@@ -1,5 +1,6 @@
 package io.pool.eightpool;
 
+import io.pool.controller.BallController;
 import io.pool.view.BallView;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -12,20 +13,20 @@ public class game extends Application {
     @Override
     public void start(Stage stage) {
         Pane root = new Pane();
-        BallView b1 = new BallView();
-        Scene scene = new Scene(root, 1920, 1080);
-        stage.setTitle("EightPool");
         Rectangle table = new Rectangle(1080, 720);
         table.setFill(Color.GREEN);
         table.setX(300);
         table.setY(100);
-        root.getChildren().addAll(table,b1);
+        root.getChildren().addAll(table);
+        BallController ballController = new BallController(root);
+        Scene scene = new Scene(root, 1920, 1080);
+        stage.setTitle("EightPool");
+
 
         GameLoopTimer gameLoopTimer = new GameLoopTimer() {
             @Override
             public void tick(float secondsSinceLastFrame) {
-                b1.getBallController().detectCollisionWithTable(table);
-                b1.getBallController().updateBallPosition();
+                ballController.detectCollision(table);
             }
         };
         gameLoopTimer.start();

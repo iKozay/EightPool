@@ -3,20 +3,26 @@ import javafx.geometry.Point2D;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
+import java.util.Objects;
+import java.util.Random;
+
 
 public class BallModel {
-
 
     private Point2D ballPosition;
     private Point2D ballVector;
     private int radius;
     private Paint color;
+    private int number;
 
-    public BallModel(int radius){
+    public BallModel(int radius, int number, Paint color){
         this.radius = radius;
+        this.number = number;
         Circle circle = new Circle(radius);
         ballPosition = new Point2D(700,700);
-        ballVector = new Point2D(1,2);
+        Random rnd = new Random();
+        ballVector = new Point2D(rnd.nextInt(7)+1, rnd.nextInt(7)+1);
+        this.color  = color;
     }
 
     public Point2D getBallPosition() {
@@ -38,4 +44,17 @@ public class BallModel {
     public int getRadius() {
         return radius;
     }
+
+    public Paint getColor() {
+        return color;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BallModel ballModel = (BallModel) o;
+        return number == ballModel.number;
+    }
+
 }
