@@ -1,33 +1,36 @@
 package io.pool.eightpool;
 
-import io.pool.model.BallModel;
-import javafx.animation.TranslateTransition;
+import io.pool.view.BallView;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import java.io.File;
-import java.util.Random;
-import java.lang.Math;
 
 public class game extends Application {
     @Override
     public void start(Stage stage) {
         Pane root = new Pane();
+        BallView b1 = new BallView();
         Scene scene = new Scene(root, 1920, 1080);
         stage.setTitle("EightPool");
-
         Rectangle table = new Rectangle(1080, 720);
+        table.setFill(Color.GREEN);
+        table.setX(300);
+        table.setY(100);
+        root.getChildren().addAll(table,b1);
+
+        GameLoopTimer gameLoopTimer = new GameLoopTimer() {
+            @Override
+            public void tick(float secondsSinceLastFrame) {
+                b1.getBallController().detectCollisionWithTable(table);
+                b1.getBallController().updateBallPosition();
+            }
+        };
+        gameLoopTimer.start();
+
+        /*Rectangle table = new Rectangle(1080, 720);
         table.setFill(Color.GREEN);
         table.setX(300);
         table.setY(100);
@@ -81,7 +84,7 @@ public class game extends Application {
             ball1.setLayoutX(ball1.getLayoutX()+1);
             ball1.setLayoutY(ball1.getLayoutY()-1);
 
-        }
+        }*/
 
 
 
