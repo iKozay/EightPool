@@ -1,15 +1,22 @@
 package io.pool.eightpool;
 
+import io.pool.model.BallModel;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.io.File;
 import java.util.Random;
 import java.lang.Math;
 
@@ -25,6 +32,15 @@ public class game extends Application {
         table.setX(300);
         table.setY(100);
         root.getChildren().addAll(table);
+
+        Circle b3 = new Circle(30, Color.BLUE);
+        Image imgB3 = new Image(new File("resources/billiards/ball15.jpg").toURI().toString());
+        b3.setFill(new ImagePattern(imgB3));
+        b3.setCenterX(300);
+        b3.setCenterY(200);
+        root.getChildren().addAll(b3);
+
+
 
         Circle ball1 = new Circle();
         ball1.setRadius(30);
