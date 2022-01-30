@@ -23,6 +23,11 @@ public class game extends Application {
     int increment=1;
     @Override
     public void start(Stage stage) {
+        //TODO Links for 3D Balls:
+        // https://openjfx.io/javadoc/16/javafx.graphics/javafx/scene/paint/PhongMaterial.html
+        // https://stackoverflow.com/questions/31382634/javafx-3d-rotations
+        // https://stackoverflow.com/questions/68186839/javafx-3d-sphere-partial-texture
+        //
         Pane root = new Pane();
         Scene scene = new Scene(root, 1920, 1080);
         stage.setTitle("EightPool");
