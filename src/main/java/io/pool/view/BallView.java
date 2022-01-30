@@ -2,22 +2,29 @@ package io.pool.view;
 
 import io.pool.controller.BallController;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Sphere;
+
+import java.io.File;
 
 public class BallView {
-    private BallController ballController;
-    private Circle ball;
-    public BallView(BallController ballController, Paint color, int radius) {
+    BallController ballController;
+    private Sphere ball;
+    public BallView(BallController ballController, Image img, int radius) {
         this.ballController = ballController;
-        ball = new Circle(radius);
-        ball.setFill(color);
+        ball = new Sphere(radius);
+        PhongMaterial material = new PhongMaterial();
+        material.setDiffuseMap(img);
+        ball.setMaterial(material);
     }
 
 
-    public Circle getBall() {
+    public Sphere getBall() {
         return ball;
     }
 }

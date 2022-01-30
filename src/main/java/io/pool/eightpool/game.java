@@ -3,24 +3,38 @@ package io.pool.eightpool;
 import io.pool.controller.BallController;
 import io.pool.view.BallView;
 import javafx.application.Application;
+import javafx.geometry.Point3D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Sphere;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.net.MalformedURLException;
+
 public class game extends Application {
+    Sphere sphere;
+    int increment=1;
     @Override
     public void start(Stage stage) {
         Pane root = new Pane();
+        Scene scene = new Scene(root, 1920, 1080);
+        stage.setTitle("EightPool");
+
+
         Rectangle table = new Rectangle(1080, 720);
         table.setFill(Color.GREEN);
         table.setX(300);
         table.setY(100);
         root.getChildren().addAll(table);
         BallController ballController = new BallController(root);
-        Scene scene = new Scene(root, 1920, 1080);
-        stage.setTitle("EightPool");
+
 
 
         GameLoopTimer gameLoopTimer = new GameLoopTimer() {
@@ -93,7 +107,16 @@ public class game extends Application {
         stage.show();
 
     }
-
+public void moveSphere(){
+    if(sphere.getLayoutX()<=100){
+        increment=1;
+    }else if (sphere.getLayoutX()>=500){
+        increment=-1;
+    }
+    sphere.setLayoutX(sphere.getLayoutX()+increment);
+    Rotate r = new Rotate(increment*5, new Point3D(sphere.getLayoutX(),sphere.getLayoutY(),0));
+    sphere.getTransforms().add(r);
+}
     public static void main(String[] args) {
         launch();
     }

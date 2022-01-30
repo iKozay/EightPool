@@ -1,5 +1,7 @@
 package io.pool.model;
 import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
@@ -9,35 +11,36 @@ import java.util.Random;
 
 public class BallModel {
 
-    private Point2D ballPosition;
-    private Point2D ballVector;
+    private Point3D ballPosition;
+    private Point3D ballVector;
     private int radius;
     private Paint color;
     private int number;
+    private Image img;
 
-    public BallModel(int radius, int number, Paint color){
+    public BallModel(int radius, int number, Image img){
         this.radius = radius;
         this.number = number;
         Circle circle = new Circle(radius);
-        ballPosition = new Point2D(700,700);
+        ballPosition = new Point3D(700,700,0);
         Random rnd = new Random();
-        ballVector = new Point2D(rnd.nextInt(7)+1, rnd.nextInt(7)+1);
-        this.color  = color;
+        ballVector = new Point3D(rnd.nextInt(7)+1, rnd.nextInt(7)+1,0);
+        this.img  = img;
     }
 
-    public Point2D getBallPosition() {
+    public Point3D getBallPosition() {
         return ballPosition;
     }
 
-    public void setBallPosition(Point2D ballPosition) {
+    public void setBallPosition(Point3D ballPosition) {
         this.ballPosition = ballPosition;
     }
 
-    public Point2D getBallVector() {
+    public Point3D getBallVector() {
         return ballVector;
     }
 
-    public void setBallVector(Point2D ballVector) {
+    public void setBallVector(Point3D ballVector) {
         this.ballVector = ballVector;
     }
 
@@ -57,4 +60,7 @@ public class BallModel {
         return number == ballModel.number;
     }
 
+    public Image getImg() {
+        return img;
+    }
 }

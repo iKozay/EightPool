@@ -3,11 +3,16 @@ package io.pool.controller;
 import io.pool.model.BallModel;
 import io.pool.view.BallView;
 import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.transform.Rotate;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class BallController {
@@ -16,21 +21,24 @@ public class BallController {
     private static ArrayList<BallModel> bModelList = new ArrayList<>();
 
     public BallController(Pane root) {
-        prepareGame(root);
+        try {
+            prepareGame(root);
+            //bModelList.add(new BallModel(20, 1, new Image(new File("resources/billiards/ball1.jpg").toURI().toURL().toExternalForm())));
+            //bViewList.add(new BallView(this,bModelList.get(0).getImg(),bModelList.get(0).getRadius()));
+            //root.getChildren().add(bViewList.get(0).getBall());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void prepareGame(Pane root) {
+    public void prepareGame(Pane root) throws MalformedURLException {
         for (int i=1;i<=16;i++){
-            if(i<7) {
-                bModelList.add(new BallModel(20, i, Color.RED));
-            }else if(i==8){
-                bModelList.add(new BallModel(20, i, Color.BLACK));
-            }else if(i==16){
-                bModelList.add(new BallModel(20, i, Color.WHITE));
+            if(i==16){
+                bModelList.add(new BallModel(20, i, new Image(new File("resources/billiards/white.jpg").toURI().toURL().toExternalForm())));
             }else{
-                bModelList.add(new BallModel(20, i,Color.BLUE));
+                bModelList.add(new BallModel(20, i, new Image(new File("resources/billiards/ball"+i+".jpg").toURI().toURL().toExternalForm())));
             }
-            bViewList.add(new BallView(this,bModelList.get(i-1).getColor(),bModelList.get(i-1).getRadius()));
+            bViewList.add(new BallView(this,bModelList.get(i-1).getImg(),bModelList.get(i-1).getRadius()));
             root.getChildren().add(bViewList.get(i-1).getBall());
         }
     }
@@ -44,11 +52,11 @@ public class BallController {
         for (BallModel bModel : bModelList) {
             if (((bModel.getBallPosition().getX() - bModel.getRadius()) <= table.getX()) || ((bModel.getBallPosition().getX() + bModel.getRadius()) >= (table.getX() + table.getWidth()))) {
                 double newXVelocity = -bModel.getBallVector().getX();
-                bModel.setBallVector(new Point2D(newXVelocity, bModel.getBallVector().getY()));
+                bModel.setBallVector(new Point3D(newXVelocity, bModel.getBallVector().getY(),0));
             }
             if (((bModel.getBallPosition().getY() - bModel.getRadius()) <= table.getY()) || ((bModel.getBallPosition().getY() + bModel.getRadius()) >= (table.getY() + table.getHeight()))) {
                 double newYVelocity = -bModel.getBallVector().getY();
-                bModel.setBallVector(new Point2D(bModel.getBallVector().getX(), newYVelocity));
+                bModel.setBallVector(new Point3D(bModel.getBallVector().getX(), newYVelocity,0));
             }
         }
         updateBallPosition();
@@ -78,6 +86,10 @@ public class BallController {
             bModel.setBallPosition(bModel.getBallPosition().add(bModel.getBallVector()));
             bView.getBall().setLayoutX(bModel.getBallPosition().getX());
             bView.getBall().setLayoutY(bModel.getBallPosition().getY());
+            Rotate rx = new Rotate(bModel.getBallVector().getX(), 0,0,0,Rotate.X_AXIS);
+            Rotate ry = new Rotate(bModel.getBallVector().getY(), 0,0,0, Rotate.Y_AXIS);
+            Rotate rz = new Rotate(0, 0,0,0, Rotate.Z_AXIS);
+            bView.getBall().getTransforms().addAll(rx,ry,rz);
         }
     }
 }
