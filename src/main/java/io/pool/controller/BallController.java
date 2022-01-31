@@ -35,6 +35,7 @@ public class BallController {
         for (int i=1;i<=16;i++){
             if(i==16){
                 bModelList.add(new BallModel(20, i, new Image(new File("resources/billiards/white.jpg").toURI().toURL().toExternalForm())));
+                bModelList.get(i-1).setBallVector(new Point3D(0,0,0));
             }else{
                 bModelList.add(new BallModel(20, i, new Image(new File("resources/billiards/ball"+i+".jpg").toURI().toURL().toExternalForm())));
             }
