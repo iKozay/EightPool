@@ -22,9 +22,9 @@ public class BallModel {
         this.radius = radius;
         this.number = number;
         Circle circle = new Circle(radius);
-        ballPosition = new Point2D(700,700);
         Random rnd = new Random();
-        ballVector = new Point2D(rnd.nextInt(7)+1, rnd.nextInt(7)+1);
+        ballPosition = new Point2D(rnd.nextInt(500)+310,rnd.nextInt(500)+110);
+        ballVector = new Point2D(rnd.nextInt(3)+1,rnd.nextInt(3)+1);
         this.img  = img;
     }
 

@@ -21,10 +21,10 @@ public class BallController {
 
     public BallController(Pane root) {
         try {
-            prepareGame(root);
-            //bModelList.add(new BallModel(20, 1, new Image(new File("resources/billiards/ball1.jpg").toURI().toURL().toExternalForm())));
-            //bViewList.add(new BallView(this,bModelList.get(0).getImg(),bModelList.get(0).getRadius()));
-            //root.getChildren().add(bViewList.get(0).getBall());
+            //prepareGame(root);
+            bModelList.add(new BallModel(20, 1, new Image(new File("resources/billiards/ball1.jpg").toURI().toURL().toExternalForm())));
+            bViewList.add(new BallView(this,bModelList.get(0).getImg(),bModelList.get(0).getRadius()));
+            root.getChildren().add(bViewList.get(0).getBall());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -45,7 +45,8 @@ public class BallController {
 
     public void detectCollision(TableController table){
         detectCollisionWithTable(table);
-        //detectCollisionWithOtherBalls();
+        detectCollisionWithOtherBalls();
+
     }
 
     private void detectCollisionWithTable(TableController table){
@@ -63,23 +64,17 @@ public class BallController {
         updateBallPosition();
     }
     private void detectCollisionWithOtherBalls(){
-        ArrayList<BallModel> affectedBalls = new ArrayList<>();
-        do {
-            for (BallModel ballA : bModelList) {
-                for (BallModel ballB : bModelList) {
-                    if (!ballA.equals(ballB)) {
-                        //TODO Implement Physics
-                        System.out.println("TODO");
+        for (BallModel ballA : bModelList) {
+            for (BallModel ballB : bModelList) {
+                if (!ballA.equals(ballB)) {
+                    if(ballA.getBallPosition().distance(ballB.getBallPosition())<=(2*ballA.getRadius())){
+
                     }
                 }
             }
-        }while(ballCollisions(affectedBalls));
-    }
-
-    private boolean ballCollisions(ArrayList<BallModel> affectedBalls){
-
-        return false;
-    }
+        }
+        updateBallPosition();
+        }
 
     private void updateBallPosition() {
         for (BallModel bModel : bModelList) {
@@ -87,8 +82,8 @@ public class BallController {
             bModel.setBallPosition(bModel.getBallPosition().add(bModel.getBallVector()));
             bView.getBall().setLayoutX(bModel.getBallPosition().getX());
             bView.getBall().setLayoutY(bModel.getBallPosition().getY());
-            Rotate rx = new Rotate(bModel.getBallVector().getX(), 0,0,0,Rotate.X_AXIS);
-            Rotate ry = new Rotate(bModel.getBallVector().getY(), 0,0,0, Rotate.Y_AXIS);
+            Rotate rx = new Rotate(bModel.getBallVector().normalize().getY(), 0,0,0,Rotate.X_AXIS);
+            Rotate ry = new Rotate(-bModel.getBallVector().normalize().getX(), 0,0,0, Rotate.Y_AXIS);
             Rotate rz = new Rotate(0, 0,0,0, Rotate.Z_AXIS);
             bView.getBall().getTransforms().addAll(rx,ry,rz);
         }
