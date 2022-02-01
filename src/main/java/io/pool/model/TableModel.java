@@ -9,16 +9,12 @@ public class TableModel {
     private Circle hole;
     private double friction;
     private Color color;
-    private int xPos;
-    private int yPos;
 
-    public TableModel(int width, int height, double friction, Color color, int xPosition, int yPosition) {
+    public TableModel(int width, int height, double friction, Color color) {
         this.width = width;
         this.height = height;
         this.friction = friction;
         this.color = color;
-        this.xPos = xPosition;
-        this.yPos = yPosition;
 
     }
     public int getWidth() {
@@ -50,11 +46,4 @@ public class TableModel {
         this.color = color;
     }
 
-    public int getXPos() {
-        return xPos;
-    }
-
-    public int getYPos() {
-        return yPos;
-    }
 }

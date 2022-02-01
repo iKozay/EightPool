@@ -3,6 +3,7 @@ package io.pool.controller;
 import io.pool.model.BallModel;
 import io.pool.model.TableModel;
 import io.pool.view.BallView;
+import io.pool.view.TableView;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
@@ -43,20 +44,19 @@ public class BallController {
         }
     }
 
-    public void detectCollision(TableController table){
+    public void detectCollision(TableView table){
         detectCollisionWithTable(table);
         detectCollisionWithOtherBalls();
 
     }
 
-    private void detectCollisionWithTable(TableController table){
+    private void detectCollisionWithTable(TableView table){
         for (BallModel bModel : bModelList) {
-            TableModel tableModel = table.getTableModel();
-            if (((bModel.getBallPosition().getX() - bModel.getRadius()) <= tableModel.getXPos()) || ((bModel.getBallPosition().getX() + bModel.getRadius()) >= (tableModel.getXPos() + tableModel.getWidth()))) {
+            if (((bModel.getBallPosition().getX() - bModel.getRadius()) <= table.getTable().getLayoutX()) || ((bModel.getBallPosition().getX() + bModel.getRadius()) >= (table.getTable().getLayoutX() + table.getTable().getWidth()))) {
                 double newXVelocity = -bModel.getBallVector().getX();
                 bModel.setBallVector(new Point2D(newXVelocity, bModel.getBallVector().getY()));
             }
-            if (((bModel.getBallPosition().getY() - bModel.getRadius()) <= tableModel.getYPos()) || ((bModel.getBallPosition().getY() + bModel.getRadius()) >= (tableModel.getYPos() + tableModel.getHeight()))) {
+            if (((bModel.getBallPosition().getY() - bModel.getRadius()) <= table.getTable().getLayoutY()) || ((bModel.getBallPosition().getY() + bModel.getRadius()) >= (table.getTable().getLayoutY() + table.getTable().getHeight()))) {
                 double newYVelocity = -bModel.getBallVector().getY();
                 bModel.setBallVector(new Point2D(bModel.getBallVector().getX(), newYVelocity));
             }
