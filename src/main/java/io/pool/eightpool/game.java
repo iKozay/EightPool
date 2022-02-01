@@ -3,6 +3,7 @@ package io.pool.eightpool;
 import io.pool.controller.BallController;
 import io.pool.controller.TableController;
 import io.pool.view.BallView;
+import io.pool.view.TableView;
 import javafx.application.Application;
 import javafx.geometry.Point3D;
 import javafx.scene.Scene;
@@ -34,7 +35,8 @@ public class game extends Application {
         stage.setTitle("EightPool");
 
 
-        TableController table = new TableController(root);
+        TableView table = new TableView(1080, 720, Color.GREEN);
+        root.getChildren().add(table.getTable());
 
 
         BallController ballController = new BallController(root);
