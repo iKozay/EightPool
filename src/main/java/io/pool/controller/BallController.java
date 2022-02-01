@@ -1,14 +1,12 @@
 package io.pool.controller;
 
 import io.pool.model.BallModel;
+import io.pool.model.TableModel;
 import io.pool.view.BallView;
-import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 
 import java.io.File;
@@ -44,18 +42,19 @@ public class BallController {
         }
     }
 
-    public void detectCollision(Rectangle table){
+    public void detectCollision(TableController table){
         detectCollisionWithTable(table);
         //detectCollisionWithOtherBalls();
     }
 
-    private void detectCollisionWithTable(Rectangle table){
+    private void detectCollisionWithTable(TableController table){
         for (BallModel bModel : bModelList) {
-            if (((bModel.getBallPosition().getX() - bModel.getRadius()) <= table.getX()) || ((bModel.getBallPosition().getX() + bModel.getRadius()) >= (table.getX() + table.getWidth()))) {
+            TableModel tableModel = table.getTableModel();
+            if (((bModel.getBallPosition().getX() - bModel.getRadius()) <= tableModel.getXPos()) || ((bModel.getBallPosition().getX() + bModel.getRadius()) >= (tableModel.getXPos() + tableModel.getWidth()))) {
                 double newXVelocity = -bModel.getBallVector().getX();
                 bModel.setBallVector(new Point3D(newXVelocity, bModel.getBallVector().getY(),0));
             }
-            if (((bModel.getBallPosition().getY() - bModel.getRadius()) <= table.getY()) || ((bModel.getBallPosition().getY() + bModel.getRadius()) >= (table.getY() + table.getHeight()))) {
+            if (((bModel.getBallPosition().getY() - bModel.getRadius()) <= tableModel.getYPos()) || ((bModel.getBallPosition().getY() + bModel.getRadius()) >= (tableModel.getYPos() + tableModel.getHeight()))) {
                 double newYVelocity = -bModel.getBallVector().getY();
                 bModel.setBallVector(new Point3D(bModel.getBallVector().getX(), newYVelocity,0));
             }

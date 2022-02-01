@@ -1,6 +1,7 @@
 package io.pool.eightpool;
 
 import io.pool.controller.BallController;
+import io.pool.controller.TableController;
 import io.pool.view.BallView;
 import javafx.application.Application;
 import javafx.geometry.Point3D;
@@ -33,13 +34,10 @@ public class game extends Application {
         stage.setTitle("EightPool");
 
 
-        Rectangle table = new Rectangle(1080, 720);
-        table.setFill(Color.GREEN);
-        table.setX(300);
-        table.setY(100);
-        root.getChildren().addAll(table);
-        BallController ballController = new BallController(root);
+        TableController table = new TableController(root);
 
+
+        BallController ballController = new BallController(root);
 
 
         GameLoopTimer gameLoopTimer = new GameLoopTimer() {
@@ -105,7 +103,6 @@ public class game extends Application {
             ball1.setLayoutY(ball1.getLayoutY()-1);
 
         }*/
-
 
 
         stage.setScene(scene);
