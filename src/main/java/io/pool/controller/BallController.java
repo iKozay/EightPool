@@ -3,6 +3,7 @@ package io.pool.controller;
 import io.pool.model.BallModel;
 import io.pool.model.TableModel;
 import io.pool.view.BallView;
+import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
@@ -33,7 +34,7 @@ public class BallController {
         for (int i=1;i<=16;i++){
             if(i==16){
                 bModelList.add(new BallModel(20, i, new Image(new File("resources/billiards/white.jpg").toURI().toURL().toExternalForm())));
-                bModelList.get(i-1).setBallVector(new Point3D(0,0,0));
+                bModelList.get(i-1).setBallVector(new Point2D(0,0));
             }else{
                 bModelList.add(new BallModel(20, i, new Image(new File("resources/billiards/ball"+i+".jpg").toURI().toURL().toExternalForm())));
             }
@@ -52,11 +53,11 @@ public class BallController {
             TableModel tableModel = table.getTableModel();
             if (((bModel.getBallPosition().getX() - bModel.getRadius()) <= tableModel.getXPos()) || ((bModel.getBallPosition().getX() + bModel.getRadius()) >= (tableModel.getXPos() + tableModel.getWidth()))) {
                 double newXVelocity = -bModel.getBallVector().getX();
-                bModel.setBallVector(new Point3D(newXVelocity, bModel.getBallVector().getY(),0));
+                bModel.setBallVector(new Point2D(newXVelocity, bModel.getBallVector().getY()));
             }
             if (((bModel.getBallPosition().getY() - bModel.getRadius()) <= tableModel.getYPos()) || ((bModel.getBallPosition().getY() + bModel.getRadius()) >= (tableModel.getYPos() + tableModel.getHeight()))) {
                 double newYVelocity = -bModel.getBallVector().getY();
-                bModel.setBallVector(new Point3D(bModel.getBallVector().getX(), newYVelocity,0));
+                bModel.setBallVector(new Point2D(bModel.getBallVector().getX(), newYVelocity));
             }
         }
         updateBallPosition();

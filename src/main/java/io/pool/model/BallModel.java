@@ -11,8 +11,8 @@ import java.util.Random;
 
 public class BallModel {
 
-    private Point3D ballPosition;
-    private Point3D ballVector;
+    private Point2D ballPosition;
+    private Point2D ballVector;
     private int radius;
     private Paint color;
     private int number;
@@ -22,25 +22,25 @@ public class BallModel {
         this.radius = radius;
         this.number = number;
         Circle circle = new Circle(radius);
-        ballPosition = new Point3D(700,700,0);
+        ballPosition = new Point2D(700,700);
         Random rnd = new Random();
-        ballVector = new Point3D(rnd.nextInt(7)+1, rnd.nextInt(7)+1,0);
+        ballVector = new Point2D(rnd.nextInt(7)+1, rnd.nextInt(7)+1);
         this.img  = img;
     }
 
-    public Point3D getBallPosition() {
+    public Point2D getBallPosition() {
         return ballPosition;
     }
 
-    public void setBallPosition(Point3D ballPosition) {
+    public void setBallPosition(Point2D ballPosition) {
         this.ballPosition = ballPosition;
     }
 
-    public Point3D getBallVector() {
+    public Point2D getBallVector() {
         return ballVector;
     }
 
-    public void setBallVector(Point3D ballVector) {
+    public void setBallVector(Point2D ballVector) {
         this.ballVector = ballVector;
     }
 
