@@ -13,7 +13,7 @@ import java.util.Random;
 public class BallModel {
 
     private Point2D ballPosition;
-    private Point2D ballVector;
+    private VelocityVector ballVector;
     private Point2D previousPosition;
     private int radius;
     private int number;
@@ -23,7 +23,7 @@ public class BallModel {
         this.radius = radius;
         this.number = number;
         ballPosition = new Point2D(400,150);
-        ballVector = new Point2D(0.1,0.1);
+        ballVector = new VelocityVector(1,1);
         this.img  = img;
     }
 
@@ -36,11 +36,11 @@ public class BallModel {
         this.ballPosition = ballPosition;
     }
 
-    public Point2D getBallVector() {
+    public VelocityVector getBallVector() {
         return ballVector;
     }
 
-    public void setBallVector(Point2D ballVector) {
+    public void setBallVector(VelocityVector ballVector) {
         this.ballVector = ballVector;
     }
 
