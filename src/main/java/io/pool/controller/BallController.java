@@ -1,6 +1,7 @@
 package io.pool.controller;
 
 import io.pool.model.BallModel;
+import io.pool.model.VelocityVector;
 import io.pool.view.BallView;
 import io.pool.view.TableView;
 import javafx.geometry.Point2D;
@@ -34,7 +35,7 @@ public class BallController {
         for (int i=1;i<=16;i++){
             if(i==16){
                 bModelList.add(new BallModel(20, i, new Image(new File("resources/billiards/white.jpg").toURI().toURL().toExternalForm())));
-                bModelList.get(i-1).setBallVector(new Point2D(0,0));
+                bModelList.get(i-1).setBallVector(new VelocityVector(0,0));
             }else{
                 bModelList.add(new BallModel(20, i, new Image(new File("resources/billiards/ball"+i+".jpg").toURI().toURL().toExternalForm())));
             }
@@ -53,11 +54,11 @@ public class BallController {
         for (BallModel bModel : bModelList) {
             if ((bModel.getBallPosition().getX() - bModel.getRadius()) <= (tableBorders.getX() + 300) || (bModel.getBallPosition().getX() + bModel.getRadius()) >= ((tableBorders.getX() + 300) + tableBorders.getWidth())) {
                 double newXVelocity = -bModel.getBallVector().getX();
-                bModel.setBallVector(new Point2D(newXVelocity, bModel.getBallVector().getY()));
+                bModel.setBallVector(new VelocityVector(newXVelocity, bModel.getBallVector().getY()));
             }
             if (((bModel.getBallPosition().getY() - bModel.getRadius()) <= (tableBorders.getY() + 100)) || ((bModel.getBallPosition().getY() + bModel.getRadius()) >= ((tableBorders.getY() + 100) + tableBorders.getHeight()))) {
                 double newYVelocity = -bModel.getBallVector().getY();
-                bModel.setBallVector(new Point2D(bModel.getBallVector().getX(), newYVelocity));
+                bModel.setBallVector(new VelocityVector(bModel.getBallVector().getX(), newYVelocity));
             }
         }
         updateBallPosition();
@@ -78,11 +79,11 @@ public class BallController {
     private void updateBallPosition() {
         for (BallModel bModel : bModelList) {
             BallView bView = bViewList.get(bModelList.indexOf(bModel));
-            bModel.setBallPosition(bModel.getBallPosition().add(bModel.getBallVector()));
+            bModel.setBallPosition(bModel.getBallPosition().add(bModel.getBallVector().getX(),bModel.getBallVector().getY()));
             bView.getBall().setLayoutX(bModel.getBallPosition().getX());
             bView.getBall().setLayoutY(bModel.getBallPosition().getY());
-            Rotate rx = new Rotate(bModel.getBallVector().normalize().getY(), 0,0,0,Rotate.X_AXIS);
-            Rotate ry = new Rotate(-bModel.getBallVector().normalize().getX(), 0,0,0, Rotate.Y_AXIS);
+            Rotate rx = new Rotate(bModel.getBallVector().getY(), 0,0,0,Rotate.X_AXIS);
+            Rotate ry = new Rotate(-bModel.getBallVector().getX(), 0,0,0, Rotate.Y_AXIS);
             Rotate rz = new Rotate(0, 0,0,0, Rotate.Z_AXIS);
             bView.getBall().getTransforms().addAll(rx,ry,rz);
         }

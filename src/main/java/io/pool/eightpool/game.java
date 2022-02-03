@@ -3,6 +3,7 @@ package io.pool.eightpool;
 import io.pool.controller.BallController;
 import io.pool.controller.TableController;
 import io.pool.model.TableModel;
+import io.pool.view.PoolCueView;
 import io.pool.view.TableView;
 import javafx.application.Application;
 import javafx.geometry.Point3D;
@@ -33,6 +34,8 @@ public class game extends Application {
         TableModel tableModel = new TableModel();
         TableController tableController = new TableController(tableView, tableModel);
 
+        PoolCueView cue = new PoolCueView();
+        root.getChildren().add(cue);
 
         BallController ballController = new BallController(root);
 
