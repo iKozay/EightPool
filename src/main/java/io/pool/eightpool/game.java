@@ -34,8 +34,8 @@ public class game extends Application {
         TableModel tableModel = new TableModel();
         TableController tableController = new TableController(tableView, tableModel);
 
-        PoolCueView cue = new PoolCueView();
-        root.getChildren().add(cue);
+        PoolCueView cueView = new PoolCueView();
+        root.getChildren().add(cueView.getCue());
 
         BallController ballController = new BallController(root);
 

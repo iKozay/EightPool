@@ -23,7 +23,7 @@ public class BallController {
     public BallController(Pane root) {
         try {
             //prepareGame(root);
-            bModelList.add(new BallModel(20, 1, new Image(new File("resources/billiards/ball1.jpg").toURI().toURL().toExternalForm())));
+            bModelList.add(new BallModel(10, 1, new Image(new File("resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm())));
             bViewList.add(new BallView(this,bModelList.get(0).getImg(),bModelList.get(0).getRadius()));
             root.getChildren().add(bViewList.get(0).getBall());
         } catch (MalformedURLException e) {

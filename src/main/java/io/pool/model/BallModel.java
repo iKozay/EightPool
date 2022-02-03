@@ -22,7 +22,7 @@ public class BallModel {
     public BallModel(int radius, int number, Image img){
         this.radius = radius;
         this.number = number;
-        ballPosition = new Point2D(400,150);
+        ballPosition = new Point2D(500,250);
         ballVector = new VelocityVector(1,1);
         this.img  = img;
     }

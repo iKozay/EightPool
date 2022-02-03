@@ -51,14 +51,14 @@ public class TableView {
 
         root.getChildren().add(table); // adding the table to the main pain of the project.
 
-//        Corner upLeftCorner = new Corner(table, holeRadius, 40, 50, 55, -45);
-//        Corner downLeftCorner = new Corner(table, holeRadius, 40, 50, height - 55, 45);
-//
-//        Corner upCenterCorner = new Corner(table, holeRadius + 10, 20, width/2, 55, -90);
-//        Corner downCenterCorner = new Corner(table, holeRadius + 10, 20, width/2, height -55, -90);
-//
-//        Corner upRightCorner = new Corner(table, holeRadius, 40, width - 55, 55, -135);
-//        Corner downRightCorner = new Corner(table, holeRadius, 40, width - 55, height - 55, 135);
+        Corner upLeftCorner = new Corner(table, holeRadius, 40, 50, 55, -45);
+        Corner downLeftCorner = new Corner(table, holeRadius, 40, 50, height - 55, 45);
+
+        Corner upCenterCorner = new Corner(table, holeRadius + 10, 20, width/2, 55, -90);
+        Corner downCenterCorner = new Corner(table, holeRadius + 10, 20, width/2, height -55, -90);
+
+        Corner upRightCorner = new Corner(table, holeRadius, 40, width - 55, 55, -135);
+        Corner downRightCorner = new Corner(table, holeRadius, 40, width - 55, height - 55, 135);
 
 //        for (int i=0; i<2;i++) {
 //            for(int j=0; j < 3; j++) {
