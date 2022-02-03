@@ -2,29 +2,23 @@ package io.pool.eightpool;
 
 import io.pool.controller.BallController;
 import io.pool.controller.TableController;
-import io.pool.view.BallView;
+import io.pool.model.TableModel;
 import io.pool.view.TableView;
 import javafx.application.Application;
 import javafx.geometry.Point3D;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.net.MalformedURLException;
 
 public class game extends Application {
     Sphere sphere;
     int increment=1;
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws MalformedURLException {
         //TODO Links for 3D Balls:
         // https://openjfx.io/javadoc/16/javafx.graphics/javafx/scene/paint/PhongMaterial.html
         // https://stackoverflow.com/questions/31382634/javafx-3d-rotations
@@ -35,8 +29,9 @@ public class game extends Application {
         stage.setTitle("EightPool");
 
 
-        TableView table = new TableView(1080, 720, Color.GREEN);
-        root.getChildren().add(table.getTable());
+        TableView tableView = new TableView(root);
+        TableModel tableModel = new TableModel();
+        TableController tableController = new TableController(tableView, tableModel);
 
 
         BallController ballController = new BallController(root);
@@ -45,32 +40,13 @@ public class game extends Application {
         GameLoopTimer gameLoopTimer = new GameLoopTimer() {
             @Override
             public void tick(float secondsSinceLastFrame) {
-                ballController.detectCollision(table);
+                ballController.detectCollision(tableView.getPlayTable());
             }
         };
         gameLoopTimer.start();
 
-        /*Rectangle table = new Rectangle(1080, 720);
-        table.setFill(Color.GREEN);
-        table.setX(300);
-        table.setY(100);
-        root.getChildren().addAll(table);
 
-        Circle b3 = new Circle(30, Color.BLUE);
-        Image imgB3 = new Image(new File("resources/billiards/ball15.jpg").toURI().toString());
-        b3.setFill(new ImagePattern(imgB3));
-        b3.setCenterX(300);
-        b3.setCenterY(200);
-        root.getChildren().addAll(b3);
-
-
-
-        Circle ball1 = new Circle();
-        ball1.setRadius(30);
-        //ball1.setFill(Color.WHITE);
-        ball1.setLayoutX(700);
-        ball1.setLayoutY(400);
-        root.getChildren().addAll(ball1);
+        /*
 
 
         Circle ball2 = new Circle();

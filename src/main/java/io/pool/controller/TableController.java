@@ -1,17 +1,26 @@
 package io.pool.controller;
 
 import io.pool.model.TableModel;
-import javafx.scene.paint.Color;
+import io.pool.view.TableView;
 
 public class TableController {
 
+    private TableView tableView;
     private TableModel tableModel;
 
-    public TableController() {
-        tableModel = new TableModel(1080, 720, 10, Color.GREEN);
+
+    public TableController(TableView view, TableModel model) {
+        tableView = view;
+        tableModel = model;
+    }
+
+    public TableView getTableView() {
+        return tableView;
     }
 
     public TableModel getTableModel() {
         return tableModel;
     }
+
+
 }
