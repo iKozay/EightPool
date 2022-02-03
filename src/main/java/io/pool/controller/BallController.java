@@ -26,6 +26,7 @@ public class BallController {
             bModelList.add(new BallModel(20, 1, new Image(new File("resources/billiards/ball1.jpg").toURI().toURL().toExternalForm())));
             bViewList.add(new BallView(this,bModelList.get(0).getImg(),bModelList.get(0).getRadius()));
             root.getChildren().add(bViewList.get(0).getBall());
+            System.out.println("x:" + bModelList.get(0).getBallVector().getX() + "DISTANCE: " + bModelList.get(0) );
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -34,10 +35,10 @@ public class BallController {
     public void prepareGame(Pane root) throws MalformedURLException {
         for (int i=1;i<=16;i++){
             if(i==16){
-                bModelList.add(new BallModel(20, i, new Image(new File("resources/billiards/white.jpg").toURI().toURL().toExternalForm())));
+                bModelList.add(new BallModel(20, i, new Image(new File("resources/billiards3D/BallCue.jpg").toURI().toURL().toExternalForm())));
                 bModelList.get(i-1).setBallVector(new Point2D(0,0));
             }else{
-                bModelList.add(new BallModel(20, i, new Image(new File("resources/billiards/ball"+i+".jpg").toURI().toURL().toExternalForm())));
+                bModelList.add(new BallModel(20, i, new Image(new File("resources/billiards3D/ball"+i+".jpg").toURI().toURL().toExternalForm())));
             }
             bViewList.add(new BallView(this,bModelList.get(i-1).getImg(),bModelList.get(i-1).getRadius()));
             root.getChildren().add(bViewList.get(i-1).getBall());
@@ -47,6 +48,17 @@ public class BallController {
     public void detectCollision(TableView table){
         detectCollisionWithTable(table);
         detectCollisionWithOtherBalls();
+
+    }
+
+    public void frictionOnTable(TableView table, float seconds){
+        System.out.println(bModelList.get(0).ballDistance());
+        double speed = bModelList.get(0).ballDistance()/seconds;
+        System.out.println(speed);
+
+    }
+
+    public void checkBallStop(){
 
     }
 
