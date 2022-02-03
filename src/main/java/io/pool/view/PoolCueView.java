@@ -1,11 +1,10 @@
 package io.pool.view;
 
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 
-public class PoolCueView extends Node {
+public class PoolCueView {
 
     private Cylinder cue;
 
@@ -22,8 +21,7 @@ public class PoolCueView extends Node {
         cue.setMaterial(material);
     }
 
-    @Override
-    public Node getStyleableNode() {
-        return super.getStyleableNode();
+    public Cylinder getCue() {
+        return cue;
     }
 }
