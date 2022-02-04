@@ -1,5 +1,7 @@
 package io.pool.model;
 
+import javafx.geometry.Point2D;
+
 public class VelocityVector {
     private double x;
     private double y;

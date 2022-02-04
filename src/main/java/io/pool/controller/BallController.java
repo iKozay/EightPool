@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
+import java.math.*;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -88,4 +89,68 @@ public class BallController {
             bView.getBall().getTransforms().addAll(rx,ry,rz);
         }
     }
+
+
+    private void collisionHandler(BallModel ball1, BallModel ball2){
+        //Balls positions
+        Point2D ball1Pos = ball1.getBallPosition();
+        Point2D ball2Pos = ball2.getBallPosition();
+
+        //perpendicular line between point of contact ball 1 and ball 2
+        double xSlope = ball2Pos.getX()-ball1Pos.getX();
+        double ySlope = ball2Pos.getY()-ball1Pos.getY();
+        double slope = ySlope/xSlope;
+
+        //find angle between perpendicular line and x axis
+        double anglePerpendicularBetweenBalls = Math.atan(slope);
+
+
+
+        //Slope of ball and direction
+        //ball1
+        double ball1YSlope = ball1.getBallVector().getY();
+        double ball1XSlope = ball1.getBallVector().getX();
+        double magnitudeBall1 = Math.sqrt(Math.pow(ball1XSlope, 2)+Math.pow(ball1YSlope, 2));
+        double directionBall1 = ball1YSlope/ball1XSlope;
+        double angleOfDirectionBall1 = Math.atan(directionBall1);
+        //rotate vector so that it is parallel to the perpendicular line
+        double tempAngleBall1 = angleOfDirectionBall1 - anglePerpendicularBetweenBalls;
+        double rotatedXComponentBall1 = Math.cos(tempAngleBall1)*magnitudeBall1;
+        double rotatedYComponentBall1 = Math.sin(tempAngleBall1)*magnitudeBall1;
+
+        //ball2
+        double ball2YSlope = ball2.getBallVector().getY();
+        double ball2XSlope = ball2.getBallVector().getX();
+        double magnitudeBall2 = Math.sqrt(Math.pow(ball2XSlope, 2)+Math.pow(ball2YSlope, 2));
+        double directionBall2 = ball2YSlope/ball2XSlope;
+        double angleOfDirectionBall2 = Math.atan(directionBall2);
+        //rotate vector so that it is parallel to the perpendicular line
+        double tempAngleBall2 = angleOfDirectionBall2 - anglePerpendicularBetweenBalls;
+        double rotatedXComponentBall2 = Math.cos(tempAngleBall2)*magnitudeBall2;
+        double rotatedYComponentBall2 = Math.sin(tempAngleBall2)*magnitudeBall1;
+
+        //switch these the two x components of each ball(the components parallel to the perpendicular line)
+        double tempRotatedXBall2 = rotatedXComponentBall2;
+        rotatedXComponentBall2 = rotatedXComponentBall1;
+        rotatedXComponentBall1 = tempRotatedXBall2;
+
+        //find the magnitude of each new vector
+        //ball1
+        double newMagnitudeBall1 = Math.sqrt(Math.pow(rotatedXComponentBall1, 2)+Math.pow(rotatedYComponentBall1, 2));
+        //ball2
+        double newMagnitudeBall2 = Math.sqrt(Math.pow(rotatedXComponentBall2, 2)+Math.pow(rotatedYComponentBall2, 2));
+
+        //rotate back the problem to its initial state
+        //use initial angles
+        double newXBall1 = Math.cos(angleOfDirectionBall1)*newMagnitudeBall1;
+        double newYBall1 = Math.sin(angleOfDirectionBall1)*newMagnitudeBall1;
+        double newXBall2 = Math.cos(angleOfDirectionBall2)*newMagnitudeBall2;
+        double newYBall2 = Math.sin(angleOfDirectionBall2)*newMagnitudeBall2;
+
+        //setting the new vectors to each ball
+        ball1.setBallVector(new VelocityVector(newXBall1, newYBall1));
+        ball2.setBallVector(new VelocityVector(newXBall2, newYBall2));
+    }
+
+
 }
