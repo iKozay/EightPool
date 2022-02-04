@@ -20,6 +20,8 @@ public class BallController {
 
     private static ArrayList<BallView> bViewList = new ArrayList<>();
     private static ArrayList<BallModel> bModelList = new ArrayList<>();
+    final double GRAVITATIONAL_FORCE = 9.8;
+    final double MASS_BALL_KG = 0.16;
 
     public BallController(Pane root) {
         try {
@@ -79,6 +81,8 @@ public class BallController {
 
     private void updateBallPosition() {
         for (BallModel bModel : bModelList) {
+            bModel.applyFriction();
+            bModel.checkIfStopped();
             BallView bView = bViewList.get(bModelList.indexOf(bModel));
             bModel.setBallPosition(bModel.getBallPosition().add(bModel.getBallVector().getX(),bModel.getBallVector().getY()));
             bView.getBall().setLayoutX(bModel.getBallPosition().getX());
