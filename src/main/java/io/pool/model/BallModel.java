@@ -12,6 +12,7 @@ import java.util.Random;
 
 public class BallModel {
 
+    private double acceleration;
     private Point2D ballPosition;
     private VelocityVector ballVector;
     private Point2D previousPosition;
@@ -23,9 +24,12 @@ public class BallModel {
         this.radius = radius;
         this.number = number;
         ballPosition = new Point2D(500,250);
-        ballVector = new VelocityVector(1,1);
+        ballVector = new VelocityVector(10,10);
+        acceleration = 0.99;
         this.img  = img;
     }
+
+
 
     public Point2D getBallPosition() {
         return ballPosition;
@@ -49,8 +53,15 @@ public class BallModel {
     }
 
     public double ballDistance(){
-        double distance = previousPosition.distance(ballPosition);
-        return distance;
+        return previousPosition.distance(ballPosition);
+    }
+
+    public void applyFriction(){
+        ballVector.setX(ballVector.getX()*acceleration);
+        ballVector.setY(ballVector.getY()*acceleration);
+    }
+    public void checkIfStopped(){
+
     }
 
     @Override

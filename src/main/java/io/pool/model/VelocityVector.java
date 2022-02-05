@@ -1,5 +1,9 @@
 package io.pool.model;
 
+import javafx.geometry.Point2D;
+
+import java.util.Vector;
+
 public class VelocityVector {
     private double x;
     private double y;
@@ -21,6 +25,11 @@ public class VelocityVector {
         this.x *= vector.getX();
         this.y *= vector.getY();
     }
+    public VelocityVector sub(VelocityVector vector){
+        return new VelocityVector(x - vector.getX(), y - vector.getY());
+    }
+
+
 
     public double getX() {
         return x;
@@ -36,5 +45,13 @@ public class VelocityVector {
 
     public void setY(double y) {
         this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return "VelocityVector{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 }
