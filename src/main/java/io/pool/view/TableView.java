@@ -4,6 +4,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 import java.io.File;
@@ -15,7 +17,7 @@ public class TableView {
 
     private Pane table; // all components of the table
     private Rectangle playTable; // the place where the ball move
-
+    private ArrayList<Circle> holes = new ArrayList<>();
     public final static int holeRadius = 22;
 
 //    private ArrayList<Hole> holes;
@@ -38,6 +40,13 @@ public class TableView {
         tableImageView.setFitWidth(width);
         tableImageView.setPreserveRatio(true);
 
+        Line whiteLine = new Line();
+        whiteLine.setStartX(width-235);
+        whiteLine.setStartY(65);
+        whiteLine.setEndX(width-235);
+        whiteLine.setEndY(height-70);
+        whiteLine.setFill(Color.WHITE);
+
 
         // the place where the ball moves
         playTable = new Rectangle((width-135), (height-135));
@@ -46,30 +55,54 @@ public class TableView {
         playTable.setFill(Color.GREEN);
         playTable.setVisible(false); //because no need to see it. it would be only useful in controlling the ball
 
-        table.getChildren().addAll(tableImageView, playTable); // adding the components to the table
+        table.getChildren().addAll(tableImageView, playTable, whiteLine); // adding the components to the table
 
 
         root.getChildren().add(table); // adding the table to the main pain of the project.
 
-        Corner upLeftCorner = new Corner(table, holeRadius, 40, 50, 55, -45);
-        Corner downLeftCorner = new Corner(table, holeRadius, 40, 50, height - 55, 45);
+        Circle upLeftCorner = new Circle();
+        upLeftCorner.setRadius(30);
+        upLeftCorner.setCenterX(50);
+        upLeftCorner.setCenterY(55);
+        upLeftCorner.setFill(Color.BLUE);
 
-        Corner upCenterCorner = new Corner(table, holeRadius + 10, 20, width/2, 55, -90);
-        Corner downCenterCorner = new Corner(table, holeRadius + 10, 20, width/2, height -55, -90);
+        Circle downLeftCorner = new Circle();
+        downLeftCorner.setRadius(30);
+        downLeftCorner.setCenterX(50);
+        downLeftCorner.setCenterY(height-55);
+        downLeftCorner.setFill(Color.BLUE);
 
-        Corner upRightCorner = new Corner(table, holeRadius, 40, width - 55, 55, -135);
-        Corner downRightCorner = new Corner(table, holeRadius, 40, width - 55, height - 55, 135);
+        Circle upRightCorner = new Circle();
+        upRightCorner.setRadius(30);
+        upRightCorner.setCenterX(width-55);
+        upRightCorner.setCenterY(55);
+        upRightCorner.setFill(Color.BLUE);
 
-//        for (int i=0; i<2;i++) {
-//            for(int j=0; j < 3; j++) {
-//
-//                Hole hole = new Hole(true);
-//                hole.setCenterX((j*(width/2)) + (holeRadius-(j*holeRadius)));
-//                hole.setCenterY((i*height) + (holeRadius-(2*i*holeRadius)));
-//                table.getChildren().add(hole);
-//            }
-//        }
+        Circle downRightCorner = new Circle();
+        downRightCorner.setRadius(30);
+        downRightCorner.setCenterX(width - 55);
+        downRightCorner.setCenterY(height-55);
+        downRightCorner.setFill(Color.BLUE);
 
+
+        Circle upCenterCorner = new Circle();
+        upCenterCorner.setRadius(30);
+        upCenterCorner.setCenterX((width/2) - 10);
+        upCenterCorner.setCenterY(50);
+        upCenterCorner.setFill(Color.BLUE);
+
+        Circle downCenterCorner = new Circle();
+        downCenterCorner.setRadius(30);
+        downCenterCorner.setCenterX((width/2) - 10);
+        downCenterCorner.setCenterY(height-50);
+        downCenterCorner.setFill(Color.BLUE);
+
+        table.getChildren().addAll(upLeftCorner, downLeftCorner, upRightCorner, downRightCorner, upCenterCorner, downCenterCorner);
+
+
+        // make the corners simply circles, and make it possible for you the ball
+        // controller to find the center mass of the ball, which will help you to disapear
+        // when the center of the ball touches the corner.
 
 
     }
@@ -79,6 +112,11 @@ public class TableView {
 
     public Rectangle getPlayTable() {
         return playTable;
+    }
+
+
+    public ArrayList<Circle> getHoles() {
+        return holes;
     }
 }
 

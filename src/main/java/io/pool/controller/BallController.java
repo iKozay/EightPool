@@ -3,6 +3,7 @@ package io.pool.controller;
 import io.pool.model.BallModel;
 import io.pool.model.VelocityVector;
 import io.pool.view.BallView;
+import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
@@ -152,4 +153,7 @@ public class BallController {
     }
 
 
+    public ArrayList<BallView> ballViewArrayList() {
+        return bViewList;
+    }
 }

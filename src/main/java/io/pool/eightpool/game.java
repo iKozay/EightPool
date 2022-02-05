@@ -39,6 +39,7 @@ public class game extends Application {
 
         BallController ballController = new BallController(root);
 
+        tableController.setBallController(ballController);
 
         GameLoopTimer gameLoopTimer = new GameLoopTimer() {
             @Override
