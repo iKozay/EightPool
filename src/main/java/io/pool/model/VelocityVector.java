@@ -1,32 +1,50 @@
 package io.pool.model;
 
-import javafx.geometry.Point2D;
-
-import java.util.Vector;
-
 public class VelocityVector {
     private double x;
     private double y;
-    // TODO I just added these. I think they will be useful
     private double angle;
-    private double vector;
+    private double direction;
     private double magnitude;
 
     public VelocityVector(double x, double y) {
         this.x = x;
         this.y = y;
+        updateVector();
     }
 
     public void add(VelocityVector vector){
         this.x += vector.getX();
         this.y += vector.getY();
+        updateVector();
     }
     public void mul(VelocityVector vector){
         this.x *= vector.getX();
         this.y *= vector.getY();
+        updateVector();
     }
-    public VelocityVector sub(VelocityVector vector){
-        return new VelocityVector(x - vector.getX(), y - vector.getY());
+    public void sub(VelocityVector vector){
+        this.x -= vector.getX();
+        this.y -= vector.getY();
+        updateVector();
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public double getDirection() {
+        return direction;
+    }
+
+    public double getMagnitude() {
+        return magnitude;
+    }
+
+    private void updateVector(){
+        this.magnitude = Math.sqrt(Math.pow(this.x, 2)+Math.pow(this.y, 2));
+        this.direction =this.y/this.x;
+        this.angle =Math.atan(this.direction);
     }
 
 

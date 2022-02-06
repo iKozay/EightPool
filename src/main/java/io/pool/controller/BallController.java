@@ -18,15 +18,18 @@ public class BallController {
 
     private static ArrayList<BallView> bViewList = new ArrayList<>();
     private static ArrayList<BallModel> bModelList = new ArrayList<>();
-    final double GRAVITATIONAL_FORCE = 9.8;
-    final double MASS_BALL_KG = 0.16;
 
     public BallController(Pane root) {
         try {
             //prepareGame(root);
             bModelList.add(new BallModel(10, 1, new Image(new File("resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm())));
             bViewList.add(new BallView(this,bModelList.get(0).getImg(),bModelList.get(0).getRadius()));
-            root.getChildren().add(bViewList.get(0).getBall());
+
+            bModelList.add(new BallModel(10, 2, new Image(new File("resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm())));
+            bViewList.add(new BallView(this,bModelList.get(1).getImg(),bModelList.get(1).getRadius()));
+            bModelList.get(1).setBallPosition(new Point2D(600,350));
+
+            root.getChildren().addAll(bViewList.get(0).getBall(),bViewList.get(1).getBall());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -68,7 +71,9 @@ public class BallController {
         for (BallModel ballA : bModelList) {
             for (BallModel ballB : bModelList) {
                 if (!ballA.equals(ballB)) {
-                    ballA.getBallPosition().distance(ballB.getBallPosition());
+                    if((ballA.isMovingBall())||(ballB.isMovingBall())){
+                        collisionHandler(ballA,ballB);
+                    }
                 }
             }
         }
@@ -77,17 +82,20 @@ public class BallController {
 
     private void updateBallPosition() {
         for (BallModel bModel : bModelList) {
-            bModel.applyFriction();
-            bModel.checkIfStopped();
+            // TODO Friction is too high. To Adjust
+            //applyFriction(bModel);
             BallView bView = bViewList.get(bModelList.indexOf(bModel));
             bModel.setBallPosition(bModel.getBallPosition().add(bModel.getBallVector().getX(),bModel.getBallVector().getY()));
             bView.getBall().setLayoutX(bModel.getBallPosition().getX());
             bView.getBall().setLayoutY(bModel.getBallPosition().getY());
             Rotate rx = new Rotate(bModel.getBallVector().getY(), 0,0,0,Rotate.X_AXIS);
             Rotate ry = new Rotate(-bModel.getBallVector().getX(), 0,0,0, Rotate.Y_AXIS);
-            Rotate rz = new Rotate(0, 0,0,0, Rotate.Z_AXIS);
-            bView.getBall().getTransforms().addAll(rx,ry,rz);
+            bView.getBall().getTransforms().addAll(rx,ry);
         }
+    }
+    public void applyFriction(BallModel bModel){
+        bModel.getBallVector().setX(bModel.getBallVector().getX()*bModel.getAcceleration());
+        bModel.getBallVector().setY(bModel.getBallVector().getY()*bModel.getAcceleration());
     }
 
 
@@ -108,22 +116,16 @@ public class BallController {
 
         //Slope of ball and direction
         //ball1
-        double ball1YSlope = ball1.getBallVector().getY();
-        double ball1XSlope = ball1.getBallVector().getX();
-        double magnitudeBall1 = Math.sqrt(Math.pow(ball1XSlope, 2)+Math.pow(ball1YSlope, 2));
-        double directionBall1 = ball1YSlope/ball1XSlope;
-        double angleOfDirectionBall1 = Math.atan(directionBall1);
+        double magnitudeBall1 = ball1.getBallVector().getMagnitude();
+        double angleOfDirectionBall1 = ball1.getBallVector().getAngle();
         //rotate vector so that it is parallel to the perpendicular line
         double tempAngleBall1 = angleOfDirectionBall1 - anglePerpendicularBetweenBalls;
         double rotatedXComponentBall1 = Math.cos(tempAngleBall1)*magnitudeBall1;
         double rotatedYComponentBall1 = Math.sin(tempAngleBall1)*magnitudeBall1;
 
         //ball2
-        double ball2YSlope = ball2.getBallVector().getY();
-        double ball2XSlope = ball2.getBallVector().getX();
-        double magnitudeBall2 = Math.sqrt(Math.pow(ball2XSlope, 2)+Math.pow(ball2YSlope, 2));
-        double directionBall2 = ball2YSlope/ball2XSlope;
-        double angleOfDirectionBall2 = Math.atan(directionBall2);
+        double magnitudeBall2 = ball2.getBallVector().getMagnitude();
+        double angleOfDirectionBall2 = ball2.getBallVector().getAngle();
         //rotate vector so that it is parallel to the perpendicular line
         double tempAngleBall2 = angleOfDirectionBall2 - anglePerpendicularBetweenBalls;
         double rotatedXComponentBall2 = Math.cos(tempAngleBall2)*magnitudeBall2;

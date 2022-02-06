@@ -19,6 +19,10 @@ public class BallModel {
     private int radius;
     private int number;
     private Image img;
+    public final static double GRAVITATIONAL_FORCE = 9.8;
+    public final static double MASS_BALL_KG = 0.16;
+    private boolean movingBall;
+
 
     public BallModel(int radius, int number, Image img){
         this.radius = radius;
@@ -27,6 +31,7 @@ public class BallModel {
         ballVector = new VelocityVector(10,10);
         acceleration = 0.99;
         this.img  = img;
+        this.movingBall=true;// because it has a velocity
     }
 
 
@@ -56,12 +61,12 @@ public class BallModel {
         return previousPosition.distance(ballPosition);
     }
 
-    public void applyFriction(){
-        ballVector.setX(ballVector.getX()*acceleration);
-        ballVector.setY(ballVector.getY()*acceleration);
+    public double getAcceleration() {
+        return acceleration;
     }
-    public void checkIfStopped(){
 
+    public void setAcceleration(double acceleration) {
+        this.acceleration = acceleration;
     }
 
     @Override
@@ -74,5 +79,13 @@ public class BallModel {
 
     public Image getImg() {
         return img;
+    }
+
+    public boolean isMovingBall() {
+        return movingBall;
+    }
+
+    public void setMovingBall(boolean movingBall) {
+        this.movingBall = movingBall;
     }
 }
