@@ -13,19 +13,42 @@ public class VelocityVector {
         updateVector();
     }
 
+    /*
     public void add(VelocityVector vector){
         this.x += vector.getX();
         this.y += vector.getY();
         updateVector();
+    }
+     */
+    public VelocityVector add(VelocityVector vector){
+        this.x += vector.getX();
+        this.y += vector.getY();
+        return new VelocityVector(this.x, this.y);
     }
     public void mul(VelocityVector vector){
         this.x *= vector.getX();
         this.y *= vector.getY();
         updateVector();
     }
+    public VelocityVector mul(double number){
+        this.x *= number;
+        this.y *= number;
+        return new VelocityVector(this.x, this.y);
+    }
     public void sub(VelocityVector vector){
         this.x -= vector.getX();
         this.y -= vector.getY();
+        updateVector();
+    }
+
+    public void div(VelocityVector vector){
+        this.x /= vector.getX();
+        this.y /= vector.getY();
+        updateVector();
+    }
+    public void div(double number){
+        this.x /= number;
+        this.y /= number;
         updateVector();
     }
 

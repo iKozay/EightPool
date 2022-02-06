@@ -103,58 +103,58 @@ public class BallController {
 
 
     private void collisionHandler(BallModel ball1, BallModel ball2){
-        //Balls positions
-        Point2D ball1Pos = ball1.getBallPosition();
-        Point2D ball2Pos = ball2.getBallPosition();
+        //https://vobarian.com/collisions/2dcollisions2.pdf
+        /**1
+         * find unit normal and unit tanget vector
+         */
+        double normalXComponent = ball2.getBallPosition().getX()-ball1.getBallPosition().getX();
+        double normalYComponent = ball2.getBallPosition().getY()-ball1.getBallPosition().getY();
+        VelocityVector normalVectorInitial = new VelocityVector(normalXComponent, normalYComponent);
+        //double normalMagnitude = Math.sqrt(Math.pow(normalXComponent, 2)+Math.pow(normalYComponent, 2));
+        //double normalAngle = Math.atan(normalYComponent/normalXComponent);
+        VelocityVector unitNormalVector = new VelocityVector(normalXComponent/Math.abs(normalXComponent), normalYComponent/Math.abs(normalYComponent));
+        VelocityVector unitTangentVector = new VelocityVector(-unitNormalVector.getY(), unitNormalVector.getX());
 
-        //perpendicular line between point of contact ball 1 and ball 2
-        double xSlope = ball2Pos.getX()-ball1Pos.getX();
-        double ySlope = ball2Pos.getY()-ball1Pos.getY();
-        double slope = ySlope/xSlope;// thats L1
+        /**2 (step 2 is skipped because we already have the balls vectors
+         * Resolve velocity vectors of ball 1 and 2 into normal and tangential components
+         * this is done by using the dot product of the balls initial velocity and using the unitVectors
+         */
+        double v1n = (unitNormalVector.getX()*ball1.getBallVector().getX())+(unitNormalVector.getY()*ball1.getBallVector().getY());
+        double v1t = (unitTangentVector.getX()*ball1.getBallVector().getX())+(unitTangentVector.getY()*ball1.getBallVector().getY());
+        double v2n = (unitNormalVector.getX()*ball2.getBallVector().getX())+(unitNormalVector.getY()*ball2.getBallVector().getY());
+        double v2t = (unitTangentVector.getX()*ball2.getBallVector().getX())+(unitTangentVector.getY()*ball2.getBallVector().getY());
 
-        //find angle between perpendicular line and x axis
-        double anglePerpendicularBetweenBalls = Math.atan(slope);// thats theta
+        /**3
+         * Find new tangential velocities
+         * they are equal to the initial ones
+         */
+        double v1tp = v1t;
+        double v2tp = v2t;
 
+        /**4
+         * Find new normal velocities
+         * all the instances of 1 in this equation are substitutes for mass
+         * this is assuming all the balls have equal mass
+         */
+        double v1np = ((v1n*1)+(2*1*v2n))/(1+1);
+        double v2np = ((v2n*1)+(2*1*v1n))/(1+1);
 
+        /**5
+         * Convert scalar normal and tangential velocites into vectors
+         */
+        VelocityVector normalVectorFinalBall1 = unitNormalVector.mul(v1np);
+        VelocityVector normalVectorFinalBall2 = unitNormalVector.mul(v2np);
+        VelocityVector tangentialVectorFinalBall1 = unitTangentVector.mul(v1tp);
+        VelocityVector tangentialVectorFinalBall2 = unitTangentVector.mul(v2tp);
 
-        //Slope of ball and direction
-        //ball1
-        double magnitudeBall1 = ball1.getBallVector().getMagnitude();
-        double angleOfDirectionBall1 = ball1.getBallVector().getAngle();
-        //rotate vector so that it is parallel to the perpendicular line
-        double tempAngleBall1 = angleOfDirectionBall1 - anglePerpendicularBetweenBalls;
-        double rotatedXComponentBall1 = Math.cos(tempAngleBall1)*magnitudeBall1;
-        double rotatedYComponentBall1 = Math.sin(tempAngleBall1)*magnitudeBall1;
+        /**6
+         * Add normal and tangential vectors for each ball
+         */
+        VelocityVector finalVectorBall1 = normalVectorFinalBall1.add(tangentialVectorFinalBall1);
+        VelocityVector finalVectorBall2 = normalVectorFinalBall2.add(tangentialVectorFinalBall2);
 
-        //ball2
-        double magnitudeBall2 = ball2.getBallVector().getMagnitude();
-        double angleOfDirectionBall2 = ball2.getBallVector().getAngle();
-        //rotate vector so that it is parallel to the perpendicular line
-        double tempAngleBall2 = angleOfDirectionBall2 - anglePerpendicularBetweenBalls;
-        double rotatedXComponentBall2 = Math.cos(tempAngleBall2)*magnitudeBall2;
-        double rotatedYComponentBall2 = Math.sin(tempAngleBall2)*magnitudeBall1;
-
-        //switch these the two x components of each ball(the components parallel to the perpendicular line)
-        double tempRotatedXBall2 = rotatedXComponentBall2;
-        rotatedXComponentBall2 = rotatedXComponentBall1;
-        rotatedXComponentBall1 = tempRotatedXBall2;
-
-        //find the magnitude of each new vector
-        //ball1
-        double newMagnitudeBall1 = Math.sqrt(Math.pow(rotatedXComponentBall1, 2)+Math.pow(rotatedYComponentBall1, 2));
-        //ball2
-        double newMagnitudeBall2 = Math.sqrt(Math.pow(rotatedXComponentBall2, 2)+Math.pow(rotatedYComponentBall2, 2));
-
-        //rotate back the problem to its initial state
-        //use initial angles
-        double newXBall1 = Math.cos(angleOfDirectionBall1)*newMagnitudeBall1;
-        double newYBall1 = Math.sin(angleOfDirectionBall1)*newMagnitudeBall1;
-        double newXBall2 = Math.cos(angleOfDirectionBall2)*newMagnitudeBall2;
-        double newYBall2 = Math.sin(angleOfDirectionBall2)*newMagnitudeBall2;
-
-        //setting the new vectors to each ball
-        ball1.setBallVector(new VelocityVector(newXBall1, newYBall1));
-        ball2.setBallVector(new VelocityVector(newXBall2, newYBall2));
+        ball1.setBallVector(finalVectorBall1);
+        ball2.setBallVector(finalVectorBall2);
     }
 
 
