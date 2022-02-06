@@ -60,6 +60,7 @@ public class TableView {
 
         root.getChildren().add(table); // adding the table to the main pain of the project.
 
+/*
         Circle upLeftCorner = new Circle();
         upLeftCorner.setRadius(30);
         upLeftCorner.setCenterX(50);
@@ -99,6 +100,7 @@ public class TableView {
 
         table.getChildren().addAll(upLeftCorner, downLeftCorner, upRightCorner, downRightCorner, upCenterCorner, downCenterCorner);
 
+*/
 
         // make the corners simply circles, and make it possible for you the ball
         // controller to find the center mass of the ball, which will help you to disapear

@@ -22,12 +22,13 @@ public class BallController {
     public BallController(Pane root) {
         try {
             //prepareGame(root);
-            bModelList.add(new BallModel(10, 1, new Image(new File("resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm())));
-            bViewList.add(new BallView(this,bModelList.get(0).getImg(),bModelList.get(0).getRadius()));
+            bModelList.add(new BallModel(15, 1, new Image(new File("resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm())));
+            bViewList.add(new BallView(this,bModelList.get(0).getImg(),BallModel.getRadius()));
 
-            bModelList.add(new BallModel(10, 2, new Image(new File("resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm())));
-            bViewList.add(new BallView(this,bModelList.get(1).getImg(),bModelList.get(1).getRadius()));
+            bModelList.add(new BallModel(15, 2, new Image(new File("resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm())));
+            bViewList.add(new BallView(this,bModelList.get(1).getImg(),BallModel.getRadius()));
             bModelList.get(1).setBallPosition(new Point2D(600,350));
+            bModelList.get(1).setBallVector(new VelocityVector(0,0));
 
             root.getChildren().addAll(bViewList.get(0).getBall(),bViewList.get(1).getBall());
         } catch (MalformedURLException e) {
@@ -43,7 +44,7 @@ public class BallController {
             }else{
                 bModelList.add(new BallModel(20, i, new Image(new File("resources/billiards/ball"+i+".jpg").toURI().toURL().toExternalForm())));
             }
-            bViewList.add(new BallView(this,bModelList.get(i-1).getImg(),bModelList.get(i-1).getRadius()));
+            bViewList.add(new BallView(this,bModelList.get(i-1).getImg(),BallModel.getRadius()));
             root.getChildren().add(bViewList.get(i-1).getBall());
         }
     }
@@ -51,7 +52,7 @@ public class BallController {
     public void detectCollision(Rectangle tableBorders){
         detectCollisionWithTable(tableBorders);
         detectCollisionWithOtherBalls();
-
+        updateBallPosition();
     }
 
     private void detectCollisionWithTable(Rectangle tableBorders){
@@ -65,19 +66,20 @@ public class BallController {
                 bModel.setBallVector(new VelocityVector(bModel.getBallVector().getX(), newYVelocity));
             }
         }
-        updateBallPosition();
     }
     private void detectCollisionWithOtherBalls(){
         for (BallModel ballA : bModelList) {
             for (BallModel ballB : bModelList) {
                 if (!ballA.equals(ballB)) {
                     if((ballA.isMovingBall())||(ballB.isMovingBall())){
-                        collisionHandler(ballA,ballB);
+                        if(ballA.getBallPosition().distance(ballB.getBallPosition())<=(2*BallModel.getRadius())){
+                            System.out.println("Collision");
+                            collisionHandler(ballA,ballB);
+                        }
                     }
                 }
             }
         }
-        updateBallPosition();
         }
 
     private void updateBallPosition() {
@@ -85,6 +87,7 @@ public class BallController {
             // TODO Friction is too high. To Adjust
             //applyFriction(bModel);
             BallView bView = bViewList.get(bModelList.indexOf(bModel));
+            System.out.println(bModel.getBallVector().getX()+","+bModel.getBallVector().getY());
             bModel.setBallPosition(bModel.getBallPosition().add(bModel.getBallVector().getX(),bModel.getBallVector().getY()));
             bView.getBall().setLayoutX(bModel.getBallPosition().getX());
             bView.getBall().setLayoutY(bModel.getBallPosition().getY());
@@ -107,10 +110,10 @@ public class BallController {
         //perpendicular line between point of contact ball 1 and ball 2
         double xSlope = ball2Pos.getX()-ball1Pos.getX();
         double ySlope = ball2Pos.getY()-ball1Pos.getY();
-        double slope = ySlope/xSlope;
+        double slope = ySlope/xSlope;// thats L1
 
         //find angle between perpendicular line and x axis
-        double anglePerpendicularBetweenBalls = Math.atan(slope);
+        double anglePerpendicularBetweenBalls = Math.atan(slope);// thats theta
 
 
 

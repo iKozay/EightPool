@@ -16,7 +16,7 @@ public class BallModel {
     private Point2D ballPosition;
     private VelocityVector ballVector;
     private Point2D previousPosition;
-    private int radius;
+    public static int radius;
     private int number;
     private Image img;
     public final static double GRAVITATIONAL_FORCE = 9.8;
@@ -28,7 +28,7 @@ public class BallModel {
         this.radius = radius;
         this.number = number;
         ballPosition = new Point2D(500,250);
-        ballVector = new VelocityVector(10,10);
+        ballVector = new VelocityVector(7,5);
         acceleration = 0.99;
         this.img  = img;
         this.movingBall=true;// because it has a velocity
@@ -53,7 +53,7 @@ public class BallModel {
         this.ballVector = ballVector;
     }
 
-    public int getRadius() {
+    public static int getRadius() {
         return radius;
     }
 
