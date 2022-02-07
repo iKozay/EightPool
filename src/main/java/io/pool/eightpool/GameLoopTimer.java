@@ -8,9 +8,9 @@ abstract class GameLoopTimer extends AnimationTimer {
     /**Animation Duration Double Property. Keeps track of animation time to the nanosecond*/
     DoubleProperty animationDuration = new SimpleDoubleProperty(0L);
     /**The time that the animation started*/
-    long animationStartTime;
+    long animationStartTime=0;
     /**The time  of the last frame in nanoseconds*/
-    long lastFrameTime;
+    long lastFrameTime=0;
     /**Boolean to see if the game is paused*/
     boolean isPaused;
     /**Boolean to see if the game is active*/
@@ -70,6 +70,7 @@ abstract class GameLoopTimer extends AnimationTimer {
         super.start();
         isActive = true;
         isPaused = false;
+        animationDuration.set(0);
     }
     /**
      * Override of the AnimationTimer stop() method.
@@ -93,8 +94,8 @@ abstract class GameLoopTimer extends AnimationTimer {
     public void handle(long now) {
         if (!isPaused) {
             long animDuration = now - animationStartTime;
-            animationDuration.set(animDuration / 1e9);
-            float secondsSinceLastFrame = (float) ((now - lastFrameTime) / 1e9);
+            animationDuration.set(animDuration);
+            float secondsSinceLastFrame = (float) ((now - lastFrameTime));
             lastFrameTime = now;
             tick(secondsSinceLastFrame);
         }

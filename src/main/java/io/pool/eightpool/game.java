@@ -20,6 +20,7 @@ public class game extends Application {
     int increment=1;
     @Override
     public void start(Stage stage) throws MalformedURLException {
+        // TODO Units: 0.04pixels/m
         //TODO Links for 3D Balls:
         // https://openjfx.io/javadoc/16/javafx.graphics/javafx/scene/paint/PhongMaterial.html
         // https://stackoverflow.com/questions/31382634/javafx-3d-rotations
@@ -44,7 +45,8 @@ public class game extends Application {
         GameLoopTimer gameLoopTimer = new GameLoopTimer() {
             @Override
             public void tick(float secondsSinceLastFrame) {
-                ballController.detectCollision(tableView.getPlayTable());
+                System.out.println(secondsSinceLastFrame);
+                ballController.detectCollision(tableView.getPlayTable(),0);
             }
         };
         gameLoopTimer.start();
@@ -53,16 +55,6 @@ public class game extends Application {
         stage.show();
 
     }
-public void moveSphere(){
-    if(sphere.getLayoutX()<=100){
-        increment=1;
-    }else if (sphere.getLayoutX()>=500){
-        increment=-1;
-    }
-    sphere.setLayoutX(sphere.getLayoutX()+increment);
-    Rotate r = new Rotate(increment*5, new Point3D(sphere.getLayoutX(),sphere.getLayoutY(),0));
-    sphere.getTransforms().add(r);
-}
     public static void main(String[] args) {
         launch();
     }

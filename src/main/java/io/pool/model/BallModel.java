@@ -19,7 +19,7 @@ public class BallModel {
     public static int radius;
     private int number;
     private Image img;
-    public final static double GRAVITATIONAL_FORCE = 9.8;
+    public final static double GRAVITATIONAL_FORCE = -9.8;
     public final static double MASS_BALL_KG = 0.16;
     private boolean movingBall;
 
@@ -27,8 +27,9 @@ public class BallModel {
     public BallModel(int radius, int number, Image img){
         this.radius = radius;
         this.number = number;
+        Random rnd = new Random();
         ballPosition = new Point2D(500,250);
-        ballVector = new VelocityVector(7,5);
+        ballVector = new VelocityVector(rnd.nextInt(7)+1,rnd.nextInt(7)+1);
         acceleration = 0.99;
         this.img  = img;
         this.movingBall=true;// because it has a velocity
