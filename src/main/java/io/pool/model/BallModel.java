@@ -15,6 +15,7 @@ public class BallModel {
     private double acceleration;
     private Point2D ballPosition;
     private VelocityVector ballVector;
+    private VelocityVector previousBallVector;
     private Point2D previousPosition;
     public static int radius;
     private int number;
@@ -29,7 +30,8 @@ public class BallModel {
         this.number = number;
         Random rnd = new Random();
         ballPosition = new Point2D(500,250);
-        ballVector = new VelocityVector(rnd.nextInt(7)+1,rnd.nextInt(7)+1);
+        previousBallVector = new VelocityVector(0,0);
+        ballVector = new VelocityVector(2,2);
         acceleration = 0.99;
         this.img  = img;
         this.movingBall=true;// because it has a velocity
@@ -51,7 +53,16 @@ public class BallModel {
     }
 
     public void setBallVector(VelocityVector ballVector) {
+        this.previousBallVector = this.ballVector;
         this.ballVector = ballVector;
+    }
+
+    public double getDeltaV(){
+        return new VelocityVector(this.ballVector.getX()-this.previousBallVector.getX(),this.ballVector.getY()-this.previousBallVector.getY()).getMagnitude();
+    }
+
+    public VelocityVector getPreviousBallVector() {
+        return previousBallVector;
     }
 
     public static int getRadius() {

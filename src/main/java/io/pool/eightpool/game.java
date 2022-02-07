@@ -45,8 +45,9 @@ public class game extends Application {
         GameLoopTimer gameLoopTimer = new GameLoopTimer() {
             @Override
             public void tick(float secondsSinceLastFrame) {
-                System.out.println(secondsSinceLastFrame);
-                ballController.detectCollision(tableView.getPlayTable(),0);
+                if(secondsSinceLastFrame<1) {
+                    ballController.detectCollision(tableView.getPlayTable(), secondsSinceLastFrame);
+                }
             }
         };
         gameLoopTimer.start();

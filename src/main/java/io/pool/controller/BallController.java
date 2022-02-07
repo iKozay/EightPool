@@ -20,16 +20,16 @@ public class BallController {
 
     public BallController(Pane root) {
         try {
-            prepareGame(root);
-            //bModelList.add(new BallModel(15, 1, new Image(new File("resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm())));
-            //bViewList.add(new BallView(this,bModelList.get(0).getImg(),BallModel.getRadius()));
+            //prepareGame(root);
+            bModelList.add(new BallModel(15, 1, new Image(new File("resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm())));
+            bViewList.add(new BallView(this,bModelList.get(0).getImg(),BallModel.getRadius()));
 
             //bModelList.add(new BallModel(15, 2, new Image(new File("resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm())));
             //bViewList.add(new BallView(this,bModelList.get(1).getImg(),BallModel.getRadius()));
             ///bModelList.get(1).setBallPosition(new Point2D(600,350));
             //bModelList.get(1).setBallVector(new VelocityVector(0,0));
             //bModelList.get(1).setMovingBall(false);
-            //root.getChildren().addAll(bViewList.get(0).getBall(),bViewList.get(1).getBall());
+            root.getChildren().addAll(bViewList.get(0).getBall());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -63,6 +63,7 @@ public class BallController {
             if (((bModel.getBallPosition().getY() - BallModel.getRadius()) <= (tableBorders.getY() + 100)) || ((bModel.getBallPosition().getY() + BallModel.getRadius()) >= ((tableBorders.getY() + 100) + tableBorders.getHeight()))) {
                 double newYVelocity = -bModel.getBallVector().getY();
                 bModel.setBallVector(new VelocityVector(bModel.getBallVector().getX(), newYVelocity));
+                System.out.println("Vector: " + bModel.getBallVector());
             }
         }
     }
@@ -116,14 +117,16 @@ public class BallController {
         }
     }
     public void applyFriction(BallModel bModel, double time){
+        //TODO friction headache
         double frictionForce = 0.01*BallModel.MASS_BALL_KG*BallModel.GRAVITATIONAL_FORCE;
-        double ballForce = (BallModel.MASS_BALL_KG*bModel.getBallVector().getMagnitude())/time;
+        double ballForce = (BallModel.MASS_BALL_KG*bModel.getDeltaV())/time;
+        System.out.println("Friction: "+frictionForce);
+        System.out.println("BallForce: "+ballForce);
         double newBallForce = ballForce+frictionForce;
         double velocityMag = (newBallForce*time)/BallModel.MASS_BALL_KG;
         double angle = bModel.getBallVector().getAngle();
-        VelocityVector newVelocity = new VelocityVector(Math.cos(angle)*velocityMag,Math.sin(angle)*velocityMag);
-        bModel.getBallVector().setX(newVelocity.getX());
-        bModel.getBallVector().setY(newVelocity.getY());
+        VelocityVector newVelocity = new VelocityVector(Math.cos(angle)*velocityMag-bModel.getBallVector().getX(),Math.sin(angle)*velocityMag-bModel.getBallVector().getY());
+        bModel.setBallVector(newVelocity);
     }
 
 

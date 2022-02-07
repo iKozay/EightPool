@@ -94,8 +94,8 @@ abstract class GameLoopTimer extends AnimationTimer {
     public void handle(long now) {
         if (!isPaused) {
             long animDuration = now - animationStartTime;
-            animationDuration.set(animDuration);
-            float secondsSinceLastFrame = (float) ((now - lastFrameTime));
+            animationDuration.set(animDuration/1e9);
+            float secondsSinceLastFrame = (float) ((now - lastFrameTime)/1e9);
             lastFrameTime = now;
             tick(secondsSinceLastFrame);
         }
