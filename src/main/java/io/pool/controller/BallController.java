@@ -8,7 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
-import java.math.*;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -29,7 +28,7 @@ public class BallController {
             bViewList.add(new BallView(this,bModelList.get(1).getImg(),BallModel.getRadius()));
             bModelList.get(1).setBallPosition(new Point2D(600,350));
             bModelList.get(1).setBallVector(new VelocityVector(0,0));
-
+            bModelList.get(1).setMovingBall(false);
             root.getChildren().addAll(bViewList.get(0).getBall(),bViewList.get(1).getBall());
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -52,16 +51,17 @@ public class BallController {
     public void detectCollision(Rectangle tableBorders){
         detectCollisionWithTable(tableBorders);
         detectCollisionWithOtherBalls();
+        overlapPrevention();
         updateBallPosition();
     }
 
     private void detectCollisionWithTable(Rectangle tableBorders){
         for (BallModel bModel : bModelList) {
-            if ((bModel.getBallPosition().getX() - bModel.getRadius()) <= (tableBorders.getX() + 300) || (bModel.getBallPosition().getX() + bModel.getRadius()) >= ((tableBorders.getX() + 300) + tableBorders.getWidth())) {
+            if ((bModel.getBallPosition().getX() - BallModel.getRadius()) <= (tableBorders.getX() + 300) || (bModel.getBallPosition().getX() + BallModel.getRadius()) >= ((tableBorders.getX() + 300) + tableBorders.getWidth())) {
                 double newXVelocity = -bModel.getBallVector().getX();
                 bModel.setBallVector(new VelocityVector(newXVelocity, bModel.getBallVector().getY()));
             }
-            if (((bModel.getBallPosition().getY() - bModel.getRadius()) <= (tableBorders.getY() + 100)) || ((bModel.getBallPosition().getY() + bModel.getRadius()) >= ((tableBorders.getY() + 100) + tableBorders.getHeight()))) {
+            if (((bModel.getBallPosition().getY() - BallModel.getRadius()) <= (tableBorders.getY() + 100)) || ((bModel.getBallPosition().getY() + BallModel.getRadius()) >= ((tableBorders.getY() + 100) + tableBorders.getHeight()))) {
                 double newYVelocity = -bModel.getBallVector().getY();
                 bModel.setBallVector(new VelocityVector(bModel.getBallVector().getX(), newYVelocity));
             }
@@ -82,12 +82,49 @@ public class BallController {
         }
         }
 
+    private void overlapPrevention() {
+        for (BallModel ballA : bModelList) {
+            for (BallModel ballB : bModelList) {
+                if (!ballA.equals(ballB)) {
+                    Point2D ballA_NextFramePos = ballA.getBallPosition().add(ballA.getBallVector().getX(), ballA.getBallVector().getY());
+                    Point2D ballB_NextFramePos = ballB.getBallPosition().add(ballB.getBallVector().getX(), ballB.getBallVector().getY());
+                    double distanceBetween = ballA_NextFramePos.distance(ballB_NextFramePos);
+                    if (distanceBetween <= (2 * BallModel.getRadius())) {
+                        if ((ballA.isMovingBall()) && (ballB.isMovingBall())) {
+                            //Point2D newCoordinateA = new Point2D(ballA_NextFramePos.getX()*proportionFactor,ballA_NextFramePos.getY()*proportionFactor);
+                            //Point2D newCoordinateB = new Point2D(ballB_NextFramePos.getX()*proportionFactor,ballB_NextFramePos.getY()*proportionFactor);
+                            //ballA.setBallPosition(newCoordinateA);
+                            //ballB.setBallPosition(newCoordinateB);
+                        } else {
+                            BallModel movingBall;
+                            if (ballA.isMovingBall()) {
+                                movingBall = ballA;
+                            } else{
+                                movingBall = ballB;
+                            }
+                            System.out.println("Old Coordinate: "+movingBall.getBallPosition());
+                            double angle = movingBall.getBallVector().getAngle();
+                            Point2D newCoordinate = new Point2D(Math.cos(angle) * (2 * BallModel.getRadius()+movingBall.getBallPosition().magnitude()), Math.sin(angle) * (2 * BallModel.getRadius()+movingBall.getBallPosition().magnitude()));
+                            System.out.println("New Coordinate: "+newCoordinate);
+                            movingBall.setBallPosition(newCoordinate);
+                            Point2D newPosA = ballA.getBallPosition().add(ballA.getBallVector().getX(), ballA.getBallVector().getY());
+                            Point2D newPosB = ballB.getBallPosition().add(ballB.getBallVector().getX(), ballB.getBallVector().getY());
+                            double newdistanceBetween = newPosA.distance(newPosB);
+                            System.out.println(newdistanceBetween);
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private void updateBallPosition() {
         for (BallModel bModel : bModelList) {
             // TODO Friction is too high. To Adjust
             //applyFriction(bModel);
             BallView bView = bViewList.get(bModelList.indexOf(bModel));
-            System.out.println(bModel.getBallVector().getX()+","+bModel.getBallVector().getY());
+            bModel.setMovingBall(!bModel.getBallVector().isZero());
             bModel.setBallPosition(bModel.getBallPosition().add(bModel.getBallVector().getX(),bModel.getBallVector().getY()));
             bView.getBall().setLayoutX(bModel.getBallPosition().getX());
             bView.getBall().setLayoutY(bModel.getBallPosition().getY());

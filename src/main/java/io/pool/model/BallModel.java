@@ -88,4 +88,5 @@ public class BallModel {
     public void setMovingBall(boolean movingBall) {
         this.movingBall = movingBall;
     }
+
 }
