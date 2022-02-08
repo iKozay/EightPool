@@ -39,7 +39,7 @@ public class BallController {
         for (int i=1;i<=16;i++){
             if(i==16){
                 bModelList.add(new BallModel(15, i, new Image(new File("resources/billiards3D/white.jpg").toURI().toURL().toExternalForm())));
-                bModelList.get(i-1).setBallVector(new VelocityVector(0,0));
+                bModelList.get(i-1).setBallVector(new Point2D(0,0));
             }else{
                 bModelList.add(new BallModel(15, i, new Image(new File("resources/billiards3D/ball"+i+".jpg").toURI().toURL().toExternalForm())));
             }
@@ -58,12 +58,11 @@ public class BallController {
         for (BallModel bModel : bModelList) {
             if ((bModel.getBallPosition().getX() - BallModel.getRadius()) <= (tableBorders.getX() + 300) || (bModel.getBallPosition().getX() + BallModel.getRadius()) >= ((tableBorders.getX() + 300) + tableBorders.getWidth())) {
                 double newXVelocity = -bModel.getBallVector().getX();
-                bModel.setBallVector(new VelocityVector(newXVelocity, bModel.getBallVector().getY()));
+                bModel.setBallVector(new Point2D(newXVelocity, bModel.getBallVector().getY()));
             }
             if (((bModel.getBallPosition().getY() - BallModel.getRadius()) <= (tableBorders.getY() + 100)) || ((bModel.getBallPosition().getY() + BallModel.getRadius()) >= ((tableBorders.getY() + 100) + tableBorders.getHeight()))) {
                 double newYVelocity = -bModel.getBallVector().getY();
-                bModel.setBallVector(new VelocityVector(bModel.getBallVector().getX(), newYVelocity));
-                System.out.println("Vector: " + bModel.getBallVector());
+                bModel.setBallVector(new Point2D(bModel.getBallVector().getX(), newYVelocity));
             }
         }
     }
@@ -88,7 +87,8 @@ public class BallController {
                                     movingBall = ballB;
                                     restingBall = ballA;
                                 }
-                                double angle = movingBall.getBallVector().getAngle();
+                                // Check angle
+                                double angle = movingBall.getBallVector().angle(0,0);
                                 Point2D newCoordinate = new Point2D(Math.cos(angle) * (2 * BallModel.getRadius()), Math.sin(angle) * (2 * BallModel.getRadius()));
                                 movingBall.setBallPosition(newCoordinate);
 
@@ -104,10 +104,9 @@ public class BallController {
 
     private void updateBallPosition(double time) {
         for (BallModel bModel : bModelList) {
-            // TODO Friction is too high. To Adjust
             applyFriction(bModel,time);
             BallView bView = bViewList.get(bModelList.indexOf(bModel));
-            bModel.setMovingBall(!bModel.getBallVector().isZero());
+            bModel.setMovingBall(!bModel.getBallVector().equals(Point2D.ZERO));
             bModel.setBallPosition(bModel.getBallPosition().add(bModel.getBallVector().getX(),bModel.getBallVector().getY()));
             bView.getBall().setLayoutX(bModel.getBallPosition().getX());
             bView.getBall().setLayoutY(bModel.getBallPosition().getY());
@@ -118,11 +117,28 @@ public class BallController {
     }
 
     public void applyFriction(BallModel bModel, double time){
-        //TODO friction headache
-        double frictionForce = 0.01*BallModel.MASS_BALL_KG*BallModel.GRAVITATIONAL_FORCE;
-        double newBallForce = bModel.getBallForce()+frictionForce;
+        double frictionForceMag = 0.1*BallModel.MASS_BALL_KG*BallModel.GRAVITATIONAL_FORCE;
+        double angleRad = (Math.atan(bModel.getBallForce().getY() / bModel.getBallForce().getX())) + Math.PI;
+        double x=0, y=0;
+        Point2D newBallForce;
+        // see this if statement
+        if(!Double.isNaN(angleRad)) {
+            //System.out.println("AngleRad: " + angleRad);
+            Point2D frictionForce = new Point2D(Math.cos(angleRad) * frictionForceMag, Math.sin(angleRad) * frictionForceMag);
+            //System.out.println("Friction:" + frictionForce.magnitude());
+            //System.out.println("Force:" + bModel.getBallForce().magnitude());
+            if (bModel.getBallForce().getX() > frictionForce.getX()) {
+                x = bModel.getBallForce().getX() - frictionForce.getX();
+            }
+            if (bModel.getBallForce().getY() > frictionForce.getY()) {
+                y = bModel.getBallForce().getY() - frictionForce.getY();
+            }
+        }
+        newBallForce = new Point2D(x,y);
+        System.out.println("NewBallForce: "+newBallForce);
         bModel.setBallForce(newBallForce, time);
     }
+
 
 
 
@@ -133,11 +149,11 @@ public class BallController {
          */
         double normalXComponent = ball2.getBallPosition().getX()-ball1.getBallPosition().getX();
         double normalYComponent = ball2.getBallPosition().getY()-ball1.getBallPosition().getY();
-        VelocityVector normalVectorInitial = new VelocityVector(normalXComponent, normalYComponent);
+        Point2D normalVectorInitial = new Point2D(normalXComponent, normalYComponent);
         //double normalMagnitude = Math.sqrt(Math.pow(normalXComponent, 2)+Math.pow(normalYComponent, 2));
         //double normalAngle = Math.atan(normalYComponent/normalXComponent);
-        VelocityVector unitNormalVector = new VelocityVector(normalXComponent/Math.abs(normalXComponent), normalYComponent/Math.abs(normalYComponent));
-        VelocityVector unitTangentVector = new VelocityVector(-unitNormalVector.getY(), unitNormalVector.getX());
+        Point2D unitNormalVector = new Point2D(normalXComponent/Math.abs(normalXComponent), normalYComponent/Math.abs(normalYComponent));
+        Point2D unitTangentVector = new Point2D(-unitNormalVector.getY(), unitNormalVector.getX());
 
         /**2 (step 2 is skipped because we already have the balls vectors
          * Resolve velocity vectors of ball 1 and 2 into normal and tangential components
@@ -166,16 +182,16 @@ public class BallController {
         /**5
          * Convert scalar normal and tangential velocites into vectors
          */
-        VelocityVector normalVectorFinalBall1 = unitNormalVector.mul(v1np);
-        VelocityVector normalVectorFinalBall2 = unitNormalVector.mul(v2np);
-        VelocityVector tangentialVectorFinalBall1 = unitTangentVector.mul(v1tp);
-        VelocityVector tangentialVectorFinalBall2 = unitTangentVector.mul(v2tp);
+        Point2D normalVectorFinalBall1 = unitNormalVector.multiply(v1np);
+        Point2D normalVectorFinalBall2 = unitNormalVector.multiply(v2np);
+        Point2D tangentialVectorFinalBall1 = unitTangentVector.multiply(v1tp);
+        Point2D tangentialVectorFinalBall2 = unitTangentVector.multiply(v2tp);
 
         /**6
          * Add normal and tangential vectors for each ball
          */
-        VelocityVector finalVectorBall1 = normalVectorFinalBall1.add(tangentialVectorFinalBall1);
-        VelocityVector finalVectorBall2 = normalVectorFinalBall2.add(tangentialVectorFinalBall2);
+        Point2D finalVectorBall1 = normalVectorFinalBall1.add(tangentialVectorFinalBall1);
+        Point2D finalVectorBall2 = normalVectorFinalBall2.add(tangentialVectorFinalBall2);
 
         ball1.setBallVector(finalVectorBall1);
         ball2.setBallVector(finalVectorBall2);

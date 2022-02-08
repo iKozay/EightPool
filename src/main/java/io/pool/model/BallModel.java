@@ -12,11 +12,11 @@ import java.util.Random;
 
 public class BallModel {
 
-    private double ballForce;
-    private double acceleration;
+    private Point2D ballForce;
+    private Point2D acceleration;
     private Point2D ballPosition;
-    private VelocityVector ballVector;
-    private VelocityVector previousBallVector;
+    private Point2D ballVector;
+    private Point2D previousBallVector;
     private Point2D previousPosition;
     public static int radius;
     private int number;
@@ -31,23 +31,24 @@ public class BallModel {
         this.number = number;
         Random rnd = new Random();
         ballPosition = new Point2D(500,250);
-        previousBallVector = new VelocityVector(0,0);
-        ballVector = new VelocityVector(2,2);
-        this.ballForce = (getDeltaV()/0.015)*MASS_BALL_KG;
+        previousBallVector = new Point2D(0,0);
+        ballVector = new Point2D(3,2);
+        this.ballForce = new Point2D(1,1);
+        this.acceleration= new Point2D(0,0);
         this.img  = img;
         this.movingBall=true;// because it has a velocity
     }
 
-    public double getBallForce() {
+    public Point2D getBallForce() {
         return ballForce;
     }
 
-    public void setBallForce(double ballForce, double time) {
+    public void setBallForce(Point2D ballForce, double time) {
         this.ballForce = ballForce;
-        double acceleration = this.ballForce/MASS_BALL_KG;
-        double vMagnitude = ballVector.getMagnitude() + acceleration*time;
-        double angleBallVector = ballVector.getAngle();
-        VelocityVector newVelocity = new VelocityVector(Math.cos(angleBallVector)*vMagnitude,Math.sin(angleBallVector)*vMagnitude);
+        this.acceleration = this.ballForce.multiply(1/MASS_BALL_KG);
+        System.out.println("a*t: "+this.acceleration.multiply(time));
+        //error with line 50. Velocity does not get reduced even if acceleration is zero
+        Point2D newVelocity = ballVector.add((this.acceleration.multiply(time)));
         this.setBallVector(newVelocity);
     }
 
@@ -60,20 +61,16 @@ public class BallModel {
         this.ballPosition = ballPosition;
     }
 
-    public VelocityVector getBallVector() {
+    public Point2D getBallVector() {
         return ballVector;
     }
 
-    public void setBallVector(VelocityVector ballVector) {
+    public void setBallVector(Point2D ballVector) {
         this.previousBallVector = this.ballVector;
         this.ballVector = ballVector;
     }
 
-    public double getDeltaV(){
-        return new VelocityVector(this.ballVector.getX()-this.previousBallVector.getX(),this.ballVector.getY()-this.previousBallVector.getY()).getMagnitude();
-    }
-
-    public VelocityVector getPreviousBallVector() {
+    public Point2D getPreviousBallVector() {
         return previousBallVector;
     }
 
@@ -85,11 +82,11 @@ public class BallModel {
         return previousPosition.distance(ballPosition);
     }
 
-    public double getAcceleration() {
+    public Point2D getAcceleration() {
         return acceleration;
     }
 
-    public void setAcceleration(double acceleration) {
+    public void setAcceleration(Point2D acceleration) {
         this.acceleration = acceleration;
     }
 
