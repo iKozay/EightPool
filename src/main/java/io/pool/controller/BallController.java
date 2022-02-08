@@ -116,18 +116,14 @@ public class BallController {
             bView.getBall().getTransforms().addAll(rx,ry);
         }
     }
+
     public void applyFriction(BallModel bModel, double time){
         //TODO friction headache
         double frictionForce = 0.01*BallModel.MASS_BALL_KG*BallModel.GRAVITATIONAL_FORCE;
-        double ballForce = (BallModel.MASS_BALL_KG*bModel.getDeltaV())/time;
-        System.out.println("Friction: "+frictionForce);
-        System.out.println("BallForce: "+ballForce);
-        double newBallForce = ballForce+frictionForce;
-        double velocityMag = (newBallForce*time)/BallModel.MASS_BALL_KG;
-        double angle = bModel.getBallVector().getAngle();
-        VelocityVector newVelocity = new VelocityVector(Math.cos(angle)*velocityMag-bModel.getBallVector().getX(),Math.sin(angle)*velocityMag-bModel.getBallVector().getY());
-        bModel.setBallVector(newVelocity);
+        double newBallForce = bModel.getBallForce()+frictionForce;
+        bModel.setBallForce(newBallForce, time);
     }
+
 
 
     private void collisionHandler(BallModel ball1, BallModel ball2){

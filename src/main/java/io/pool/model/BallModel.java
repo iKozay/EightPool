@@ -12,6 +12,7 @@ import java.util.Random;
 
 public class BallModel {
 
+    private double ballForce;
     private double acceleration;
     private Point2D ballPosition;
     private VelocityVector ballVector;
@@ -32,12 +33,23 @@ public class BallModel {
         ballPosition = new Point2D(500,250);
         previousBallVector = new VelocityVector(0,0);
         ballVector = new VelocityVector(2,2);
-        acceleration = 0.99;
+        this.ballForce = (getDeltaV()/0.015)*MASS_BALL_KG;
         this.img  = img;
         this.movingBall=true;// because it has a velocity
     }
 
+    public double getBallForce() {
+        return ballForce;
+    }
 
+    public void setBallForce(double ballForce, double time) {
+        this.ballForce = ballForce;
+        double acceleration = this.ballForce/MASS_BALL_KG;
+        double vMagnitude = ballVector.getMagnitude() + acceleration*time;
+        double angleBallVector = ballVector.getAngle();
+        VelocityVector newVelocity = new VelocityVector(Math.cos(angleBallVector)*vMagnitude,Math.sin(angleBallVector)*vMagnitude);
+        this.setBallVector(newVelocity);
+    }
 
     public Point2D getBallPosition() {
         return ballPosition;
