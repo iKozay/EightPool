@@ -30,10 +30,10 @@ public class BallModel {
         this.radius = radius;
         this.number = number;
         Random rnd = new Random();
-        ballPosition = new Point2D(500,250);
-        previousBallVector = new Point2D(0,0);
-        ballVector = new Point2D(3,2);
-        this.ballForce = new Point2D(1,1);
+        this.ballPosition = new Point2D(900,250);
+        this.previousBallVector = new Point2D(0,0);
+        this.ballVector = new Point2D(-7,-5);
+        this.ballForce = new Point2D(0,0);
         this.acceleration= new Point2D(0,0);
         this.img  = img;
         this.movingBall=true;// because it has a velocity
@@ -45,13 +45,15 @@ public class BallModel {
 
     public void setBallForce(Point2D ballForce, double time) {
         this.ballForce = ballForce;
-        this.acceleration = this.ballForce.multiply(1/MASS_BALL_KG);
-        Point2D newVelocity;
-        if(!this.acceleration.equals(Point2D.ZERO)) {
-            newVelocity = ballVector.add((this.acceleration.multiply(time)));
-        }else{
-            newVelocity = new Point2D(0,0);
+        this.acceleration = this.ballForce.multiply(1 / MASS_BALL_KG);
+        Point2D newVelocity = ballVector.add((this.acceleration.multiply(time)));
+        if(Math.signum(newVelocity.getX())!=Math.signum(ballVector.getX())){
+            newVelocity = newVelocity.subtract(newVelocity.getX(),0);
         }
+        if(Math.signum(newVelocity.getY())!=Math.signum(ballVector.getY())){
+            newVelocity = newVelocity.subtract(0,newVelocity.getY());
+        }
+        System.out.println(newVelocity);
         this.setBallVector(newVelocity);
     }
 

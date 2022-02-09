@@ -56,14 +56,26 @@ public class BallController {
 
     private void detectCollisionWithTable(Rectangle tableBorders){
         for (BallModel bModel : bModelList) {
-            if ((bModel.getBallPosition().getX() - BallModel.getRadius()) <= (tableBorders.getX() + 300) || (bModel.getBallPosition().getX() + BallModel.getRadius()) >= ((tableBorders.getX() + 300) + tableBorders.getWidth())) {
-                double newXVelocity = -bModel.getBallVector().getX();
-                bModel.setBallVector(new Point2D(newXVelocity, bModel.getBallVector().getY()));
+            double newXVelocity = bModel.getBallVector().getX();
+            double newYVelocity = bModel.getBallVector().getY();
+            double newXPos = bModel.getBallPositionX();
+            double newYPos = bModel.getBallPositionY();
+            if ((bModel.getBallPosition().getX() - BallModel.getRadius()) <= (tableBorders.getX() + 300)) {
+                newXVelocity = -bModel.getBallVector().getX();
+                newXPos = tableBorders.getX() + 300 + BallModel.getRadius();
+            }else if((bModel.getBallPosition().getX() + BallModel.getRadius()) >= ((tableBorders.getX() + 300) + tableBorders.getWidth())){
+                newXVelocity = -bModel.getBallVector().getX();
+                newXPos = tableBorders.getX() + 300 + tableBorders.getWidth() - BallModel.getRadius();
             }
-            if (((bModel.getBallPosition().getY() - BallModel.getRadius()) <= (tableBorders.getY() + 100)) || ((bModel.getBallPosition().getY() + BallModel.getRadius()) >= ((tableBorders.getY() + 100) + tableBorders.getHeight()))) {
-                double newYVelocity = -bModel.getBallVector().getY();
-                bModel.setBallVector(new Point2D(bModel.getBallVector().getX(), newYVelocity));
+            if ((bModel.getBallPosition().getY() - BallModel.getRadius()) <= (tableBorders.getY() + 100)) {
+                newYVelocity = -bModel.getBallVector().getY();
+                newYPos = tableBorders.getY() + 100 + BallModel.getRadius();
+            }else if ((bModel.getBallPosition().getY() + BallModel.getRadius()) >= ((tableBorders.getY() + 100) + tableBorders.getHeight())){
+                newYVelocity = -bModel.getBallVector().getY();
+                newYPos = tableBorders.getY() + 100 +tableBorders.getHeight() - BallModel.getRadius();
             }
+            //bModel.setBallPosition(new Point2D(newXPos, newYPos));
+            bModel.setBallVector(new Point2D(newXVelocity, newYVelocity));
         }
     }
     private void detectCollisionWithOtherBalls(){
@@ -104,23 +116,35 @@ public class BallController {
 
     private void updateBallPosition(double time) {
         for (BallModel bModel : bModelList) {
-            applyFriction(bModel,time);
-            BallView bView = bViewList.get(bModelList.indexOf(bModel));
-            bModel.setMovingBall(!bModel.getBallVector().equals(Point2D.ZERO));
-            bModel.setBallPosition(bModel.getBallPosition().add(bModel.getBallVector().getX(),bModel.getBallVector().getY()));
-            bView.getBall().setLayoutX(bModel.getBallPosition().getX());
-            bView.getBall().setLayoutY(bModel.getBallPosition().getY());
-            Rotate rx = new Rotate(bModel.getBallVector().getY(), 0,0,0,Rotate.X_AXIS);
-            Rotate ry = new Rotate(-bModel.getBallVector().getX(), 0,0,0, Rotate.Y_AXIS);
-            bView.getBall().getTransforms().addAll(rx,ry);
+            if(bModel.isMovingBall()) {
+                applyFriction(bModel, time);
+                BallView bView = bViewList.get(bModelList.indexOf(bModel));
+                bModel.setMovingBall(!bModel.getBallVector().equals(Point2D.ZERO));
+                bModel.setBallPosition(bModel.getBallPosition().add(bModel.getBallVector().getX(), bModel.getBallVector().getY()));
+                bView.getBall().setLayoutX(bModel.getBallPosition().getX());
+                bView.getBall().setLayoutY(bModel.getBallPosition().getY());
+                Rotate rx = new Rotate(bModel.getBallVector().getY(), 0, 0, 0, Rotate.X_AXIS);
+                Rotate ry = new Rotate(-bModel.getBallVector().getX(), 0, 0, 0, Rotate.Y_AXIS);
+                bView.getBall().getTransforms().addAll(rx, ry);
+            }
         }
     }
 
     public void applyFriction(BallModel bModel, double time){
         double frictionForceMag = 0.1*BallModel.MASS_BALL_KG*BallModel.GRAVITATIONAL_FORCE;
-        double angleRad = (Math.atan(bModel.getBallVector().getY() / bModel.getBallVector().getX())) + Math.PI;
+        // TODO Fix the angle.
+        double vectorAngleRad = (Math.atan(Math.abs(bModel.getBallVector().getY() / bModel.getBallVector().getX())));
+        if((Math.signum(bModel.getBallVector().getX())==-1)&&(Math.signum(bModel.getBallVector().getY())!=-1)){
+            vectorAngleRad+=Math.PI/2;
+        }else if((Math.signum(bModel.getBallVector().getX())==-1)&&(Math.signum(bModel.getBallVector().getY())==-1)){
+            vectorAngleRad+=Math.PI;
+        }else if((Math.signum(bModel.getBallVector().getX())!=-1)&&(Math.signum(bModel.getBallVector().getY())==-1)){
+            vectorAngleRad+=3*Math.PI/4;
+        }
+        double angleRad = vectorAngleRad+Math.PI;
+        // TODO Fix the angle.
         Point2D frictionForce;
-        if(!((bModel.getBallVector().getX()<0)&&(bModel.getBallVector().getY()<0))&&!Double.isNaN(angleRad)) {
+        if(!Double.isNaN(angleRad)) {
             frictionForce = new Point2D(Math.cos(angleRad) * frictionForceMag, Math.sin(angleRad) * frictionForceMag);
         }else {
             frictionForce = new Point2D(0, 0);
