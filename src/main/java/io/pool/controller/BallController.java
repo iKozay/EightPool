@@ -118,25 +118,14 @@ public class BallController {
 
     public void applyFriction(BallModel bModel, double time){
         double frictionForceMag = 0.1*BallModel.MASS_BALL_KG*BallModel.GRAVITATIONAL_FORCE;
-        double angleRad = (Math.atan(bModel.getBallForce().getY() / bModel.getBallForce().getX())) + Math.PI;
-        double x=0, y=0;
-        Point2D newBallForce;
-        // see this if statement
-        if(!Double.isNaN(angleRad)) {
-            //System.out.println("AngleRad: " + angleRad);
-            Point2D frictionForce = new Point2D(Math.cos(angleRad) * frictionForceMag, Math.sin(angleRad) * frictionForceMag);
-            //System.out.println("Friction:" + frictionForce.magnitude());
-            //System.out.println("Force:" + bModel.getBallForce().magnitude());
-            if (bModel.getBallForce().getX() > frictionForce.getX()) {
-                x = bModel.getBallForce().getX() - frictionForce.getX();
-            }
-            if (bModel.getBallForce().getY() > frictionForce.getY()) {
-                y = bModel.getBallForce().getY() - frictionForce.getY();
-            }
+        double angleRad = (Math.atan(bModel.getBallVector().getY() / bModel.getBallVector().getX())) + Math.PI;
+        Point2D frictionForce;
+        if(!((bModel.getBallVector().getX()<0)&&(bModel.getBallVector().getY()<0))&&!Double.isNaN(angleRad)) {
+            frictionForce = new Point2D(Math.cos(angleRad) * frictionForceMag, Math.sin(angleRad) * frictionForceMag);
+        }else {
+            frictionForce = new Point2D(0, 0);
         }
-        newBallForce = new Point2D(x,y);
-        System.out.println("NewBallForce: "+newBallForce);
-        bModel.setBallForce(newBallForce, time);
+        bModel.setBallForce(frictionForce, time);
     }
 
 

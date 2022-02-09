@@ -21,7 +21,7 @@ public class BallModel {
     public static int radius;
     private int number;
     private Image img;
-    public final static double GRAVITATIONAL_FORCE = -9.8;
+    public final static double GRAVITATIONAL_FORCE = 9.8;
     public final static double MASS_BALL_KG = 0.16;
     private boolean movingBall;
 
@@ -46,9 +46,12 @@ public class BallModel {
     public void setBallForce(Point2D ballForce, double time) {
         this.ballForce = ballForce;
         this.acceleration = this.ballForce.multiply(1/MASS_BALL_KG);
-        System.out.println("a*t: "+this.acceleration.multiply(time));
-        //error with line 50. Velocity does not get reduced even if acceleration is zero
-        Point2D newVelocity = ballVector.add((this.acceleration.multiply(time)));
+        Point2D newVelocity;
+        if(!this.acceleration.equals(Point2D.ZERO)) {
+            newVelocity = ballVector.add((this.acceleration.multiply(time)));
+        }else{
+            newVelocity = new Point2D(0,0);
+        }
         this.setBallVector(newVelocity);
     }
 
