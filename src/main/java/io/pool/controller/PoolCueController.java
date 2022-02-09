@@ -1,12 +1,29 @@
 package io.pool.controller;
 
+import io.pool.model.PoolCueModel;
+import io.pool.view.PoolCueView;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class PoolCueController {
+    PoolCueView pcv = new PoolCueView();
+    PoolCueModel pcm = new PoolCueModel();
+
+    /**
+     * handler for the mouse moving
+     * @param e
+     */
+    public void cueRotateHandler(MouseEvent e){
+        double dx = e.getX()-pcv.getCueCenter().getX();
+        double dy = e.getY()-pcv.getCueCenter().getY();
+        double angle = (Math.atan2(dy,dx))*180/Math.PI;
+        pcm.setRotation(angle);
+        pcv.rotateCue(pcm);
+    }
 
 
     static class keyHandler {
