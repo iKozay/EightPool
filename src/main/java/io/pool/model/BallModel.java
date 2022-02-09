@@ -110,4 +110,11 @@ public class BallModel {
         this.movingBall = movingBall;
     }
 
+    public double getBallPositionX() {
+        return ballPosition.getX();
+    }
+
+    public double getBallPositionY() {
+        return ballPosition.getY();
+    }
 }

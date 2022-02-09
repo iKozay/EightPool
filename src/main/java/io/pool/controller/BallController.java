@@ -201,4 +201,6 @@ public class BallController {
     public ArrayList<BallView> ballViewArrayList() {
         return bViewList;
     }
+
+    public ArrayList<BallModel> ballModelArrayList() {return bModelList; }
 }

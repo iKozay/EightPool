@@ -7,7 +7,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -15,18 +14,19 @@ import java.util.ArrayList;
 
 public class TableView {
 
-    private Pane table; // all components of the table
-    private Rectangle playTable; // the place where the ball move
-    private ArrayList<Circle> holes = new ArrayList<>();
-    public final static int holeRadius = 22;
+    private final Pane table; // all components of the table
+    private final Rectangle playTable; // the place where the ball move
+    private final ArrayList<Circle> holes = new ArrayList<>();
+    public final static int cornerHoleRadius = 30;
+    public final static int centerHoleRadius = 25;
 
 //    private ArrayList<Hole> holes;
     public TableView(Pane root) throws MalformedURLException {
         int width = 1080; // the width of the pane
         int height = 610; // the height of the pane
 
-        int layoutX = 300;
-        int layoutY = 100;
+        int layoutX = 300; // the XPosition in the general pane
+        int layoutY = 100; // the YPosition in the general pane
 
         table = new Pane();
         table.setPrefWidth(width);
@@ -35,17 +35,18 @@ public class TableView {
         table.setLayoutY(layoutY);
 
         ImageView tableImageView = new ImageView(); // the image view of the table
-        Image image = new Image(new File("resources/tableImage/perfectTable.png").toURI().toURL().toExternalForm());
+        Image image = new Image(new File("resources/tableImage/finalTable.png").toURI().toURL().toExternalForm());
         tableImageView.setImage(image);
         tableImageView.setFitWidth(width);
         tableImageView.setPreserveRatio(true);
 
         Line whiteLine = new Line();
-        whiteLine.setStartX(width-235);
-        whiteLine.setStartY(65);
-        whiteLine.setEndX(width-235);
-        whiteLine.setEndY(height-70);
-        whiteLine.setFill(Color.WHITE);
+        whiteLine.setStartX(width-300);
+        whiteLine.setStartY(68);
+        whiteLine.setEndX(width-300);
+        whiteLine.setEndY(height-72);
+        whiteLine.setStroke(Color.WHITE);
+        whiteLine.setStrokeWidth(3);
 
 
         // the place where the ball moves
@@ -60,51 +61,55 @@ public class TableView {
 
         root.getChildren().add(table); // adding the table to the main pain of the project.
 
-/*
         Circle upLeftCorner = new Circle();
-        upLeftCorner.setRadius(30);
-        upLeftCorner.setCenterX(50);
+        upLeftCorner.setRadius(cornerHoleRadius);
+        upLeftCorner.setCenterX(48);
         upLeftCorner.setCenterY(55);
         upLeftCorner.setFill(Color.BLUE);
+        upLeftCorner.setVisible(false);
+        holes.add(upLeftCorner);
 
         Circle downLeftCorner = new Circle();
-        downLeftCorner.setRadius(30);
-        downLeftCorner.setCenterX(50);
-        downLeftCorner.setCenterY(height-55);
+        downLeftCorner.setRadius(cornerHoleRadius);
+        downLeftCorner.setCenterX(48);
+        downLeftCorner.setCenterY(height-57);
         downLeftCorner.setFill(Color.BLUE);
+        downLeftCorner.setVisible(false);
+        holes.add(downLeftCorner);
 
         Circle upRightCorner = new Circle();
-        upRightCorner.setRadius(30);
-        upRightCorner.setCenterX(width-55);
+        upRightCorner.setRadius(cornerHoleRadius);
+        upRightCorner.setCenterX(width-58);
         upRightCorner.setCenterY(55);
         upRightCorner.setFill(Color.BLUE);
+        upRightCorner.setVisible(false);
+        holes.add(upRightCorner);
 
         Circle downRightCorner = new Circle();
-        downRightCorner.setRadius(30);
-        downRightCorner.setCenterX(width - 55);
-        downRightCorner.setCenterY(height-55);
+        downRightCorner.setRadius(cornerHoleRadius);
+        downRightCorner.setCenterX(width - 58);
+        downRightCorner.setCenterY(height- 57);
         downRightCorner.setFill(Color.BLUE);
-
+        downRightCorner.setVisible(false);
+        holes.add(downRightCorner);
 
         Circle upCenterCorner = new Circle();
-        upCenterCorner.setRadius(30);
-        upCenterCorner.setCenterX((width/2) - 10);
-        upCenterCorner.setCenterY(50);
+        upCenterCorner.setRadius(centerHoleRadius);
+        upCenterCorner.setCenterX((width/2)-7);
+        upCenterCorner.setCenterY(41);
         upCenterCorner.setFill(Color.BLUE);
+        upCenterCorner.setVisible(false);
+        holes.add(upCenterCorner);
 
         Circle downCenterCorner = new Circle();
-        downCenterCorner.setRadius(30);
-        downCenterCorner.setCenterX((width/2) - 10);
-        downCenterCorner.setCenterY(height-50);
+        downCenterCorner.setRadius(centerHoleRadius);
+        downCenterCorner.setCenterX((width/2) - 7);
+        downCenterCorner.setCenterY(height-47);
         downCenterCorner.setFill(Color.BLUE);
+        downCenterCorner.setVisible(false);
+        holes.add(downCenterCorner);
 
-        table.getChildren().addAll(upLeftCorner, downLeftCorner, upRightCorner, downRightCorner, upCenterCorner, downCenterCorner);
-
-*/
-
-        // make the corners simply circles, and make it possible for you the ball
-        // controller to find the center mass of the ball, which will help you to disapear
-        // when the center of the ball touches the corner.
+        table.getChildren().addAll(holes);
 
 
     }
@@ -120,5 +125,7 @@ public class TableView {
     public ArrayList<Circle> getHoles() {
         return holes;
     }
+
+
 }
 

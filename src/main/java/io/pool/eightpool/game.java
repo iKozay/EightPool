@@ -5,12 +5,11 @@ import io.pool.controller.TableController;
 import io.pool.model.TableModel;
 import io.pool.view.PoolCueView;
 import io.pool.view.TableView;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.geometry.Point3D;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 import java.net.MalformedURLException;
@@ -32,15 +31,23 @@ public class game extends Application {
 
 
         TableView tableView = new TableView(root);
-        TableModel tableModel = new TableModel();
-        TableController tableController = new TableController(tableView, tableModel);
+        TableModel tableModel = new TableModel(tableView);
+
 
         PoolCueView cueView = new PoolCueView();
         root.getChildren().add(cueView.getCue());
 
         BallController ballController = new BallController(root);
 
+        TableController tableController = new TableController(tableView, tableModel);
+
         tableController.setBallController(ballController);
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+            }
+        };
+        timer.start();
 
         GameLoopTimer gameLoopTimer = new GameLoopTimer() {
             @Override
