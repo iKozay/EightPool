@@ -1,12 +1,12 @@
 package io.pool.controller;
 
 import io.pool.model.BallModel;
-import io.pool.model.VelocityVector;
 import io.pool.view.BallView;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 
 import java.io.File;
@@ -18,12 +18,19 @@ public class BallController {
     private static ArrayList<BallView> bViewList = new ArrayList<>();
     private static ArrayList<BallModel> bModelList = new ArrayList<>();
 
+    double mouseAnchorX;
+    double mouseAnchorY;
+
+
     public BallController(Pane root) {
         try {
             //prepareGame(root);
-            bModelList.add(new BallModel(15, 1, new Image(new File("resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm())));
-            bViewList.add(new BallView(this,bModelList.get(0).getImg(),BallModel.getRadius()));
-
+            BallModel ballModel = new BallModel(15, 1, new Image(new File("resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm()));
+            bModelList.add(ballModel);
+            BallView ballView = new BallView(this,bModelList.get(0).getImg(),BallModel.getRadius());
+            //ballView.getBall().translateXProperty().bind(ballModel.getBall);
+            bViewList.add(ballView);
+            makeDraggable();
             //bModelList.add(new BallModel(15, 2, new Image(new File("resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm())));
             //bViewList.add(new BallView(this,bModelList.get(1).getImg(),BallModel.getRadius()));
             ///bModelList.get(1).setBallPosition(new Point2D(600,350));
@@ -34,6 +41,27 @@ public class BallController {
             e.printStackTrace();
         }
     }
+
+
+    public void makeDraggable() {
+
+        for (BallView bView : bViewList) {
+            bView.getBall().setOnMousePressed(mouseEvent -> {
+                mouseAnchorX = mouseEvent.getX();
+                mouseAnchorY = mouseEvent.getY();
+            });
+            bView.getBall().setOnMouseDragged(mouseEvent -> {
+                Point2D newPosition = new Point2D(mouseEvent.getSceneX() - mouseAnchorX, mouseEvent.getSceneY() - mouseAnchorY);
+                BallModel bModel = bModelList.get(bViewList.indexOf(bView));
+                bModel.setBallPosition(newPosition);
+                bView.getBall().setLayoutX(bModel.getBallPosition().getX());
+                bView.getBall().setLayoutY(bModel.getBallPosition().getY());
+            });
+
+        }
+
+    }
+
 
     public void prepareGame(Pane root) throws MalformedURLException {
         for (int i=1;i<=16;i++){
@@ -151,9 +179,6 @@ public class BallController {
         }
         bModel.setBallForce(frictionForce, time);
     }
-
-
-
 
     private void collisionHandler(BallModel ball1, BallModel ball2){
         //https://vobarian.com/collisions/2dcollisions2.pdf

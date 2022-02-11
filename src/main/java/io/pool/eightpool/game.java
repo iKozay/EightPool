@@ -3,6 +3,7 @@ package io.pool.eightpool;
 import io.pool.controller.BallController;
 import io.pool.controller.TableController;
 import io.pool.model.TableModel;
+import io.pool.view.BallView;
 import io.pool.view.PoolCueView;
 import io.pool.view.TableView;
 import javafx.animation.AnimationTimer;
@@ -15,6 +16,9 @@ import javafx.stage.Stage;
 import java.net.MalformedURLException;
 
 public class game extends Application {
+    public final static int eightPoolTableX = 300;
+    public final static int eightPoolTableY = 100;
+
     Sphere sphere;
     int increment=1;
     @Override
@@ -29,7 +33,6 @@ public class game extends Application {
         Scene scene = new Scene(root, 1920, 1080);
         stage.setTitle("EightPool");
 
-
         TableView tableView = new TableView(root);
         TableModel tableModel = new TableModel(tableView);
 
@@ -42,9 +45,17 @@ public class game extends Application {
         TableController tableController = new TableController(tableView, tableModel);
 
         tableController.setBallController(ballController);
+
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                for (BallView ballView : ballController.ballViewArrayList()) {
+                    for (int i = 0; i < tableView.getHoles().size(); i++) {
+                        if(tableController.checkInterBallsHoles(ballView, i)) {
+                            ballView.getBall().setRadius(ballView.getBall().getRadius() - 0.3);
+                        }
+                    }
+                }
             }
         };
         timer.start();

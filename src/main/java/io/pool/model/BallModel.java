@@ -4,13 +4,14 @@ import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 import javafx.scene.shape.Sphere;
 
 import java.util.Objects;
 import java.util.Random;
 
 
-public class BallModel {
+public class BallModel extends Shape {
 
     private Point2D ballForce;
     private Point2D acceleration;
