@@ -6,7 +6,7 @@ import java.math.MathContext;
 public class CustomPoint2D {
     private static final BigDecimal ZERO_BD = new BigDecimal(0.0);
     private static final BigDecimal TWO_BD = new BigDecimal(2.0);
-    private static final BigDecimal ONE_HUNDRED_EIGHTY_BD = new BigDecimal(180.0);
+    private static final BigDecimal TWO_PI_BD = new BigDecimal(2*Math.PI);
     public static final CustomPoint2D ZERO = new CustomPoint2D(ZERO_BD, ZERO_BD);
 
     private final BigDecimal x;
@@ -91,7 +91,7 @@ public class CustomPoint2D {
             return ZERO_BD;
         }
         if (delta.compareTo(new BigDecimal(-1.0))==-1) {
-            return ONE_HUNDRED_EIGHTY_BD;
+            return TWO_PI_BD;
         }
 
         return new BigDecimal(Math.acos(delta.doubleValue()));
