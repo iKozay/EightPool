@@ -13,14 +13,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 
 public class game extends Application {
     public final static int eightPoolTableX = 300;
     public final static int eightPoolTableY = 100;
 
-    Sphere sphere;
-    int increment=1;
     @Override
     public void start(Stage stage) throws MalformedURLException {
         // TODO Units: 0.04pixels/m
