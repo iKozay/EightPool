@@ -1,5 +1,6 @@
 package io.pool.controller;
 
+import io.pool.eightpool.game;
 import io.pool.model.BallModel;
 import io.pool.model.CustomPoint2D;
 import io.pool.view.BallView;
@@ -22,13 +23,16 @@ public class BallController {
     double mouseAnchorX;
     double mouseAnchorY;
 
+    private int tableX = game.eightPoolTableX;
+    private int tableY = game.eightPoolTableY;
+
 
     public BallController(Pane root) {
         try {
             //prepareGame(root);
             BallModel ballModel = new BallModel(15, 1, new Image(new File("resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm()));
             bModelList.add(ballModel);
-            BallView ballView = new BallView(this,bModelList.get(0).getImg(),BallModel.getRadius());
+            BallView ballView = new BallView(bModelList.get(0).getImg(),BallModel.getRadius());
             //ballView.getBall().translateXProperty().bind(ballModel.getBall);
             bViewList.add(ballView);
             makeDraggable();
@@ -72,7 +76,7 @@ public class BallController {
             }else{
                 bModelList.add(new BallModel(15, i, new Image(new File("resources/billiards3D/ball"+i+".jpg").toURI().toURL().toExternalForm())));
             }
-            bViewList.add(new BallView(this,bModelList.get(i-1).getImg(),BallModel.getRadius()));
+            bViewList.add(new BallView(bModelList.get(i-1).getImg(),BallModel.getRadius()));
             root.getChildren().add(bViewList.get(i-1).getBall());
         }
     }
@@ -90,17 +94,17 @@ public class BallController {
             BigDecimal newXPos = bModel.getBallPositionX();
             BigDecimal newYPos = bModel.getBallPositionY();
             BigDecimal radius = new BigDecimal(BallModel.getRadius());
-            if ((bModel.getBallPosition().getX().subtract(radius)).compareTo(new BigDecimal(tableBorders.getX() + 300))<=0) {
+            if ((bModel.getBallPosition().getX().subtract(radius)).compareTo(new BigDecimal(tableBorders.getX() + tableX))<=0) {
                 newXVelocity = bModel.getBallVelocity().getX().negate();
                 newXPos = new BigDecimal(tableBorders.getX() + 300).add(radius);
-            }else if((bModel.getBallPosition().getX().add(radius)).compareTo(new BigDecimal((tableBorders.getX() + 300) + tableBorders.getWidth()))>=0){
+            }else if((bModel.getBallPosition().getX().add(radius)).compareTo(new BigDecimal((tableBorders.getX() + tableX) + tableBorders.getWidth()))>=0){
                 newXVelocity = bModel.getBallVelocity().getX().negate();
                 newXPos = new BigDecimal(tableBorders.getX() + 300 + tableBorders.getWidth()).subtract(radius);
             }
-            if ((bModel.getBallPosition().getY().subtract(radius)).compareTo(new BigDecimal(tableBorders.getY() + 100))<=0) {
+            if ((bModel.getBallPosition().getY().subtract(radius)).compareTo(new BigDecimal(tableBorders.getY() + tableY))<=0) {
                 newYVelocity = bModel.getBallVelocity().getY().negate();
                 newYPos = new BigDecimal(tableBorders.getY() + 100).add(radius);
-            }else if ((bModel.getBallPosition().getY().add(radius)).compareTo(new BigDecimal((tableBorders.getY() + 100) + tableBorders.getHeight()))>=0){
+            }else if ((bModel.getBallPosition().getY().add(radius)).compareTo(new BigDecimal((tableBorders.getY() + tableY) + tableBorders.getHeight()))>=0){
                 newYVelocity = bModel.getBallVelocity().getY().negate();
                 newYPos = new BigDecimal(tableBorders.getY() + 100 +tableBorders.getHeight()).subtract(radius);
             }

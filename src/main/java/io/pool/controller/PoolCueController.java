@@ -8,7 +8,6 @@ import java.util.Set;
 
 public class PoolCueController {
 
-
     static class keyHandler {
         /**The set of keys that are currently pressed down*/
         private static final Set<KeyCode> keysCurrentlyDown = new HashSet<>();
