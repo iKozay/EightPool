@@ -1,6 +1,7 @@
 package io.pool.eightpool;
 
 import io.pool.controller.BallController;
+import io.pool.controller.PoolCueController;
 import io.pool.controller.TableController;
 import io.pool.model.TableModel;
 import io.pool.view.BallView;
@@ -9,6 +10,7 @@ import io.pool.view.TableView;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import java.net.MalformedURLException;
@@ -32,7 +34,7 @@ public class game extends Application {
         TableView tableView = new TableView(root);
         TableModel tableModel = new TableModel(tableView);
 
-
+        PoolCueController pcc = new PoolCueController();
         PoolCueView cueView = new PoolCueView();
         root.getChildren().add(cueView.getCue());
 
@@ -60,7 +62,11 @@ public class game extends Application {
             @Override
             public void tick(float secondsSinceLastFrame) {
                 if(secondsSinceLastFrame<1) {
-                    ballController.detectCollision(tableView.getPlayTable(), secondsSinceLastFrame);
+                    //ballController.detectCollision(tableView.getPlayTable(), secondsSinceLastFrame);
+//                    scene.addEventHandler(MouseEvent.MOUSE_MOVED, event -> );
+                    scene.setOnMouseMoved(event -> {
+                        pcc.handleRotateCue(event);
+                    });
                 }
             }
         };

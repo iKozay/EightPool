@@ -1,12 +1,29 @@
 package io.pool.controller;
 
+import io.pool.model.CustomPoint2D;
+import io.pool.view.PoolCueView;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.transform.Rotate;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class PoolCueController {
+
+    PoolCueView pcv = new PoolCueView();
+
+    public void handleRotateCue(MouseEvent e){
+        System.out.println("MOUSE IS MOVING");
+        double deltaX = e.getX()- pcv.getCenterX();
+        double deltaY = e.getY()-pcv.getCenterY();
+
+        double angleBetweenPoints = Math.toDegrees(Math.atan(deltaY/deltaX));
+        pcv.updateRotation(angleBetweenPoints);
+
+
+    }
 
     static class keyHandler {
         /**The set of keys that are currently pressed down*/
