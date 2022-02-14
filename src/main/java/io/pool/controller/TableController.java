@@ -2,6 +2,7 @@ package io.pool.controller;
 
 import io.pool.model.BallModel;
 import io.pool.model.TableModel;
+import io.pool.view.BallView;
 import io.pool.view.TableView;
 import javafx.scene.shape.Circle;
 import java.util.ArrayList;
@@ -46,19 +47,12 @@ public class TableController {
     public double getInitialY(Circle c) {
         return c.getCenterY();
     }
-    public void checkIntersection() {
 
-        boolean isIntersecting;
-        for (BallModel ballModel: getBallController().ballModelArrayList()) {
-            for ( int i = 1; i <= tableView.getHoles().size(); i++) {
-                ArrayList<Circle> holes = tableView.getHoles();
-//                double centerToCenter = Math.sqrt(Math.pow(ballModel.getBallPositionX() - (c.getLayoutX() + getInitialX(c)), 2) + Math.pow(ballModel.getBallPositionY() - (c.getLayoutY() + getInitialY(c)), 2));
+    public boolean checkInterBallsHoles(BallView ballView, int holeNum) {
+        Circle hole = tableView.getHoles().get(holeNum);
+        double centerToCenter = Math.sqrt(Math.pow(ballView.getBall().getLayoutX() - 300 - (hole.getCenterX()), 2) + Math.pow(ballView.getBall().getLayoutY() - 100 - (hole.getCenterY()), 2));
 
-//                double rs1 = BallModel.getRadius() + c.getRadius();
-//                isIntersecting = centerToCenter <= rs1;
-//                if (isIntersecting) System.out.println("intersection");
-            }
-        }
-
+        double rs1 = ballView.getBall().getRadius() + hole.getRadius();
+        return centerToCenter <= rs1;
     }
 }
