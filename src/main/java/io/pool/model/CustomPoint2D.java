@@ -8,9 +8,9 @@ public class CustomPoint2D {
     public static final MathContext DECIMAL8 = new MathContext(8, RoundingMode.HALF_EVEN);
     public static final BigDecimal ZERO_BD = new BigDecimal(0.0, DECIMAL8);
     public static final BigDecimal TWO_BD = new BigDecimal(2.0, DECIMAL8);
-    public static final BigDecimal HALF_PI_BD = new BigDecimal(Math.PI/2, DECIMAL8);
-    public static final BigDecimal PI_BD = new BigDecimal(Math.PI, DECIMAL8);
-    public static final BigDecimal TWO_PI_BD = new BigDecimal(2*Math.PI, DECIMAL8);
+    public static final BigDecimal NINETY_DEGREES_BD = new BigDecimal(90, DECIMAL8);
+    public static final BigDecimal ONE_EIGHTY_BD = new BigDecimal(180, DECIMAL8);
+    public static final BigDecimal THREE_SIXTY_BD = new BigDecimal(360, DECIMAL8);
     public static final CustomPoint2D ZERO = new CustomPoint2D(ZERO_BD, ZERO_BD);
 
     private final BigDecimal x;
@@ -91,7 +91,7 @@ public class CustomPoint2D {
     public BigDecimal getAngle(){
         try {
             BigDecimal subtotal = getY().divide(getX(), DECIMAL8);
-            BigDecimal total = new BigDecimal(Math.atan(subtotal.abs().doubleValue()), DECIMAL8);
+            BigDecimal total = new BigDecimal(Math.toDegrees(Math.atan(subtotal.abs().doubleValue())), DECIMAL8);
             return total;
         }catch (ArithmeticException e){
             return null;
@@ -112,10 +112,10 @@ public class CustomPoint2D {
             return ZERO_BD;
         }
         if (delta.compareTo(new BigDecimal(-1.0))==-1) {
-            return TWO_PI_BD;
+            return THREE_SIXTY_BD;
         }
 
-        return new BigDecimal(Math.acos(delta.doubleValue()), DECIMAL8);
+        return new BigDecimal(Math.toDegrees(Math.acos(delta.doubleValue())), DECIMAL8);
     }
 
     public BigDecimal angle(CustomPoint2D point) {

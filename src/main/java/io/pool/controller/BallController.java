@@ -163,20 +163,21 @@ public class BallController {
     public void applyFriction(BallModel bModel, double time){
         double frictionForceMag = 0.1*BallModel.MASS_BALL_KG*BallModel.GRAVITATIONAL_FORCE;
         // TODO Fix the angle.
-        BigDecimal vectorAngleRad = bModel.getBallVelocity().getAngle();
+        BigDecimal vectorAngleDeg = bModel.getBallVelocity().getAngle();
         CustomPoint2D frictionForce = CustomPoint2D.ZERO;
-        if(vectorAngleRad!=null) {
+        if(vectorAngleDeg!=null) {
             if ((bModel.getBallVelocity().getX().signum() == -1) && (bModel.getBallVelocity().getY().signum() != -1)) {
-                vectorAngleRad = vectorAngleRad.add(CustomPoint2D.HALF_PI_BD);
+                vectorAngleDeg = vectorAngleDeg.add(CustomPoint2D.NINETY_DEGREES_BD);
             } else if ((bModel.getBallVelocity().getX().signum() == -1) && (bModel.getBallVelocity().getY().signum() == -1)) {
-                vectorAngleRad = vectorAngleRad.add(CustomPoint2D.PI_BD);
+                vectorAngleDeg = vectorAngleDeg.add(CustomPoint2D.ONE_EIGHTY_BD);
             } else if ((bModel.getBallVelocity().getX().signum() != -1) && (bModel.getBallVelocity().getY().signum() == -1)) {
-                vectorAngleRad = vectorAngleRad.add(CustomPoint2D.HALF_PI_BD.add(CustomPoint2D.PI_BD));
+                vectorAngleDeg = vectorAngleDeg.add(CustomPoint2D.NINETY_DEGREES_BD.add(CustomPoint2D.ONE_EIGHTY_BD));
             }
-            BigDecimal angleRad = vectorAngleRad.add(CustomPoint2D.PI_BD);
+            BigDecimal angleDeg = vectorAngleDeg.add(CustomPoint2D.ONE_EIGHTY_BD);
             // TODO Fix the angle.
-            System.out.println(angleRad.subtract(vectorAngleRad).subtract(CustomPoint2D.PI_BD));
-            frictionForce = new CustomPoint2D(new BigDecimal(Math.cos(angleRad.doubleValue()) * frictionForceMag,CustomPoint2D.DECIMAL8), new BigDecimal(Math.sin(angleRad.doubleValue()) * frictionForceMag,CustomPoint2D.DECIMAL8));
+            System.out.println(vectorAngleDeg);
+            frictionForce = new CustomPoint2D(new BigDecimal(Math.cos(Math.toRadians(angleDeg.doubleValue())) * frictionForceMag,CustomPoint2D.DECIMAL8), new BigDecimal(Math.sin(Math.toRadians(angleDeg.doubleValue())) * frictionForceMag));
+
         }
         bModel.setBallForce(frictionForce, time);
     }
