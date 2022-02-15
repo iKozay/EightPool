@@ -10,7 +10,6 @@ import io.pool.view.TableView;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import java.net.MalformedURLException;
@@ -19,6 +18,8 @@ public class game extends Application {
     public final static int eightPoolTableX = 0;
     public final static int eightPoolTableY = 0;
 
+    private double oldPosX;
+    private double oldPosY;
     @Override
     public void start(Stage stage) throws MalformedURLException {
         // TODO Units: 0.04pixels/m
@@ -36,7 +37,7 @@ public class game extends Application {
 
         PoolCueController pcc = new PoolCueController();
         PoolCueView cueView = new PoolCueView();
-        root.getChildren().add(cueView.getCue());
+        root.getChildren().addAll(cueView.getCue());
 
         BallController ballController = new BallController(root);
 
@@ -56,21 +57,15 @@ public class game extends Application {
                 }
             }
         };
-        //timer.start();
+        timer.start();
 
-        GameLoopTimer gameLoopTimer = new GameLoopTimer() {
-            @Override
-            public void tick(float secondsSinceLastFrame) {
-                if(secondsSinceLastFrame<1) {
-                    ballController.detectCollision(tableView.getPlayTable(), secondsSinceLastFrame);
-                    //scene.addEventHandler(MouseEvent.MOUSE_MOVED, event -> );
-                    //scene.setOnMouseMoved(event -> {
-                    //    pcc.handleRotateCue(event);
-                    //});
-                }
-            }
-        };
-        gameLoopTimer.start();
+        scene.setOnMouseEntered(event -> {
+            oldPosX = event.getSceneX();
+            oldPosY = event.getSceneY();
+        });
+        scene.setOnMouseMoved(event -> {
+            pcc.handleRotateCue(event, oldPosX, oldPosY);
+        });
 
         stage.setScene(scene);
         stage.show();
