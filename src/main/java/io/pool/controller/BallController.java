@@ -165,24 +165,16 @@ public class BallController {
     }
 
     public void applyFriction(BallModel bModel, double time){
-        double frictionForceMag = 0.1*BallModel.MASS_BALL_KG*BallModel.GRAVITATIONAL_FORCE;
+       BigDecimal frictionForceMag = new BigDecimal(0.1*BallModel.MASS_BALL_KG*BallModel.GRAVITATIONAL_FORCE,CustomPoint2D.DECIMAL8);
         // TODO Fix the angle.
         BigDecimal vectorAngleDeg = bModel.getBallVelocity().getAngle();
         CustomPoint2D frictionForce = CustomPoint2D.ZERO;
         if(vectorAngleDeg!=null) {
-            if ((bModel.getBallVelocity().getX().signum() == -1) && (bModel.getBallVelocity().getY().signum() != -1)) {
-                vectorAngleDeg = vectorAngleDeg.add(CustomPoint2D.NINETY_DEGREES_BD);
-            } else if ((bModel.getBallVelocity().getX().signum() == -1) && (bModel.getBallVelocity().getY().signum() == -1)) {
-                vectorAngleDeg = vectorAngleDeg.add(CustomPoint2D.ONE_EIGHTY_BD);
-            } else if ((bModel.getBallVelocity().getX().signum() != -1) && (bModel.getBallVelocity().getY().signum() == -1)) {
-                vectorAngleDeg = vectorAngleDeg.add(CustomPoint2D.NINETY_DEGREES_BD.add(CustomPoint2D.ONE_EIGHTY_BD));
-            }
             BigDecimal angleDeg = vectorAngleDeg.add(CustomPoint2D.ONE_EIGHTY_BD);
             // TODO Fix the angle.
-            System.out.println(vectorAngleDeg);
-            frictionForce = new CustomPoint2D(new BigDecimal(Math.cos(Math.toRadians(angleDeg.doubleValue())) * frictionForceMag,CustomPoint2D.DECIMAL8), new BigDecimal(Math.sin(Math.toRadians(angleDeg.doubleValue())) * frictionForceMag));
-
+            frictionForce = new CustomPoint2D(frictionForceMag.multiply(new BigDecimal(Math.cos(Math.toRadians(angleDeg.doubleValue()))),CustomPoint2D.DECIMAL8),  frictionForceMag.multiply(new BigDecimal(Math.sin(Math.toRadians(angleDeg.doubleValue()))),CustomPoint2D.DECIMAL8));
         }
+        System.out.println("Friction: "+frictionForce);
         bModel.setBallForce(frictionForce, time);
     }
 

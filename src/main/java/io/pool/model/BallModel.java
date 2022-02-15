@@ -2,6 +2,9 @@ package io.pool.model;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Shape;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Random;
 
@@ -20,6 +23,9 @@ public class BallModel extends Shape {
     public final static double GRAVITATIONAL_FORCE = 9.8;
     public final static double MASS_BALL_KG = 0.16;
     private boolean movingBall;
+    File file;
+    FileWriter writer;
+    BigDecimal time;
 
 
     public BallModel(int radius, int number, Image img){
@@ -28,11 +34,20 @@ public class BallModel extends Shape {
         Random rnd = new Random();
         this.ballPosition = new CustomPoint2D(400,250);
         this.previousBallVelocity = new CustomPoint2D(0,0);
-        this.ballVelocity = new CustomPoint2D(-6,2);
+        this.ballVelocity = new CustomPoint2D(12,4);
         this.ballForce = new CustomPoint2D(0,0);
         this.acceleration= new CustomPoint2D(0,0);
         this.img  = img;
         this.movingBall=true;// because it has a velocity
+        ////
+        file = new File("filename.txt");
+        try {
+            writer = new FileWriter("filename.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        time= new BigDecimal(0);
+        ////
     }
 
     public CustomPoint2D getBallForce() {
@@ -42,14 +57,27 @@ public class BallModel extends Shape {
     public void setBallForce(CustomPoint2D ballForce, double time) {
         this.ballForce = ballForce;
         this.acceleration = this.ballForce.multiply(1 / MASS_BALL_KG);
-        CustomPoint2D newVelocity = ballVelocity.add((this.acceleration.multiply(time)));
-        if(newVelocity.getX().signum()!=ballVelocity.getX().signum()){
-            newVelocity = newVelocity.subtract(newVelocity.getX(),CustomPoint2D.ZERO_BD);
+        CustomPoint2D finalV = this.acceleration.multiply(time);
+        CustomPoint2D newVelocityMag = new CustomPoint2D(ballVelocity.getAbsX().subtract(finalV.getAbsX()),ballVelocity.getAbsY().subtract(finalV.getAbsY()));
+        //newVelocityMag.subtract((this.acceleration.multiply(time)));
+
+        if(newVelocityMag.getX().doubleValue()<0){
+            newVelocityMag = new CustomPoint2D(0,newVelocityMag.getY().doubleValue());
         }
-        if(newVelocity.getY().signum()!=ballVelocity.getY().signum()){
-            newVelocity = newVelocity.subtract(CustomPoint2D.ZERO_BD,newVelocity.getY());
+        if(newVelocityMag.getY().doubleValue()<0){
+            newVelocityMag = new CustomPoint2D(newVelocityMag.getX().doubleValue(),0);
+        }
+
+        CustomPoint2D newVelocity = new CustomPoint2D(newVelocityMag.getX().multiply(new BigDecimal(ballVelocity.getX().signum()),CustomPoint2D.DECIMAL8),  newVelocityMag.getY().multiply(new BigDecimal(ballVelocity.getY().signum(),CustomPoint2D.DECIMAL8)));
+
+        this.time = this.time.add(new BigDecimal(time));
+        try {
+            writer.write(this.time.doubleValue()+","+newVelocityMag.getX().doubleValue()+","+newVelocityMag.getY().doubleValue()+"\n");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         System.out.println(newVelocity);
+
         this.setBallVelocity(newVelocity);
     }
 
@@ -109,6 +137,13 @@ public class BallModel extends Shape {
 
     public void setMovingBall(boolean movingBall) {
         this.movingBall = movingBall;
+        if(movingBall==false){
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public BigDecimal getBallPositionX() {

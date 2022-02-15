@@ -24,6 +24,14 @@ public class CustomPoint2D {
         return y;
     }
 
+    public BigDecimal getAbsX() {
+        return x.abs();
+    }
+
+    public BigDecimal getAbsY() {
+        return y.abs();
+    }
+
     public CustomPoint2D(double x, double y) {
         this.x = new BigDecimal(x, DECIMAL8);
         this.y = new BigDecimal(y, DECIMAL8);
@@ -90,11 +98,23 @@ public class CustomPoint2D {
 
     public BigDecimal getAngle(){
         try {
-            BigDecimal subtotal = getY().divide(getX(), DECIMAL8);
-            BigDecimal total = new BigDecimal(Math.toDegrees(Math.atan(subtotal.abs().doubleValue())), DECIMAL8);
+            BigDecimal subtotal = getY().divide(getX(), DECIMAL8).abs();
+            BigDecimal total = new BigDecimal(Math.toDegrees(Math.atan(subtotal.doubleValue())), DECIMAL8);
+            if ((getX().signum() == -1) && (getY().signum() != -1)) {
+                total = total.add(CustomPoint2D.NINETY_DEGREES_BD);
+            } else if ((getX().signum() == -1) && (getY().signum() == -1)) {
+                total = total.add(CustomPoint2D.ONE_EIGHTY_BD);
+            } else if ((getX().signum() != -1) && (getY().signum() == -1)) {
+                total = total.add(CustomPoint2D.NINETY_DEGREES_BD.add(CustomPoint2D.ONE_EIGHTY_BD));
+            }
+
             return total;
         }catch (ArithmeticException e){
-            return null;
+            if(getY().signum() == 1) {
+                return CustomPoint2D.NINETY_DEGREES_BD;
+            }else{
+                return NINETY_DEGREES_BD.add(ONE_EIGHTY_BD);
+            }
         }
     }
 

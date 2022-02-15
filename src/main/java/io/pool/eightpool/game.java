@@ -56,17 +56,17 @@ public class game extends Application {
                 }
             }
         };
-        timer.start();
+        //timer.start();
 
         GameLoopTimer gameLoopTimer = new GameLoopTimer() {
             @Override
             public void tick(float secondsSinceLastFrame) {
                 if(secondsSinceLastFrame<1) {
-                    //ballController.detectCollision(tableView.getPlayTable(), secondsSinceLastFrame);
-//                    scene.addEventHandler(MouseEvent.MOUSE_MOVED, event -> );
-                    scene.setOnMouseMoved(event -> {
-                        pcc.handleRotateCue(event);
-                    });
+                    ballController.detectCollision(tableView.getPlayTable(), secondsSinceLastFrame);
+                    //scene.addEventHandler(MouseEvent.MOUSE_MOVED, event -> );
+                    //scene.setOnMouseMoved(event -> {
+                    //    pcc.handleRotateCue(event);
+                    //});
                 }
             }
         };
