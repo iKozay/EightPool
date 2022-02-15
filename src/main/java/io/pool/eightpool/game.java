@@ -50,6 +50,13 @@ public class game extends Application {
             public void tick(float secondsSinceLastFrame) {
                 if(secondsSinceLastFrame<1){
                     ballController.detectCollision(tableView.getPlayTable(),secondsSinceLastFrame);
+                    for (BallView ballView : ballController.ballViewArrayList()) {
+                        for (int i = 0; i < tableView.getHoles().size(); i++) {
+                            if(tableController.checkInterBallsHoles(ballView, i)) {
+                                ballView.getBall().setRadius(ballView.getBall().getRadius() - 0.3);
+                            }
+                        }
+                    }
                 }
             }
         };
@@ -57,13 +64,10 @@ public class game extends Application {
 
 
 
-        scene.setOnMouseEntered(event -> {
-            oldPosX = event.getSceneX();
-            oldPosY = event.getSceneY();
-        });
-        scene.setOnMouseMoved(event -> {
-            pcc.handleRotateCue(event, oldPosX, oldPosY);
-        });
+
+        pcc.hit(scene);
+
+        pcc.handleRotateCue(scene);
 
         stage.setScene(scene);
         stage.show();
