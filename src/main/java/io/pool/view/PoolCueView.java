@@ -4,7 +4,6 @@ import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
-import javafx.scene.transform.Rotate;
 
 public class PoolCueView {
 
@@ -13,6 +12,7 @@ public class PoolCueView {
     double yPos = 300;
     double centerX = xPos;
     double centerY = yPos;
+    double previousAngle = 0;
 
     public PoolCueView() {
 
@@ -28,9 +28,6 @@ public class PoolCueView {
 
     }
 
-    double previousAngle = 0;
-
-
     public Cylinder getCue() {
         return cue;
     }
@@ -45,12 +42,15 @@ public class PoolCueView {
         return centerY;
     }
 
-//    public double getCueAngle() {
-//        return cue.getTransforms();
-//    }
-
-
     public double getPreviousAngle() {
         return previousAngle;
     }
+
+    public void setPreviousAngle(double angle) {
+        this.previousAngle = angle;
+    }
+    //    public double getCueAngle() {
+//        return cue.getTransforms();
+//    }
+
 }

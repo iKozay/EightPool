@@ -18,8 +18,8 @@ public class game extends Application {
     public final static int eightPoolTableX = 0;
     public final static int eightPoolTableY = 0;
 
-    private double oldAngleX;
-    private double oldAngleY;
+    private double oldPosX;
+    private double oldPosY;
     @Override
     public void start(Stage stage) throws MalformedURLException {
         // TODO Units: 0.04pixels/m
@@ -60,11 +60,11 @@ public class game extends Application {
         timer.start();
 
         scene.setOnMouseEntered(event -> {
-            oldAngleX = event.getSceneX();
-            oldAngleY = event.getSceneY();
+            oldPosX = event.getSceneX();
+            oldPosY = event.getSceneY();
         });
         scene.setOnMouseMoved(event -> {
-            pcc.handleRotateCue(event, oldAngleX, oldAngleY);
+            pcc.handleRotateCue(event, oldPosX, oldPosY);
         });
 
         stage.setScene(scene);

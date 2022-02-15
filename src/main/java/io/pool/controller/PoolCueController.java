@@ -14,22 +14,19 @@ import java.util.Set;
 public class PoolCueController {
 
     PoolCueView pcv = new PoolCueView();
-    private final DoubleProperty angle = new SimpleDoubleProperty(0);
 
-    public void handleRotateCue(MouseEvent e, double oldAngleX, double oldAngleY){
+    public void handleRotateCue(MouseEvent e, double oldPosX, double oldPosY){
 
-        System.out.println(oldAngleX - e.getX());
-
-        double deltaX = oldAngleX - e.getX();
-        double deltaY = oldAngleY - e.getY();
+        double deltaX = e.getX() - pcv.getXPos();
+        double deltaY = e.getY() - pcv.getYPos();
 
         if (deltaX != 0) {
-            double newAngleDegrees =Math.toDegrees(Math.atan(deltaY/deltaX));
-            DoubleProperty newAngleProperty = new SimpleDoubleProperty(newAngleDegrees);
+            double newAngleDegrees = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 90;
+            System.out.println(newAngleDegrees);
             Rotate rotate = new Rotate();
+            rotate.setAngle(newAngleDegrees - pcv.getPreviousAngle());
             pcv.getCue().getTransforms().add(rotate);
-            rotate.angleProperty().bind(newAngleProperty.subtract(angle));
-            angle.set(newAngleDegrees);
+            pcv.setPreviousAngle(newAngleDegrees);
         }
 
     }
