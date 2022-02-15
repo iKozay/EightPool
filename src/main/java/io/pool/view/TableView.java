@@ -18,6 +18,7 @@ public class TableView {
     private final Pane table; // all components of the table
     private final Rectangle playTable; // the place where the ball move
     private final ArrayList<Circle> holes = new ArrayList<>();
+    private final ArrayList<Line> lines = new ArrayList<>();
     public final static int cornerHoleRadius = 30;
     public final static int centerHoleRadius = 25;
 
@@ -110,6 +111,39 @@ public class TableView {
         holes.add(downCenterCorner);
 
         table.getChildren().addAll(holes);
+
+
+        Line upLeftLine = new Line(95, 65, 500, 65);
+        upLeftLine.setStroke(Color.WHITE);
+        upLeftLine.setStrokeWidth(3);
+        lines.add(upLeftLine);
+
+        Line upRightLine = new Line(565, 65, 975, 65);
+        upRightLine.setStroke(Color.WHITE);
+        upRightLine.setStrokeWidth(3);
+        lines.add(upRightLine);
+
+        Line downLeftLine = new Line(95, height-70, 500, height-70);
+        downLeftLine.setStroke(Color.WHITE);
+        downLeftLine.setStrokeWidth(3);
+        lines.add(downLeftLine);
+
+        Line downRightLine = new Line(565, height-70, 975, height-70);
+        downRightLine.setStroke(Color.WHITE);
+        downRightLine.setStrokeWidth(3);
+        lines.add(downRightLine);
+
+        Line centerLeftLine = new Line(65, 103, 65, height-110);
+        centerLeftLine.setStroke(Color.WHITE);
+        centerLeftLine.setStrokeWidth(3);
+        lines.add(centerLeftLine);
+
+        Line centerRightLine = new Line(1010, 103, 1010, height-110);
+        centerRightLine.setStroke(Color.WHITE);
+        centerRightLine.setStrokeWidth(3);
+        lines.add(centerRightLine);
+
+        table.getChildren().addAll(lines);
 
 
     }

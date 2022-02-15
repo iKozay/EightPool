@@ -96,17 +96,17 @@ public class BallController {
             BigDecimal radius = new BigDecimal(BallModel.getRadius());
             if ((bModel.getBallPosition().getX().subtract(radius)).compareTo(new BigDecimal(tableBorders.getX() + tableX))<=0) {
                 newXVelocity = bModel.getBallVelocity().getX().negate();
-                newXPos = new BigDecimal(tableBorders.getX() + 300).add(radius);
+                newXPos = new BigDecimal(tableBorders.getX() + tableX).add(radius);
             }else if((bModel.getBallPosition().getX().add(radius)).compareTo(new BigDecimal((tableBorders.getX() + tableX) + tableBorders.getWidth()))>=0){
                 newXVelocity = bModel.getBallVelocity().getX().negate();
-                newXPos = new BigDecimal(tableBorders.getX() + 300 + tableBorders.getWidth()).subtract(radius);
+                newXPos = new BigDecimal(tableBorders.getX() + tableX + tableBorders.getWidth()).subtract(radius);
             }
             if ((bModel.getBallPosition().getY().subtract(radius)).compareTo(new BigDecimal(tableBorders.getY() + tableY))<=0) {
                 newYVelocity = bModel.getBallVelocity().getY().negate();
-                newYPos = new BigDecimal(tableBorders.getY() + 100).add(radius);
+                newYPos = new BigDecimal(tableBorders.getY() + tableY).add(radius);
             }else if ((bModel.getBallPosition().getY().add(radius)).compareTo(new BigDecimal((tableBorders.getY() + tableY) + tableBorders.getHeight()))>=0){
                 newYVelocity = bModel.getBallVelocity().getY().negate();
-                newYPos = new BigDecimal(tableBorders.getY() + 100 +tableBorders.getHeight()).subtract(radius);
+                newYPos = new BigDecimal(tableBorders.getY() + tableY +tableBorders.getHeight()).subtract(radius);
             }
             //bModel.setBallPosition(new CustomPoint2D(newXPos, newYPos));
             bModel.setBallVelocity(new CustomPoint2D(newXVelocity, newYVelocity));

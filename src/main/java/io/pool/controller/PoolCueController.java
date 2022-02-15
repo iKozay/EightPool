@@ -1,7 +1,8 @@
 package io.pool.controller;
 
-import io.pool.model.CustomPoint2D;
 import io.pool.view.PoolCueView;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
@@ -13,15 +14,23 @@ import java.util.Set;
 public class PoolCueController {
 
     PoolCueView pcv = new PoolCueView();
+    private final DoubleProperty angle = new SimpleDoubleProperty(0);
 
-    public void handleRotateCue(MouseEvent e){
-        System.out.println("MOUSE IS MOVING");
-        double deltaX = e.getX()- pcv.getCenterX();
-        double deltaY = e.getY()-pcv.getCenterY();
+    public void handleRotateCue(MouseEvent e, double oldAngleX, double oldAngleY){
 
-        double angleBetweenPoints = Math.toDegrees(Math.atan(deltaY/deltaX));
-        pcv.updateRotation(angleBetweenPoints);
+        System.out.println(oldAngleX - e.getX());
 
+        double deltaX = oldAngleX - e.getX();
+        double deltaY = oldAngleY - e.getY();
+
+        if (deltaX != 0) {
+            double newAngleDegrees =Math.toDegrees(Math.atan(deltaY/deltaX));
+            DoubleProperty newAngleProperty = new SimpleDoubleProperty(newAngleDegrees);
+            Rotate rotate = new Rotate();
+            pcv.getCue().getTransforms().add(rotate);
+            rotate.angleProperty().bind(newAngleProperty.subtract(angle));
+            angle.set(newAngleDegrees);
+        }
 
     }
 

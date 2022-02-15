@@ -1,5 +1,6 @@
 package io.pool.view;
 
+import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
@@ -10,36 +11,31 @@ public class PoolCueView {
     private static Cylinder cue;
     double xPos = 500;
     double yPos = 300;
-    double centerX = xPos + 100;
-    double centerY = yPos + 5;
+    double centerX = xPos;
+    double centerY = yPos;
 
     public PoolCueView() {
 
         cue = new Cylinder();
         cue.setRadius(10);
-        cue.setHeight(200);
+        cue.setHeight(400);
         cue.translateXProperty().set(xPos);
         cue.translateYProperty().set(yPos);
+        cue.setRotationAxis(Point3D.ZERO);
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseColor(Color.GOLD);
         cue.setMaterial(material);
+
     }
 
-    Rotate rotate;
-    public void updateRotation(double rotation){
+    double previousAngle = 0;
 
-        rotate = new Rotate();
-        rotate.setAngle(rotation);
-        rotate.setPivotX(centerX);
-        rotate.setPivotY(centerY);
-        this.cue.getTransforms().add(rotate);
-    }
 
     public Cylinder getCue() {
         return cue;
     }
-    public double getxPos(){return xPos;}
-    public double getyPos(){return yPos;}
+    public double getXPos(){return xPos;}
+    public double getYPos(){return yPos;}
 
     public double getCenterX() {
         return centerX;
@@ -47,5 +43,14 @@ public class PoolCueView {
 
     public double getCenterY() {
         return centerY;
+    }
+
+//    public double getCueAngle() {
+//        return cue.getTransforms();
+//    }
+
+
+    public double getPreviousAngle() {
+        return previousAngle;
     }
 }
