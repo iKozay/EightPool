@@ -9,7 +9,7 @@ public class PoolCueView {
 
     private static Cylinder cue;
     double xPos = 500;
-    double yPos = 300;
+    double yPos = 100;
     double centerX = xPos;
     double centerY = yPos;
     double previousAngle = 0;
@@ -18,7 +18,7 @@ public class PoolCueView {
 
         cue = new Cylinder();
         cue.setRadius(10);
-        cue.setHeight(400);
+        cue.setHeight(300);
         cue.translateXProperty().set(xPos);
         cue.translateYProperty().set(yPos);
         cue.setRotationAxis(Point3D.ZERO);

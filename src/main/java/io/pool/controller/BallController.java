@@ -91,22 +91,16 @@ public class BallController {
         for (BallModel bModel : bModelList) {
             BigDecimal newXVelocity = bModel.getBallVelocity().getX();
             BigDecimal newYVelocity = bModel.getBallVelocity().getY();
-            BigDecimal newXPos = bModel.getBallPositionX();
-            BigDecimal newYPos = bModel.getBallPositionY();
             BigDecimal radius = new BigDecimal(BallModel.getRadius());
             if ((bModel.getBallPosition().getX().subtract(radius)).compareTo(new BigDecimal(tableBorders.getX() + tableX))<=0) {
                 newXVelocity = bModel.getBallVelocity().getX().negate();
-                newXPos = new BigDecimal(tableBorders.getX() + tableX).add(radius);
             }else if((bModel.getBallPosition().getX().add(radius)).compareTo(new BigDecimal((tableBorders.getX() + tableX) + tableBorders.getWidth()))>=0){
                 newXVelocity = bModel.getBallVelocity().getX().negate();
-                newXPos = new BigDecimal(tableBorders.getX() + tableX + tableBorders.getWidth()).subtract(radius);
             }
             if ((bModel.getBallPosition().getY().subtract(radius)).compareTo(new BigDecimal(tableBorders.getY() + tableY))<=0) {
                 newYVelocity = bModel.getBallVelocity().getY().negate();
-                newYPos = new BigDecimal(tableBorders.getY() + tableY).add(radius);
             }else if ((bModel.getBallPosition().getY().add(radius)).compareTo(new BigDecimal((tableBorders.getY() + tableY) + tableBorders.getHeight()))>=0){
                 newYVelocity = bModel.getBallVelocity().getY().negate();
-                newYPos = new BigDecimal(tableBorders.getY() + tableY +tableBorders.getHeight()).subtract(radius);
             }
             //bModel.setBallPosition(new CustomPoint2D(newXPos, newYPos));
             bModel.setBallVelocity(new CustomPoint2D(newXVelocity, newYVelocity));
@@ -139,7 +133,7 @@ public class BallController {
                                 movingBall.setBallPosition(newCoordinate);
 
                             }
-                            System.out.println("Collision");
+//                            System.out.println("Collision");
                             collisionHandler(ballA,ballB);
                         }
                     }
@@ -174,7 +168,7 @@ public class BallController {
             // TODO Fix the angle.
             frictionForce = new CustomPoint2D(frictionForceMag.multiply(new BigDecimal(Math.cos(Math.toRadians(angleDeg.doubleValue()))),CustomPoint2D.DECIMAL8),  frictionForceMag.multiply(new BigDecimal(Math.sin(Math.toRadians(angleDeg.doubleValue()))),CustomPoint2D.DECIMAL8));
         }
-        System.out.println("Friction: "+frictionForce);
+//        System.out.println("Friction: "+frictionForce);
         bModel.setBallForce(frictionForce, time);
     }
 

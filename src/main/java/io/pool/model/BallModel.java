@@ -76,7 +76,7 @@ public class BallModel extends Shape {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(newVelocity);
+//        System.out.println(newVelocity);
 
         this.setBallVelocity(newVelocity);
     }

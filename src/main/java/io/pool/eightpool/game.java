@@ -62,12 +62,9 @@ public class game extends Application {
         };
         gametimer.start();
 
-
-
+        pcc.handleRotateCue(scene);
 
         pcc.hit(scene);
-
-        pcc.handleRotateCue(scene);
 
         stage.setScene(scene);
         stage.show();
