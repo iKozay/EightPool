@@ -7,10 +7,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 
 public class BallView {
-    BallController ballController;
     private Sphere ball;
-    public BallView(BallController ballController, Image img, int radius) {
-        this.ballController = ballController;
+    public BallView(Image img, int radius) {
         ball = new Sphere(radius);
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseMap(img);

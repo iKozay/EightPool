@@ -11,16 +11,15 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
-
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 
 public class game extends Application {
-    public final static int eightPoolTableX = 300;
-    public final static int eightPoolTableY = 100;
+    public final static int eightPoolTableX = 0;
+    public final static int eightPoolTableY = 0;
 
+    private double oldPosX;
+    private double oldPosY;
     @Override
     public void start(Stage stage) throws MalformedURLException {
         // TODO Units: 0.04pixels/m
@@ -30,7 +29,7 @@ public class game extends Application {
         // https://stackoverflow.com/questions/68186839/javafx-3d-sphere-partial-texture
         //
         Pane root = new Pane();
-        Scene scene = new Scene(root, 1920, 1080);
+        Scene scene = new Scene(root, 1080, 610);
         stage.setTitle("EightPool");
 
         TableView tableView = new TableView(root);
@@ -38,7 +37,7 @@ public class game extends Application {
 
         PoolCueController pcc = new PoolCueController();
         PoolCueView cueView = new PoolCueView();
-        root.getChildren().add(cueView.getCue());
+        root.getChildren().addAll(cueView.getCue());
 
         BallController ballController = new BallController(root);
 
@@ -46,31 +45,26 @@ public class game extends Application {
 
         tableController.setBallController(ballController);
 
-        AnimationTimer timer = new AnimationTimer() {
+        GameLoopTimer gametimer = new GameLoopTimer() {
             @Override
-            public void handle(long now) {
-                for (BallView ballView : ballController.ballViewArrayList()) {
-                    for (int i = 0; i < tableView.getHoles().size(); i++) {
-                        if(tableController.checkInterBallsHoles(ballView, i)) {
-                            ballView.getBall().setRadius(ballView.getBall().getRadius() - 0.3);
+            public void tick(float secondsSinceLastFrame) {
+                if(secondsSinceLastFrame<1){
+                    ballController.detectCollision(tableView.getPlayTable(),secondsSinceLastFrame);
+                    for (BallView ballView : ballController.ballViewArrayList()) {
+                        for (int i = 0; i < tableView.getHoles().size(); i++) {
+                            if(tableController.checkInterBallsHoles(ballView, i)) {
+                                ballView.getBall().setRadius(ballView.getBall().getRadius() - 0.3);
+                            }
                         }
                     }
                 }
             }
         };
-        timer.start();
+        gametimer.start();
 
-        GameLoopTimer gameLoopTimer = new GameLoopTimer() {
-            @Override
-            public void tick(float secondsSinceLastFrame) {
-                if(secondsSinceLastFrame<1) {
-                    ballController.detectCollision(tableView.getPlayTable(), secondsSinceLastFrame);
-                    root.setOnMouseMoved(event -> pcc.cueRotateHandler(event));
-                }
+        pcc.handleRotateCue(scene);
 
-            }
-        };
-        gameLoopTimer.start();
+        pcc.hit(scene);
 
         stage.setScene(scene);
         stage.show();

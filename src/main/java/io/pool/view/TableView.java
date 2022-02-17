@@ -18,6 +18,7 @@ public class TableView {
     private final Pane table; // all components of the table
     private final Rectangle playTable; // the place where the ball move
     private final ArrayList<Circle> holes = new ArrayList<>();
+    private final ArrayList<Line> lines = new ArrayList<>();
     public final static int cornerHoleRadius = 30;
     public final static int centerHoleRadius = 25;
 
@@ -65,6 +66,7 @@ public class TableView {
         upLeftCorner.setRadius(cornerHoleRadius);
         upLeftCorner.setCenterX(48);
         upLeftCorner.setCenterY(55);
+//        upLeftCorner.setFill(Color.BLUE);
         upLeftCorner.setVisible(false);
         holes.add(upLeftCorner);
 
@@ -72,6 +74,7 @@ public class TableView {
         downLeftCorner.setRadius(cornerHoleRadius);
         downLeftCorner.setCenterX(48);
         downLeftCorner.setCenterY(height-57);
+//        downLeftCorner.setFill(Color.BLUE);
         downLeftCorner.setVisible(false);
         holes.add(downLeftCorner);
 
@@ -79,6 +82,7 @@ public class TableView {
         upRightCorner.setRadius(cornerHoleRadius);
         upRightCorner.setCenterX(width-58);
         upRightCorner.setCenterY(55);
+//        upRightCorner.setFill(Color.BLUE);
         upRightCorner.setVisible(false);
         holes.add(upRightCorner);
 
@@ -86,6 +90,7 @@ public class TableView {
         downRightCorner.setRadius(cornerHoleRadius);
         downRightCorner.setCenterX(width - 58);
         downRightCorner.setCenterY(height- 57);
+//        downRightCorner.setFill(Color.BLUE);
         downRightCorner.setVisible(false);
         holes.add(downRightCorner);
 
@@ -93,6 +98,7 @@ public class TableView {
         upCenterCorner.setRadius(centerHoleRadius);
         upCenterCorner.setCenterX((width/2)-7);
         upCenterCorner.setCenterY(41);
+//        upCenterCorner.setFill(Color.BLUE);
         upCenterCorner.setVisible(false);
         holes.add(upCenterCorner);
 
@@ -101,9 +107,43 @@ public class TableView {
         downCenterCorner.setCenterX((width/2) - 7);
         downCenterCorner.setCenterY(height-47);
         downCenterCorner.setVisible(false);
+//        downCenterCorner.setFill(Color.BLUE);
         holes.add(downCenterCorner);
 
         table.getChildren().addAll(holes);
+
+
+        Line upLeftLine = new Line(95, 65, 500, 65);
+        upLeftLine.setStroke(Color.WHITE);
+        upLeftLine.setStrokeWidth(3);
+        lines.add(upLeftLine);
+
+        Line upRightLine = new Line(565, 65, 975, 65);
+        upRightLine.setStroke(Color.WHITE);
+        upRightLine.setStrokeWidth(3);
+        lines.add(upRightLine);
+
+        Line downLeftLine = new Line(95, height-70, 500, height-70);
+        downLeftLine.setStroke(Color.WHITE);
+        downLeftLine.setStrokeWidth(3);
+        lines.add(downLeftLine);
+
+        Line downRightLine = new Line(565, height-70, 975, height-70);
+        downRightLine.setStroke(Color.WHITE);
+        downRightLine.setStrokeWidth(3);
+        lines.add(downRightLine);
+
+        Line centerLeftLine = new Line(65, 103, 65, height-110);
+        centerLeftLine.setStroke(Color.WHITE);
+        centerLeftLine.setStrokeWidth(3);
+        lines.add(centerLeftLine);
+
+        Line centerRightLine = new Line(1010, 103, 1010, height-110);
+        centerRightLine.setStroke(Color.WHITE);
+        centerRightLine.setStrokeWidth(3);
+        lines.add(centerRightLine);
+
+        table.getChildren().addAll(lines);
 
 
     }
@@ -121,5 +161,6 @@ public class TableView {
     }
 
 
+    //tableView: getHeight, getWidth, getX, getY, in the class diagram
 }
 

@@ -1,5 +1,6 @@
 package io.pool.controller;
 
+import io.pool.eightpool.game;
 import io.pool.model.BallModel;
 import io.pool.model.TableModel;
 import io.pool.view.BallView;
@@ -13,11 +14,14 @@ public class TableController {
     private TableModel tableModel;
     private BallController ballController;
     private ArrayList<Circle> holes;
+    private int tableX = game.eightPoolTableX;
+    private int tableY = game.eightPoolTableY;
 
 
     public TableController(TableView tableView, TableModel tableModel) {
         this.tableView = tableView;
         this.tableModel = tableModel;
+
 
         this.holes = tableView.getHoles();
     }
@@ -50,7 +54,7 @@ public class TableController {
 
     public boolean checkInterBallsHoles(BallView ballView, int holeNum) {
         Circle hole = tableView.getHoles().get(holeNum);
-        double centerToCenter = Math.sqrt(Math.pow(ballView.getBall().getLayoutX() - 300 - (hole.getCenterX()), 2) + Math.pow(ballView.getBall().getLayoutY() - 100 - (hole.getCenterY()), 2));
+        double centerToCenter = Math.sqrt(Math.pow(ballView.getBall().getLayoutX() - tableX - (hole.getCenterX()), 2) + Math.pow(ballView.getBall().getLayoutY() - tableY - (hole.getCenterY()), 2));
 
         double rs1 = ballView.getBall().getRadius() + hole.getRadius();
         return centerToCenter <= rs1;

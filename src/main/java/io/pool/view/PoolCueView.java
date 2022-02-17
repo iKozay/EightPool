@@ -1,59 +1,56 @@
 package io.pool.view;
 
-import io.pool.model.PoolCueModel;
-import javafx.animation.RotateTransition;
-import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
-import javafx.scene.transform.Rotate;
 
 public class PoolCueView {
 
-    private Cylinder cue;
-    private double xPosition = 150;
-    private double yPosition = 150;
-    private double width = 10;
-    private double length = 200;
-    private PhongMaterial material = new PhongMaterial(Color.GREENYELLOW);
-    private Point2D cueCenter= new Point2D(150, (yPosition+length)/2);
-
+    private static Cylinder cue;
+    double xPos = 500;
+    double yPos = 100;
+    double centerX = xPos;
+    double centerY = yPos;
+    double previousAngle = 0;
 
     public PoolCueView() {
+
         cue = new Cylinder();
-        cue.setLayoutX(xPosition);
-        cue.setLayoutY(yPosition);
-        cue.setRadius(width);
-        cue.setHeight(length);
+        cue.setRadius(10);
+        cue.setHeight(300);
+        cue.translateXProperty().set(xPos);
+        cue.translateYProperty().set(yPos);
+        cue.setRotationAxis(Point3D.ZERO);
+        PhongMaterial material = new PhongMaterial();
+        material.setDiffuseColor(Color.GOLD);
         cue.setMaterial(material);
-        RotateTransition rotate = new RotateTransition();
-        rotate.setNode(this.cue);
-        rotate.setByAngle(100);
-        rotate.play();
 
     }
 
     public Cylinder getCue() {
         return cue;
     }
+    public double getXPos(){return xPos;}
+    public double getYPos(){return yPos;}
 
-    public Point2D getCueCenter() {return cueCenter;}
-
-    public void setCueCenter(Point2D cueCenter) {this.cueCenter = cueCenter;}
-
-    public void rotateCue(PoolCueModel cueModel){
-        /*
-        RotateTransition rotate = new RotateTransition();
-        rotate.setNode(this.cue);
-        rotate.setByAngle(cueModel.getRotation());
-        System.out.println(cueModel.getRotation()+ "ROTATION");
-        rotate.play();
-
-         */
-        Rotate rotate = new Rotate();
-        rotate.setAngle(cueModel.getRotation());
-        rotate.setPivotX(this.cueCenter.getX());
-        rotate.setPivotY(this.cueCenter.getY());
-        this.cue.getTransforms().add(rotate);
+    public double getCenterX() {
+        return centerX;
     }
+
+    public double getCenterY() {
+        return centerY;
+    }
+
+    public double getPreviousAngle() {
+        return previousAngle;
+    }
+
+    public void setPreviousAngle(double angle) {
+        this.previousAngle = angle;
+    }
+    //    public double getCueAngle() {
+//        return cue.getTransforms();
+//    }
+
 }
