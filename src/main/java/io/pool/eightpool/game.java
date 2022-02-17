@@ -5,6 +5,7 @@ import io.pool.controller.PoolCueController;
 import io.pool.controller.TableController;
 import io.pool.model.TableModel;
 import io.pool.view.BallView;
+import io.pool.view.MainMenuView;
 import io.pool.view.PoolCueView;
 import io.pool.view.TableView;
 import javafx.animation.AnimationTimer;
@@ -29,9 +30,16 @@ public class game extends Application {
         // https://stackoverflow.com/questions/68186839/javafx-3d-sphere-partial-texture
         //
         Pane root = new Pane();
-        Scene scene = new Scene(root, 1080, 610);
+
+        MainMenuView mmv = new MainMenuView();
+
+
+        Scene scene = new Scene(mmv, 1920, 1080);
         stage.setTitle("EightPool");
 
+
+
+        /*
         TableView tableView = new TableView(root);
         TableModel tableModel = new TableModel(tableView);
 
@@ -65,6 +73,8 @@ public class game extends Application {
         pcc.handleRotateCue(scene);
 
         pcc.hit(scene);
+
+         */
 
         stage.setScene(scene);
         stage.show();
