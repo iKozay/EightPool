@@ -1,6 +1,7 @@
 package io.pool.eightpool;
 
 import io.pool.controller.BallController;
+import io.pool.controller.MainMenuController;
 import io.pool.controller.PoolCueController;
 import io.pool.controller.TableController;
 import io.pool.model.TableModel;
@@ -32,14 +33,18 @@ public class game extends Application {
         Pane root = new Pane();
 
         MainMenuView mmv = new MainMenuView();
+        MainMenuController mmc = new MainMenuController(mmv,stage);
 
 
         Scene scene = new Scene(mmv, 1920, 1080);
+        Scene gameScene = new Scene(root, 1920, 1080);
+        mmc.soloAction(gameScene);
+
         stage.setTitle("EightPool");
 
 
 
-        /*
+
         TableView tableView = new TableView(root);
         TableModel tableModel = new TableModel(tableView);
 
@@ -70,11 +75,11 @@ public class game extends Application {
         };
         gametimer.start();
 
-        pcc.handleRotateCue(scene);
+        pcc.handleRotateCue(gameScene);
 
-        pcc.hit(scene);
+        pcc.hit(gameScene);
 
-         */
+
 
         stage.setScene(scene);
         stage.show();

@@ -2,6 +2,9 @@ package io.pool.view;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -21,7 +24,16 @@ public class MainMenuView extends Pane{
     Rectangle2D screen = Screen.getPrimary().getBounds();
     private final double screenWidth = screen.getWidth();
     private final double screenHeight = screen.getHeight();
-
+    private Polygon p2Sub;
+    private Polygon p1,p2,p3;
+    private MenuBar menuBar;
+    private Menu menuFile;
+    private Menu menuEdit;
+    private Menu menuHelp;
+    private MenuItem menuItem1;
+    private MenuItem menuItem2;
+    private MenuItem menuItem3;
+    private MenuItem menuItem4;
 
     public MainMenuView(){
         this.setStyle("-fx-background-color: White");
@@ -45,7 +57,7 @@ public class MainMenuView extends Pane{
 
         //Adding texture
         //Green
-        Polygon p1 = new Polygon();
+        p1 = new Polygon();
         this.getChildren().add(p1);
         p1.getPoints().addAll(new Double[]{
                 0.0 , 0.0,
@@ -65,7 +77,7 @@ public class MainMenuView extends Pane{
             e.printStackTrace();
         }
         //Red
-        Polygon p2 = new Polygon();
+        p2 = new Polygon();
         this.getChildren().add(p2);
         p2.getPoints().addAll(new Double[]{
                 this.getScreenWidth()/3 , 0.0,
@@ -85,8 +97,26 @@ public class MainMenuView extends Pane{
             e.printStackTrace();
         }
 
+        p2Sub = new Polygon();
+        p2Sub.getPoints().addAll(new Double[]{
+                this.getScreenWidth()/3 , 0.0,
+                this.getScreenWidth()*2/3, 0.0,
+                this.getScreenWidth()*7/12, this.getScreenHeight(),
+                this.getScreenWidth()/4, this.getScreenHeight()
+        });
+        try {
+            InputStream RedtableTextureStream = new FileInputStream("resources/MainMenu/RedTableTexture.jpg");
+            RedtableTextureImage = new Image(RedtableTextureStream);
+            RedtableTexturePattern = new ImagePattern(RedtableTextureImage);
+            p2Sub.setFill(RedtableTexturePattern);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+
         //Blue
-        Polygon p3 = new Polygon();
+        p3 = new Polygon();
         this.getChildren().add(p3);
         p3.getPoints().addAll(new Double[]{
                 this.getScreenWidth()*2/3 , 0.0,
@@ -129,8 +159,127 @@ public class MainMenuView extends Pane{
         versusAIText.setLayoutX(this.getScreenWidth()*0.68);
         versusAIText.setLayoutY(this.getScreenHeight()*0.4);
 
+        //Menu Bar
+        menuBar = new MenuBar();
+        menuBar.setMinSize(100,10);
+        menuBar.setStyle("-fx-background-color: transparent");
+        this.getChildren().add(menuBar);
+        //Menu File
+        menuFile = new Menu("File");
+        //MenuFile Items
+        menuItem1 = new MenuItem("File1");
+        menuItem2 = new MenuItem("File2");
+        menuFile.getItems().addAll(menuItem1,menuItem2);
+
+        //Menu Edit
+        menuEdit = new Menu("Edit");
+        //MenuEdit Items
+        menuItem3 = new MenuItem("File1");
+        menuItem4 = new MenuItem("File2");
+        menuEdit.getItems().addAll(menuItem3,menuItem4);
+        //Menu Help
+        menuHelp = new Menu("Help");
+        menuBar.getMenus().addAll(menuFile,menuEdit,menuHelp);
+
+
+
     }
 
+    public Menu getMenuFile() {
+        return menuFile;
+    }
+
+    public void setMenuFile(Menu menuFile) {
+        this.menuFile = menuFile;
+    }
+
+    public Menu getMenuEdit() {
+        return menuEdit;
+    }
+
+    public void setMenuEdit(Menu menuEdit) {
+        this.menuEdit = menuEdit;
+    }
+
+    public Menu getMenuHelp() {
+        return menuHelp;
+    }
+
+    public void setMenuHelp(Menu menuHelp) {
+        this.menuHelp = menuHelp;
+    }
+
+    public MenuItem getMenuItem1() {
+        return menuItem1;
+    }
+
+    public void setMenuItem1(MenuItem menuItem1) {
+        this.menuItem1 = menuItem1;
+    }
+
+    public MenuItem getMenuItem2() {
+        return menuItem2;
+    }
+
+    public void setMenuItem2(MenuItem menuItem2) {
+        this.menuItem2 = menuItem2;
+    }
+
+    public MenuItem getMenuItem3() {
+        return menuItem3;
+    }
+
+    public void setMenuItem3(MenuItem menuItem3) {
+        this.menuItem3 = menuItem3;
+    }
+
+    public MenuItem getMenuItem4() {
+        return menuItem4;
+    }
+
+    public void setMenuItem4(MenuItem menuItem4) {
+        this.menuItem4 = menuItem4;
+    }
+
+    public MenuBar getMenuBar() {
+        return menuBar;
+    }
+
+    public void setMenuBar(MenuBar menuBar) {
+        this.menuBar = menuBar;
+    }
+
+    public Polygon getP1() {
+        return p1;
+    }
+
+    public void setP1(Polygon p1) {
+        this.p1 = p1;
+    }
+
+    public Polygon getP2() {
+        return p2;
+    }
+
+    public void setP2(Polygon p2) {
+        this.p2 = p2;
+    }
+
+    public Polygon getP3() {
+        return p3;
+    }
+
+    public void setP3(Polygon p3) {
+        this.p3 = p3;
+    }
+
+    public Polygon getP2Sub() {
+        return p2Sub;
+    }
+
+    public void setP2Sub(Polygon p2Sub) {
+        this.p2Sub = p2Sub;
+    }
 
     public double getScreenWidth() {return screenWidth;}
 
