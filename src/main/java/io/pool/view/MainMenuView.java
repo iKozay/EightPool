@@ -12,6 +12,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Scale;
 import javafx.stage.Screen;
 
 import java.io.FileInputStream;
@@ -59,12 +60,10 @@ public class MainMenuView extends Pane{
         //Green
         p1 = new Polygon();
         this.getChildren().add(p1);
-        p1.getPoints().addAll(new Double[]{
-                0.0 , 0.0,
+        p1.getPoints().addAll(0.0, 0.0,
                 this.getScreenWidth()/3, 0.0,
                 this.getScreenWidth()/4, this.getScreenHeight(),
-                0.0, this.getScreenHeight()
-        });
+                0.0, this.getScreenHeight());
 
         Image tableTextureImage;
         ImagePattern tableTexturePattern;
@@ -79,12 +78,10 @@ public class MainMenuView extends Pane{
         //Red
         p2 = new Polygon();
         this.getChildren().add(p2);
-        p2.getPoints().addAll(new Double[]{
-                this.getScreenWidth()/3 , 0.0,
+        p2.getPoints().addAll(this.getScreenWidth()/3, 0.0,
                 this.getScreenWidth()*2/3, 0.0,
                 this.getScreenWidth()*7/12, this.getScreenHeight(),
-                this.getScreenWidth()/4, this.getScreenHeight()
-        });
+                this.getScreenWidth()/4, this.getScreenHeight());
 
         Image RedtableTextureImage;
         ImagePattern RedtableTexturePattern;
@@ -98,12 +95,10 @@ public class MainMenuView extends Pane{
         }
 
         p2Sub = new Polygon();
-        p2Sub.getPoints().addAll(new Double[]{
-                this.getScreenWidth()/3 , 0.0,
+        p2Sub.getPoints().addAll(this.getScreenWidth()/3, 0.0,
                 this.getScreenWidth()*2/3, 0.0,
                 this.getScreenWidth()*7/12, this.getScreenHeight(),
-                this.getScreenWidth()/4, this.getScreenHeight()
-        });
+                this.getScreenWidth()/4, this.getScreenHeight());
         try {
             InputStream RedtableTextureStream = new FileInputStream("resources/MainMenu/RedTableTexture.jpg");
             RedtableTextureImage = new Image(RedtableTextureStream);
@@ -113,17 +108,13 @@ public class MainMenuView extends Pane{
             e.printStackTrace();
         }
 
-
-
         //Blue
         p3 = new Polygon();
         this.getChildren().add(p3);
-        p3.getPoints().addAll(new Double[]{
-                this.getScreenWidth()*2/3 , 0.0,
+        p3.getPoints().addAll(this.getScreenWidth()*2/3, 0.0,
                 this.getScreenWidth(), 0.0,
                 this.getScreenWidth(), this.getScreenHeight(),
-                this.getScreenWidth()*7/12, this.getScreenHeight()
-        });
+                this.getScreenWidth()*7/12, this.getScreenHeight());
 
         Image BluetableTextureImage;
         ImagePattern BluetableTexturePattern;
@@ -180,8 +171,6 @@ public class MainMenuView extends Pane{
         //Menu Help
         menuHelp = new Menu("Help");
         menuBar.getMenus().addAll(menuFile,menuEdit,menuHelp);
-
-
 
     }
 

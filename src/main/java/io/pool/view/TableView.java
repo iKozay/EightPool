@@ -1,13 +1,20 @@
 package io.pool.view;
 
 import io.pool.eightpool.game;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -15,6 +22,7 @@ import java.util.ArrayList;
 
 public class TableView {
 
+    private final BorderPane borderPane;
     private final Pane table; // all components of the table
     private final Rectangle playTable; // the place where the ball move
     private final ArrayList<Circle> holes = new ArrayList<>();
@@ -35,6 +43,41 @@ public class TableView {
         table.setPrefHeight(height);
         table.setLayoutX(layoutX);
         table.setLayoutY(layoutY);
+
+        Label player1Lbl = new Label("player1");
+        player1Lbl.setStyle("-fx-font-size: 24");
+        Label player2Lbl = new Label("player2");
+        player2Lbl.setStyle("-fx-font-size: 24");
+        HBox playersIcon = new HBox(900,player1Lbl,player2Lbl);
+        playersIcon.setAlignment(Pos.CENTER);
+        playersIcon.setStyle("-fx-border-color: black");
+
+        Text information = new Text();
+        information.setText("Ball 1: " + "" + "\n" + "Ball 1: " + "" + "\n" + "Ball 2: " + "" + "\n" + "Ball 3: " + ""
+                + "\n" + "Ball 4: " + "" + "\n" + "Ball 5: " + "" + "\n" + "Ball 6: " + "" + "\n" + "Ball 7: " + "" + "\n"
+                + "Ball 8: " + "" + "\n" + "Ball 9: " + "" + "\n" + "Ball 10: " + "" + "\n" + "Ball 11: " + "" + "\n"
+                + "Ball 12: " + "" + "\n" + "Ball 13: " + "" + "\n" + "Ball 14: " + "" + "\n" + "Ball 15: " + ""
+                + "\n" + "Ball 16: " + "" + "\n" + "Ball Cue: " + "" + "\n");
+        information.setStyle("-fx-font-size: 15");
+        Slider sldFriction = new Slider();
+        sldFriction.setShowTickLabels(true);
+        Label sldLblFriction = new Label("Friction");
+        Slider sldForce = new Slider();
+        sldForce.setShowTickLabels(true);
+        Label sldLblForce = new Label("Force");
+        VBox ballInformation = new VBox(information,sldLblForce,sldForce,sldLblFriction,sldFriction);
+        ballInformation.setPrefHeight(500);
+        ballInformation.setPrefWidth(220);
+        ballInformation.setStyle("-fx-border-color: black");
+
+        borderPane = new BorderPane();
+        borderPane.setRight(ballInformation);
+        borderPane.setTop(playersIcon);
+        borderPane.setCenter(table);
+        borderPane.setPrefWidth(1300);
+        borderPane.setPrefHeight(610);
+
+
 
         ImageView tableImageView = new ImageView(); // the image view of the table
         Image image = new Image(new File("resources/tableImage/finalTable.png").toURI().toURL().toExternalForm());
@@ -60,7 +103,7 @@ public class TableView {
 
         table.getChildren().addAll(tableImageView, playTable, whiteLine); // adding the components to the table
 
-        root.getChildren().add(table); // adding the table to the main pain of the project.
+        root.getChildren().add(borderPane); // adding the table to the main pain of the project.
 
         Circle upLeftCorner = new Circle();
         upLeftCorner.setRadius(cornerHoleRadius);

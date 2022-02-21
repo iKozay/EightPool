@@ -37,7 +37,7 @@ public class game extends Application {
 
 
         Scene scene = new Scene(mmv, 1920, 1080);
-        Scene gameScene = new Scene(root, 1920, 1080);
+        Scene gameScene = new Scene(root, 1300, 1080);
         mmc.soloAction(gameScene);
 
         stage.setTitle("EightPool");
