@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.pool.controller.settingsController">
+   <children>
+      <GridPane prefHeight="197.0" prefWidth="600.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="128.6666488647461" minHeight="0.0" prefHeight="31.33332633972168" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="318.3333333333333" minHeight="8.000010172526043" prefHeight="32.66667683919272" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="367.99998982747394" minHeight="10.0" prefHeight="31.999989827473954" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="367.99998982747394" minHeight="10.0" prefHeight="31.666667938232422" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="367.99998982747394" minHeight="10.0" prefHeight="43.999994913737" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="367.99998982747394" minHeight="10.0" prefHeight="60.33332570393881" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem fx:id="close" mnemonicParsing="false" onAction="#handleclose" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem fx:id="goToMainMenu" mnemonicParsing="false" onAction="#handlegoToMainMenu" text="Go to Main Menu" />
+                        <MenuItem mnemonicParsing="false" text="Profiles" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox prefHeight="15.0" prefWidth="600.0" GridPane.rowIndex="1">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Control Option:" wrappingWidth="91.54623413085938" />
+                  <RadioButton mnemonicParsing="false" text="Keyboard" />
+                  <RadioButton mnemonicParsing="false" selected="true" text="Mouse" />
+               </children>
+            </HBox>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Show White Ball Path:" GridPane.rowIndex="2" />
+            <ComboBox prefWidth="150.0" promptText="Pointer" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets left="120.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Theme Selection:" GridPane.rowIndex="3" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Pool Cue Selection:" GridPane.rowIndex="4" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Friction Coefficient:" GridPane.rowIndex="5" />
+            <ComboBox prefWidth="150.0" promptText="Default Theme" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets left="100.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <ComboBox prefWidth="150.0" promptText="Default Pool Cue" GridPane.rowIndex="4">
+               <GridPane.margin>
+                  <Insets left="110.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <Slider blockIncrement="0.1" majorTickUnit="0.1" max="0.5" min="0.1" minorTickCount="0" prefHeight="37.0" prefWidth="429.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="0.3" GridPane.rowIndex="5">
+               <GridPane.margin>
+                  <Insets left="100.0" right="10.0" />
+               </GridPane.margin>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Slider>
+         </children>
+      </GridPane>
+   </children>
+</Pane>

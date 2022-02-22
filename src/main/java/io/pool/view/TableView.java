@@ -1,8 +1,10 @@
 package io.pool.view;
 
+import io.pool.controller.MainMenuController;
 import io.pool.eightpool.game;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
@@ -65,7 +67,11 @@ public class TableView {
         Slider sldForce = new Slider();
         sldForce.setShowTickLabels(true);
         Label sldLblForce = new Label("Force");
-        VBox ballInformation = new VBox(information,sldLblForce,sldForce,sldLblFriction,sldFriction);
+        Button goToMenu = new Button("Go to main menu");
+        goToMenu.setOnAction(e->{
+            MainMenuController.gotoMainMenu();
+        });
+        VBox ballInformation = new VBox(information,sldLblForce,sldForce,sldLblFriction,sldFriction,goToMenu);
         ballInformation.setPrefHeight(500);
         ballInformation.setPrefWidth(220);
         ballInformation.setStyle("-fx-border-color: black");

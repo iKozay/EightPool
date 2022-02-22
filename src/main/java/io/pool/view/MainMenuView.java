@@ -1,5 +1,7 @@
 package io.pool.view;
 
+import io.pool.controller.MainMenuController;
+import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
@@ -35,6 +37,7 @@ public class MainMenuView extends Pane{
     private MenuItem menuItem2;
     private MenuItem menuItem3;
     private MenuItem menuItem4;
+    private MainMenuController mainMenuController;
 
     public MainMenuView(){
         this.setStyle("-fx-background-color: White");
@@ -158,18 +161,23 @@ public class MainMenuView extends Pane{
         //Menu File
         menuFile = new Menu("File");
         //MenuFile Items
-        menuItem1 = new MenuItem("File1");
-        menuItem2 = new MenuItem("File2");
-        menuFile.getItems().addAll(menuItem1,menuItem2);
+        menuItem1 = new MenuItem("Close");
+        menuItem1.setOnAction(e->{
+            Platform.exit();
+        });
+        menuFile.getItems().addAll(menuItem1);
 
         //Menu Edit
         menuEdit = new Menu("Edit");
         //MenuEdit Items
-        menuItem3 = new MenuItem("File1");
-        menuItem4 = new MenuItem("File2");
+        menuItem3 = new MenuItem("Game Settings");
+        menuItem3.setOnAction(e->{
+            mainMenuController.gotoSettings();
+        });
+        menuItem4 = new MenuItem("Profiles");
         menuEdit.getItems().addAll(menuItem3,menuItem4);
         //Menu Help
-        menuHelp = new Menu("Help");
+        menuHelp = new Menu("About");
         menuBar.getMenus().addAll(menuFile,menuEdit,menuHelp);
 
     }
@@ -273,4 +281,8 @@ public class MainMenuView extends Pane{
     public double getScreenWidth() {return screenWidth;}
 
     public double getScreenHeight() {return screenHeight;}
+
+    public void setController(MainMenuController mainMenuController) {
+        this.mainMenuController = mainMenuController;
+    }
 }

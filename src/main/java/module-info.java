@@ -5,5 +5,6 @@ module io.pool.eightpool {
 
 
     opens io.pool.eightpool to javafx.fxml;
+    opens io.pool.controller to javafx.fxml;
     exports io.pool.eightpool;
 }

@@ -5,15 +5,14 @@ import io.pool.controller.MainMenuController;
 import io.pool.controller.PoolCueController;
 import io.pool.controller.TableController;
 import io.pool.model.TableModel;
-import io.pool.view.BallView;
-import io.pool.view.MainMenuView;
-import io.pool.view.PoolCueView;
-import io.pool.view.TableView;
+import io.pool.view.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.net.MalformedURLException;
 
 public class game extends Application {
@@ -23,7 +22,7 @@ public class game extends Application {
     private double oldPosX;
     private double oldPosY;
     @Override
-    public void start(Stage stage) throws MalformedURLException {
+    public void start(Stage stage) throws IOException {
         // TODO Units: 0.04pixels/m
         //TODO Links for 3D Balls:
         // https://openjfx.io/javadoc/16/javafx.graphics/javafx/scene/paint/PhongMaterial.html
@@ -34,11 +33,10 @@ public class game extends Application {
 
         MainMenuView mmv = new MainMenuView();
         MainMenuController mmc = new MainMenuController(mmv,stage);
+        mmc.setSettingsView(new SettingsView());
 
 
         Scene scene = new Scene(mmv, 1920, 1080);
-        Scene gameScene = new Scene(root, 1300, 1080);
-        mmc.soloAction(gameScene);
 
         stage.setTitle("EightPool");
 
@@ -75,9 +73,8 @@ public class game extends Application {
         };
         gametimer.start();
 
-        pcc.handleRotateCue(gameScene);
 
-        pcc.hit(gameScene);
+        mmc.setGameView(root,pcc);
 
 
 

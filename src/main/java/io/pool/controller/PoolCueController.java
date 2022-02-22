@@ -58,4 +58,12 @@ public class PoolCueController {
         });
 
     }
+
+    public void resetEventHandler(Scene scene) {
+        scene.setOnMouseMoved(null);
+        scene.setOnMousePressed(null);
+        scene.setOnMouseDragged(null);
+        scene.setOnMouseReleased(null);
+
+    }
 }
