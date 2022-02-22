@@ -10,8 +10,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
@@ -34,14 +36,20 @@ public class BallController {
             bModelList.add(ballModel);
             BallView ballView = new BallView(bModelList.get(0).getImg(),BallModel.getRadius());
             //ballView.getBall().translateXProperty().bind(ballModel.getBall);
+            BallModel ballModel2 = new BallModel(15, 2, new Image(new File("resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm()));
+            bModelList.add(ballModel2);
+            BallView ballView2 = new BallView(bModelList.get(1).getImg(),BallModel.getRadius());
             bViewList.add(ballView);
+            bViewList.add(ballView2);
+            ballModel2.setBallPosition(new CustomPoint2D(900,250));
+            ballModel2.setBallVelocity(new CustomPoint2D(-1,0));
             makeDraggable();
             //bModelList.add(new BallModel(15, 2, new Image(new File("resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm())));
             //bViewList.add(new BallView(this,bModelList.get(1).getImg(),BallModel.getRadius()));
             ///bModelList.get(1).setBallPosition(new Point2D(600,350));
             //bModelList.get(1).setBallVector(new VelocityVector(0,0));
             //bModelList.get(1).setMovingBall(false);
-            root.getChildren().addAll(bViewList.get(0).getBall());
+            root.getChildren().addAll(bViewList.get(0).getBall(),bViewList.get(1).getBall());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -83,7 +91,7 @@ public class BallController {
 
     public void detectCollision(Rectangle tableBorders, double time){
         detectCollisionWithTable(tableBorders);
-        //detectCollisionWithOtherBalls();
+        detectCollisionWithOtherBalls();
         updateBallPosition(time);
     }
 
@@ -107,16 +115,23 @@ public class BallController {
         }
     }
     private void detectCollisionWithOtherBalls(){
+        //TODO make sure if ball already collided using some method
+        ArrayList<BallModel> collisionChecked = new ArrayList<>();
         for (BallModel ballA : bModelList) {
             for (BallModel ballB : bModelList) {
                 if (!ballA.equals(ballB)) {
                     if((ballA.isMovingBall())||(ballB.isMovingBall())){
-                        if(ballA.getBallPosition().distance(ballB.getBallPosition()).compareTo(new BigDecimal(2*BallModel.getRadius()))<=0){
+                        if(distance(ballA.getBallPositionX(),ballA.getBallPositionY(),ballB.getBallPositionX(),ballB.getBallPositionY()).compareTo(new BigDecimal(2*BallModel.getRadius()))<=0){
                             if ((ballA.isMovingBall()) && (ballB.isMovingBall())) {
                                 //Point2D newCoordinateA = new Point2D(ballA_NextFramePos.getX()*proportionFactor,ballA_NextFramePos.getY()*proportionFactor);
                                 //Point2D newCoordinateB = new Point2D(ballB_NextFramePos.getX()*proportionFactor,ballB_NextFramePos.getY()*proportionFactor);
                                 //ballA.setBallPosition(newCoordinateA);
                                 //ballB.setBallPosition(newCoordinateB);
+                                BigDecimal distance = distance(ballA.getBallPositionX(),ballA.getBallPositionY(),ballB.getBallPositionX(),ballB.getBallPositionY()).divide(new BigDecimal(2));
+
+                               // ballA.setBallPosition(ballA.getBallPositionX().subtract(distance),ballA.getBallPositionY().subtract(distance));
+                               // ballB.setBallPosition(ballB.getBallPositionX().add(distance),ballB.getBallPositionY().add(distance));
+
                             } else {
                                 BallModel movingBall;
                                 BallModel restingBall;
@@ -133,7 +148,10 @@ public class BallController {
                                 movingBall.setBallPosition(newCoordinate);
 
                             }
-//                            System.out.println("Collision");
+                            System.out.println("Collision");
+                            //ballA.setBallVelocity(new CustomPoint2D(1,0));
+                            //ballB.setBallVelocity(new CustomPoint2D(-1,0));
+                            //System.out.println(ballA.getBallVelocity()+" ; "+ballB.getBallVelocity());
                             collisionHandler(ballA,ballB);
                         }
                     }
@@ -145,13 +163,13 @@ public class BallController {
     private void updateBallPosition(double time) {
         for (BallModel bModel : bModelList) {
             if(bModel.isMovingBall()) {
-                applyFriction(bModel, time);
+                //applyFriction(bModel, time);
                 BallView bView = bViewList.get(bModelList.indexOf(bModel));
-                bModel.setMovingBall(!bModel.getBallVelocity().equals(Point2D.ZERO));
+                bModel.setMovingBall(!bModel.getBallVelocity().equals(CustomPoint2D.ZERO));
                 bModel.setBallPosition(bModel.getBallPosition().add(bModel.getBallVelocity().getX(), bModel.getBallVelocity().getY()));
                 bView.getBall().setLayoutX(bModel.getBallPosition().getX().doubleValue());
                 bView.getBall().setLayoutY(bModel.getBallPosition().getY().doubleValue());
-                Rotate rx = new Rotate(bModel.getBallVelocity().getY().doubleValue(), 0, 0, 0, Rotate.X_AXIS);
+                Rotate rx = new Rotate(-bModel.getBallVelocity().getY().doubleValue(), 0, 0, 0, Rotate.X_AXIS);
                 Rotate ry = new Rotate(bModel.getBallVelocity().getX().doubleValue(), 0, 0, 0, Rotate.Y_AXIS);
                 bView.getBall().getTransforms().addAll(rx, ry);
             }
@@ -177,22 +195,25 @@ public class BallController {
         /**1
          * find unit normal and unit tanget vector
          */
-        BigDecimal normalXComponent = ball2.getBallPosition().getX().subtract(ball1.getBallPosition().getX());
-        BigDecimal normalYComponent = ball2.getBallPosition().getY().subtract(ball1.getBallPosition().getY());
-        CustomPoint2D normalVectorInitial = new CustomPoint2D(normalXComponent, normalYComponent);
-        //double normalMagnitude = Math.sqrt(Math.pow(normalXComponent, 2)+Math.pow(normalYComponent, 2));
-        //double normalAngle = Math.atan(normalYComponent/normalXComponent);
-        CustomPoint2D unitNormalVector = new CustomPoint2D(normalXComponent.divide(normalXComponent.abs()), normalYComponent.divide(normalYComponent.abs()));
-        CustomPoint2D unitTangentVector = new CustomPoint2D(unitNormalVector.getY().negate(), unitNormalVector.getX());
+        BigDecimal normalXComponent = ball2.getBallVelocity().getX().subtract(ball1.getBallVelocity().getX());
+        BigDecimal normalYComponent = ball2.getBallVelocity().getY().subtract(ball1.getBallVelocity().getY());
+
+        BigDecimal magnitude = (normalYComponent.pow(2).add(normalXComponent.pow(2))).sqrt(MathContext.DECIMAL32);
+        BigDecimal unitNormalX = normalXComponent.divide(magnitude);
+        BigDecimal unitNormalY = normalYComponent.divide(magnitude);
+
+        BigDecimal unitTangentX = unitNormalY.negate();
+        BigDecimal unitTangentY = unitTangentX;
+
 
         /**2 (step 2 is skipped because we already have the balls vectors
          * Resolve velocity vectors of ball 1 and 2 into normal and tangential components
          * this is done by using the dot product of the balls initial velocity and using the unitVectors
          */
-        BigDecimal v1n = (unitNormalVector.getX().multiply(ball1.getBallVelocity().getX()).add(unitNormalVector.getY().multiply(ball1.getBallVelocity().getY())));
-        BigDecimal v1t = (unitTangentVector.getX().multiply(ball1.getBallVelocity().getX())).add(unitTangentVector.getY().multiply(ball1.getBallVelocity().getY()));
-        BigDecimal v2n = (unitNormalVector.getX().multiply(ball2.getBallVelocity().getX())).add(unitNormalVector.getY().multiply(ball2.getBallVelocity().getY()));
-        BigDecimal v2t = (unitTangentVector.getX().multiply(ball2.getBallVelocity().getX())).add(unitTangentVector.getY().multiply(ball2.getBallVelocity().getY()));
+        BigDecimal v1n = (unitNormalX.multiply(ball1.getBallVelocity().getX()).add(unitNormalY.multiply(ball1.getBallVelocity().getY())));
+        BigDecimal v1t = (unitTangentX.multiply(ball1.getBallVelocity().getX())).add(unitTangentY.multiply(ball1.getBallVelocity().getY()));
+        BigDecimal v2n = (unitNormalX.multiply(ball2.getBallVelocity().getX())).add(unitNormalY.multiply(ball2.getBallVelocity().getY()));
+        BigDecimal v2t = (unitTangentX.multiply(ball2.getBallVelocity().getX())).add(unitTangentY.multiply(ball2.getBallVelocity().getY()));
 
         /**3
          * Find new tangential velocities
@@ -206,28 +227,43 @@ public class BallController {
          * all the instances of 1 in this equation are substitutes for mass
          * this is assuming all the balls have equal mass
          */
-        BigDecimal v1np = (v1n).add(v2n.multiply(CustomPoint2D.TWO_BD)).divide(CustomPoint2D.TWO_BD);
-        BigDecimal v2np = (v2n).add(v1n.multiply(CustomPoint2D.TWO_BD)).divide(CustomPoint2D.TWO_BD);
+        BigDecimal two = new BigDecimal(2);
+        BigDecimal v1np = v2n;//(v1n).add(v2n.multiply(two)).divide(two);
+        BigDecimal v2np = v1n;//(v2n).add(v1n.multiply(two)).divide(two);
 
         /**5
          * Convert scalar normal and tangential velocites into vectors
          */
-        CustomPoint2D normalVectorFinalBall1 = unitNormalVector.multiply(v1np);
-        CustomPoint2D normalVectorFinalBall2 = unitNormalVector.multiply(v2np);
-        CustomPoint2D tangentialVectorFinalBall1 = unitTangentVector.multiply(v1tp);
-        CustomPoint2D tangentialVectorFinalBall2 = unitTangentVector.multiply(v2tp);
+        BigDecimal normalXFinalBall1 = unitNormalX.multiply(v1np);
+        BigDecimal normalYFinalBall1 = unitNormalY.multiply(v1np);
+        BigDecimal normalXFinalBall2 = unitNormalX.multiply(v2np);
+        BigDecimal normalYFinalBall2 = unitNormalY.multiply(v2np);
+
+        BigDecimal tangentialXFinalBall1 = unitTangentX.multiply(v1tp);
+        BigDecimal tangentialYFinalBall1 = unitTangentY.multiply(v1tp);
+        BigDecimal tangentialXFinalBall2 = unitTangentX.multiply(v2tp);
+        BigDecimal tangentialYFinalBall2 = unitTangentY.multiply(v2tp);
 
         /**6
          * Add normal and tangential vectors for each ball
          */
-        CustomPoint2D finalVectorBall1 = normalVectorFinalBall1.add(tangentialVectorFinalBall1);
-        CustomPoint2D finalVectorBall2 = normalVectorFinalBall2.add(tangentialVectorFinalBall2);
+        BigDecimal finalBall1X = normalXFinalBall1.add(tangentialXFinalBall1);
+        BigDecimal finalBall1Y = normalYFinalBall1.add(tangentialYFinalBall1);
+        BigDecimal finalBall2X = normalXFinalBall2.add(tangentialXFinalBall2);
+        BigDecimal finalBall2Y = normalYFinalBall2.add(tangentialYFinalBall2);
 
-        ball1.setBallVelocity(finalVectorBall1);
-        ball2.setBallVelocity(finalVectorBall2);
+        ball1.setBallVelocity(new CustomPoint2D(finalBall1X,finalBall1Y));
+        ball2.setBallVelocity(new CustomPoint2D(finalBall2X,finalBall2Y));
     }
 
-
+    public BigDecimal distance(BigDecimal x2, BigDecimal y2, BigDecimal x1, BigDecimal y1) {
+        BigDecimal a = x2.subtract(x1, MathContext.DECIMAL32);
+        BigDecimal b = y2.subtract(y1, MathContext.DECIMAL32);
+        a = a.pow(2, MathContext.DECIMAL32);
+        b = b.pow(2, MathContext.DECIMAL32);
+        BigDecimal subtotal = a.add(b, MathContext.DECIMAL32);
+        return subtotal.sqrt(MathContext.DECIMAL32);
+    }
     public ArrayList<BallView> ballViewArrayList() {
         return bViewList;
     }

@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Random;
 
 
@@ -32,9 +34,9 @@ public class BallModel extends Shape {
         this.radius = radius;
         this.number = number;
         Random rnd = new Random();
-        this.ballPosition = new CustomPoint2D(400,250);
+        this.ballPosition = new CustomPoint2D(100,250);
         this.previousBallVelocity = new CustomPoint2D(0,0);
-        this.ballVelocity = new CustomPoint2D(0,0);
+        this.ballVelocity = new CustomPoint2D(1,0);
         this.ballForce = new CustomPoint2D(0,0);
         this.acceleration= new CustomPoint2D(0,0);
         this.img  = img;
@@ -152,5 +154,9 @@ public class BallModel extends Shape {
 
     public BigDecimal getBallPositionY() {
         return ballPosition.getY();
+    }
+
+    public void setBallPosition(BigDecimal x, BigDecimal y) {
+        setBallPosition(new CustomPoint2D(x,y));
     }
 }
