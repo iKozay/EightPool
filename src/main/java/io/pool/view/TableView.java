@@ -86,7 +86,7 @@ public class TableView {
 
 
         ImageView tableImageView = new ImageView(); // the image view of the table
-        Image image = new Image(new File("resources/tableImage/finalTable.png").toURI().toURL().toExternalForm());
+        Image image = new Image(new File("src/main/resources/tableImage/finalTable.png").toURI().toURL().toExternalForm());
         tableImageView.setImage(image);
         tableImageView.setFitWidth(width);
         tableImageView.setPreserveRatio(true);

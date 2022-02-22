@@ -13,7 +13,7 @@ public class BallView {
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseMap(img);
         material.setSpecularColor(Color.WHITE);
-        material.setSpecularPower(30);
+        material.setSpecularPower(100);
         ball.setMaterial(material);
     }
 

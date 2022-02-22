@@ -32,7 +32,7 @@ public class BallModel extends Shape {
         this.radius = radius;
         this.number = number;
         Random rnd = new Random();
-        this.ballPosition = new CustomPoint2D(400,250);
+        this.ballPosition = new CustomPoint2D(rnd.nextInt(700)+250,rnd.nextInt(500)+100);
         this.previousBallVelocity = new CustomPoint2D(0,0);
         this.ballVelocity = new CustomPoint2D(0,0);
         this.ballForce = new CustomPoint2D(0,0);
