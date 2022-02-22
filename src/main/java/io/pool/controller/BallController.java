@@ -10,10 +10,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 

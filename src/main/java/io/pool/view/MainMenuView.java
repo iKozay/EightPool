@@ -71,7 +71,7 @@ public class MainMenuView extends Pane{
         Image tableTextureImage;
         ImagePattern tableTexturePattern;
         try {
-            InputStream tableTextureStream = new FileInputStream("resources/MainMenu/TableTexture.jpg");
+            InputStream tableTextureStream = new FileInputStream("src/main/resources/MainMenu/TableTexture.jpg");
             tableTextureImage = new Image(tableTextureStream);
             tableTexturePattern = new ImagePattern(tableTextureImage);
             p1.setFill(tableTexturePattern);
@@ -89,7 +89,7 @@ public class MainMenuView extends Pane{
         Image RedtableTextureImage;
         ImagePattern RedtableTexturePattern;
         try {
-            InputStream RedtableTextureStream = new FileInputStream("resources/MainMenu/RedTableTexture.jpg");
+            InputStream RedtableTextureStream = new FileInputStream("src/main/resources/MainMenu/RedTableTexture.jpg");
             RedtableTextureImage = new Image(RedtableTextureStream);
             RedtableTexturePattern = new ImagePattern(RedtableTextureImage);
             p2.setFill(RedtableTexturePattern);
@@ -103,7 +103,7 @@ public class MainMenuView extends Pane{
                 this.getScreenWidth()*7/12, this.getScreenHeight(),
                 this.getScreenWidth()/4, this.getScreenHeight());
         try {
-            InputStream RedtableTextureStream = new FileInputStream("resources/MainMenu/RedTableTexture.jpg");
+            InputStream RedtableTextureStream = new FileInputStream("src/main/resources/MainMenu/RedTableTexture.jpg");
             RedtableTextureImage = new Image(RedtableTextureStream);
             RedtableTexturePattern = new ImagePattern(RedtableTextureImage);
             p2Sub.setFill(RedtableTexturePattern);
@@ -122,7 +122,7 @@ public class MainMenuView extends Pane{
         Image BluetableTextureImage;
         ImagePattern BluetableTexturePattern;
         try {
-            InputStream BluetableTextureStream = new FileInputStream("resources/MainMenu/BlueTableTexture.jpg");
+            InputStream BluetableTextureStream = new FileInputStream("src/main/resources/MainMenu/BlueTableTexture.jpg");
             BluetableTextureImage = new Image(BluetableTextureStream);
             BluetableTexturePattern = new ImagePattern(BluetableTextureImage);
             p3.setFill(BluetableTexturePattern);
