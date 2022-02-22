@@ -50,7 +50,7 @@ public class TableView {
         player1Lbl.setStyle("-fx-font-size: 24");
         Label player2Lbl = new Label("player2");
         player2Lbl.setStyle("-fx-font-size: 24");
-        HBox playersIcon = new HBox(900,player1Lbl,player2Lbl);
+        HBox playersIcon = new HBox(700,player1Lbl,player2Lbl);
         playersIcon.setAlignment(Pos.CENTER);
         playersIcon.setStyle("-fx-border-color: black");
 
