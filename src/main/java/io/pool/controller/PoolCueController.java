@@ -20,13 +20,13 @@ public class PoolCueController {
 
             if (deltaX != 0) {
                 double newAngleDegrees = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 90;
-                System.out.println(newAngleDegrees);
+                //System.out.println(newAngleDegrees);
                 Rotate rotate = new Rotate();
                 rotate.setPivotY(pcv.getCue().getHeight()/2);
                 rotate.setAngle(newAngleDegrees - pcv.getPreviousAngle());
                 pcv.getCue().getTransforms().add(rotate);
                 pcv.setPreviousAngle(newAngleDegrees);
-                System.out.println(newAngleDegrees);
+                //System.out.println(newAngleDegrees);
             }
         });
 

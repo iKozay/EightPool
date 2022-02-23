@@ -11,14 +11,8 @@ import java.math.RoundingMode;
 import java.util.Random;
 
 
-public class BallModel extends Shape {
+public class BallModel {
 
-    private CustomPoint2D ballForce;
-    private CustomPoint2D acceleration;
-    private CustomPoint2D ballPosition;
-    private CustomPoint2D ballVelocity;
-    private CustomPoint2D previousBallVelocity;
-    private CustomPoint2D previousBallPosition;
     public static int radius;
     private int number;
     private Image img;
@@ -26,79 +20,88 @@ public class BallModel extends Shape {
     public final static double MASS_BALL_KG = 0.16;
     private boolean movingBall;
 
+    /**
+     * VARIABLES WITHOUT Point2D
+     */
+
+    //Ball Position
+    private BigDecimal ballPositionX;
+    private BigDecimal ballPositionY;
+
+    //Ball Velocity
+    private BigDecimal ballVelocityX;
+    private BigDecimal ballVelocityY;
+
+    //Ball Acceleration
+    private BigDecimal ballAccelerationX;
+    private BigDecimal ballAccelerationY;
 
     public BallModel(int radius, int number, Image img){
         this.radius = radius;
         this.number = number;
-        Random rnd = new Random();
-        this.ballPosition = new CustomPoint2D(100,250);
-        this.previousBallVelocity = new CustomPoint2D(0,0);
-        this.ballVelocity = new CustomPoint2D(1,0);
-        this.ballForce = new CustomPoint2D(0,0);
-        this.acceleration= new CustomPoint2D(0,0);
+
+        // Setting ball Velocity
+        this.ballVelocityX = new BigDecimal(50);
+        this.ballVelocityY = new BigDecimal(20);
+
+        // Getting the position of the ball
+        this.ballPositionX = new BigDecimal(200);
+        this.ballPositionY = new BigDecimal(200);
+
         this.img  = img;
         this.movingBall=true;// because it has a velocity
-    }
-
-    public CustomPoint2D getBallForce() {
-        return ballForce;
-    }
-
-    public void setBallForce(CustomPoint2D ballForce, double time) {
-        this.ballForce = ballForce;
-        this.acceleration = this.ballForce.multiply(1 / MASS_BALL_KG);
-        CustomPoint2D finalV = this.acceleration.multiply(time);
-        CustomPoint2D newVelocityMag = new CustomPoint2D(ballVelocity.getAbsX().subtract(finalV.getAbsX()),ballVelocity.getAbsY().subtract(finalV.getAbsY()));
-        //newVelocityMag.subtract((this.acceleration.multiply(time)));
-
-        if(newVelocityMag.getX().doubleValue()<0){
-            newVelocityMag = new CustomPoint2D(0,newVelocityMag.getY().doubleValue());
-        }
-        if(newVelocityMag.getY().doubleValue()<0){
-            newVelocityMag = new CustomPoint2D(newVelocityMag.getX().doubleValue(),0);
-        }
-
-        CustomPoint2D newVelocity = new CustomPoint2D(newVelocityMag.getX().multiply(new BigDecimal(ballVelocity.getX().signum()),CustomPoint2D.DECIMAL8),  newVelocityMag.getY().multiply(new BigDecimal(ballVelocity.getY().signum(),CustomPoint2D.DECIMAL8)));
-
-        this.setBallVelocity(newVelocity);
-    }
-
-    public CustomPoint2D getBallPosition() {
-        return ballPosition;
-    }
-
-    public void setBallPosition(CustomPoint2D ballPosition) {
-        this.previousBallPosition = this.ballPosition;
-        this.ballPosition = ballPosition;
-    }
-
-    public CustomPoint2D getBallVelocity() {
-        return ballVelocity;
-    }
-
-    public void setBallVelocity(CustomPoint2D ballVelocity) {
-        this.previousBallVelocity = this.ballVelocity;
-        this.ballVelocity = ballVelocity;
-    }
-
-    public CustomPoint2D getPreviousBallVelocity() {
-        return previousBallVelocity;
     }
 
     public static int getRadius() {
         return radius;
     }
 
-    public BigDecimal ballDistance(){
-        return previousBallPosition.distance(ballPosition);
+    public BigDecimal getBallPositionX() {
+        return ballPositionX;
     }
 
-    public CustomPoint2D getAcceleration() {
-        return acceleration;
+    public BigDecimal getBallPositionY() {
+        return ballPositionY;
     }
 
-    public void setAcceleration(CustomPoint2D acceleration) {
-        this.acceleration = acceleration;
+    public void setBallPositionX(BigDecimal ballPositionX) {
+        this.ballPositionX = ballPositionX;
+    }
+
+    public void setBallPositionY(BigDecimal ballPositionY) {
+        this.ballPositionY = ballPositionY;
+    }
+
+    public BigDecimal getBallVelocityX() {
+        return ballVelocityX;
+    }
+
+    public void setBallVelocityX(BigDecimal ballVelocityX) {
+        this.ballVelocityX = ballVelocityX;
+    }
+
+    public BigDecimal getBallVelocityY() {
+        return ballVelocityY;
+    }
+
+    public void setBallVelocityY(BigDecimal ballVelocityY) {
+        this.ballVelocityY = ballVelocityY;
+    }
+
+    public BigDecimal getBallAccelerationX() {
+        return ballAccelerationX;
+    }
+
+    public void setBallAccelerationX(BigDecimal ballAccelerationX) {
+        this.ballAccelerationX = ballAccelerationX;
+    }
+
+    public BigDecimal getBallAccelerationY() {
+        return ballAccelerationY;
+    }
+
+    public void setBallAccelerationY(BigDecimal ballAccelerationY) {
+        this.ballAccelerationY = ballAccelerationY;
     }
 
     @Override
@@ -117,19 +120,12 @@ public class BallModel extends Shape {
         return movingBall;
     }
 
-    public void setMovingBall(boolean movingBall) {
-        this.movingBall = movingBall;
+    public void setMovingBall() {
+        if(ballVelocityY.doubleValue() == 0 && ballVelocityX.doubleValue() == 0){
+            movingBall = false;
+        }else {
+            movingBall = true;
+        }
     }
 
-    public BigDecimal getBallPositionX() {
-        return ballPosition.getX();
-    }
-
-    public BigDecimal getBallPositionY() {
-        return ballPosition.getY();
-    }
-
-    public void setBallPosition(BigDecimal x, BigDecimal y) {
-        setBallPosition(new CustomPoint2D(x,y));
-    }
 }
