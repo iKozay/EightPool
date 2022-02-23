@@ -41,12 +41,13 @@ public class BallModel {
         this.number = number;
 
         // Setting ball Velocity
-        this.ballVelocityX = new BigDecimal(50);
-        this.ballVelocityY = new BigDecimal(20);
+        Random rnd = new Random();
+        this.ballVelocityX = new BigDecimal(rnd.nextInt(5)+1);
+        this.ballVelocityY = new BigDecimal(rnd.nextInt(5)+1);
 
         // Getting the position of the ball
-        this.ballPositionX = new BigDecimal(200);
-        this.ballPositionY = new BigDecimal(200);
+        this.ballPositionX = new BigDecimal(rnd.nextInt(700)+200);
+        this.ballPositionY = new BigDecimal(rnd.nextInt(400)+200);
 
         this.img  = img;
         this.movingBall=true;// because it has a velocity
@@ -128,4 +129,7 @@ public class BallModel {
         }
     }
 
+    public int getNumber() {
+        return this.number;
+    }
 }

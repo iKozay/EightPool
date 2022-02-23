@@ -29,15 +29,23 @@ public class BallController {
 
     public BallController(Pane root) {
         try {
-            //prepareGame(root);
-            BallModel ballModel = new BallModel(15, 1, new Image(new File("src/main/resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm()));
-            bModelList.add(ballModel);
-            BallView ballView = new BallView(bModelList.get(0).getImg(),BallModel.getRadius());
+            prepareGame(root);
+            //BallModel ballModel = new BallModel(15, 1, new Image(new File("src/main/resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm()));
+            //bModelList.add(ballModel);
+            //BallView ballView = new BallView(bModelList.get(0).getImg(),BallModel.getRadius());
             //ballView.getBall().translateXProperty().bind(ballModel.getBall);
+            //BallModel ballModel2 = new BallModel(15, 2, new Image(new File("src/main/resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm()));
+            //bModelList.add(ballModel2);
+            //BallView ballView2 = new BallView(bModelList.get(1).getImg(),BallModel.getRadius());
+            //bViewList.add(ballView);
+            //bViewList.add(ballView2);
+            //ballModel2.setBallPosition(new CustomPoint2D(500,500));
+            //ballModel2.setBallVelocity(new CustomPoint2D(-1,-1));
+            //makeDraggable();
 //            BallModel ballModel2 = new BallModel(15, 2, new Image(new File("resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm()));
 //            bModelList.add(ballModel2);
 //            BallView ballView2 = new BallView(bModelList.get(1).getImg(),BallModel.getRadius());
-            bViewList.add(ballView);
+//            bViewList.add(ballView);
 //            bViewList.add(ballView2);
 //            ballModel2.setBallPosition(new CustomPoint2D(900,250));
 //            ballModel2.setBallVelocity(new CustomPoint2D(-1,0));
@@ -47,7 +55,7 @@ public class BallController {
             ///bModelList.get(1).setBallPosition(new Point2D(600,350));
             //bModelList.get(1).setBallVector(new VelocityVector(0,0));
             //bModelList.get(1).setMovingBall(false);
-            root.getChildren().addAll(bViewList.get(0).getBall());
+            //root.getChildren().addAll(bViewList.get(0).getBall(),bViewList.get(1).getBall());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -88,7 +96,7 @@ public class BallController {
 
     public void detectCollision(Rectangle tableBorders, double time){
         detectCollisionWithTable(tableBorders);
-        //detectCollisionWithOtherBalls();
+        detectCollisionWithOtherBalls();
         updateBallPosition(time);
     }
 
@@ -110,42 +118,65 @@ public class BallController {
         }
     }
     private void detectCollisionWithOtherBalls(){
-        //TODO make sure if ball already collided using some method
-        ArrayList<BallModel> collisionChecked = new ArrayList<>();
+        ArrayList<String> collisionChecked = new ArrayList<>();
+        BigDecimal distance;
+        boolean foundInArray=false;
         for (BallModel ballA : bModelList) {
             for (BallModel ballB : bModelList) {
                 if (!ballA.equals(ballB)) {
                     if((ballA.isMovingBall())||(ballB.isMovingBall())){
-                        if(distance(ballA.getBallPositionX(),ballA.getBallPositionY(),ballB.getBallPositionX(),ballB.getBallPositionY()).compareTo(new BigDecimal(2*BallModel.getRadius()))<=0){
-                            if ((ballA.isMovingBall()) && (ballB.isMovingBall())) {
-                                //Point2D newCoordinateA = new Point2D(ballA_NextFramePos.getX()*proportionFactor,ballA_NextFramePos.getY()*proportionFactor);
-                                //Point2D newCoordinateB = new Point2D(ballB_NextFramePos.getX()*proportionFactor,ballB_NextFramePos.getY()*proportionFactor);
-                                //ballA.setBallPosition(newCoordinateA);
-                                //ballB.setBallPosition(newCoordinateB);
-                                BigDecimal distance = distance(ballA.getBallPositionX(),ballA.getBallPositionY(),ballB.getBallPositionX(),ballB.getBallPositionY()).divide(new BigDecimal(2));
+                        distance = distance(ballA.getBallPositionX(),ballA.getBallPositionY(),ballB.getBallPositionX(),ballB.getBallPositionY());
+                        if(distance.compareTo(new BigDecimal(2*BallModel.getRadius()))<=0){
+                            if(collisionChecked.size()==0){
+                                collisionChecked.add(ballA.getNumber() + "" + ballB.getNumber());
+                            }else {
+                                String collision = "";
+                                for (String id : collisionChecked) {
+                                    if (!(id.contains(String.valueOf(ballA.getNumber())) && id.contains(String.valueOf(ballB.getNumber())))) {
+                                        collision = ballA.getNumber() + "" + ballB.getNumber();
+                                    } else {
+                                        foundInArray = true;
+                                        break;
+                                    }
+                                }
+                                if(!collision.isEmpty()){
+                                    collisionChecked.add(collision);
+                                }
+                            }
+                            if(!foundInArray){
+                                if ((ballA.isMovingBall()) && (ballB.isMovingBall())) {
+                                    //Point2D newCoordinateA = new Point2D(ballA_NextFramePos.getX()*proportionFactor,ballA_NextFramePos.getY()*proportionFactor);
+                                    //Point2D newCoordinateB = new Point2D(ballB_NextFramePos.getX()*proportionFactor,ballB_NextFramePos.getY()*proportionFactor);
+                                    //ballA.setBallPosition(newCoordinateA);
+                                    //ballB.setBallPosition(newCoordinateB);
+                                    //BigDecimal distance = distance(ballA.getBallPositionX(),ballA.getBallPositionY(),ballB.getBallPositionX(),ballB.getBallPositionY()).divide(new BigDecimal(2));
 
                                // ballA.setBallPosition(ballA.getBallPositionX().subtract(distance),ballA.getBallPositionY().subtract(distance));
                                // ballB.setBallPosition(ballB.getBallPositionX().add(distance),ballB.getBallPositionY().add(distance));
 
-                            } else {
-                                BallModel movingBall;
-                                BallModel restingBall;
-                                if (ballA.isMovingBall()) {
-                                    movingBall = ballA;
-                                    restingBall = ballB;
-                                } else{
-                                    movingBall = ballB;
-                                    restingBall = ballA;
+                                } else {
+                                    BallModel movingBall;
+                                    BallModel restingBall;
+                                    if (ballA.isMovingBall()) {
+                                        movingBall = ballA;
+                                        restingBall = ballB;
+                                    } else{
+                                        movingBall = ballB;
+                                        restingBall = ballA;
+                                    }
+                                    // Check angle
+                                    //BigDecimal angle = movingBall.getBallVelocity().getAngle();
+                                    //CustomPoint2D newCoordinate = new CustomPoint2D(new BigDecimal(Math.cos(angle.doubleValue()) * (2 * BallModel.getRadius())), new BigDecimal(Math.sin(angle.doubleValue()) * (2 * BallModel.getRadius())));
+                                    //.setBallPosition(newCoordinate);
+
                                 }
-                                // Check angle
-
-
+                                System.out.println("Collision");
+                                //ballA.setBallVelocity(new CustomPoint2D(1,0));
+                                //ballB.setBallVelocity(new CustomPoint2D(-1,0));
+                                //System.out.println(ballA.getBallVelocity()+" ; "+ballB.getBallVelocity());
+                                collisionHandler(ballA,ballB);
                             }
-                            System.out.println("Collision");
-                            //ballA.setBallVelocity(new CustomPoint2D(1,0));
-                            //ballB.setBallVelocity(new CustomPoint2D(-1,0));
-                            //System.out.println(ballA.getBallVelocity()+" ; "+ballB.getBallVelocity());
-                            collisionHandler(ballA,ballB);
+                            foundInArray=false;
                         }
                     }
                 }
@@ -174,8 +205,8 @@ public class BallController {
     }
 
     public void applyFriction(BallModel bModel, double time){
-       BigDecimal frictionForceMag = new BigDecimal(0.1*BallModel.MASS_BALL_KG*BallModel.GRAVITATIONAL_FORCE,MathContext.DECIMAL32);
-       
+       BigDecimal frictionForceMag = new BigDecimal(0.01*BallModel.MASS_BALL_KG*BallModel.GRAVITATIONAL_FORCE,MathContext.DECIMAL32);
+
         double velocityRatio = bModel.getBallVelocityX().abs().doubleValue() / bModel.getBallVelocityY().abs().doubleValue();
 
         bModel.setBallAccelerationY((new BigDecimal(Math.sqrt(Math.pow(frictionForceMag.doubleValue(),2)) / (Math.pow(velocityRatio,2) + 1),MathContext.DECIMAL32)));
@@ -187,7 +218,7 @@ public class BallController {
         if(bModel.getBallVelocityY().doubleValue() > 0){
             bModel.setBallAccelerationY(bModel.getBallAccelerationY().multiply(BigDecimal.valueOf(-1)));
         }
-        
+
         if(!(bModel.getBallVelocityX().abs().doubleValue() <= frictionForceMag.doubleValue()) && !(bModel.getBallVelocityY().abs().doubleValue() <= frictionForceMag.doubleValue()) ){
             System.out.println("");
             bModel.setBallVelocityX(bModel.getBallVelocityX().add(bModel.getBallAccelerationX()));
@@ -205,15 +236,16 @@ public class BallController {
         /**1
          * find unit normal and unit tanget vector
          */
+        //FIX
         BigDecimal normalXComponent = ball2.getBallVelocityX().subtract(ball1.getBallVelocityX());
         BigDecimal normalYComponent = ball2.getBallVelocityY().subtract(ball1.getBallVelocityY());
 
         BigDecimal magnitude = (normalYComponent.pow(2).add(normalXComponent.pow(2))).sqrt(MathContext.DECIMAL32);
-        BigDecimal unitNormalX = normalXComponent.divide(magnitude);
-        BigDecimal unitNormalY = normalYComponent.divide(magnitude);
+        BigDecimal unitNormalX = normalXComponent.divide(magnitude,MathContext.DECIMAL32);
+        BigDecimal unitNormalY = normalYComponent.divide(magnitude,MathContext.DECIMAL32);
 
         BigDecimal unitTangentX = unitNormalY.negate();
-        BigDecimal unitTangentY = unitTangentX;
+        BigDecimal unitTangentY = unitNormalX;
 
 
         /**2 (step 2 is skipped because we already have the balls vectors
@@ -237,9 +269,8 @@ public class BallController {
          * all the instances of 1 in this equation are substitutes for mass
          * this is assuming all the balls have equal mass
          */
-        BigDecimal two = new BigDecimal(2);
-        BigDecimal v1np = v2n;//(v1n).add(v2n.multiply(two)).divide(two);
-        BigDecimal v2np = v1n;//(v2n).add(v1n.multiply(two)).divide(two);
+        BigDecimal v1np = v2n;
+        BigDecimal v2np = v1n;
 
         /**5
          * Convert scalar normal and tangential velocites into vectors
@@ -257,10 +288,10 @@ public class BallController {
         /**6
          * Add normal and tangential vectors for each ball
          */
-        BigDecimal finalBall1X = normalXFinalBall1.add(tangentialXFinalBall1);
-        BigDecimal finalBall1Y = normalYFinalBall1.add(tangentialYFinalBall1);
-        BigDecimal finalBall2X = normalXFinalBall2.add(tangentialXFinalBall2);
-        BigDecimal finalBall2Y = normalYFinalBall2.add(tangentialYFinalBall2);
+        BigDecimal finalBall1X = normalXFinalBall1.add(tangentialXFinalBall1,MathContext.DECIMAL32);
+        BigDecimal finalBall1Y = normalYFinalBall1.add(tangentialYFinalBall1,MathContext.DECIMAL32);
+        BigDecimal finalBall2X = normalXFinalBall2.add(tangentialXFinalBall2,MathContext.DECIMAL32);
+        BigDecimal finalBall2Y = normalYFinalBall2.add(tangentialYFinalBall2,MathContext.DECIMAL32);
 
         ball1.setBallVelocityX(finalBall1X);
         ball1.setBallVelocityY(finalBall1Y);

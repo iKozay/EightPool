@@ -53,7 +53,7 @@ public class TableView {
         HBox playersIcon = new HBox(700,player1Lbl,player2Lbl);
         playersIcon.setAlignment(Pos.CENTER);
         playersIcon.setStyle("-fx-border-color: black");
-
+        playersIcon.setPrefHeight(50);
         Text information = new Text();
         information.setText("Ball 1: " + "" + "\n" + "Ball 1: " + "" + "\n" + "Ball 2: " + "" + "\n" + "Ball 3: " + ""
                 + "\n" + "Ball 4: " + "" + "\n" + "Ball 5: " + "" + "\n" + "Ball 6: " + "" + "\n" + "Ball 7: " + "" + "\n"
