@@ -25,9 +25,6 @@ public class BallModel extends Shape {
     public final static double GRAVITATIONAL_FORCE = 9.8;
     public final static double MASS_BALL_KG = 0.16;
     private boolean movingBall;
-    File file;
-    FileWriter writer;
-    BigDecimal time;
 
 
     public BallModel(int radius, int number, Image img){
@@ -41,15 +38,6 @@ public class BallModel extends Shape {
         this.acceleration= new CustomPoint2D(0,0);
         this.img  = img;
         this.movingBall=true;// because it has a velocity
-        ////
-        file = new File("filename.txt");
-        try {
-            writer = new FileWriter("filename.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        time= new BigDecimal(0);
-        ////
     }
 
     public CustomPoint2D getBallForce() {
@@ -71,14 +59,6 @@ public class BallModel extends Shape {
         }
 
         CustomPoint2D newVelocity = new CustomPoint2D(newVelocityMag.getX().multiply(new BigDecimal(ballVelocity.getX().signum()),CustomPoint2D.DECIMAL8),  newVelocityMag.getY().multiply(new BigDecimal(ballVelocity.getY().signum(),CustomPoint2D.DECIMAL8)));
-
-        this.time = this.time.add(new BigDecimal(time));
-        try {
-            writer.write(this.time.doubleValue()+","+newVelocityMag.getX().doubleValue()+","+newVelocityMag.getY().doubleValue()+"\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        System.out.println(newVelocity);
 
         this.setBallVelocity(newVelocity);
     }
@@ -139,13 +119,6 @@ public class BallModel extends Shape {
 
     public void setMovingBall(boolean movingBall) {
         this.movingBall = movingBall;
-        if(movingBall==false){
-            try {
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public BigDecimal getBallPositionX() {

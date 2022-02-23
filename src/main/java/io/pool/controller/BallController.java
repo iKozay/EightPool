@@ -5,6 +5,7 @@ import io.pool.model.BallModel;
 import io.pool.model.CustomPoint2D;
 import io.pool.view.BallView;
 import javafx.geometry.Point2D;
+import java.math.MathContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
@@ -12,6 +13,7 @@ import javafx.scene.transform.Rotate;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
@@ -30,11 +32,11 @@ public class BallController {
     public BallController(Pane root) {
         try {
             //prepareGame(root);
-            BallModel ballModel = new BallModel(15, 1, new Image(new File("resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm()));
+            BallModel ballModel = new BallModel(15, 1, new Image(new File("src/main/resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm()));
             bModelList.add(ballModel);
             BallView ballView = new BallView(bModelList.get(0).getImg(),BallModel.getRadius());
             //ballView.getBall().translateXProperty().bind(ballModel.getBall);
-            BallModel ballModel2 = new BallModel(15, 2, new Image(new File("resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm()));
+            BallModel ballModel2 = new BallModel(15, 2, new Image(new File("src/main/resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm()));
             bModelList.add(ballModel2);
             BallView ballView2 = new BallView(bModelList.get(1).getImg(),BallModel.getRadius());
             bViewList.add(ballView);
@@ -77,10 +79,10 @@ public class BallController {
     public void prepareGame(Pane root) throws MalformedURLException {
         for (int i=1;i<=16;i++){
             if(i==16){
-                bModelList.add(new BallModel(15, i, new Image(new File("resources/billiards3D/white.jpg").toURI().toURL().toExternalForm())));
+                bModelList.add(new BallModel(15, i, new Image(new File("src/main/resources/billiards3D/white.jpg").toURI().toURL().toExternalForm())));
                 bModelList.get(i-1).setBallVelocity(new CustomPoint2D(0,0));
             }else{
-                bModelList.add(new BallModel(15, i, new Image(new File("resources/billiards3D/ball"+i+".jpg").toURI().toURL().toExternalForm())));
+                bModelList.add(new BallModel(15, i, new Image(new File("src/main/resources/billiards3D/ball"+i+".jpg").toURI().toURL().toExternalForm())));
             }
             bViewList.add(new BallView(bModelList.get(i-1).getImg(),BallModel.getRadius()));
             root.getChildren().add(bViewList.get(i-1).getBall());
