@@ -142,22 +142,10 @@ public class PhysicsModule {
         }
 
         /**
-         * Checks if thr friction magnitude is bigger than the velocity.
-         * This means that in the next frame, the ball should be stationary.
+         * Checks if the acceleration is bigger than the velocity.
+         * This means that the ball will become be stationary.
          * If it is not, it assigns the new velocity
          */
-        // TODO Understand this
-        if (!(getBallVelocityX().abs().doubleValue() <= frictionForceMag.doubleValue()) && !(getBallVelocityY().abs().doubleValue() <= frictionForceMag.doubleValue())) {
-            setBallVelocityX(getBallVelocityX().add(getBallAccelerationX()));
-            setBallVelocityY(getBallVelocityY().add(getBallAccelerationY()));
-        } else {
-            setBallVelocityX(new BigDecimal(0));
-            setBallVelocityY(new BigDecimal(0));
-        }
-        /**
-         * Repeated twice. Have to test to see which is the one to keep
-         * */
-        // TODO Understand this
         if (getBallVelocityX().abs().doubleValue() < getBallAccelerationX().abs().doubleValue()) {
             setBallVelocityX(new BigDecimal(0));
         }
