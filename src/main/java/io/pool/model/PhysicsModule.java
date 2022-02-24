@@ -172,7 +172,7 @@ public class PhysicsModule {
      * @param otherBall The second ball that will interact with this one
      * @see <a href="https://vobarian.com/collisions/2dcollisions2.pdf">2-Dimensional Elastic Collisions without Trigonometry</a>
      */
-    public void handleMomentum(BallModel otherBall) {
+    public void handleMomentum(BallModel otherBall, double distance) {
         //
         /**1
          * find unit normal and unit tanget vector
@@ -189,6 +189,21 @@ public class PhysicsModule {
 
         BigDecimal unitTangentX = unitNormalY.negate();
         BigDecimal unitTangentY = unitNormalX;
+
+
+        /**
+         * Find the minimum distance X and Y to prevent overlapping
+         */
+        BigDecimal distanceX = normalXComponent.multiply(new BigDecimal((2*BallModel.RADIUS-distance)/distance));
+        BigDecimal distanceY = normalYComponent.multiply(new BigDecimal((2*BallModel.RADIUS-distance)/distance));
+
+        /**
+         * Push-Pull Balls apart
+         */
+        ball1.setBallPositionX(ball1.getBallPositionX().add(distanceX.divide(new BigDecimal(2))));
+        ball1.setBallPositionY(ball1.getBallPositionY().add(distanceY.divide(new BigDecimal(2))));
+        ball2.setBallPositionX(ball2.getBallPositionX().subtract(distanceX.divide(new BigDecimal(2))));
+        ball2.setBallPositionY(ball2.getBallPositionY().subtract(distanceY.divide(new BigDecimal(2))));
 
 
         /**2 (step 2 is skipped because we already have the balls vectors

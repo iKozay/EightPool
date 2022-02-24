@@ -133,9 +133,9 @@ public class BallController {
                 if (!ballA.equals(ballB)) {
                     if((ballA.isMovingBall())||(ballB.isMovingBall())){
                         distance = ballA.distance(ballB);
-                        if(distance.compareTo(new BigDecimal(2*BallModel.RADIUS))<=0){
+                        if(distance.compareTo(new BigDecimal(2*BallModel.RADIUS))<0){
                             if(collisionChecked.size()==0){
-                                collisionChecked.add(ballA.getNumber() + "" + ballB.getNumber());
+                                collisionChecked.add(ballA.getNumber() + "," + ballB.getNumber());
                             }else {
                                 String collision = "";
                                 for (String id : collisionChecked) {
@@ -151,37 +151,7 @@ public class BallController {
                                 }
                             }
                             if(!foundInArray){
-                                if ((ballA.isMovingBall()) && (ballB.isMovingBall())) {
-                                    //Point2D newCoordinateA = new Point2D(ballA_NextFramePos.getX()*proportionFactor,ballA_NextFramePos.getY()*proportionFactor);
-                                    //Point2D newCoordinateB = new Point2D(ballB_NextFramePos.getX()*proportionFactor,ballB_NextFramePos.getY()*proportionFactor);
-                                    //ballA.setBallPosition(newCoordinateA);
-                                    //ballB.setBallPosition(newCoordinateB);
-                                    //BigDecimal distance = distance(ballA.getBallPositionX(),ballA.getBallPositionY(),ballB.getBallPositionX(),ballB.getBallPositionY()).divide(new BigDecimal(2));
-
-                               // ballA.setBallPosition(ballA.getBallPositionX().subtract(distance),ballA.getBallPositionY().subtract(distance));
-                               // ballB.setBallPosition(ballB.getBallPositionX().add(distance),ballB.getBallPositionY().add(distance));
-
-                                } else {
-                                    BallModel movingBall;
-                                    BallModel restingBall;
-                                    if (ballA.isMovingBall()) {
-                                        movingBall = ballA;
-                                        restingBall = ballB;
-                                    } else{
-                                        movingBall = ballB;
-                                        restingBall = ballA;
-                                    }
-                                    // Check angle
-                                    //BigDecimal angle = movingBall.getBallVelocity().getAngle();
-                                    //CustomPoint2D newCoordinate = new CustomPoint2D(new BigDecimal(Math.cos(angle.doubleValue()) * (2 * BallModel.getRadius())), new BigDecimal(Math.sin(angle.doubleValue()) * (2 * BallModel.getRadius())));
-                                    //.setBallPosition(newCoordinate);
-
-                                }
-                                //System.out.println("Collision");
-                                //ballA.setBallVelocity(new CustomPoint2D(1,0));
-                                //ballB.setBallVelocity(new CustomPoint2D(-1,0));
-                                //System.out.println(ballA.getBallVelocity()+" ; "+ballB.getBallVelocity());
-                                ballA.handleMomentum(ballB);
+                                ballA.handleMomentum(ballB, distance.doubleValue());
                             }
                             foundInArray=false;
                         }
