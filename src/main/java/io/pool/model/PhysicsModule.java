@@ -1,10 +1,12 @@
 package io.pool.model;
 
 import io.pool.view.BallView;
+import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.nio.BufferUnderflowException;
 import java.util.Random;
 
 public class PhysicsModule {
@@ -102,31 +104,39 @@ public class PhysicsModule {
     /**
      * Applies friction to the ball
      *
+     * <br><br>
+     * Assign the new acceleration using the ratio:
+     * <p>
+     *      Let R be the ratio between V<sub>x</sub> and V<sub>y</sub>. R = V<sub>x</sub> / V<sub>y</sub>
+     *      <br>
+     *      That same ratio has to apply for the acceleration. R = a<sub>x</sub> / a<sub>y</sub>
+     *      <br>
+     *      The following relation can be drawn using the Pythagorean theorem: a<sup>2</sup> = (a<sub>x</sub>)<sup>2</sup> + (a<sub>y</sub>)<sup>2</sup>
+     *      <br>
+     *      With some algebraic manipulations, we can find the new values of a<sub>x</sub> and a<sub>y</sub>:
+     *      <br>
+     *      a<sup>2</sup> = (a<sub>x</sub>)<sup>2</sup> + (a<sub>y</sub>)<sup>2</sup>
+     *      <br>
+     *      a<sup>2</sup> = (R*a<sub>y</sub>)<sup>2</sup> + (a<sub>y</sub>)<sup>2</sup>
+     *      <br>
+     *      a<sup>2</sup> = (R+1) * (a<sub>y</sub>)<sup>2</sup>
+     *      <br>
+     *      a<sup>2</sup> / (R+1) =  (a<sub>y</sub>)<sup>2</sup>
+     *      <br>
+     *      a<sub>y</sub> = sqrt [a<sup>2</sup> / (R+1)]
+     *      <br>
+     *      a<sub>x</sub> = R * a<sub>y</sub>
+     *  </p>
      * @param frictionCoefficient Friction coefficient depending on the situation
      * @param time                Time in seconds
      */
     private void applyFriction(double frictionCoefficient, double time) {
+
         /** Get the friction magnitude */
         BigDecimal frictionForceMag = new BigDecimal(frictionCoefficient * PhysicsModule.MASS_BALL_KG * PhysicsModule.GRAVITATIONAL_FORCE, MathContext.DECIMAL32);
         /** Calculate the velocity ratio */
         double velocityRatio = getBallVelocityX().abs().doubleValue() / getBallVelocityY().abs().doubleValue();
-        /** Assign the new acceleration using the ratio:
-         * <img src="docs-files/ratio.png"/>
-         *  <p>
-         *      Let R be the ratio between V<sub>x</sub> and V<sub>y</sub>. R = V<sub>x</sub> / V<sub>y</sub>
-         *      That same ratio has to apply for the acceleration. R = a<sub>x</sub> / a<sub>y</sub>
-         *
-         *      From the image above, the following relation can be drawn: a<sup>2</sup> = (a<sub>x</sub>)<sup>2</sup> + (a<sub>y</sub>)<sup>2</sup>
-         *      With some algebraic manipulations, we can find the new values of a<sub>x</sub> and a<sub>y</sub>:
-         *      a<sup>2</sup> = (a<sub>x</sub>)<sup>2</sup> + (a<sub>y</sub>)<sup>2</sup>
-         *      a<sup>2</sup> = (R*a<sub>y</sub>)<sup>2</sup> + (a<sub>y</sub>)<sup>2</sup>
-         *      a<sup>2</sup> = (R+1) * (a<sub>y</sub>)<sup>2</sup>
-         *      a<sup>2</sup> / (R+1) =  (a<sub>y</sub>)<sup>2</sup>
-         *      ---
-         *      a<sub>y</sub> = sqrt [a<sup>2</sup> / (R+1)]
-         *      a<sub>x</sub> = R * a<sub>y</sub>
-         *  </p>
-         * */
+
         setBallAccelerationY((new BigDecimal(Math.sqrt(Math.pow(frictionForceMag.doubleValue(), 2)) / (Math.pow(velocityRatio, 2) + 1), MathContext.DECIMAL32)));
         setBallAccelerationX(new BigDecimal(velocityRatio * getBallAccelerationY().doubleValue(), MathContext.DECIMAL32));
 
@@ -146,6 +156,18 @@ public class PhysicsModule {
          * This means that the ball will become be stationary.
          * If it is not, it assigns the new velocity
          */
+        // TODO Understand this
+        if (!(getBallVelocityX().abs().doubleValue() <= frictionForceMag.doubleValue()) && !(getBallVelocityY().abs().doubleValue() <= frictionForceMag.doubleValue())) {
+            setBallVelocityX(getBallVelocityX().add(getBallAccelerationX()));
+            setBallVelocityY(getBallVelocityY().add(getBallAccelerationY()));
+        } else {
+            setBallVelocityX(new BigDecimal(0));
+            setBallVelocityY(new BigDecimal(0));
+        }
+        /**
+         * Repeated twice. Have to test to see which is the one to keep.
+         * */
+        // TODO Understand this
         if (getBallVelocityX().abs().doubleValue() < getBallAccelerationX().abs().doubleValue()) {
             setBallVelocityX(new BigDecimal(0));
         }

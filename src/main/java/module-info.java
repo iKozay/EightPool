@@ -4,7 +4,6 @@ module io.pool.eightpool {
     requires javafx.graphics;
 
 
-    opens io.pool.eightpool to javafx.fxml;
     opens io.pool.controller to javafx.fxml;
     exports io.pool.eightpool;
 }
