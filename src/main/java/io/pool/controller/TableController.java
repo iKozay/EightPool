@@ -12,17 +12,15 @@ public class TableController {
 
     private TableView tableView;
     private TableModel tableModel;
-    private BallController ballController;
     private ArrayList<Circle> holes;
     private int tableX = game.eightPoolTableX;
     private int tableY = game.eightPoolTableY;
 
 
-    public TableController(TableView tableView, TableModel tableModel) {
+    public TableController(TableView tableView) {
         this.tableView = tableView;
-        this.tableModel = tableModel;
-
-
+        this.tableModel = new TableModel();
+        System.out.println(tableModel.getPositionX());
         this.holes = tableView.getHoles();
     }
 
@@ -35,14 +33,6 @@ public class TableController {
         return tableModel;
     }
 
-
-    public void setBallController(BallController ballController) {
-        this.ballController = ballController;
-    }
-
-    public BallController getBallController() {
-        return ballController;
-    }
 
     public double getInitialX(Circle c) {
         return c.getCenterX();

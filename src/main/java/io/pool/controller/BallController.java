@@ -3,6 +3,7 @@ package io.pool.controller;
 import io.pool.eightpool.game;
 import io.pool.model.BallModel;
 import io.pool.view.BallView;
+import io.pool.view.GameView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
@@ -26,15 +27,8 @@ public class BallController {
 
     /**
      * Main constructor of BallController
-     * @param root The parent window that will contain the balls
      * */
-    public BallController(Pane root) {
-        try {
-            prepareGame(root);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-    }
+    public BallController() {}
 
 
     /**
@@ -69,13 +63,13 @@ public class BallController {
                  BallModel finalBModel = bModel;
                 BallView finalBView = bView;
                 bView.getBall().setOnMouseDragged(mouseEvent -> {
-                    if(!finalBModel.isMovingBall()) {
+                    if(!finalBModel.isMoving) {
                         BigDecimal newPositionX = new BigDecimal(mouseEvent.getSceneX() - mouseAnchorX);
                         BigDecimal newPositionY = new BigDecimal(mouseEvent.getSceneY() - mouseAnchorY);
-                        finalBModel.setBallPositionX(newPositionX);
-                        finalBModel.setBallPositionY(newPositionY);
-                        finalBView.getBall().setLayoutX(finalBModel.getBallPositionX().doubleValue());
-                        finalBView.getBall().setLayoutY(finalBModel.getBallPositionY().doubleValue());
+                        finalBModel.setPositionX(newPositionX);
+                        finalBModel.setPositionY(newPositionY);
+                        finalBView.getBall().setLayoutX(finalBModel.getPositionX().doubleValue());
+                        finalBView.getBall().setLayoutY(finalBModel.getPositionY().doubleValue());
                     }
                 });
             }
@@ -95,11 +89,11 @@ public class BallController {
     /**
      * Detects all the collisions and updates the ball position
      * */
-    public void detectCollision(Rectangle tableBorders, double time){
+    public void detectCollision(Rectangle tableBorders){
         detectCollisionWithTable(tableBorders);
         detectCollisionWithOtherBalls();
         for (BallModel bModel : bModelList) {
-            bModel.updateBallPosition(bViewList.get(bModelList.indexOf(bModel)),time);
+            bModel.updatePosition(bViewList.get(bModelList.indexOf(bModel)));
         }
     }
     /**
@@ -109,15 +103,15 @@ public class BallController {
     private void detectCollisionWithTable(Rectangle tableBorders){
         for (BallModel bModel : bModelList) {
             BigDecimal radius = new BigDecimal(BallModel.RADIUS);
-            if ((bModel.getBallPositionX().subtract(radius)).compareTo(new BigDecimal(tableBorders.getX() + tableX))<=0) {
-                bModel.setBallVelocityX(bModel.getBallVelocityX().negate());
-            }else if((bModel.getBallPositionX().add(radius)).compareTo(new BigDecimal((tableBorders.getX() + tableX) + tableBorders.getWidth()))>=0){
-                bModel.setBallVelocityX(bModel.getBallVelocityX().negate());
+            if ((bModel.getPositionX().subtract(radius)).compareTo(new BigDecimal(tableBorders.getX() + tableX))<=0) {
+                bModel.setVelocityX(bModel.getVelocityX().negate());
+            }else if((bModel.getPositionX().add(radius)).compareTo(new BigDecimal((tableBorders.getX() + tableX) + tableBorders.getWidth()))>=0){
+                bModel.setVelocityX(bModel.getVelocityX().negate());
             }
-            if ((bModel.getBallPositionY().subtract(radius)).compareTo(new BigDecimal(tableBorders.getY() + tableY))<=0) {
-                bModel.setBallVelocityY(bModel.getBallVelocityY().negate());
-            }else if ((bModel.getBallPositionY().add(radius)).compareTo(new BigDecimal((tableBorders.getY() + tableY) + tableBorders.getHeight()))>=0){
-                bModel.setBallVelocityY(bModel.getBallVelocityY().negate());
+            if ((bModel.getPositionY().subtract(radius)).compareTo(new BigDecimal(tableBorders.getY() + tableY))<=0) {
+                bModel.setVelocityY(bModel.getVelocityY().negate());
+            }else if ((bModel.getPositionY().add(radius)).compareTo(new BigDecimal((tableBorders.getY() + tableY) + tableBorders.getHeight()))>=0){
+                bModel.setVelocityY(bModel.getVelocityY().negate());
             }
         }
     }
@@ -131,7 +125,7 @@ public class BallController {
         for (BallModel ballA : bModelList) {
             for (BallModel ballB : bModelList) {
                 if (!ballA.equals(ballB)) {
-                    if((ballA.isMovingBall())||(ballB.isMovingBall())){
+                    if((ballA.isMoving)||(ballB.isMoving)){
                         distance = ballA.distance(ballB);
                         if(distance.compareTo(new BigDecimal(2*BallModel.RADIUS))<0){
                             if(collisionChecked.size()==0){
@@ -175,5 +169,23 @@ public class BallController {
      */
     public ArrayList<BallModel> ballModelArrayList() {return bModelList; }
 
+    /**
+     * Removes all the BallViews from the Pane then Clears the BallView ArrayList
+     * @param gameView The Pane that contains the BallViews
+     */
+    public void destroyViews(GameView gameView) {
+        for(BallView bView : bViewList){
+            gameView.getChildren().remove(bView.getBall());
+        }
+        bViewList.clear();
+        System.out.println("Cleared All BallViews: "+bViewList.size());
+    }
 
+    /**
+     * Clears the BallModels ArrayList
+     */
+    public void destroyModels() {
+        bModelList.clear();
+        System.out.println("Cleared All BallModels: "+bModelList.size());
+    }
 }

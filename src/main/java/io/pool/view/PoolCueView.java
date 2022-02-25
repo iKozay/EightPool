@@ -49,8 +49,6 @@ public class PoolCueView {
     public void setPreviousAngle(double angle) {
         this.previousAngle = angle;
     }
-    //    public double getCueAngle() {
-//        return cue.getTransforms();
-//    }
+
 
 }

@@ -1,18 +1,19 @@
 package io.pool.controller;
 
+import io.pool.view.GameView;
 import io.pool.view.MainMenuView;
 import io.pool.view.SettingsView;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import java.net.MalformedURLException;
 
 public class MainMenuController {
 
     private static MainMenuView mmv;
     private static Stage stage;
     private SettingsView settingsView;
-    private Pane gameView;
-    private static PoolCueController pcc;
+    private static GameView gameView;
 
     public MainMenuController(MainMenuView mmv,Stage stage) {
         this.mmv = mmv;
@@ -22,7 +23,8 @@ public class MainMenuController {
 
     public static void gotoMainMenu(){
         stage.getScene().setRoot(mmv);
-        pcc.resetEventHandler(stage.getScene());
+        gameView.getGameController().getPoolCueController().resetEventHandler(stage.getScene());
+        gameView.getGameController().resetGame();
     }
     public void gotoSettings(){
         stage.getScene().setRoot(settingsView.getNewLoadedPane());
@@ -46,13 +48,17 @@ public class MainMenuController {
         this.settingsView = settingsView;
     }
 
-    public void setGameView(Pane root, PoolCueController pcc) {
+    public void setGameView(GameView root) {
         this.gameView = root;
-        this.pcc = pcc;
         mmv.getP1().setOnMouseClicked(event -> {
             stage.getScene().setRoot(gameView);
-            pcc.handleRotateCue(stage.getScene());
-            pcc.hit(stage.getScene());
+            this.gameView.getGameController().getPoolCueController().handleRotateCue(stage.getScene());
+            this.gameView.getGameController().getPoolCueController().hit(stage.getScene());
+            try {
+                gameView.getGameController().startGame();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         });
     }
 }

@@ -6,7 +6,7 @@ import javafx.scene.input.KeyCode;
 import java.util.HashSet;
 import java.util.Set;
 
-class keyHandler {
+class KeyHandler {
     /**The set of keys that are currently pressed down*/
     private static final Set<KeyCode> keysCurrentlyDown = new HashSet<>();
 

@@ -3,22 +3,21 @@ package io.pool.view;
 import io.pool.controller.MainMenuController;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Scale;
 import javafx.stage.Screen;
+import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 
@@ -39,9 +38,9 @@ public class MainMenuView extends Pane{
     private MenuItem menuItem4;
     private MainMenuController mainMenuController;
 
-    public MainMenuView(){
+    public MainMenuView(Stage stage) throws IOException {
         this.setStyle("-fx-background-color: White");
-
+        mainMenuController = new MainMenuController(this,stage);
         /*
         //Separating regions
         Path path1 = new Path();
@@ -180,6 +179,13 @@ public class MainMenuView extends Pane{
         menuHelp = new Menu("About");
         menuBar.getMenus().addAll(menuFile,menuEdit,menuHelp);
 
+        initializeViews();
+
+    }
+
+    private void initializeViews() throws IOException {
+        this.mainMenuController.setSettingsView(new SettingsView());
+        this.mainMenuController.setGameView(new GameView());
     }
 
     public Menu getMenuFile() {
@@ -284,5 +290,9 @@ public class MainMenuView extends Pane{
 
     public void setController(MainMenuController mainMenuController) {
         this.mainMenuController = mainMenuController;
+    }
+
+    public MainMenuController getMainMenuController() {
+        return this.mainMenuController;
     }
 }

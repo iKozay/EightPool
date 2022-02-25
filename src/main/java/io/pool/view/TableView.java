@@ -115,48 +115,48 @@ public class TableView {
         upLeftCorner.setRadius(cornerHoleRadius);
         upLeftCorner.setCenterX(48);
         upLeftCorner.setCenterY(55);
-//        upLeftCorner.setFill(Color.BLUE);
-        upLeftCorner.setVisible(false);
+        upLeftCorner.setFill(Color.BLUE);
+        //upLeftCorner.setVisible(false);
         holes.add(upLeftCorner);
 
         Circle downLeftCorner = new Circle();
         downLeftCorner.setRadius(cornerHoleRadius);
         downLeftCorner.setCenterX(48);
         downLeftCorner.setCenterY(height-57);
-//        downLeftCorner.setFill(Color.BLUE);
-        downLeftCorner.setVisible(false);
+        downLeftCorner.setFill(Color.BLUE);
+//        downLeftCorner.setVisible(false);
         holes.add(downLeftCorner);
 
         Circle upRightCorner = new Circle();
         upRightCorner.setRadius(cornerHoleRadius);
         upRightCorner.setCenterX(width-58);
         upRightCorner.setCenterY(55);
-//        upRightCorner.setFill(Color.BLUE);
-        upRightCorner.setVisible(false);
+        upRightCorner.setFill(Color.BLUE);
+        //upRightCorner.setVisible(false);
         holes.add(upRightCorner);
 
         Circle downRightCorner = new Circle();
         downRightCorner.setRadius(cornerHoleRadius);
         downRightCorner.setCenterX(width - 58);
         downRightCorner.setCenterY(height- 57);
-//        downRightCorner.setFill(Color.BLUE);
-        downRightCorner.setVisible(false);
+        downRightCorner.setFill(Color.BLUE);
+        //downRightCorner.setVisible(false);
         holes.add(downRightCorner);
 
         Circle upCenterCorner = new Circle();
         upCenterCorner.setRadius(centerHoleRadius);
         upCenterCorner.setCenterX((width/2)-7);
         upCenterCorner.setCenterY(41);
-//        upCenterCorner.setFill(Color.BLUE);
-        upCenterCorner.setVisible(false);
+        upCenterCorner.setFill(Color.BLUE);
+        //upCenterCorner.setVisible(false);
         holes.add(upCenterCorner);
 
         Circle downCenterCorner = new Circle();
         downCenterCorner.setRadius(centerHoleRadius);
         downCenterCorner.setCenterX((width/2) - 7);
         downCenterCorner.setCenterY(height-47);
-        downCenterCorner.setVisible(false);
-//        downCenterCorner.setFill(Color.BLUE);
+        //downCenterCorner.setVisible(false);
+        downCenterCorner.setFill(Color.BLUE);
         holes.add(downCenterCorner);
 
         table.getChildren().addAll(holes);

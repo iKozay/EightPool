@@ -1,15 +1,15 @@
 package io.pool.model;
 
 import io.pool.view.BallView;
-import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.nio.BufferUnderflowException;
 import java.util.Random;
 
 public class PhysicsModule {
+    /** Zero in BigDecimal. To be used to define anything to zero */
+    protected static BigDecimal ZERO = new BigDecimal(0);
     /**
      * Gravitational constant
      */
@@ -19,7 +19,7 @@ public class PhysicsModule {
      */
     public final static double MASS_BALL_KG = 0.16;
     /**
-     * Friction coefficient for ball-table
+     * Friction coefficient for ball-table rolling
      */
     private static final double FRICTION_COEFFIECIENT = 0.01;
 
@@ -27,31 +27,38 @@ public class PhysicsModule {
     /**
      * Position in component form
      */
-    private BigDecimal ballPositionX;
-    private BigDecimal ballPositionY;
+    private BigDecimal positionX;
+    private BigDecimal positionY;
 
     /**
      * Velocity in component form
      */
-    private BigDecimal ballVelocityX;
-    private BigDecimal ballVelocityY;
+    private BigDecimal velocityX;
+    private BigDecimal velocityY;
 
     /**
-     * Boolean that tells if the ball has a velocity vector equal to zero
-     * it is <>true</> if both velocity X and Y are not zero
-     * it is <>false</> otherwise
+     * Boolean that tells if the object has a velocity vector equal to zero
+     * it is <code>true</code> if both velocity X and Y are not zero
+     * it is <code>false</code> otherwise
      */
 
-    private boolean movingBall;
+    public boolean isMoving;
 
     /**
      * Acceleration in component form
      */
-    private BigDecimal ballAccelerationX;
-    private BigDecimal ballAccelerationY;
+    private BigDecimal accelerationX;
+    private BigDecimal accelerationY;
+
+    /**
+     * Force in component form
+     */
+    private BigDecimal forceX;
+    private BigDecimal forceY;
 
     /**
      * Main constructor of the Physics Module
+     * Randomizes the Position and Velocity
      */
     public PhysicsModule() {
         randomizePosition();
@@ -59,45 +66,62 @@ public class PhysicsModule {
     }
 
     /**
-     * Assigns a random position on the table for the ball
+     * Constructor that defines the position and sets the velocity to zero
+     * @param positionX Position X of the object
+     * @param positionY Position X of the object
      */
-    private void randomizePosition() {
-        Random rnd = new Random();
-        this.ballPositionX = new BigDecimal(rnd.nextInt(700) + 200);
-        this.ballPositionY = new BigDecimal(rnd.nextInt(400) + 200);
+    public PhysicsModule(BigDecimal positionX, BigDecimal positionY) {
+        this.positionX = positionX;
+        this.positionY = positionY;
+        this.velocityX = ZERO;
+        this.velocityY = ZERO;
+        this.isMoving=false;
     }
 
     /**
-     * Assigns a random velocity for the ball
+     * Assigns a random position on the table for the object
+     */
+    private void randomizePosition() {
+        Random rnd = new Random();
+        this.positionX = new BigDecimal(rnd.nextInt(700) + 200);
+        this.positionY = new BigDecimal(rnd.nextInt(400) + 200);
+    }
+
+    /**
+     * Assigns a random velocity for the object
      */
     private void randomizeVelocity() {
         Random rnd = new Random();
-        this.ballVelocityX = new BigDecimal(rnd.nextInt(5) + 1);
-        this.ballVelocityY = new BigDecimal(rnd.nextInt(5) + 1);
-        this.movingBall = true;
+        this.velocityX = new BigDecimal(rnd.nextInt(5) + 1);
+        this.velocityY = new BigDecimal(rnd.nextInt(5) + 1);
+        this.isMoving = true;
     }
 
     /**
      * Updates the BallModel and the BallView positions
      *
      * @param bView The BallView that represents this ball
-     * @param time  Time in seconds
      */
-    public void updateBallPosition(BallView bView, double time) {
-        setMovingBall();
-        /** Updates the position of the ball only if it is moving */
-        if (isMovingBall()) {
-            applyFriction(FRICTION_COEFFIECIENT, time);
-            /** Updates the BallModel position */
-            setBallPositionX(getBallPositionX().add(getBallVelocityX()));
-            setBallPositionY(getBallPositionY().add(getBallVelocityY()));
-            /** Updates the BallView position */
-            bView.getBall().setLayoutX(getBallPositionX().doubleValue());
-            bView.getBall().setLayoutY(getBallPositionY().doubleValue());
-            /** Add rotation animation */
-            Rotate rx = new Rotate(-getBallVelocityY().doubleValue(), 0, 0, 0, Rotate.X_AXIS);
-            Rotate ry = new Rotate(getBallVelocityX().doubleValue(), 0, 0, 0, Rotate.Y_AXIS);
-            bView.getBall().getTransforms().addAll(rx, ry);
+    public void updatePosition(BallView bView) {
+        /** This method only applies to BallModel
+         * Must check is it is called from BallModel
+         * */
+        if(this.getClass().equals(BallModel.class)) {
+            setIsMoving();
+            /** Updates the position of the ball only if it is moving */
+            if (isMoving) {
+                applyFriction(FRICTION_COEFFIECIENT);
+                /** Updates the BallModel position */
+                setPositionX(getPositionX().add(getVelocityX()));
+                setPositionY(getPositionY().add(getVelocityY()));
+                /** Updates the BallView position */
+                bView.getBall().setLayoutX(getPositionX().doubleValue());
+                bView.getBall().setLayoutY(getPositionY().doubleValue());
+                /** Add rotation animation */
+                Rotate rx = new Rotate(-getVelocityY().doubleValue(), 0, 0, 0, Rotate.X_AXIS);
+                Rotate ry = new Rotate(getVelocityX().doubleValue(), 0, 0, 0, Rotate.Y_AXIS);
+                bView.getBall().getTransforms().addAll(rx, ry);
+            }
         }
     }
 
@@ -128,51 +152,46 @@ public class PhysicsModule {
      *      a<sub>x</sub> = R * a<sub>y</sub>
      *  </p>
      * @param frictionCoefficient Friction coefficient depending on the situation
-     * @param time                Time in seconds
      */
-    private void applyFriction(double frictionCoefficient, double time) {
-
-        /** Get the friction magnitude */
-        BigDecimal frictionForceMag = new BigDecimal(frictionCoefficient * PhysicsModule.MASS_BALL_KG * PhysicsModule.GRAVITATIONAL_FORCE, MathContext.DECIMAL32);
-        /** Calculate the velocity ratio */
-        double velocityRatio = getBallVelocityX().abs().doubleValue() / getBallVelocityY().abs().doubleValue();
-
-        setBallAccelerationY((new BigDecimal(Math.sqrt(Math.pow(frictionForceMag.doubleValue(), 2)) / (Math.pow(velocityRatio, 2) + 1), MathContext.DECIMAL32)));
-        setBallAccelerationX(new BigDecimal(velocityRatio * getBallAccelerationY().doubleValue(), MathContext.DECIMAL32));
-
-        /**
-         * Make the acceleration opposite to the velocity if it is positive
-         * Acceleration is negative by default
-         */
-        if (getBallVelocityX().doubleValue() > 0) {
-            setBallAccelerationX(getBallAccelerationX().multiply(BigDecimal.valueOf(-1)));
-        }
-        if (getBallVelocityY().doubleValue() > 0) {
-            setBallAccelerationY(getBallAccelerationY().multiply(BigDecimal.valueOf(-1)));
-        }
-
-        /**
-         * Checks if the acceleration is bigger than the velocity.
-         * This means that the ball will become be stationary.
-         * If it is not, it assigns the new velocity
-         */
-        // TODO Understand this
-        if (!(getBallVelocityX().abs().doubleValue() <= frictionForceMag.doubleValue()) && !(getBallVelocityY().abs().doubleValue() <= frictionForceMag.doubleValue())) {
-            setBallVelocityX(getBallVelocityX().add(getBallAccelerationX()));
-            setBallVelocityY(getBallVelocityY().add(getBallAccelerationY()));
-        } else {
-            setBallVelocityX(new BigDecimal(0));
-            setBallVelocityY(new BigDecimal(0));
-        }
-        /**
-         * Repeated twice. Have to test to see which is the one to keep.
+    private void applyFriction(double frictionCoefficient) {
+        /** This method only applies to BallModel
+         * Must check is it is called from BallModel
          * */
-        // TODO Understand this
-        if (getBallVelocityX().abs().doubleValue() < getBallAccelerationX().abs().doubleValue()) {
-            setBallVelocityX(new BigDecimal(0));
-        }
-        if (getBallVelocityY().abs().doubleValue() < getBallAccelerationY().abs().doubleValue()) {
-            setBallVelocityY(new BigDecimal(0));
+        if(this.getClass().equals(BallModel.class)) {
+            /** Get the friction magnitude */
+            BigDecimal frictionForceMag = new BigDecimal(frictionCoefficient * PhysicsModule.MASS_BALL_KG * PhysicsModule.GRAVITATIONAL_FORCE, MathContext.DECIMAL32);
+            /** Calculate the velocity ratio */
+            double velocityRatio = getVelocityX().abs().doubleValue() / getVelocityY().abs().doubleValue();
+
+            setAccelerationY((new BigDecimal(Math.sqrt(Math.pow(frictionForceMag.doubleValue(), 2)) / (Math.pow(velocityRatio, 2) + 1), MathContext.DECIMAL32)));
+            setAccelerationX(new BigDecimal(velocityRatio * getAccelerationY().doubleValue(), MathContext.DECIMAL32));
+
+            /**
+             * Make the acceleration opposite to the velocity if it is positive
+             * Acceleration is negative by default
+             */
+            if (getVelocityX().doubleValue() > 0) {
+                setAccelerationX(getAccelerationX().multiply(BigDecimal.valueOf(-1)));
+            }
+            if (getVelocityY().doubleValue() > 0) {
+                setAccelerationY(getAccelerationY().multiply(BigDecimal.valueOf(-1)));
+            }
+
+            /**
+             * Checks if the acceleration is bigger than the velocity.
+             * This means that the ball will become be stationary.
+             * If it is not, it assigns the new velocity
+             */
+            if (getVelocityX().abs().doubleValue() < getAccelerationX().abs().doubleValue()) {
+                setVelocityX(ZERO);
+            } else {
+                setVelocityX(getVelocityX().add(getAccelerationX()));
+            }
+            if (getVelocityY().abs().doubleValue() < getAccelerationY().abs().doubleValue()) {
+                setVelocityY(ZERO);
+            } else {
+                setVelocityY(getVelocityY().add(getAccelerationY()));
+            }
         }
     }
 
@@ -183,15 +202,15 @@ public class PhysicsModule {
      * @see <a href="https://vobarian.com/collisions/2dcollisions2.pdf">2-Dimensional Elastic Collisions without Trigonometry</a>
      */
     public void handleMomentum(BallModel otherBall, double distance) {
-        //
+        // TODO Generalize the handle momentum to include table and Pool Cue
         /**1
          * find unit normal and unit tanget vector
          */
         PhysicsModule ball1 = this;
         PhysicsModule ball2 = otherBall;
 
-        BigDecimal normalXComponent = ball2.getBallVelocityX().subtract(ball1.getBallVelocityX());
-        BigDecimal normalYComponent = ball2.getBallVelocityY().subtract(ball1.getBallVelocityY());
+        BigDecimal normalXComponent = ball2.getVelocityX().subtract(ball1.getVelocityX());
+        BigDecimal normalYComponent = ball2.getVelocityY().subtract(ball1.getVelocityY());
 
         BigDecimal magnitude = (normalYComponent.pow(2).add(normalXComponent.pow(2))).sqrt(MathContext.DECIMAL32);
         BigDecimal unitNormalX = normalXComponent.divide(magnitude, MathContext.DECIMAL32);
@@ -210,20 +229,20 @@ public class PhysicsModule {
         /**
          * Push-Pull Balls apart
          */
-        ball1.setBallPositionX(ball1.getBallPositionX().add(distanceX.divide(new BigDecimal(2))));
-        ball1.setBallPositionY(ball1.getBallPositionY().add(distanceY.divide(new BigDecimal(2))));
-        ball2.setBallPositionX(ball2.getBallPositionX().subtract(distanceX.divide(new BigDecimal(2))));
-        ball2.setBallPositionY(ball2.getBallPositionY().subtract(distanceY.divide(new BigDecimal(2))));
+        ball1.setPositionX(ball1.getPositionX().add(distanceX.divide(new BigDecimal(2))));
+        ball1.setPositionY(ball1.getPositionY().add(distanceY.divide(new BigDecimal(2))));
+        ball2.setPositionX(ball2.getPositionX().subtract(distanceX.divide(new BigDecimal(2))));
+        ball2.setPositionY(ball2.getPositionY().subtract(distanceY.divide(new BigDecimal(2))));
 
 
         /**2 (step 2 is skipped because we already have the balls vectors
          * Resolve velocity vectors of ball 1 and 2 into normal and tangential components
          * this is done by using the dot product of the balls initial velocity and using the unitVectors
          */
-        BigDecimal v1n = (unitNormalX.multiply(ball1.getBallVelocityX()).add(unitNormalY.multiply(ball1.getBallVelocityY())));
-        BigDecimal v1t = (unitTangentX.multiply(ball1.getBallVelocityX())).add(unitTangentY.multiply(ball1.getBallVelocityY()));
-        BigDecimal v2n = (unitNormalX.multiply(ball2.getBallVelocityX())).add(unitNormalY.multiply(ball2.getBallVelocityY()));
-        BigDecimal v2t = (unitTangentX.multiply(ball2.getBallVelocityX())).add(unitTangentY.multiply(ball2.getBallVelocityY()));
+        BigDecimal v1n = (unitNormalX.multiply(ball1.getVelocityX()).add(unitNormalY.multiply(ball1.getVelocityY())));
+        BigDecimal v1t = (unitTangentX.multiply(ball1.getVelocityX())).add(unitTangentY.multiply(ball1.getVelocityY()));
+        BigDecimal v2n = (unitNormalX.multiply(ball2.getVelocityX())).add(unitNormalY.multiply(ball2.getVelocityY()));
+        BigDecimal v2t = (unitTangentX.multiply(ball2.getVelocityX())).add(unitTangentY.multiply(ball2.getVelocityY()));
 
         /**3
          * Find new tangential velocities
@@ -261,166 +280,211 @@ public class PhysicsModule {
         BigDecimal finalBall2X = normalXFinalBall2.add(tangentialXFinalBall2, MathContext.DECIMAL32);
         BigDecimal finalBall2Y = normalYFinalBall2.add(tangentialYFinalBall2, MathContext.DECIMAL32);
 
-        ball1.setBallVelocityX(finalBall1X);
-        ball1.setBallVelocityY(finalBall1Y);
-        ball2.setBallVelocityX(finalBall2X);
-        ball2.setBallVelocityY(finalBall2Y);
+        ball1.setVelocityX(finalBall1X);
+        ball1.setVelocityY(finalBall1Y);
+        ball2.setVelocityX(finalBall2X);
+        ball2.setVelocityY(finalBall2Y);
     }
 
     /**
-     * Gets the distance between this ball and another ball
-     *
-     * @param otherBall Another ball
-     * @return The distance between the two balls
+     * Gets the distance between this object and another object
+     * <p>
+     *     D = sqrt [ (x<sub>2</sub>-x<sub>1</sub>)<sup>2</sup> + (y<sub>2</sub>-y<sub>1</sub>)<sup>2</sup> ]
+     * </p>
+     * @param module Another object that extends PhysicsModule
+     * @return The distance between two objects
      */
-    public BigDecimal distance(BallModel otherBall) {
-        /**
-         * Assigns the x and y variables
-         */
-        BigDecimal x2, y2, x1, y1;
-        x2 = otherBall.getBallPositionX();
-        y2 = otherBall.getBallPositionY();
-        x1 = getBallPositionX();
-        y1 = getBallPositionY();
-        /**
-         * Finds distance using the following equation:
-         * <p>
-         *     D = sqrt [ (x<sub>2</sub>-x<sub>1</sub>)<sup>2</sup> + (y<sub>2</sub>-y<sub>1</sub>)<sup>2</sup> ]
-         * </p>
-         */
-        BigDecimal a = x2.subtract(x1, MathContext.DECIMAL32);
-        BigDecimal b = y2.subtract(y1, MathContext.DECIMAL32);
-        a = a.pow(2, MathContext.DECIMAL32);
-        b = b.pow(2, MathContext.DECIMAL32);
-        BigDecimal subtotal = a.add(b, MathContext.DECIMAL32);
-        return subtotal.sqrt(MathContext.DECIMAL32);
+    public BigDecimal distance(PhysicsModule module) {
+        // TODO handle distance with table and pool cue
+        /** This method only applies to BallModel
+         * Must check is it is called from BallModel
+         * */
+        BigDecimal distance=ZERO;
+        if(this.getClass().equals(BallModel.class)&&module.getClass().equals(BallModel.class)) {
+            BallModel otherBall = (BallModel) module;
+
+            /**
+             * Assigns the x and y variables
+             */
+            BigDecimal x2, y2, x1, y1;
+            x2 = otherBall.getPositionX();
+            y2 = otherBall.getPositionY();
+            x1 = getPositionX();
+            y1 = getPositionY();
+            /**
+             * Finds distance using the following equation:
+
+             */
+            BigDecimal a = x2.subtract(x1, MathContext.DECIMAL32);
+            BigDecimal b = y2.subtract(y1, MathContext.DECIMAL32);
+            a = a.pow(2, MathContext.DECIMAL32);
+            b = b.pow(2, MathContext.DECIMAL32);
+            BigDecimal subtotal = a.add(b, MathContext.DECIMAL32);
+            distance = subtotal.sqrt(MathContext.DECIMAL32);
+        }
+        return distance;
     }
 
     /**
-     * Gets the component X of the ball position
+     *
+     * Getters and Setters
+     *
+     */
+
+
+    /**
+     * Gets the component X of position
      *
      * @return component X of Position
      */
-    public BigDecimal getBallPositionX() {
-        return ballPositionX;
+    public BigDecimal getPositionX() {
+        return positionX;
+    }
+
+
+    /**
+     * Sets the component X of position
+     *
+     * @param positionX The new X component of Position
+     */
+    public void setPositionX(BigDecimal positionX) {
+        this.positionX = positionX;
     }
 
     /**
-     * Gets the component Y of the ball position
+     * Gets the component Y of position
      *
      * @return component Y of Position
      */
-    public BigDecimal getBallPositionY() {
-        return ballPositionY;
+    public BigDecimal getPositionY() {
+        return positionY;
     }
 
     /**
-     * Sets the component X of the ball position
+     * Sets the component Y of position
      *
-     * @param ballPositionX The new X component of Position
+     * @param positionY The new Y component of Position
      */
-    public void setBallPositionX(BigDecimal ballPositionX) {
-        this.ballPositionX = ballPositionX;
+    public void setPositionY(BigDecimal positionY) {
+        this.positionY = positionY;
     }
 
     /**
-     * Sets the component Y of the ball position
-     *
-     * @param ballPositionY The new Y component of Position
-     */
-    public void setBallPositionY(BigDecimal ballPositionY) {
-        this.ballPositionY = ballPositionY;
-    }
-
-    /**
-     * Gets the component X of the ball velocity
+     * Gets the component X of velocity
      *
      * @return component X of Velocity
      */
-    public BigDecimal getBallVelocityX() {
-        return ballVelocityX;
+    public BigDecimal getVelocityX() {
+        return velocityX;
     }
 
     /**
-     * Sets the component X of the ball velocity
+     * Sets the component X of velocity
      *
-     * @param ballVelocityX The new X component of Velocity
+     * @param velocityX The new X component of Velocity
      */
-    public void setBallVelocityX(BigDecimal ballVelocityX) {
-        this.ballVelocityX = ballVelocityX;
+    public void setVelocityX(BigDecimal velocityX) {
+        this.velocityX = velocityX;
     }
 
     /**
-     * Gets the component Y of the ball velocity
+     * Gets the component Y of velocity
      *
      * @return component Y of Velocity
      */
-    public BigDecimal getBallVelocityY() {
-        return ballVelocityY;
+    public BigDecimal getVelocityY() {
+        return velocityY;
     }
 
     /**
-     * Sets the component Y of the ball velocity
+     * Sets the component Y of velocity
      *
-     * @param ballVelocityY The new Y component of Velocity
+     * @param velocityY The new Y component of Velocity
      */
-    public void setBallVelocityY(BigDecimal ballVelocityY) {
-        this.ballVelocityY = ballVelocityY;
+    public void setVelocityY(BigDecimal velocityY) {
+        this.velocityY = velocityY;
     }
 
     /**
-     * Gets the component X of the ball acceleration
+     * Gets the component X of acceleration
      *
      * @return component X of Acceleration
      */
-    public BigDecimal getBallAccelerationX() {
-        return ballAccelerationX;
+    public BigDecimal getAccelerationX() {
+        return accelerationX;
     }
 
     /**
-     * Sets the component X of the ball acceleration
+     * Sets the component X of acceleration
      *
-     * @param ballAccelerationX The new X component of Acceleration
+     * @param accelerationX The new X component of Acceleration
      */
-    public void setBallAccelerationX(BigDecimal ballAccelerationX) {
-        this.ballAccelerationX = ballAccelerationX;
+    public void setAccelerationX(BigDecimal accelerationX) {
+        this.accelerationX = accelerationX;
     }
 
     /**
-     * Gets the component Y of the ball acceleration
+     * Gets the component Y of acceleration
      *
      * @return component Y of Acceleration
      */
-    public BigDecimal getBallAccelerationY() {
-        return ballAccelerationY;
+    public BigDecimal getAccelerationY() {
+        return accelerationY;
     }
 
     /**
-     * Sets the component Y of the ball acceleration
+     * Sets the component Y of acceleration
      *
-     * @param ballAccelerationY The new Y component of Acceleration
+     * @param accelerationY The new Y component of Acceleration
      */
-    public void setBallAccelerationY(BigDecimal ballAccelerationY) {
-        this.ballAccelerationY = ballAccelerationY;
+    public void setAccelerationY(BigDecimal accelerationY) {
+        this.accelerationY = accelerationY;
     }
 
     /**
-     * Checks if the ball is moving.
+     * Gets the component X of the force
      *
-     * @return <code>true</code> if it has a velocity not equal to zero. <code>false</code> otherwise.
+     * @return component X of the force
      */
-    public boolean isMovingBall() {
-        return movingBall;
+    public BigDecimal getForceX() {
+        return forceX;
     }
 
     /**
-     * Sets the <code>movingBall</code> variable depending on if the ball has a velocity higher than 0.
+     * Sets the component X of the force
+     *
+     * @param forceX The new X component of the force
      */
-    public void setMovingBall() {
-        if (ballVelocityY.doubleValue() == 0 && ballVelocityX.doubleValue() == 0) {
-            movingBall = false;
+    public void setForceX(BigDecimal forceX) {
+        this.forceX = forceX;
+    }
+
+    /**
+     * Gets the component Y of the force
+     *
+     * @return component Y of the force
+     */
+    public BigDecimal getForceY() {
+        return forceY;
+    }
+
+    /**
+     * Sets the component Y of the force
+     *
+     * @param forceY The new Y component of the force
+     */
+    public void setForceY(BigDecimal forceY) {
+        this.forceY = forceY;
+    }
+
+    /**
+     * Sets the <code>movingBall</code> variable depending on if the object has a velocity higher than 0.
+     */
+    public void setIsMoving() {
+        if (velocityY.doubleValue() == 0 && velocityX.doubleValue() == 0) {
+            isMoving = false;
         } else {
-            movingBall = true;
+            isMoving = true;
         }
     }
 

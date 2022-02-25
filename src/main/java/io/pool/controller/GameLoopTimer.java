@@ -1,4 +1,4 @@
-package io.pool.eightpool;
+package io.pool.controller;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.DoubleProperty;

@@ -1,31 +1,37 @@
 package io.pool.controller;
 
+import io.pool.model.PoolCueModel;
 import io.pool.view.PoolCueView;
 
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
 public class PoolCueController {
 
-    PoolCueView pcv = new PoolCueView();
+    PoolCueView poolCueView;
+    PoolCueModel poolCueModel;
+
+    public PoolCueController(PoolCueView poolCueView) {
+        this.poolCueView = poolCueView;
+        this.poolCueModel = new PoolCueModel();
+    }
 
     boolean isPressed = false;
     public void handleRotateCue(Scene scene){
 
         scene.setOnMouseMoved(event -> {
-            double deltaX = event.getX() - pcv.getXPos();
-            double deltaY = event.getY() - (pcv.getYPos() + pcv.getCue().getHeight()/2);
+            double deltaX = event.getX() - poolCueView.getXPos();
+            double deltaY = event.getY() - (poolCueView.getYPos() + poolCueView.getCue().getHeight()/2);
 
             if (deltaX != 0) {
                 double newAngleDegrees = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 90;
                 //System.out.println(newAngleDegrees);
                 Rotate rotate = new Rotate();
-                rotate.setPivotY(pcv.getCue().getHeight()/2);
-                rotate.setAngle(newAngleDegrees - pcv.getPreviousAngle());
-                pcv.getCue().getTransforms().add(rotate);
-                pcv.setPreviousAngle(newAngleDegrees);
+                rotate.setPivotY(poolCueView.getCue().getHeight()/2);
+                rotate.setAngle(newAngleDegrees - poolCueView.getPreviousAngle());
+                poolCueView.getCue().getTransforms().add(rotate);
+                poolCueView.setPreviousAngle(newAngleDegrees);
                 //System.out.println(newAngleDegrees);
             }
         });
@@ -49,9 +55,9 @@ public class PoolCueController {
             draggedDistance = Math.sqrt(Math.pow(draggedDistanceX, 2) + Math.pow(draggedDistanceY, 2));
             Translate translate = new Translate();
 
-            translate.setX(draggedDistance * Math.cos(pcv.getPreviousAngle() +2.7));
-            translate.setY(draggedDistance * Math.sin(pcv.getPreviousAngle() +2.7));
-            pcv.getCue().getTransforms().addAll(translate);
+            translate.setX(draggedDistance * Math.cos(poolCueView.getPreviousAngle() +2.7));
+            translate.setY(draggedDistance * Math.sin(poolCueView.getPreviousAngle() +2.7));
+            poolCueView.getCue().getTransforms().addAll(translate);
         });
         scene.setOnMouseReleased(event -> {
             isPressed = false;
