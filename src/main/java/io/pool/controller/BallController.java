@@ -188,4 +188,13 @@ public class BallController {
         bModelList.clear();
         System.out.println("Cleared All BallModels: "+bModelList.size());
     }
+
+    public ArrayList<Double> xballPos = new ArrayList<>();
+    public ArrayList<Double> yballPos = new ArrayList<>();
+    public void addBallsPosition(){
+        for(BallView bv: bViewList){
+            xballPos.add(bv.getBall().getLayoutX());
+            yballPos.add(bv.getBall().getLayoutY());
+        }
+    }
 }
