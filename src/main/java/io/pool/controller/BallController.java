@@ -102,7 +102,7 @@ public class BallController {
     /**
      * Detects all the collisions and updates the ball position
      * */
-    public void detectCollision(ArrayList<Line> tableBorders, TableModel tableModel){
+    public void detectCollision(Rectangle tableBorders, TableModel tableModel){
         detectCollisionWithTable(tableBorders,tableModel);
         detectCollisionWithOtherBalls();
         for (BallModel bModel : bModelList) {
@@ -114,26 +114,24 @@ public class BallController {
      * @param tableBorders Shape that defines the table borders
      * @param tableModel The Table Model
      * */
-    private void detectCollisionWithTable(ArrayList<Line> tableBorders, TableModel tableModel){
-        for (Line line : tableBorders) {
+    private void detectCollisionWithTable(Rectangle tableBorders, TableModel tableModel){
             for (BallModel bModel : bModelList) {
                 // TODO work on collision with table
                 BigDecimal radius = new BigDecimal(BallModel.RADIUS);
-                Shape intersect = Shape.subtract(line,bViewList.get(bModelList.indexOf(bModel)).getCircleFromSphere());
-                tableModel.setCollisionOverlap(intersect);
-                System.out.println(tableModel.distance(bModel));
-//                if ((bModel.getPositionX().subtract(radius)).compareTo(new BigDecimal(tableBorders.getX() + tableX)) <= 0) {
-//                    bModel.setVelocityX(bModel.getVelocityX().negate());
-//                } else if ((bModel.getPositionX().add(radius)).compareTo(new BigDecimal((tableBorders.getX() + tableX) + tableBorders.getWidth())) >= 0) {
-//                    bModel.setVelocityX(bModel.getVelocityX().negate());
-//                }
-//                if ((bModel.getPositionY().subtract(radius)).compareTo(new BigDecimal(tableBorders.getY() + tableY)) <= 0) {
-//                    bModel.setVelocityY(bModel.getVelocityY().negate());
-//                } else if ((bModel.getPositionY().add(radius)).compareTo(new BigDecimal((tableBorders.getY() + tableY) + tableBorders.getHeight())) >= 0) {
-//                    bModel.setVelocityY(bModel.getVelocityY().negate());
-//                }
+                //Shape intersect = Shape.subtract(line,bViewList.get(bModelList.indexOf(bModel)).getCircleFromSphere());
+                //tableModel.setCollisionOverlap(intersect);
+                //System.out.println(tableModel.distance(bModel));
+                if ((bModel.getPositionX().subtract(radius)).compareTo(new BigDecimal(tableBorders.getX() + tableX)) <= 0) {
+                    bModel.setVelocityX(bModel.getVelocityX().negate());
+                } else if ((bModel.getPositionX().add(radius)).compareTo(new BigDecimal((tableBorders.getX() + tableX) + tableBorders.getWidth())) >= 0) {
+                    bModel.setVelocityX(bModel.getVelocityX().negate());
+                }
+                if ((bModel.getPositionY().subtract(radius)).compareTo(new BigDecimal(tableBorders.getY() + tableY)) <= 0) {
+                    bModel.setVelocityY(bModel.getVelocityY().negate());
+                } else if ((bModel.getPositionY().add(radius)).compareTo(new BigDecimal((tableBorders.getY() + tableY) + tableBorders.getHeight())) >= 0) {
+                    bModel.setVelocityY(bModel.getVelocityY().negate());
+                }
             }
-        }
     }
     /**
      * Detects all the collisions between the balls

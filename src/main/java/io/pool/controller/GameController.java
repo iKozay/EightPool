@@ -36,7 +36,7 @@ public class GameController {
                  * */
                 if(secondsSinceLastFrame<1){
                     /** Detect collisions */
-                    ballController.detectCollision(gView.getTableView().getLines(),tableController.getTableModel());
+                    ballController.detectCollision(gView.getTableView().getPlayTable(),tableController.getTableModel());
                     /** Check if ball gets inside any of the holes */
                     for (BallView ballView : ballController.ballViewArrayList()) {
                         for (int i = 0; i < gView.getTableView().getHoles().size(); i++) {
