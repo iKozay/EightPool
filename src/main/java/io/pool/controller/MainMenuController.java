@@ -56,7 +56,6 @@ public class MainMenuController {
             }
         });
 
-
         mmv.getSolo1Btn().setOnMouseExited(event -> {
             if(mmv.getChildren().contains(mmv.getSolo1Btn())){
                 mmv.getChildren().remove(mmv.getSolo1Btn());
