@@ -1,8 +1,13 @@
 package io.pool.model;
 
+import javafx.scene.shape.Shape;
+
 import java.math.BigDecimal;
 
 public class PoolCueModel extends PhysicsModule{
+
+    private Shape collisionOverlap=null;
+
     public PoolCueModel(){
         setForceX(ZERO);
         setForceY(ZERO);
@@ -17,6 +22,10 @@ public class PoolCueModel extends PhysicsModule{
         setAccelerationY(null);
         /** The pool cue has no velocity therefore it will never move */
         isMoving=false;
+    }
+
+    public Shape getCollisionOverlap() {
+        return collisionOverlap;
     }
 
     /**

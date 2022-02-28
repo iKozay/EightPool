@@ -3,6 +3,7 @@ package io.pool.view;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
 
 public class BallView {
@@ -30,5 +31,13 @@ public class BallView {
      * */
     public Sphere getBall() {
         return ball;
+    }
+
+    /**
+     * Gets the sphere
+     * @return The sphere
+     * */
+    public Circle getCircleFromSphere() {
+        return new Circle(ball.getLayoutX(),ball.getLayoutY(),ball.getRadius());
     }
 }

@@ -1,11 +1,14 @@
 package io.pool.model;
 
+import javafx.scene.shape.Shape;
+
 import java.math.BigDecimal;
 
 public class TableModel extends PhysicsModule{
 
-    public TableModel() {
+    private Shape collisionOverlap=null;
 
+    public TableModel() {
         /** The table does not need any of these properties
          * Setting them to zero by calling the overridden methods
          * */
@@ -21,6 +24,12 @@ public class TableModel extends PhysicsModule{
         isMoving=false;
     }
 
+    public Shape getCollisionOverlap() {
+        return collisionOverlap;
+    }
+    public void setCollisionOverlap(Shape intersect) {
+        this.collisionOverlap=intersect;
+    }
 
     /**
      *
@@ -69,6 +78,7 @@ public class TableModel extends PhysicsModule{
     public void setForceY(BigDecimal forceY) {
         super.setForceY(ZERO);
     }
+
 /*
     I will give each hole a number
     1               2                  3

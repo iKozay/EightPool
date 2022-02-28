@@ -31,11 +31,11 @@ public class TableView {
     private final ArrayList<Line> lines = new ArrayList<>();
     public final static int cornerHoleRadius = 30;
     public final static int centerHoleRadius = 25;
-
+    int width = 1080; // the width of the pane
+    int height = 610; // the height of the pane
     //    private ArrayList<Hole> holes;
     public TableView(Pane root) throws MalformedURLException {
-        int width = 1080; // the width of the pane
-        int height = 610; // the height of the pane
+
 
         int layoutX = game.eightPoolTableX; // the XPosition in the general pane
         int layoutY = game.eightPoolTableY; // the YPosition in the general pane
@@ -111,6 +111,11 @@ public class TableView {
 
         root.getChildren().add(borderPane); // adding the table to the main pain of the project.
 
+        createHoles();
+        createLines();
+
+    }
+    public void createHoles(){
         Circle upLeftCorner = new Circle();
         upLeftCorner.setRadius(cornerHoleRadius);
         upLeftCorner.setCenterX(48);
@@ -161,7 +166,8 @@ public class TableView {
 
         table.getChildren().addAll(holes);
 
-
+    }
+    public void createLines(){
         Line upLeftLine = new Line(95, 65, 500, 65);
         upLeftLine.setStroke(Color.WHITE);
         upLeftLine.setStrokeWidth(3);
@@ -193,8 +199,6 @@ public class TableView {
         lines.add(centerRightLine);
 
         table.getChildren().addAll(lines);
-
-
     }
     public Pane getFullTable() {
         return table;
@@ -209,6 +213,9 @@ public class TableView {
         return holes;
     }
 
+    public ArrayList<Line> getLines() {
+        return lines;
+    }
 
     //tableView: getHeight, getWidth, getX, getY, in the class diagram
 }

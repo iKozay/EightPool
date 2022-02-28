@@ -7,7 +7,9 @@ import javafx.scene.shape.Cylinder;
 
 public class PoolCueView {
 
+    /** The cylinder that will represent the pool cue */
     private static Cylinder cue;
+
     double xPos = 500;
     double yPos = 100;
     double centerX = xPos;
