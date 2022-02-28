@@ -2,13 +2,17 @@ package io.pool.controller;
 
 import io.pool.eightpool.game;
 import io.pool.model.BallModel;
+import io.pool.model.TableModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -25,11 +29,8 @@ public class BallController {
 
     double mouseAnchorX,mouseAnchorY;
 
-    /**
-     * Main constructor of BallController
-     * */
-    public BallController() {}
-
+    public BallController() {
+    }
 
     /**
      * Prepares the game by creating the BallModels and the BallViews. Adds the BallViews to the pane
@@ -86,11 +87,23 @@ public class BallController {
              root.getChildren().add(bView.getBall());
         }
     }
+    public void testingBallController(Pane root) throws MalformedURLException {
+        BallModel bModel1 = new BallModel(1, new Image(new File("src/main/resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm()));
+        BallModel bModel2 = new BallModel(2, new Image(new File("src/main/resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm()));
+        bModelList.add(bModel1);
+        bModelList.add(bModel2);
+        BallView bView1 = new BallView(bModel1.getImg(),BallModel.RADIUS);
+        BallView bView2 = new BallView(bModel2.getImg(),BallModel.RADIUS);
+        bViewList.add(bView1);
+        bViewList.add(bView2);
+        root.getChildren().addAll(bView1.getBall(),bView2.getBall());
+    }
+
     /**
      * Detects all the collisions and updates the ball position
      * */
-    public void detectCollision(Rectangle tableBorders){
-        detectCollisionWithTable(tableBorders);
+    public void detectCollision(Rectangle tableBorders, TableModel tableModel){
+        detectCollisionWithTable(tableBorders,tableModel);
         detectCollisionWithOtherBalls();
         for (BallModel bModel : bModelList) {
             bModel.updatePosition(bViewList.get(bModelList.indexOf(bModel)));
@@ -99,21 +112,26 @@ public class BallController {
     /**
      * Detects any collision between a ball and the table
      * @param tableBorders Shape that defines the table borders
+     * @param tableModel The Table Model
      * */
-    private void detectCollisionWithTable(Rectangle tableBorders){
-        for (BallModel bModel : bModelList) {
-            BigDecimal radius = new BigDecimal(BallModel.RADIUS);
-            if ((bModel.getPositionX().subtract(radius)).compareTo(new BigDecimal(tableBorders.getX() + tableX))<=0) {
-                bModel.setVelocityX(bModel.getVelocityX().negate());
-            }else if((bModel.getPositionX().add(radius)).compareTo(new BigDecimal((tableBorders.getX() + tableX) + tableBorders.getWidth()))>=0){
-                bModel.setVelocityX(bModel.getVelocityX().negate());
+    private void detectCollisionWithTable(Rectangle tableBorders, TableModel tableModel){
+            for (BallModel bModel : bModelList) {
+                // TODO work on collision with table
+                BigDecimal radius = new BigDecimal(BallModel.RADIUS);
+                //Shape intersect = Shape.subtract(line,bViewList.get(bModelList.indexOf(bModel)).getCircleFromSphere());
+                //tableModel.setCollisionOverlap(intersect);
+                //System.out.println(tableModel.distance(bModel));
+                if ((bModel.getPositionX().subtract(radius)).compareTo(new BigDecimal(tableBorders.getX() + tableX)) <= 0) {
+                    bModel.setVelocityX(bModel.getVelocityX().negate());
+                } else if ((bModel.getPositionX().add(radius)).compareTo(new BigDecimal((tableBorders.getX() + tableX) + tableBorders.getWidth())) >= 0) {
+                    bModel.setVelocityX(bModel.getVelocityX().negate());
+                }
+                if ((bModel.getPositionY().subtract(radius)).compareTo(new BigDecimal(tableBorders.getY() + tableY)) <= 0) {
+                    bModel.setVelocityY(bModel.getVelocityY().negate());
+                } else if ((bModel.getPositionY().add(radius)).compareTo(new BigDecimal((tableBorders.getY() + tableY) + tableBorders.getHeight())) >= 0) {
+                    bModel.setVelocityY(bModel.getVelocityY().negate());
+                }
             }
-            if ((bModel.getPositionY().subtract(radius)).compareTo(new BigDecimal(tableBorders.getY() + tableY))<=0) {
-                bModel.setVelocityY(bModel.getVelocityY().negate());
-            }else if ((bModel.getPositionY().add(radius)).compareTo(new BigDecimal((tableBorders.getY() + tableY) + tableBorders.getHeight()))>=0){
-                bModel.setVelocityY(bModel.getVelocityY().negate());
-            }
-        }
     }
     /**
      * Detects all the collisions between the balls
