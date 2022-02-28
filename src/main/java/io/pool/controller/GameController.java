@@ -56,8 +56,8 @@ public class GameController {
      * @throws MalformedURLException if the path to the ball images is incorrect
      */
     public void startGame() throws MalformedURLException {
-        //ballController.prepareGame(this.gameView);
-        ballController.testingBallController(this.gameView);
+        ballController.prepareGame(this.gameView);
+        //ballController.testingBallController(this.gameView);
         gameLoopTimer.start();
     }
 
