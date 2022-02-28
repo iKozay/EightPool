@@ -94,6 +94,8 @@ public class PhysicsModule {
         Random rnd = new Random();
         this.velocityX = new BigDecimal(rnd.nextInt(5) + 1);
         this.velocityY = new BigDecimal(rnd.nextInt(5) + 1);
+        this.accelerationY = ZERO;
+        this.accelerationX = ZERO;
         this.isMoving = true;
     }
 
@@ -121,6 +123,7 @@ public class PhysicsModule {
                 Rotate rx = new Rotate(-getVelocityY().doubleValue(), 0, 0, 0, Rotate.X_AXIS);
                 Rotate ry = new Rotate(getVelocityX().doubleValue(), 0, 0, 0, Rotate.Y_AXIS);
                 bView.getBall().getTransforms().addAll(rx, ry);
+
             }
         }
     }
@@ -163,7 +166,8 @@ public class PhysicsModule {
             /** Calculate the velocity ratio */
             double velocityRatio = getVelocityX().abs().doubleValue() / getVelocityY().abs().doubleValue();
 
-            setAccelerationY((new BigDecimal(Math.sqrt(Math.pow(frictionForceMag.doubleValue(), 2)) / (Math.pow(velocityRatio, 2) + 1), MathContext.DECIMAL32)));
+
+            setAccelerationY(new BigDecimal(Math.sqrt(Math.pow(frictionForceMag.doubleValue(), 2)) / (Math.pow(velocityRatio, 2) + 1), MathContext.DECIMAL32));
             setAccelerationX(new BigDecimal(velocityRatio * getAccelerationY().doubleValue(), MathContext.DECIMAL32));
 
             /**
@@ -185,12 +189,12 @@ public class PhysicsModule {
             if (getVelocityX().abs().doubleValue() < getAccelerationX().abs().doubleValue()) {
                 setVelocityX(ZERO);
             } else {
-                setVelocityX(getVelocityX().add(getAccelerationX()));
+                setVelocityX(getVelocityX().add(getAccelerationX(), MathContext.DECIMAL32));
             }
             if (getVelocityY().abs().doubleValue() < getAccelerationY().abs().doubleValue()) {
                 setVelocityY(ZERO);
             } else {
-                setVelocityY(getVelocityY().add(getAccelerationY()));
+                setVelocityY(getVelocityY().add(getAccelerationY(), MathContext.DECIMAL32));
             }
         }
     }
@@ -208,7 +212,9 @@ public class PhysicsModule {
          */
         PhysicsModule ball1 = this;
         PhysicsModule ball2 = otherBall;
-
+        System.out.println("///////////////////////");
+        System.out.println("b1: "+ ((BallModel) this).getNumber()+ball1.isMoving);
+        System.out.println("b2: "+ ((BallModel) ball2).getNumber()+ball2.isMoving);
         BigDecimal normalXComponent = ball2.getVelocityX().subtract(ball1.getVelocityX());
         BigDecimal normalYComponent = ball2.getVelocityY().subtract(ball1.getVelocityY());
 
@@ -481,7 +487,7 @@ public class PhysicsModule {
      * Sets the <code>movingBall</code> variable depending on if the object has a velocity higher than 0.
      */
     public void setIsMoving() {
-        if (velocityY.doubleValue() == 0 && velocityX.doubleValue() == 0) {
+        if (velocityY.doubleValue() == 0.0 && velocityX.doubleValue() == 0.0) {
             isMoving = false;
         } else {
             isMoving = true;

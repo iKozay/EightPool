@@ -3,11 +3,11 @@ package io.pool.view;
 import io.pool.controller.MainMenuController;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
@@ -37,27 +37,17 @@ public class MainMenuView extends Pane{
     private MenuItem menuItem3;
     private MenuItem menuItem4;
     private MainMenuController mainMenuController;
+    private Button solo1Btn;
+    private Button pvp1Btn;
+    private ComboBox pvp1ComboBox;
+    private Button pve1Btn;
+    private Button pve2Btn;
+    private Button pve3Btn;
+    private Text soloText;
 
     public MainMenuView(Stage stage) throws IOException {
         this.setStyle("-fx-background-color: White");
         mainMenuController = new MainMenuController(this,stage);
-        /*
-        //Separating regions
-        Path path1 = new Path();
-        MoveTo mt1 = new MoveTo(this.getScreenWidth()/3, 0);
-        LineTo line1 = new LineTo(this.getScreenWidth()/4, this.getScreenHeight());
-        path1.getElements().add(mt1);
-        path1.getElements().add(line1);
-        this.getChildren().add(path1);
-
-        Path path2 = new Path();
-        MoveTo mt2 = new MoveTo(this.getScreenWidth()*2/3, 0);
-        LineTo line2 = new LineTo(this.getScreenWidth()*7/12, this.getScreenHeight());
-        path2.getElements().add(mt2);
-        path2.getElements().add(line2);
-        this.getChildren().add(path2);
-         */
-
         //Adding texture
         //Green
         p1 = new Polygon();
@@ -131,7 +121,7 @@ public class MainMenuView extends Pane{
 
         //adding text
         Font font = new Font(this.getScreenWidth()*0.05);
-        Text soloText = new Text();
+        soloText = new Text();
         soloText.setText("SOLO");
         soloText.setFont(font);
         this.getChildren().add(soloText);
@@ -179,6 +169,17 @@ public class MainMenuView extends Pane{
         menuHelp = new Menu("About");
         menuBar.getMenus().addAll(menuFile,menuEdit,menuHelp);
 
+        /**
+         * Buttons Hover for each polygon
+         */
+
+        // Solo Button 1
+        solo1Btn = new Button();
+        DropShadow shadow = new DropShadow();
+        solo1Btn.setFont(new Font(40));
+        solo1Btn.setStyle("-fx-background-color: rgba(255,255,255,.3)");
+        solo1Btn.setShape(p1);
+        solo1Btn.setPrefSize(getScreenWidth()/3,getScreenHeight());
         initializeViews();
 
     }
@@ -186,6 +187,55 @@ public class MainMenuView extends Pane{
     private void initializeViews() throws IOException {
         this.mainMenuController.setSettingsView(new SettingsView());
         this.mainMenuController.setGameView(new GameView());
+    }
+
+
+    public Button getSolo1Btn() {
+        return solo1Btn;
+    }
+
+    public void setSolo1Btn(Button solo1Btn) {
+        this.solo1Btn = solo1Btn;
+    }
+
+    public Button getPvp1Btn() {
+        return pvp1Btn;
+    }
+
+    public void setPvp1Btn(Button pvp1Btn) {
+        this.pvp1Btn = pvp1Btn;
+    }
+
+    public ComboBox getPvp1ComboBox() {
+        return pvp1ComboBox;
+    }
+
+    public void setPvp1ComboBox(ComboBox pvp1ComboBox) {
+        this.pvp1ComboBox = pvp1ComboBox;
+    }
+
+    public Button getPve1Btn() {
+        return pve1Btn;
+    }
+
+    public void setPve1Btn(Button pve1Btn) {
+        this.pve1Btn = pve1Btn;
+    }
+
+    public Button getPve2Btn() {
+        return pve2Btn;
+    }
+
+    public void setPve2Btn(Button pve2Btn) {
+        this.pve2Btn = pve2Btn;
+    }
+
+    public Button getPve3Btn() {
+        return pve3Btn;
+    }
+
+    public void setPve3Btn(Button pve3Btn) {
+        this.pve3Btn = pve3Btn;
     }
 
     public Menu getMenuFile() {
@@ -282,6 +332,14 @@ public class MainMenuView extends Pane{
 
     public void setP2Sub(Polygon p2Sub) {
         this.p2Sub = p2Sub;
+    }
+
+    public Text getSoloText() {
+        return soloText;
+    }
+
+    public void setSoloText(Text soloText) {
+        this.soloText = soloText;
     }
 
     public double getScreenWidth() {return screenWidth;}

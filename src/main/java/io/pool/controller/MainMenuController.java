@@ -43,14 +43,9 @@ public class MainMenuController {
         });
     }
 
+    public void solo1Action(){
 
-    public void setSettingsView(SettingsView settingsView) {
-        this.settingsView = settingsView;
-    }
-
-    public void setGameView(GameView root) {
-        this.gameView = root;
-        mmv.getP1().setOnMouseClicked(event -> {
+        mmv.getSolo1Btn().setOnMouseClicked(event -> {
             stage.getScene().setRoot(gameView);
             this.gameView.getGameController().getPoolCueController().handleRotateCue(stage.getScene());
             this.gameView.getGameController().getPoolCueController().hit(stage.getScene());
@@ -60,5 +55,36 @@ public class MainMenuController {
                 e.printStackTrace();
             }
         });
+
+        mmv.getSolo1Btn().setOnMouseExited(event -> {
+            if(mmv.getChildren().contains(mmv.getSolo1Btn())){
+                mmv.getChildren().remove(mmv.getSolo1Btn());
+                //mmv.getSoloText().setScaleX(0.75);
+                //mmv.getSoloText().setScaleY(0.75);
+                mmv.getSoloText().setText("SOLO");
+            }
+        });
+        mmv.getP1().hoverProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue){
+                System.out.println("Hovering");
+                //mmv.getSoloText().setScaleX(1.25);
+                //mmv.getSoloText().setScaleY(1.25);
+                mmv.getSoloText().setText("PLAY");
+                mmv.getChildren().add(mmv.getSolo1Btn());
+            }
+        });
+    }
+
+
+
+
+    public void setSettingsView(SettingsView settingsView) {
+        this.settingsView = settingsView;
+    }
+
+    public void setGameView(GameView root) {
+        this.gameView = root;
+        solo1Action();
+
     }
 }
