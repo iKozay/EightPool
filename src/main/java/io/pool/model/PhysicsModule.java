@@ -1,17 +1,14 @@
 package io.pool.model;
 
 import io.pool.view.BallView;
-import javafx.scene.shape.Shape;
-import javafx.scene.transform.Rotate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.text.Normalizer;
 import java.util.Random;
 
 public class PhysicsModule {
     /** Zero in BigDecimal. To be used to define anything to zero */
-    protected static BigDecimal ZERO = new BigDecimal(0);
+    public static BigDecimal ZERO = new BigDecimal(0);
     /**
      * Gravitational constant
      */
@@ -23,7 +20,8 @@ public class PhysicsModule {
     /**
      * Friction coefficient for ball-table rolling
      */
-    private static final double FRICTION_COEFFIECIENT = 0.01;
+    private static final double ROLLING_FRICTION_COEFFICIENT = 0.035;
+    private static final double BALL_BALL_FRICTION_COEFFICIENT = 0.1;
 
 
     /**
@@ -107,26 +105,21 @@ public class PhysicsModule {
      * @param bView The BallView that represents this ball
      */
     public void updatePosition(BallView bView) {
-        /** This method only applies to BallModel
-         * Must check is it is called from BallModel
-         * */
-        if(this.getClass().equals(BallModel.class)) {
-            setIsMoving();
-            /** Updates the position of the ball only if it is moving */
-            if (isMoving) {
-                applyFriction(FRICTION_COEFFIECIENT);
-                /** Updates the BallModel position */
-                setPositionX(getPositionX().add(getVelocityX()));
-                setPositionY(getPositionY().add(getVelocityY()));
-                /** Updates the BallView position */
-                bView.getBall().setLayoutX(getPositionX().doubleValue());
-                bView.getBall().setLayoutY(getPositionY().doubleValue());
-                /** Add rotation animation */
-                Rotate rx = new Rotate(-getVelocityY().doubleValue(), 0, 0, 0, Rotate.X_AXIS);
-                Rotate ry = new Rotate(getVelocityX().doubleValue(), 0, 0, 0, Rotate.Y_AXIS);
-                bView.getBall().getTransforms().addAll(rx, ry);
+        setIsMoving();
+        /** Updates the position of the ball only if it is moving */
+        if (isMoving) {
+            applyFriction(ROLLING_FRICTION_COEFFICIENT);
+            /** Updates the BallModel position */
+            setPositionX(getPositionX().add(getVelocityX()));
+            setPositionY(getPositionY().add(getVelocityY()));
+            /** Updates the BallView position */
+            bView.getBall().setLayoutX(getPositionX().doubleValue());
+            bView.getBall().setLayoutY(getPositionY().doubleValue());
+            /** Add rotation animation */
+            //Rotate rx = new Rotate(-getVelocityY().doubleValue(), 0, 0, 0, Rotate.X_AXIS);
+            //Rotate ry = new Rotate(getVelocityX().doubleValue(), 0, 0, 0, Rotate.Y_AXIS);
+            //bView.getBall().getTransforms().addAll(rx, ry);
 
-            }
         }
     }
 
@@ -159,45 +152,41 @@ public class PhysicsModule {
      * @param frictionCoefficient Friction coefficient depending on the situation
      */
     private void applyFriction(double frictionCoefficient) {
-        /** This method only applies to BallModel
-         * Must check is it is called from BallModel
-         * */
-        if(this.getClass().equals(BallModel.class)) {
-            /** Get the friction magnitude */
-            BigDecimal frictionForceMag = new BigDecimal(frictionCoefficient * PhysicsModule.MASS_BALL_KG * PhysicsModule.GRAVITATIONAL_FORCE, MathContext.DECIMAL32);
-            /** Calculate the velocity ratio */
-            double velocityRatio = getVelocityX().abs().doubleValue() / getVelocityY().abs().doubleValue();
+        /** Get the friction magnitude */
+        BigDecimal frictionForceMag = new BigDecimal(frictionCoefficient * PhysicsModule.MASS_BALL_KG * PhysicsModule.GRAVITATIONAL_FORCE, MathContext.DECIMAL32);
+        /** Calculate the velocity ratio */
+        double velocityRatio = getVelocityX().abs().doubleValue() / getVelocityY().abs().doubleValue();
 
-            setAccelerationY((new BigDecimal(Math.sqrt(Math.pow(frictionForceMag.doubleValue(), 2)) / (Math.pow(velocityRatio, 2) + 1), MathContext.DECIMAL32)));
-            setAccelerationX(new BigDecimal(velocityRatio * getAccelerationY().doubleValue(), MathContext.DECIMAL32));
+        setAccelerationY((new BigDecimal(Math.sqrt(Math.pow(frictionForceMag.doubleValue(), 2)) / (Math.pow(velocityRatio, 2) + 1), MathContext.DECIMAL32)));
+        setAccelerationX(new BigDecimal(velocityRatio * getAccelerationY().doubleValue(), MathContext.DECIMAL32));
 
-            /**
-             * Make the acceleration opposite to the velocity if it is positive
-             * Acceleration is negative by default
-             */
-            if (getVelocityX().doubleValue() > 0) {
-                setAccelerationX(getAccelerationX().multiply(BigDecimal.valueOf(-1)));
-            }
-            if (getVelocityY().doubleValue() > 0) {
-                setAccelerationY(getAccelerationY().multiply(BigDecimal.valueOf(-1)));
-            }
-
-            /**
-             * Checks if the acceleration is bigger than the velocity.
-             * This means that the ball will become be stationary.
-             * If it is not, it assigns the new velocity
-             */
-            if (getVelocityX().abs().doubleValue() < getAccelerationX().abs().doubleValue()) {
-                setVelocityX(ZERO);
-            } else {
-                setVelocityX(getVelocityX().add(getAccelerationX(), MathContext.DECIMAL32));
-            }
-            if (getVelocityY().abs().doubleValue() < getAccelerationY().abs().doubleValue()) {
-                setVelocityY(ZERO);
-            } else {
-                setVelocityY(getVelocityY().add(getAccelerationY(), MathContext.DECIMAL32));
-            }
+        /**
+         * Make the acceleration opposite to the velocity if it is positive
+         * Acceleration is negative by default
+         */
+        if (getVelocityX().doubleValue() > 0) {
+            setAccelerationX(getAccelerationX().multiply(BigDecimal.valueOf(-1)));
         }
+        if (getVelocityY().doubleValue() > 0) {
+            setAccelerationY(getAccelerationY().multiply(BigDecimal.valueOf(-1)));
+        }
+
+        /**
+         * Checks if the acceleration is bigger than the velocity.
+         * This means that the ball will become be stationary.
+         * If it is not, it assigns the new velocity
+         */
+        if (getVelocityX().abs().doubleValue() < getAccelerationX().abs().doubleValue()) {
+            setVelocityX(ZERO);
+        } else {
+            setVelocityX(getVelocityX().add(getAccelerationX(), MathContext.DECIMAL32));
+        }
+        if (getVelocityY().abs().doubleValue() < getAccelerationY().abs().doubleValue()) {
+            setVelocityY(ZERO);
+        } else {
+            setVelocityY(getVelocityY().add(getAccelerationY(), MathContext.DECIMAL32));
+        }
+        System.out.println(getVelocityX()+" , "+getVelocityY());
     }
 
     /**
@@ -206,40 +195,19 @@ public class PhysicsModule {
      * @param module Second object that extends PhysicsModule
      * @see <a href="https://vobarian.com/collisions/2dcollisions2.pdf">2-Dimensional Elastic Collisions without Trigonometry</a>
      */
-    public void handleMomentum(PhysicsModule module, double distance) {
-        // TODO Generalize the handle momentum to include table and Pool Cue
+    public void handleMomentum(PhysicsModule module) {
         /**1
-         * find unit normal and unit tanget vector
+         * find unit normal and unit tangent vector
          */
         PhysicsModule pm1 = this, pm2=module;
         BigDecimal normalXComponent,normalYComponent;
-        if((this.getClass().equals(BallModel.class))&&(module.getClass().equals(BallModel.class))){
-            /**
-             * It is the ball hitting another ball
-             * pm1 is the first ball
-             * pm2 is the second ball
-             */
-            normalXComponent = pm2.getVelocityX().subtract(pm1.getVelocityX());
-            normalYComponent = pm2.getVelocityY().subtract(pm1.getVelocityY());
-        }else if(module.getClass().equals(TableModel.class)){
-            /**
-             * It is the ball hitting the table border
-             * pm1 is the table
-             * pm2 is the ball
-             */
-            normalXComponent = pm1.getVelocityX();
-            normalYComponent = pm1.getVelocityY();
-        }else{
-            /**
-             * It is the pool cue hitting the ball
-             * pm1 is the pool cue
-             * pm2 is the ball
-             * */
-            pm2.setAccelerationX(pm1.getForceX().divide(new BigDecimal(MASS_BALL_KG)));
-            pm2.setAccelerationY(pm1.getForceY().divide(new BigDecimal(MASS_BALL_KG)));
-            normalXComponent = pm2.getVelocityX().add(pm2.getAccelerationX());
-            normalYComponent = pm2.getVelocityY().add(pm2.getAccelerationY());
-        }
+        /**
+         * It is the ball hitting another ball
+         * pm1 is the first ball
+         * pm2 is the second ball
+         */
+        normalXComponent = pm2.getPositionX().subtract(pm1.getPositionX());
+        normalYComponent = pm2.getPositionY().subtract(pm1.getPositionY());
 
 
         BigDecimal magnitude = (normalYComponent.pow(2).add(normalXComponent.pow(2))).sqrt(MathContext.DECIMAL32);
@@ -256,16 +224,17 @@ public class PhysicsModule {
         /**
          * Find the minimum distance X and Y to prevent overlapping
          */
-        BigDecimal distanceX = normalXComponent.multiply(new BigDecimal((2*BallModel.RADIUS-distance)/distance));
-        BigDecimal distanceY = normalYComponent.multiply(new BigDecimal((2*BallModel.RADIUS-distance)/distance));
+        //BigDecimal distanceX = normalXComponent.multiply(new BigDecimal((2*BallModel.RADIUS-distance)/distance));
+        //BigDecimal distanceY = normalYComponent.multiply(new BigDecimal((2*BallModel.RADIUS-distance)/distance));
 
         /**
          * Push-Pull Balls apart
          */
-        pm1.setPositionX(pm1.getPositionX().add(distanceX.divide(new BigDecimal(2))));
-        pm1.setPositionY(pm1.getPositionY().add(distanceY.divide(new BigDecimal(2))));
-        pm2.setPositionX(pm2.getPositionX().subtract(distanceX.divide(new BigDecimal(2))));
-        pm2.setPositionY(pm2.getPositionY().subtract(distanceY.divide(new BigDecimal(2))));
+
+        //pm1.setPositionX(pm1.getPositionX().add(distanceX.divide(new BigDecimal(2))));
+        //pm1.setPositionY(pm1.getPositionY().add(distanceY.divide(new BigDecimal(2))));
+        //pm2.setPositionX(pm2.getPositionX().subtract(distanceX.divide(new BigDecimal(2))));
+        //pm2.setPositionY(pm2.getPositionY().subtract(distanceY.divide(new BigDecimal(2))));
 
 
         /**2 (step 2 is skipped because we already have the balls vectors
@@ -317,6 +286,8 @@ public class PhysicsModule {
         pm1.setVelocityY(finalBall1Y);
         pm2.setVelocityX(finalBall2X);
         pm2.setVelocityY(finalBall2Y);
+        //pm1.applyFriction(BALL_BALL_FRICTION_COEFFICIENT);
+        //pm2.applyFriction(BALL_BALL_FRICTION_COEFFICIENT);
     }
 
     /**
@@ -337,38 +308,35 @@ public class PhysicsModule {
         /**
          * Assigns the x and y variables depending on the object
          */
-        if(this.getClass().equals(BallModel.class)&&module.getClass().equals(BallModel.class)) {
-            BallModel otherBall = (BallModel) module;
-            x2 = otherBall.getPositionX();
-            y2 = otherBall.getPositionY();
-            x1 = getPositionX();
-            y1 = getPositionY();
+        BallModel otherBall = (BallModel) module;
+        x2 = otherBall.getPositionX();
+        y2 = otherBall.getPositionY();
+        x1 = getPositionX();
+        y1 = getPositionY();
 
-        }else{
-            Shape intersect=null;
-            if(this.getClass().equals(TableModel.class)){
-                TableModel t = (TableModel) this;
-                //intersect = t.getCollisionOverlap();
-            }else if(this.getClass().equals(PoolCueModel.class)){
-                PoolCueModel p = (PoolCueModel) this;
-                //intersect = p.getCollisionOverlap();
-            }
-            if(intersect!=null){
-                x2 = new BigDecimal(intersect.getBoundsInLocal().getHeight());
-                y2 = new BigDecimal(intersect.getBoundsInLocal().getWidth());
-            }
-        }
-            /**
-             * Finds distance
-             */
-            BigDecimal a = x2.subtract(x1, MathContext.DECIMAL32);
-            BigDecimal b = y2.subtract(y1, MathContext.DECIMAL32);
-            a = a.pow(2, MathContext.DECIMAL32);
-            b = b.pow(2, MathContext.DECIMAL32);
-            BigDecimal subtotal = a.add(b, MathContext.DECIMAL32);
-            distance = subtotal.sqrt(MathContext.DECIMAL32);
+        /**
+         * Finds distance
+         */
+        BigDecimal a = x2.subtract(x1, MathContext.DECIMAL32);
+        BigDecimal b = y2.subtract(y1, MathContext.DECIMAL32);
+        a = a.pow(2, MathContext.DECIMAL32);
+        b = b.pow(2, MathContext.DECIMAL32);
+        BigDecimal subtotal = a.add(b, MathContext.DECIMAL32);
+        distance = subtotal.sqrt(MathContext.DECIMAL32);
         return distance;
     }
+//    public BigDecimal getAngleFromVelocity(){
+//        BigDecimal angle = new BigDecimal(Math.atan(Math.abs(getVelocityY().doubleValue()/getVelocityX().doubleValue())));
+//        if ((getVelocityX().signum() == -1) && (getVelocityY().signum() == -1)) {
+//            angle = angle.add(new BigDecimal(Math.PI));
+//        } else if ((getVelocityX().signum() == -1) && (getVelocityY().signum() == 1)) {
+//            angle = angle.add(new BigDecimal(Math.PI/2));
+//        } else if ((getVelocityX().signum() == 1) && (getVelocityY().signum() == -1)) {
+//            angle = angle.add(new BigDecimal(3*Math.PI/4));
+//        }
+//        return angle;
+//    }
+
 
     /**
      *

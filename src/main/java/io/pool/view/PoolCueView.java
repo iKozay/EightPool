@@ -12,8 +12,6 @@ public class PoolCueView {
 
     double xPos = 500;
     double yPos = 100;
-    double centerX = xPos;
-    double centerY = yPos;
     double previousAngle = 0;
 
     public PoolCueView() {
@@ -21,9 +19,9 @@ public class PoolCueView {
         cue = new Cylinder();
         cue.setRadius(10);
         cue.setHeight(300);
-        cue.translateXProperty().set(xPos);
-        cue.translateYProperty().set(yPos);
-        cue.setRotationAxis(Point3D.ZERO);
+        cue.setLayoutX(xPos);
+        cue.setLayoutY(yPos);
+        //cue.setRotationAxis(Point3D.ZERO);
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseColor(Color.GOLD);
         cue.setMaterial(material);
@@ -36,13 +34,6 @@ public class PoolCueView {
     public double getXPos(){return xPos;}
     public double getYPos(){return yPos;}
 
-    public double getCenterX() {
-        return centerX;
-    }
-
-    public double getCenterY() {
-        return centerY;
-    }
 
     public double getPreviousAngle() {
         return previousAngle;

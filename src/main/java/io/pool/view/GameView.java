@@ -22,6 +22,7 @@ public class GameView extends Pane {
          */
         tableView = new TableView(this);
         cueView = new PoolCueView();
+        displayPoolCue(false);
         gameController = new GameController(this);
         this.getChildren().addAll(cueView.getCue());
     }
@@ -48,5 +49,8 @@ public class GameView extends Pane {
      */
     public PoolCueView getCueView() {
         return cueView;
+    }
+    public void displayPoolCue(boolean visibility){
+        this.cueView.getCue().setVisible(visibility);
     }
 }

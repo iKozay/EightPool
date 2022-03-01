@@ -2,6 +2,7 @@ package io.pool.view;
 
 import io.pool.controller.MainMenuController;
 import io.pool.eightpool.game;
+import io.pool.model.TableBorderModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -28,7 +29,7 @@ public class TableView {
     private final Pane table; // all components of the table
     private final Rectangle playTable; // the place where the ball move
     private final ArrayList<Circle> holes = new ArrayList<>();
-    private final ArrayList<Line> lines = new ArrayList<>();
+    //private final ArrayList<Line> lines = new ArrayList<>();
     public final static int cornerHoleRadius = 30;
     public final static int centerHoleRadius = 25;
     int width = 1080; // the width of the pane
@@ -107,7 +108,7 @@ public class TableView {
         playTable.setFill(Color.GREEN);
         playTable.setVisible(false); //because no need to see it. it would be only useful in controlling the ball
 
-        table.getChildren().addAll(tableImageView, playTable, whiteLine); // adding the components to the table
+        table.getChildren().addAll(tableImageView, playTable);//, whiteLine); // adding the components to the table
 
         root.getChildren().add(borderPane); // adding the table to the main pain of the project.
 
@@ -168,37 +169,41 @@ public class TableView {
 
     }
     public void createLines(){
-        Line upLeftLine = new Line(95, 65, 500, 65);
+        //TODO Add the rest of the lines for the rest of the table border lines
+        TableBorderModel upLeftLine = new TableBorderModel(95, 65, 500, 65,1,-1);
         upLeftLine.setStroke(Color.WHITE);
         upLeftLine.setStrokeWidth(3);
-        lines.add(upLeftLine);
+        TableBorderModel.addTableBorders(upLeftLine);
+        //lines.add(upLeftLine);
 
-        Line upRightLine = new Line(565, 65, 975, 65);
+        TableBorderModel upRightLine = new TableBorderModel(565, 65, 975, 65,1,-1);
         upRightLine.setStroke(Color.WHITE);
         upRightLine.setStrokeWidth(3);
-        lines.add(upRightLine);
+        TableBorderModel.addTableBorders(upRightLine);
 
-        Line downLeftLine = new Line(95, height-70, 500, height-70);
+        TableBorderModel downLeftLine = new TableBorderModel(95, height-70, 500, height-70,1,-1);
         downLeftLine.setStroke(Color.WHITE);
         downLeftLine.setStrokeWidth(3);
-        lines.add(downLeftLine);
+        TableBorderModel.addTableBorders(downLeftLine);
 
-        Line downRightLine = new Line(565, height-70, 975, height-70);
+        TableBorderModel downRightLine = new TableBorderModel(565, height-70, 975, height-70,1,-1);
         downRightLine.setStroke(Color.WHITE);
         downRightLine.setStrokeWidth(3);
-        lines.add(downRightLine);
+        TableBorderModel.addTableBorders(downRightLine);
 
-        Line centerLeftLine = new Line(65, 103, 65, height-110);
+        TableBorderModel centerLeftLine = new TableBorderModel(65, 103, 65, height-110,-1,1);
         centerLeftLine.setStroke(Color.WHITE);
         centerLeftLine.setStrokeWidth(3);
-        lines.add(centerLeftLine);
+        TableBorderModel.addTableBorders(centerLeftLine);
 
-        Line centerRightLine = new Line(1010, 103, 1010, height-110);
+        TableBorderModel centerRightLine = new TableBorderModel(1010, 103, 1010, height-110,-1,1);
         centerRightLine.setStroke(Color.WHITE);
         centerRightLine.setStrokeWidth(3);
-        lines.add(centerRightLine);
+        TableBorderModel.addTableBorders(centerRightLine);
 
-        table.getChildren().addAll(lines);
+
+
+        table.getChildren().addAll(TableBorderModel.tableBorder);
     }
     public Pane getFullTable() {
         return table;
@@ -213,9 +218,9 @@ public class TableView {
         return holes;
     }
 
-    public ArrayList<Line> getLines() {
-        return lines;
-    }
+    //public ArrayList<Line> getLines() {
+    //    return lines;
+    //}
 
     //tableView: getHeight, getWidth, getX, getY, in the class diagram
 }

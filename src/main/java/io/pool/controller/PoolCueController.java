@@ -1,8 +1,10 @@
 package io.pool.controller;
 
+import io.pool.model.BallModel;
 import io.pool.model.PoolCueModel;
 import io.pool.view.PoolCueView;
 
+import javafx.geometry.Point3D;
 import javafx.scene.Scene;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -18,6 +20,7 @@ public class PoolCueController {
     }
 
     boolean isPressed = false;
+
     public void handleRotateCue(Scene scene){
 
         scene.setOnMouseMoved(event -> {
@@ -27,9 +30,13 @@ public class PoolCueController {
             if (deltaX != 0) {
                 double newAngleDegrees = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 90;
                 //System.out.println(newAngleDegrees);
-                Rotate rotate = new Rotate();
-                rotate.setPivotY(poolCueView.getCue().getHeight()/2);
-                rotate.setAngle(newAngleDegrees - poolCueView.getPreviousAngle());
+
+
+
+                Rotate rotate = new Rotate(newAngleDegrees - poolCueView.getPreviousAngle());
+               // rotate.setPivotX(BallController.bModelList.get(15).getPositionX().doubleValue());
+               // rotate.setPivotY(BallController.bModelList.get(15).getPositionY().doubleValue());
+                //rotate.setAngle();
                 poolCueView.getCue().getTransforms().add(rotate);
                 poolCueView.setPreviousAngle(newAngleDegrees);
                 //System.out.println(newAngleDegrees);
