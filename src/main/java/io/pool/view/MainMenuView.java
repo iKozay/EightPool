@@ -3,6 +3,7 @@ package io.pool.view;
 import io.pool.controller.MainMenuController;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -23,6 +24,12 @@ import java.io.InputStream;
 
 public class MainMenuView extends Pane{
 
+    private Text pvpText;
+    private Text versusAIText;
+    private Group buttonGroup;
+    private Polygon p3Sub;
+    private Polygon p3Sub1;
+    private Polygon p3Sub2;
     Rectangle2D screen = Screen.getPrimary().getBounds();
     private final double screenWidth = screen.getWidth();
     private final double screenHeight = screen.getHeight();
@@ -39,7 +46,6 @@ public class MainMenuView extends Pane{
     private MainMenuController mainMenuController;
     private Button solo1Btn;
     private Button pvp1Btn;
-    private ComboBox pvp1ComboBox;
     private Button pve1Btn;
     private Button pve2Btn;
     private Button pve3Btn;
@@ -86,20 +92,6 @@ public class MainMenuView extends Pane{
             e.printStackTrace();
         }
 
-        p2Sub = new Polygon();
-        p2Sub.getPoints().addAll(this.getScreenWidth()/3, 0.0,
-                this.getScreenWidth()*2/3, 0.0,
-                this.getScreenWidth()*7/12, this.getScreenHeight(),
-                this.getScreenWidth()/4, this.getScreenHeight());
-        try {
-            InputStream RedtableTextureStream = new FileInputStream("src/main/resources/MainMenu/RedTableTexture.jpg");
-            RedtableTextureImage = new Image(RedtableTextureStream);
-            RedtableTexturePattern = new ImagePattern(RedtableTextureImage);
-            p2Sub.setFill(RedtableTexturePattern);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
         //Blue
         p3 = new Polygon();
         this.getChildren().add(p3);
@@ -128,14 +120,14 @@ public class MainMenuView extends Pane{
         soloText.setLayoutX(this.getScreenWidth()*0.08);
         soloText.setLayoutY(this.getScreenHeight()*0.45);
 
-        Text pvpText = new Text();
+        pvpText = new Text();
         pvpText.setText("P\n  v\n    P");
         pvpText.setFont(font);
         this.getChildren().add(pvpText);
         pvpText.setLayoutX(this.getScreenWidth()*0.42);
         pvpText.setLayoutY(this.getScreenHeight()*0.35);
 
-        Text versusAIText = new Text();
+        versusAIText = new Text();
         versusAIText.setText("CHALLENGE\n    THE AI");
         versusAIText.setFont(font);
         this.getChildren().add(versusAIText);
@@ -169,17 +161,85 @@ public class MainMenuView extends Pane{
         menuHelp = new Menu("About");
         menuBar.getMenus().addAll(menuFile,menuEdit,menuHelp);
 
+        //Polygon Test
+        p3Sub = new Polygon();
+        //this.getChildren().add(p3Sub);
+        p3Sub.getPoints().addAll(
+                this.getScreenWidth()*2/3, 0.0,
+                this.getScreenWidth(), 0.0,
+                this.getScreenWidth(), this.getScreenHeight()/3,
+                this.getScreenWidth()*63.89/100, this.getScreenHeight()/3);
+
+        p3Sub1 = new Polygon();
+        //this.getChildren().add(p3Sub1);
+        p3Sub1.getPoints().addAll(
+                this.getScreenWidth()*63.89/100,this.getScreenHeight()/3,
+                this.getScreenWidth(),this.getScreenHeight()/3,
+                this.getScreenWidth(),this.getScreenHeight()*2/3,
+                this.getScreenWidth()*61.1/100,this.getScreenHeight()*2/3);
+
+        p3Sub2 = new Polygon();
+        //this.getChildren().add(p3Sub2);
+        p3Sub2.getPoints().addAll(
+                this.getScreenWidth()*61.1/100,this.getScreenHeight()*2/3,
+                this.getScreenWidth(),this.getScreenHeight()*2/3,
+                this.getScreenWidth(),this.getScreenHeight(),
+                this.getScreenWidth()*58.37/100,this.getScreenHeight());
+
+
+
         /**
          * Buttons Hover for each polygon
          */
 
         // Solo Button 1
         solo1Btn = new Button();
-        DropShadow shadow = new DropShadow();
-        solo1Btn.setFont(new Font(40));
+        solo1Btn.setFont(font);
         solo1Btn.setStyle("-fx-background-color: rgba(255,255,255,.3)");
         solo1Btn.setShape(p1);
         solo1Btn.setPrefSize(getScreenWidth()/3,getScreenHeight());
+
+        // PVP Button 1
+        pvp1Btn = new Button();
+        pvp1Btn.setShape(p2);
+        pvp1Btn.setStyle("-fx-background-color: rgba(255,255,255,.3)");
+        pvp1Btn.setFont(font);
+        pvp1Btn.setPrefSize(p2.getLayoutBounds().getWidth(),p2.getLayoutBounds().getHeight());
+        pvp1Btn.setLayoutX(p2.getLayoutBounds().getMinX());
+
+
+        // PVE Button 1
+        pve1Btn = new Button("EASY");
+        pve1Btn.setFont(font);
+        pve1Btn.setStyle("-fx-background-color: rgba(255,255,255,.3)");
+        pve1Btn.setShape(p3Sub);
+        pve1Btn.setPrefWidth(p3Sub.getLayoutBounds().getWidth());
+        pve1Btn.setPrefHeight(p3Sub.getLayoutBounds().getHeight());
+        pve1Btn.setLayoutX(p3Sub.getLayoutBounds().getMinX());
+
+        // PVE Button 2
+        pve2Btn = new Button("MEDIUM");
+        pve2Btn.setFont(font);
+        pve2Btn.setStyle("-fx-background-color: rgba(255,255,255,.3)");
+        pve2Btn.setShape(p3Sub1);
+        pve2Btn.setPrefWidth(p3Sub1.getLayoutBounds().getWidth());
+        pve2Btn.setPrefHeight(p3Sub1.getLayoutBounds().getHeight());
+        pve2Btn.setLayoutX(p3Sub1.getLayoutBounds().getMinX());
+        pve2Btn.setLayoutY(p3Sub1.getLayoutBounds().getMinY());
+
+        // PVE Button 3
+        pve3Btn = new Button("HARD");
+        pve3Btn.setFont(font);
+        pve3Btn.setStyle("-fx-background-color: rgba(255,255,255,.3)");
+        pve3Btn.setShape(p3Sub2);
+        pve3Btn.setPrefWidth(p3Sub2.getLayoutBounds().getWidth());
+        pve3Btn.setPrefHeight(p3Sub2.getLayoutBounds().getHeight());
+        pve3Btn.setLayoutX(p3Sub2.getLayoutBounds().getMinX());
+        pve3Btn.setLayoutY(p3Sub2.getLayoutBounds().getMinY());
+
+        buttonGroup = new Group();
+        buttonGroup.getChildren().addAll(pve1Btn,pve2Btn,pve3Btn);
+
         initializeViews();
 
     }
@@ -189,6 +249,53 @@ public class MainMenuView extends Pane{
         this.mainMenuController.setGameView(new GameView());
     }
 
+    public Text getPvpText() {
+        return pvpText;
+    }
+
+    public void setPvpText(Text pvpText) {
+        this.pvpText = pvpText;
+    }
+
+    public Text getVersusAIText() {
+        return versusAIText;
+    }
+
+    public void setVersusAIText(Text versusAIText) {
+        this.versusAIText = versusAIText;
+    }
+
+    public Group getButtonGroup() {
+        return buttonGroup;
+    }
+
+    public void setButtonGroup(Group buttonGroup) {
+        this.buttonGroup = buttonGroup;
+    }
+
+    public Polygon getP3Sub() {
+        return p3Sub;
+    }
+
+    public void setP3Sub(Polygon p3Sub) {
+        this.p3Sub = p3Sub;
+    }
+
+    public Polygon getP3Sub1() {
+        return p3Sub1;
+    }
+
+    public void setP3Sub1(Polygon p3Sub1) {
+        this.p3Sub1 = p3Sub1;
+    }
+
+    public Polygon getP3Sub2() {
+        return p3Sub2;
+    }
+
+    public void setP3Sub2(Polygon p3Sub2) {
+        this.p3Sub2 = p3Sub2;
+    }
 
     public Button getSolo1Btn() {
         return solo1Btn;
@@ -204,14 +311,6 @@ public class MainMenuView extends Pane{
 
     public void setPvp1Btn(Button pvp1Btn) {
         this.pvp1Btn = pvp1Btn;
-    }
-
-    public ComboBox getPvp1ComboBox() {
-        return pvp1ComboBox;
-    }
-
-    public void setPvp1ComboBox(ComboBox pvp1ComboBox) {
-        this.pvp1ComboBox = pvp1ComboBox;
     }
 
     public Button getPve1Btn() {
