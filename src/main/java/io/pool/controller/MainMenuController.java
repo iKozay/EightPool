@@ -3,6 +3,7 @@ package io.pool.controller;
 import io.pool.view.GameView;
 import io.pool.view.MainMenuView;
 import io.pool.view.SettingsView;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -30,18 +31,39 @@ public class MainMenuController {
         stage.getScene().setRoot(settingsView.getNewLoadedPane());
     }
 
-    public void pvpAction(Scene scene){
-        mmv.getP2().setOnMouseClicked(event -> {
-            System.out.println("Clicked");
-            scene.getRoot().getChildrenUnmodifiable().remove(mmv.getP2());
+    public void pvpAction(){
+        mmv.getPvp1Btn().setOnMouseExited(event -> {
+            if(mmv.getChildren().contains(mmv.getPve1Btn())){
+                mmv.getChildren().remove(mmv.getPvp1Btn());
+                mmv.getPvpText().setText("P\n  v\n    P");
+            }
+        });
+
+        mmv.getP3().hoverProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue){
+                mmv.getChildren().add(mmv.getPvp1Btn());
+                mmv.getPvpText().setText("PLAY");
+            }
+        });
+
+    }
+
+    public void pvAIAction(){
+        mmv.getButtonGroup().setOnMouseExited(event -> {
+            if(mmv.getChildren().contains(mmv.getButtonGroup())){
+                mmv.getChildren().remove(mmv.getButtonGroup());
+                mmv.getVersusAIText().setText("CHALLENGE\n    THE AI");
+            }
+        });
+
+        mmv.getP3().hoverProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue){
+                mmv.getChildren().add(mmv.getButtonGroup());
+                mmv.getVersusAIText().setText("");
+            }
         });
     }
 
-    public void pvAIAction(Scene scene){
-        mmv.getP3().setOnMouseClicked(event -> {
-            stage.setScene(scene);
-        });
-    }
 
     public void solo1Action(){
 
@@ -85,6 +107,8 @@ public class MainMenuController {
     public void setGameView(GameView root) {
         this.gameView = root;
         solo1Action();
+        pvAIAction();
+        //pvpAction();
 
     }
 }
