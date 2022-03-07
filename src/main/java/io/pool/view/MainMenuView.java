@@ -53,7 +53,7 @@ public class MainMenuView extends Pane{
 
     public MainMenuView(Stage stage) throws IOException {
         this.setStyle("-fx-background-color: White");
-        mainMenuController = new MainMenuController(this,stage);
+        mainMenuController = new MainMenuController(this, stage);
         //Adding texture
         //Green
         p1 = new Polygon();

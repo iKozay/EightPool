@@ -10,6 +10,8 @@ import java.io.IOException;
 public class game extends Application {
     public final static int eightPoolTableX = 0;
     public final static int eightPoolTableY = 50;
+    public final static int eightPoolTableWidth = 1920;
+    public final static int eightPoolTableHeight = 1080;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -25,7 +27,7 @@ public class game extends Application {
          */
         MainMenuView mmv = new MainMenuView(stage);
 
-        Scene scene = new Scene(mmv, 1920, 1080);
+        Scene scene = new Scene(mmv, eightPoolTableWidth, eightPoolTableHeight);
 
         stage.setTitle("EightPool");
 

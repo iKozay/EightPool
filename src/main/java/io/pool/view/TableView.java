@@ -2,20 +2,22 @@ package io.pool.view;
 
 import io.pool.controller.MainMenuController;
 import io.pool.eightpool.game;
+import io.pool.model.BallModel;
 import io.pool.model.TableBorderModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.io.File;
@@ -27,19 +29,21 @@ public class TableView {
 
     private final BorderPane borderPane;
     private final Pane table; // all components of the table
-    private final Rectangle playTable; // the place where the ball move
     private final ArrayList<Circle> holes = new ArrayList<>();
-    //private final ArrayList<Line> lines = new ArrayList<>();
-    public final static int cornerHoleRadius = 30;
-    public final static int centerHoleRadius = 25;
-    int width = 1080; // the width of the pane
-    int height = 610; // the height of the pane
-    //    private ArrayList<Hole> holes;
+    public final static int cornerHoleRadius = game.eightPoolTableWidth/64;
+    public final static int centerHoleRadius = (int) (game.eightPoolTableWidth/76.8);
+    private final int width = (int) (game.eightPoolTableWidth/1.777777777); // the width of the pane
+    private final int height = (int) (game.eightPoolTableHeight/1.777777777); // the height of the pane
+
     public TableView(Pane root) throws MalformedURLException {
 
+        double layoutX = game.eightPoolTableX + 0.1*game.eightPoolTableX; // the XPosition in the general pane
+        double layoutY = game.eightPoolTableY + 0.1*game.eightPoolTableY; // the YPosition in the general pane
 
-        int layoutX = game.eightPoolTableX; // the XPosition in the general pane
-        int layoutY = game.eightPoolTableY; // the YPosition in the general pane
+        borderPane = new BorderPane();
+
+        borderPane.setPrefWidth(1500);
+        borderPane.setPrefHeight(height);
 
         table = new Pane();
         table.setPrefWidth(width);
@@ -52,39 +56,103 @@ public class TableView {
         Label player2Lbl = new Label("player2");
         player2Lbl.setStyle("-fx-font-size: 24");
         HBox playersIcon = new HBox(700,player1Lbl,player2Lbl);
+
         playersIcon.setAlignment(Pos.CENTER);
         playersIcon.setStyle("-fx-border-color: black");
         playersIcon.setPrefHeight(50);
-        Text information = new Text();
-        information.setText("Ball 1: " + "" + "\n" + "Ball 1: " + "" + "\n" + "Ball 2: " + "" + "\n" + "Ball 3: " + ""
-                + "\n" + "Ball 4: " + "" + "\n" + "Ball 5: " + "" + "\n" + "Ball 6: " + "" + "\n" + "Ball 7: " + "" + "\n"
-                + "Ball 8: " + "" + "\n" + "Ball 9: " + "" + "\n" + "Ball 10: " + "" + "\n" + "Ball 11: " + "" + "\n"
-                + "Ball 12: " + "" + "\n" + "Ball 13: " + "" + "\n" + "Ball 14: " + "" + "\n" + "Ball 15: " + ""
-                + "\n" + "Ball 16: " + "" + "\n" + "Ball Cue: " + "" + "\n");
-        information.setStyle("-fx-font-size: 15");
-        Slider sldFriction = new Slider();
-        sldFriction.setShowTickLabels(true);
-        Label sldLblFriction = new Label("Friction");
-        Slider sldForce = new Slider();
-        sldForce.setShowTickLabels(true);
-        Label sldLblForce = new Label("Force");
-        Button goToMenu = new Button("Go to main menu");
-        goToMenu.setOnAction(e->{
-            MainMenuController.gotoMainMenu();
-        });
-        VBox ballInformation = new VBox(information,sldLblForce,sldForce,sldLblFriction,sldFriction,goToMenu);
-        ballInformation.setPrefHeight(500);
-        ballInformation.setPrefWidth(220);
-        ballInformation.setStyle("-fx-border-color: black");
 
-        borderPane = new BorderPane();
-        borderPane.setRight(ballInformation);
+//        Text information = new Text();
+//        information.setText("Ball 1: " + "" + "\n" + "Ball 1: " + "" + "\n" + "Ball 2: " + "" + "\n" + "Ball 3: " + ""
+//                + "\n" + "Ball 4: " + "" + "\n" + "Ball 5: " + "" + "\n" + "Ball 6: " + "" + "\n" + "Ball 7: " + "" + "\n"
+//                + "Ball 8: " + "" + "\n" + "Ball 9: " + "" + "\n" + "Ball 10: " + "" + "\n" + "Ball 11: " + "" + "\n"
+//                + "Ball 12: " + "" + "\n" + "Ball 13: " + "" + "\n" + "Ball 14: " + "" + "\n" + "Ball 15: " + ""
+//                + "\n" + "Ball 16: " + "" + "\n" + "Ball Cue: " + "" + "\n");
+//        information.setStyle("-fx-font-size: 15");
+//        Slider sldFriction = new Slider();
+//        sldFriction.setShowTickLabels(true);
+//        Label sldLblFriction = new Label("Friction");
+//        Slider sldForce = new Slider();
+//        sldForce.setShowTickLabels(true);
+//        Label sldLblForce = new Label("Force");
+//        Button goToMenu = new Button("Go to main menu");
+//        goToMenu.setOnAction(e->{
+//            MainMenuController.gotoMainMenu();
+//        });
+//        VBox ballInformation = new VBox(information,sldLblForce,sldForce,sldLblFriction,sldFriction,goToMenu);
+//
+//        ballInformation.setAlignment(Pos.CENTER_LEFT);
+//        ballInformation.setPrefHeight(500);
+//        ballInformation.setPrefWidth(220);
+//        ballInformation.setStyle("-fx-border-color: black");
+//
+//        borderPane.setRight(ballInformation);
+//        borderPane.setTop(playersIcon);
+//        borderPane.setCenter(table);
+
+        VBox rightContainer = new VBox();
+        rightContainer.setSpacing(25);
+        rightContainer.setAlignment(Pos.TOP_CENTER);
+
+        HBox principalBar = new HBox();
+        principalBar.setAlignment(Pos.CENTER_LEFT);
+        principalBar.setSpacing(25);
+        principalBar.setMaxHeight(75);
+        principalBar.setPrefWidth(350);
+        principalBar.setStyle("-fx-background-color: #3D4956");
+
+        Button backButton, ballsButton, tableButton, cueButton;
+
+        ImageView leaveArrowImageView = new ImageView();
+        Image leaveImage = new Image(new File("src/main/resources/UI icons/arrow.png").toURI().toURL().toExternalForm());
+        leaveArrowImageView.setImage(leaveImage);
+        leaveArrowImageView.setFitWidth(30);
+        leaveArrowImageView.setPreserveRatio(true);
+        backButton = new Button("");
+        backButton.setGraphic(leaveArrowImageView);
+        backButton.setContentDisplay(ContentDisplay.CENTER);
+        backButton.setStyle("-fx-background-color: red");
+        backButton.setMaxWidth(30);
+        backButton.setMaxHeight(75);
+
+        ballsButton = new Button("Balls");
+        ballsButton.setTextFill(Color.WHITE);
+        ballsButton.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+        ballsButton.setStyle("-fx-background-color: transparent");
+
+        tableButton = new Button("Table");
+        tableButton.setTextFill(Color.WHITE);
+        tableButton.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+        tableButton.setStyle("-fx-background-color: transparent");
+
+        cueButton = new Button("Cue");
+        cueButton.setTextFill(Color.WHITE);
+        cueButton.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+        cueButton.setStyle("-fx-background-color: transparent");
+
+        principalBar.getChildren().addAll(backButton, ballsButton, tableButton, cueButton);
+        ///////
+
+        FlowPane ballsPane = new FlowPane();
+        ballsPane.setPadding(new Insets(30,30,30,30));
+        ballsPane.setAlignment(Pos.CENTER);
+        ballsPane.setStyle("-fx-background-color: #3D4956");
+        ballsPane.setVgap(25);
+        ballsPane.setHgap(38);
+
+        for (int i=1;i<16;i++) {
+            BallModel bModel;
+            BallView bView;
+            bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/ball" + i + ".jpg").toURI().toURL().toExternalForm()));
+            bView = new BallView(bModel.getImg(),BallModel.RADIUS);
+            ballsPane.getChildren().add(bView.getBall());
+        }
+
+
+        rightContainer.getChildren().addAll(principalBar, ballsPane);
+
+        borderPane.setRight(rightContainer);
         borderPane.setTop(playersIcon);
         borderPane.setCenter(table);
-        borderPane.setPrefWidth(1300);
-        borderPane.setPrefHeight(610);
-
-
 
         ImageView tableImageView = new ImageView(); // the image view of the table
         Image image = new Image(new File("src/main/resources/tableImage/finalTable.png").toURI().toURL().toExternalForm());
@@ -93,22 +161,14 @@ public class TableView {
         tableImageView.setPreserveRatio(true);
 
         Line whiteLine = new Line();
-        whiteLine.setStartX(width-300);
-        whiteLine.setStartY(68);
-        whiteLine.setEndX(width-300);
-        whiteLine.setEndY(height-72);
+        whiteLine.setStartX(width-(width/3.6));
+        whiteLine.setStartY(height/8.934);
+        whiteLine.setEndX(width-(width/3.6));
+        whiteLine.setEndY(height-(height/8.4375));
         whiteLine.setStroke(Color.WHITE);
         whiteLine.setStrokeWidth(3);
 
-
-        // the place where the ball moves
-        playTable = new Rectangle((width-135), (height-135));
-        playTable.setX(65);
-        playTable.setY(65);
-        playTable.setFill(Color.GREEN);
-        playTable.setVisible(false); //because no need to see it. it would be only useful in controlling the ball
-
-        table.getChildren().addAll(tableImageView, playTable);//, whiteLine); // adding the components to the table
+        table.getChildren().addAll(tableImageView);//, whiteLine); // adding the components to the table
 
         root.getChildren().add(borderPane); // adding the table to the main pain of the project.
 
@@ -209,19 +269,8 @@ public class TableView {
         return table;
     }
 
-    public Rectangle getPlayTable() {
-        return playTable;
-    }
-
-
     public ArrayList<Circle> getHoles() {
         return holes;
     }
-
-    //public ArrayList<Line> getLines() {
-    //    return lines;
-    //}
-
-    //tableView: getHeight, getWidth, getX, getY, in the class diagram
 }
 

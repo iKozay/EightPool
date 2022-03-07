@@ -22,8 +22,6 @@ public class DBConnection {
         }
     }
 
-
-
     //Player table
     public static void createNewPlayerDB(){
         connect();

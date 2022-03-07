@@ -2,13 +2,11 @@ package io.pool.controller;
 
 import io.pool.eightpool.game;
 import io.pool.model.BallModel;
-import io.pool.model.PhysicsModule;
 import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 
 import java.io.File;
@@ -127,14 +125,6 @@ public class BallController {
                         bModel.setVelocityY(bModel.getVelocityY().multiply(line.getReflectionYFactor()));
                         //tableModel.handleMomentum(bModel);
                     }
-                    // else if ((bModel.getPositionX().add(radius)).compareTo(new BigDecimal((tableBorders.getX() + tableX) + tableBorders.getWidth())) >= 0) {
-                    //    bModel.setVelocityX(bModel.getVelocityX().negate());
-                    //}
-                    //if ((bModel.getPositionY().subtract(radius)).compareTo(new BigDecimal(tableBorders.getY() + tableY)) <= 0) {
-                    //    bModel.setVelocityY(bModel.getVelocityY().negate());
-                    //} else if ((bModel.getPositionY().add(radius)).compareTo(new BigDecimal((tableBorders.getY() + tableY) + tableBorders.getHeight())) >= 0) {
-                    //    bModel.setVelocityY(bModel.getVelocityY().negate());
-                   // }
                 }
             }
     }
