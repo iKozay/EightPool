@@ -92,8 +92,8 @@ public class PhysicsModule {
      */
     private void randomizeVelocity() {
         Random rnd = new Random();
-        this.velocityX = new BigDecimal(rnd.nextInt(5) + 1);
-        this.velocityY = new BigDecimal(rnd.nextInt(5) + 1);
+        this.velocityX = new BigDecimal(rnd.nextInt(8) + 1);
+        this.velocityY = new BigDecimal(rnd.nextInt(8) + 1);
         this.accelerationY = ZERO;
         this.accelerationX = ZERO;
         this.isMoving = true;
@@ -186,7 +186,7 @@ public class PhysicsModule {
         } else {
             setVelocityY(getVelocityY().add(getAccelerationY(), MathContext.DECIMAL32));
         }
-        System.out.println(getVelocityX()+" , "+getVelocityY());
+        //System.out.println(getVelocityX()+" , "+getVelocityY());
     }
 
     /**

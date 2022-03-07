@@ -33,13 +33,13 @@ public class MainMenuController {
 
     public void pvpAction(){
         mmv.getPvp1Btn().setOnMouseExited(event -> {
-            if(mmv.getChildren().contains(mmv.getPve1Btn())){
+            if(mmv.getChildren().contains(mmv.getPvp1Btn())){
                 mmv.getChildren().remove(mmv.getPvp1Btn());
                 mmv.getPvpText().setText("P\n  v\n    P");
             }
         });
 
-        mmv.getP3().hoverProperty().addListener((observable, oldValue, newValue) -> {
+        mmv.getP2().hoverProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue){
                 mmv.getChildren().add(mmv.getPvp1Btn());
                 mmv.getPvpText().setText("PLAY");
@@ -62,6 +62,21 @@ public class MainMenuController {
                 mmv.getVersusAIText().setText("");
             }
         });
+        for (int i = 0;i<3;i++){
+
+            int finalI = i;
+            mmv.getButtonGroup().getChildren().get(i).hoverProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue){
+                    mmv.getButtonGroup().getChildren().get(finalI).setStyle("-fx-background-color: rgba(255,255,255,.7)");
+                }
+            });
+
+            int finalI1 = i;
+            mmv.getButtonGroup().getChildren().get(i).setOnMouseExited(event -> {
+                mmv.getButtonGroup().getChildren().get(finalI1).setStyle("-fx-background-color: rgba(255,255,255,.3)");
+            });
+        }
+
     }
 
 
@@ -108,7 +123,7 @@ public class MainMenuController {
         this.gameView = root;
         solo1Action();
         pvAIAction();
-        //pvpAction();
+        pvpAction();
 
     }
 }

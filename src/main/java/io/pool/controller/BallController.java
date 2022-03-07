@@ -2,6 +2,7 @@ package io.pool.controller;
 
 import io.pool.eightpool.game;
 import io.pool.model.BallModel;
+import io.pool.model.PhysicsModule;
 import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
@@ -209,6 +210,18 @@ public class BallController {
         for(BallView bv: bViewList){
             xballPos.add(bv.getBall().getLayoutX());
             yballPos.add(bv.getBall().getLayoutY());
+        }
+    }
+
+    public void ballInHole(BallModel ballModel,GameView gameView) {
+        if(ballModelArrayList().contains(ballModel)){
+            System.out.println("works");
+            BallView bView1 = ballViewArrayList().get(ballModelArrayList().indexOf(ballModel));
+            ballModel.setVelocityX(PhysicsModule.ZERO);
+            ballModel.setVelocityY(PhysicsModule.ZERO);
+            gameView.getChildren().remove(bView1.getBall());
+            ballModelArrayList().remove(ballModel);
+            ballViewArrayList().remove(bView1);
         }
     }
 }

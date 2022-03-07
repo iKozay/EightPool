@@ -30,7 +30,7 @@ public class game extends Application {
         Scene scene = new Scene(mmv);
 
         stage.setTitle("EightPool");
-        stage.setFullScreen(true);
+        stage.setFullScreen(false);
         stage.setScene(scene);
         stage.show();
 

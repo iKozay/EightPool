@@ -1,10 +1,12 @@
 package io.pool.controller;
 
 import io.pool.model.BallModel;
+import io.pool.model.PlayerModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 public class GameController {
     /** Instance of GameView that contains all the Ball,Table and Pool Cue Views*/
@@ -17,6 +19,12 @@ public class GameController {
     private PoolCueController poolCueController;
     /** Animation Timer that helps to update the View every frame */
     private GameLoopTimer gameLoopTimer;
+
+    private PlayerModel p1;
+
+    private PlayerModel p2;
+
+    private ArrayList<BallModel> bModelIn = new ArrayList<>();
 
     /**
      * Main Constructor of GameController
@@ -42,8 +50,8 @@ public class GameController {
                     for (BallView ballView : ballController.ballViewArrayList()) {
                         for (int i = 0; i < gView.getTableView().getHoles().size(); i++) {
                             if(tableController.checkInterBallsHoles(ballView, i)) {
-                                //TODO Disabled ball in hole.
-                                //ballView.getBall().setRadius(ballView.getBall().getRadius() - 0.3);
+                                bModelIn.add(ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView)));
+
                             }
                         }
                     }
@@ -54,15 +62,18 @@ public class GameController {
                         if(moving) break;
                     }
                     if(!moving){
-                        gView.getCueView().getCue().setLayoutX(BallController.bModelList.get(15).getPositionX().doubleValue());
-                        gView.getCueView().getCue().setLayoutY(BallController.bModelList.get(15).getPositionY().doubleValue());
+                        //gView.getCueView().getCue().setLayoutX(BallController.bModelList.get(15).getPositionX().doubleValue());
+                        //gView.getCueView().getCue().setLayoutY(BallController.bModelList.get(15).getPositionY().doubleValue());
                         gView.displayPoolCue(true);
                     }else{
                         gView.displayPoolCue(false);
                     }
+
+                    ballInHole();
                 }
             }
         };
+
     }
 
     /**
@@ -86,6 +97,27 @@ public class GameController {
         ballController.destroyViews(this.gameView);
         ballController.destroyModels();
     }
+
+    public void turns(PlayerModel p1){
+        System.out.println(p1.getUsername() + "," + "your turn!");
+
+    }
+
+    public void ballInHole(){
+        for (BallModel b:bModelIn) {
+            System.out.println(b.getNumber());
+            ballController.ballInHole(b, gameView);
+        }
+        System.out.println();
+    }
+
+    public void winnerPlayer(){
+        if(bModelIn.contains(ballController.ballModelArrayList().get(7))){
+
+        }
+
+    }
+
 
 
     /**
