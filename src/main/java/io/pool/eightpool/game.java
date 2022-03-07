@@ -27,10 +27,10 @@ public class game extends Application {
          */
         MainMenuView mmv = new MainMenuView(stage);
 
-        Scene scene = new Scene(mmv, eightPoolTableWidth, eightPoolTableHeight);
+        Scene scene = new Scene(mmv);
 
         stage.setTitle("EightPool");
-
+        stage.setFullScreen(true);
         stage.setScene(scene);
         stage.show();
 
