@@ -183,8 +183,10 @@ public class PhysicsModule {
             setAccelerationX(getVelocityX().multiply(ratio));
             setAccelerationY(getVelocityY().multiply(ratio));
         }else{
-            setAccelerationX(getVelocityX());
-            setAccelerationY(getVelocityY());
+            setAccelerationX(ZERO);
+            setAccelerationY(ZERO);
+            setVelocityX(ZERO);
+            setVelocityY(ZERO);
         }
 
         //////////////////////////////////////////////
