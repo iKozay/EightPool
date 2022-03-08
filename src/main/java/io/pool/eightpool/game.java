@@ -1,5 +1,6 @@
 package io.pool.eightpool;
 
+import io.pool.Database.DBConnection;
 import io.pool.view.*;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -37,6 +38,8 @@ public class game extends Application {
         stage.setFullScreen(true);
         stage.setScene(scene);
         stage.show();
+        DBConnection.deleteAllData();
+
 
     }
     public static void main(String[] args) {
