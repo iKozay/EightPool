@@ -53,13 +53,8 @@ public class GameController {
                     for (BallView ballView : ballController.ballViewArrayList()) {
                         for (int i = 0; i < gView.getTableView().getHoles().size(); i++) {
                             if(tableController.checkInterBallsHoles(ballView, i)) {
-                                BallModel bModel = ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView));
-                                if(bModel.getNumber()==16){
-                                    bModel.setPositionX(new BigDecimal(500));
-                                    bModel.setPositionY(new BigDecimal(500));
-                                }else{
-                                    bModelIn.add(bModel);
-                                }
+                                whiteBallIn(ballView);
+                                //eightBallIn(ballView);
 //                                FadeTransition gettingInTheHole = new FadeTransition();
 //                                gettingInTheHole.setDuration(Duration.seconds(5));
 //                                gettingInTheHole.setNode(ballView.getBall());
@@ -90,8 +85,9 @@ public class GameController {
                     }else{
                         gView.displayPoolCue(false);
                     }
-
                     ballInHole();
+                    allSolidBallsIn();
+
                 }
             }
         };
@@ -105,6 +101,7 @@ public class GameController {
      */
     public void startGame() throws MalformedURLException {
         ballController.prepareGame(this.gameView);
+        System.out.println("START");
         //ballController.testingBallController(this.gameView);
         gameLoopTimer.start();
     }
@@ -118,17 +115,48 @@ public class GameController {
         gameLoopTimer.stop();
         ballController.destroyViews(this.gameView);
         ballController.destroyModels();
+        System.out.println("Reset");
     }
 
     public void turns(PlayerModel p1){
         System.out.println(p1.getUsername() + "," + "your turn!");
+    }
+    public void whiteBallIn(BallView ballView){
+        BallModel bModel = ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView));
+        if(bModel.getNumber()==16){
+            bModel.setPositionX(new BigDecimal(tableController.getTableView().getFullTable().getWidth()/2));
+            bModel.setPositionY(new BigDecimal(tableController.getTableView().getFullTable().getHeight()/2));
+            bModel.setVelocityX(new BigDecimal(0.1));
+            bModel.setVelocityY(new BigDecimal(0.1));
+        }else{
+            bModelIn.add(bModel);
+        }
+    }
 
+    public void eightBallIn(BallView ballView){
+        BallModel bModel = ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView));
+        if(bModel.getNumber() == 8){
+            System.out.println("You got the 8 ball in, You lose!");
+            ballController.destroyModels();
+            ballController.destroyViews(this.gameView);
+        }
+    }
+
+    public void allSolidBallsIn(){
+        for(int i = 0; i < 7 ;i++){
+            if(bModelIn.contains(BallController.getSolidBModelList())){
+                System.out.println("Yes");
+            }
+
+
+        }
     }
 
     public void ballInHole(){
         for (BallModel b:bModelIn) {
         //     System.out.println(b.getNumber());
             ballController.ballInHole(b, gameView);
+
         }
         //System.out.println();
     }

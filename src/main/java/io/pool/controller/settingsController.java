@@ -15,7 +15,7 @@ public class settingsController implements Initializable {
 
     }
 
-    @FXML protected void handlegoToMainMenu(ActionEvent event) {
+    @FXML protected void handleToMainMenu(ActionEvent event) {
         MainMenuController.gotoMainMenu();
     }
     @FXML protected void handleclose(ActionEvent event) {

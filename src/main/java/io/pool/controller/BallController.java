@@ -19,8 +19,14 @@ public class BallController {
 
     /**ArrayList that contains all the BallViews*/
     public static ArrayList<BallView> bViewList = new ArrayList<>();
+    public static ArrayList<BallView> stripeBViewList = new ArrayList<>();
+    public static ArrayList<BallView> solidBViewList = new ArrayList<>();
     /**ArrayList that contains all the BallModels*/
     public static ArrayList<BallModel> bModelList = new ArrayList<>();
+    /**ArrayList that contains all the stripe/solid*/
+    public static ArrayList<BallModel> stripeBModelList = new ArrayList<>();
+    public static ArrayList<BallModel> solidBModelList = new ArrayList<>();
+
     public static BallModel whiteBallModel;
     public static BallView whiteBallView;
     private int tableX = game.eightPoolTableX;
@@ -89,7 +95,43 @@ public class BallController {
              */
              root.getChildren().add(bView.getBall());
         }
+
+        for(int i = 8;i<15;i++){
+            stripeBModelList.add(bModelList.get(i));
+            stripeBViewList.add(bViewList.get(i));
+        }
+        for(int i = 0;i<7;i++){
+            solidBModelList.add(bModelList.get(i));
+            solidBViewList.add(bViewList.get(i));
+        }
+
+        for (int i = 0; i < 7; i++) {
+            System.out.println("Stripe: "+stripeBModelList.get(i).getNumber());
+            System.out.println("Solid " + solidBModelList.get(i).getNumber());
+
+        }
+
+        System.out.println("Model "+ballModelArrayList().size());
+        System.out.println("Solid "+solidBModelList.size());
+        System.out.println("Stripe "+stripeBViewList.size());
+        System.out.println("View "+ballViewArrayList().size());
+        System.out.println("Nodes " + root.getChildren().size());
     }
+
+//    public void makeWhiteBallDraggable(){
+//        whiteBallView.getBall().setOnMousePressed(event -> {
+//            double xPosMouse = event.getX();
+//            double yPosMouse = event.getY();
+//            double xPosSphere = whiteBallView.getBall().getLayoutX();
+//            double yPosSphere = whiteBallView.getBall().getLayoutY();
+//            System.out.println("xPos Mouse: " + xPosMouse + "\n" + "yPos Mouse: " + yPosMouse + "\n" + "xPos Sphere: " + xPosSphere + "\n"  + "yPos Sphere: " + yPosSphere + "\n" );
+//
+//            whiteBallView.getBall().setTranslateX(xPosSphere+xPosMouse);
+//            whiteBallView.getBall().setTranslateY(yPosSphere+yPosMouse);
+//
+//        });
+//    }
+
     public void testingBallController(Pane root) throws MalformedURLException {
         BallModel bModel1 = new BallModel(1, new Image(new File("src/main/resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm()));
         BallModel bModel2 = new BallModel(2, new Image(new File("src/main/resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm()));
@@ -200,6 +242,22 @@ public class BallController {
      * @return the ArrayList that contains all the BallModels
      */
     public ArrayList<BallModel> ballModelArrayList() {return bModelList; }
+
+    public static ArrayList<BallView> getStripeBViewList() {
+        return stripeBViewList;
+    }
+
+    public static ArrayList<BallView> getSolidBViewList() {
+        return solidBViewList;
+    }
+
+    public static ArrayList<BallModel> getStripeBModelList() {
+        return stripeBModelList;
+    }
+
+    public static ArrayList<BallModel> getSolidBModelList() {
+        return solidBModelList;
+    }
 
     /**
      * Removes all the BallViews from the Pane then Clears the BallView ArrayList

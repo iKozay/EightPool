@@ -38,7 +38,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                   <items>
-                    <MenuItem fx:id="goToMainMenu" mnemonicParsing="false" onAction="#handlegoToMainMenu" text="Go to Main Menu" />
+                    <MenuItem fx:id="goToMainMenu" mnemonicParsing="false" onAction="#handleToMainMenu" text="Go to Main Menu" />
                         <MenuItem mnemonicParsing="false" text="Profiles" />
                   </items>
                 </Menu>
