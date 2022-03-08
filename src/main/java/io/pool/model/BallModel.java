@@ -1,11 +1,12 @@
 package io.pool.model;
 
+import io.pool.view.TableView;
 import javafx.scene.image.Image;
 
 public class BallModel extends PhysicsModule{
 
     /** The radius of the ball */
-    public static int RADIUS = 15;
+    public static int RADIUS = TableView.getTableWidth()/70;
     /** The number of the ball */
     private int number;
     /** The image that will be on the sphere */

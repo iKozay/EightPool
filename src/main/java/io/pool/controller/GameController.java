@@ -2,12 +2,9 @@ package io.pool.controller;
 
 import io.pool.Database.DBConnection;
 import io.pool.model.BallModel;
-import io.pool.model.PhysicsModule;
 import io.pool.model.PlayerModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
-import javafx.animation.FadeTransition;
-import javafx.util.Duration;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
