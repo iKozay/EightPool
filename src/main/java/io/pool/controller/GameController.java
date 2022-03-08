@@ -54,10 +54,12 @@ public class GameController {
                     for (BallView ballView : ballController.ballViewArrayList()) {
                         for (int i = 0; i < gView.getTableView().getHoles().size(); i++) {
                             if(tableController.checkInterBallsHoles(ballView, i)) {
-                                bModelIn.add(ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView)));
-                                if(bModelIn.get(bModelIn.size()-1).getNumber()==16){
-                                    bModelIn.get(bModelIn.size()-1).setPositionX(new BigDecimal(500));
-                                    bModelIn.get(bModelIn.size()-1).setPositionY(new BigDecimal(500));
+                                BallModel bModel = ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView));
+                                if(bModel.getNumber()==16){
+                                    bModel.setPositionX(new BigDecimal(500));
+                                    bModel.setPositionY(new BigDecimal(500));
+                                }else{
+                                    bModelIn.add(bModel);
                                 }
 //                                FadeTransition gettingInTheHole = new FadeTransition();
 //                                gettingInTheHole.setDuration(Duration.seconds(5));
@@ -98,8 +100,8 @@ public class GameController {
      * @throws MalformedURLException if the path to the ball images is incorrect
      */
     public void startGame() throws MalformedURLException {
-        ballController.prepareGame(this.gameView);
-        //ballController.testingBallController(this.gameView);
+        //ballController.prepareGame(this.gameView);
+        ballController.testingBallController(this.gameView);
         gameLoopTimer.start();
     }
 
@@ -121,10 +123,10 @@ public class GameController {
 
     public void ballInHole(){
         for (BallModel b:bModelIn) {
-            System.out.println(b.getNumber());
+        //     System.out.println(b.getNumber());
             ballController.ballInHole(b, gameView);
         }
-        System.out.println();
+        //System.out.println();
     }
 
     public void winnerPlayer(){
