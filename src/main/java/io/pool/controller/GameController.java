@@ -55,6 +55,10 @@ public class GameController {
                         for (int i = 0; i < gView.getTableView().getHoles().size(); i++) {
                             if(tableController.checkInterBallsHoles(ballView, i)) {
                                 bModelIn.add(ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView)));
+                                if(bModelIn.get(bModelIn.size()-1).getNumber()==16){
+                                    bModelIn.get(bModelIn.size()-1).setPositionX(new BigDecimal(500));
+                                    bModelIn.get(bModelIn.size()-1).setPositionY(new BigDecimal(500));
+                                }
 //                                FadeTransition gettingInTheHole = new FadeTransition();
 //                                gettingInTheHole.setDuration(Duration.seconds(5));
 //                                gettingInTheHole.setNode(ballView.getBall());

@@ -217,7 +217,7 @@ public class PhysicsModule {
 //        }
         setVelocityX(getVelocityX().add(getAccelerationX(), MathContext.DECIMAL32));
         setVelocityY(getVelocityY().add(getAccelerationY(), MathContext.DECIMAL32));
-        System.out.println(getVelocityX()+" , "+getVelocityY());
+        //System.out.println(getVelocityX()+" , "+getVelocityY());
     }
 
     /**
