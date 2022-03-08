@@ -128,6 +128,9 @@ public class TableView {
         backButton.setStyle("-fx-background-color: red");
         backButton.setMaxWidth(30);
         backButton.setMaxHeight(75);
+        backButton.setOnAction(e->{
+            MainMenuController.gotoMainMenu();
+        });
 
         ballsButton = new Button("Balls");
         ballsButton.setTextFill(Color.WHITE);
