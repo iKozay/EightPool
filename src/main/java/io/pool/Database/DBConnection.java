@@ -1,17 +1,19 @@
 package io.pool.Database;
 
 import io.pool.controller.BallController;
+import io.pool.model.BallModel;
 import io.pool.view.BallView;
 
 import java.sql.*;
 
 public class DBConnection {
 
-    public static final String connectionString = "";
+    public static final String connectionString = "jdbc:sqlite:src/main/resources/DBFiles/EightBallDatabase.db";
     public static Connection connection = null;
+    static BallController bc = new BallController();
 
     //Connection to database
-    public static void connect() {
+    private static void connect() {
         try {
             if ((connection == null)||(connection.isClosed())) {
                 connection = DriverManager.getConnection(connectionString);
@@ -62,57 +64,40 @@ public class DBConnection {
         //TODO
     }
 
-
-    static BallController bc = new BallController();
-    //Ball position table
-    //double x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15, xw;
-    //double y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, y13, y14, y15, yw;
-    public static void setBallPositions(){
-        bc.addBallsPosition();
-        connect();
-        PreparedStatement ps;
-
-        for(int i=0; i<bc.xballPos.size(); i++){
-            String sql = "INSERT INTO BallConfiguration(x" + i+1 + ") VALUES (?)";
-            try{
-                ps = connection.prepareStatement(sql);
-                ps.setFloat(1, Float.valueOf(bc.xballPos.get(i).toString()));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        for(int i=0; i<bc.yballPos.size(); i++){
-            String sql = "INSERT INTO BallConfiguration(y" + i+1 + ") VALUES (?)";
-            try{
-                ps = connection.prepareStatement(sql);
-                ps.setFloat(1, Float.valueOf(bc.yballPos.get(i).toString()));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-    }
-
+    public static boolean hasBeenCalled = false;
     public static void createNewSavedPosition(){
         connect();
         PreparedStatement ps;
 
-        String sql = "INSERT INTO BallConfiguration (layoutName) VALUES (?)";
+        String sqlName = "INSERT INTO BallConfiguration (layoutName) VALUES (?)";
         try{
-            ps = connection.prepareStatement(sql);
+            ps = connection.prepareStatement(sqlName);
             ps.setString(1, "layout name test");
-            //TODO add ball positions
             ps.execute();
             System.out.println("Layout saved!");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        setBallPositions();
+
+        try{
+            for(BallModel e: bc.ballModelArrayList()){
+            String sqlPos = "UPDATE BallConfiguration set (x"+e.getNumber()+")=?, (y"+e.getNumber()+")=? WHERE layoutName = ?";
+            ps = connection.prepareStatement(sqlPos);
+            ps.setFloat(1, e.getPositionX().floatValue());
+            ps.setFloat(2, e.getPositionY().floatValue());
+            ps.setString(3, "layout name test");
+            ps.execute();
+            System.out.println("New layout saved!");
+        }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void removeSavedPosition(int layoutNB){connect();
+
+    public static void removeSavedPosition(int layoutNB){
+        connect();
         PreparedStatement ps;
         String sql = "delete from BallConfiguration WHERE layoutNumber = ? ";
 
@@ -123,7 +108,8 @@ public class DBConnection {
             System.out.println("Player removed successfully!");
         } catch (SQLException e) {
             e.printStackTrace();
-        }}
+        }
+    }
 
     public static void readSavedPosition(){
         //TODO
@@ -133,6 +119,19 @@ public class DBConnection {
         //TODO
     }
 
+    /**Deletes all data from BallConfiguration Table*/
+    public static void deleteAllData(){
+        connect();
+        PreparedStatement ps;
+        String sql = "DELETE FROM BallConfiguration";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.execute();
+            System.out.println("All saved layouts deleted!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 //Getters and setters

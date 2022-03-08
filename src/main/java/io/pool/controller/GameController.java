@@ -1,5 +1,6 @@
 package io.pool.controller;
 
+import io.pool.Database.DBConnection;
 import io.pool.model.BallModel;
 import io.pool.model.PhysicsModule;
 import io.pool.model.PlayerModel;
@@ -29,6 +30,7 @@ public class GameController {
     private PlayerModel p2;
 
     private ArrayList<BallModel> bModelIn = new ArrayList<>();
+
 
     /**
      * Main Constructor of GameController
@@ -79,10 +81,15 @@ public class GameController {
                         moving = bModel.isMoving;
                         if(moving) break;
                     }
-                    if(!moving){
+                    if(!moving){ /**methods when all balls have stopped moving*/
                         gView.getCueView().getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue()+(BallModel.RADIUS));
                         gView.getCueView().getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue()-(gView.getCueView().getCue().getHeight()/2));
                         gView.displayPoolCue(true);
+
+                        if(!DBConnection.hasBeenCalled) {
+                            DBConnection.createNewSavedPosition();
+                            DBConnection.hasBeenCalled = true;
+                        }
                     }else{
                         gView.displayPoolCue(false);
                     }
