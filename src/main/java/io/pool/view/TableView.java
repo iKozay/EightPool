@@ -4,6 +4,7 @@ import io.pool.controller.MainMenuController;
 import io.pool.eightpool.game;
 import io.pool.model.BallModel;
 import io.pool.model.TableBorderModel;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -30,10 +32,13 @@ public class TableView {
     private final BorderPane borderPane;
     private final Pane table; // all components of the table
     private final ArrayList<Circle> holes = new ArrayList<>();
-    public final static int cornerHoleRadius = game.eightPoolTableWidth/64;
+    public final static int cornerHoleRadius = (int) (game.eightPoolTableWidth/64);
     public final static int centerHoleRadius = (int) (game.eightPoolTableWidth/76.8);
     private final int width = (int) (game.eightPoolTableWidth/1.777777777); // the width of the pane
     private final int height = (int) (game.eightPoolTableHeight/1.777777777); // the height of the pane
+    private double tableHeight;
+
+    boolean selectionCircleClicked;
 
     public TableView(Pane root) throws MalformedURLException {
 
@@ -50,6 +55,15 @@ public class TableView {
         table.setPrefHeight(height);
         table.setLayoutX(layoutX);
         table.setLayoutY(layoutY);
+
+        ImageView tableImageView = new ImageView(); // the image view of the table
+        Image image = new Image(new File("src/main/resources/tableImage/finalTable.png").toURI().toURL().toExternalForm());
+        tableImageView.setImage(image);
+        tableImageView.setFitWidth(width);
+        tableImageView.setFitHeight(height);
+
+        table.getChildren().addAll(tableImageView);
+
 
         Label player1Lbl = new Label("player1");
         player1Lbl.setStyle("-fx-font-size: 24");
@@ -91,11 +105,12 @@ public class TableView {
 
         VBox rightContainer = new VBox();
         rightContainer.setSpacing(25);
+        rightContainer.setMaxWidth(400);
+        rightContainer.setPadding(new Insets(25,25,25,25));
         rightContainer.setAlignment(Pos.TOP_CENTER);
 
-        HBox principalBar = new HBox();
+        GridPane principalBar = new GridPane();
         principalBar.setAlignment(Pos.CENTER_LEFT);
-        principalBar.setSpacing(25);
         principalBar.setMaxHeight(75);
         principalBar.setPrefWidth(350);
         principalBar.setStyle("-fx-background-color: #3D4956");
@@ -118,33 +133,68 @@ public class TableView {
         ballsButton.setTextFill(Color.WHITE);
         ballsButton.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         ballsButton.setStyle("-fx-background-color: transparent");
+        ballsButton.setPrefWidth(100);
 
         tableButton = new Button("Table");
         tableButton.setTextFill(Color.WHITE);
         tableButton.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         tableButton.setStyle("-fx-background-color: transparent");
+        tableButton.setPrefWidth(100);
 
         cueButton = new Button("Cue");
         cueButton.setTextFill(Color.WHITE);
         cueButton.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         cueButton.setStyle("-fx-background-color: transparent");
+        cueButton.setPrefWidth(100);
 
-        principalBar.getChildren().addAll(backButton, ballsButton, tableButton, cueButton);
+        principalBar.add(backButton, 0,0);
+        principalBar.add(ballsButton, 1,0);
+        principalBar.add(tableButton, 2,0);
+        principalBar.add(cueButton, 3,0);
         ///////
 
-        FlowPane ballsPane = new FlowPane();
-        ballsPane.setPadding(new Insets(30,30,30,30));
-        ballsPane.setAlignment(Pos.CENTER);
-        ballsPane.setStyle("-fx-background-color: #3D4956");
-        ballsPane.setVgap(25);
-        ballsPane.setHgap(38);
+        FlowPane ballsPrimaryPane = new FlowPane();
+        ballsPrimaryPane.setLayoutX(0);
+        ballsPrimaryPane.setLayoutY(0);
+        ballsPrimaryPane.setMaxWidth(350);
+        ballsPrimaryPane.setPadding(new Insets(25,25,25,25));
+        ballsPrimaryPane.setAlignment(Pos.CENTER);
+        ballsPrimaryPane.setStyle("-fx-background-color: #3D4956");
+        ballsPrimaryPane.setVgap(25);
+        ballsPrimaryPane.setHgap(35);
+
+        FlowPane ballsStrokePane = new FlowPane();
+        ballsPrimaryPane.setLayoutX(0);
+        ballsPrimaryPane.setLayoutY(0);
+        ballsStrokePane.setPadding(new Insets(25,25,25,25));
+        ballsStrokePane.setAlignment(Pos.CENTER);
+        ballsStrokePane.setStyle("-fx-background-color: #3D4956");
+        ballsStrokePane.setVgap(25);
+        ballsStrokePane.setHgap(35);
+
+        Pane ballsPane = new Pane();
+        ballsPane.setMaxSize(400, 200);
+        ballsPane.getChildren().addAll(ballsPrimaryPane);
 
         for (int i=1;i<16;i++) {
             BallModel bModel;
             BallView bView;
             bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/ball" + i + ".jpg").toURI().toURL().toExternalForm()));
             bView = new BallView(bModel.getImg(),BallModel.RADIUS);
-            ballsPane.getChildren().add(bView.getBall());
+
+            selectionCircleClicked = false;
+            Circle selectionCircle = new Circle(bView.getBall().getRadius() + 3);
+            selectionCircle.setFill(Color.YELLOW);
+            selectionCircle.setVisible(false);
+            bView.getBall().setOnMouseEntered(event -> selectionCircle.setVisible(true));
+            bView.getBall().setOnMouseClicked(event -> selectionCircleClicked = true);
+            bView.getBall().setOnMouseExited(event -> {
+                if (!selectionCircleClicked) selectionCircle.setVisible(false);
+            });
+
+
+            ballsPrimaryPane.getChildren().add(bView.getBall());
+            ballsStrokePane.getChildren().add(selectionCircle);
         }
 
 
@@ -154,12 +204,6 @@ public class TableView {
         borderPane.setTop(playersIcon);
         borderPane.setCenter(table);
 
-        ImageView tableImageView = new ImageView(); // the image view of the table
-        Image image = new Image(new File("src/main/resources/tableImage/finalTable.png").toURI().toURL().toExternalForm());
-        tableImageView.setImage(image);
-        tableImageView.setFitWidth(width);
-        tableImageView.setPreserveRatio(true);
-
         Line whiteLine = new Line();
         whiteLine.setStartX(width-(width/3.6));
         whiteLine.setStartY(height/8.934);
@@ -167,8 +211,6 @@ public class TableView {
         whiteLine.setEndY(height-(height/8.4375));
         whiteLine.setStroke(Color.WHITE);
         whiteLine.setStrokeWidth(3);
-
-        table.getChildren().addAll(tableImageView);//, whiteLine); // adding the components to the table
 
         root.getChildren().add(borderPane); // adding the table to the main pain of the project.
 
@@ -179,48 +221,51 @@ public class TableView {
     public void createHoles(){
         Circle upLeftCorner = new Circle();
         upLeftCorner.setRadius(cornerHoleRadius);
-        upLeftCorner.setCenterX(48);
-        upLeftCorner.setCenterY(55);
+        upLeftCorner.setCenterX(width/22.5);
+        upLeftCorner.setCenterY(height/11);
         upLeftCorner.setFill(Color.BLUE);
         //upLeftCorner.setVisible(false);
         holes.add(upLeftCorner);
 
         Circle downLeftCorner = new Circle();
         downLeftCorner.setRadius(cornerHoleRadius);
-        downLeftCorner.setCenterX(48);
-        downLeftCorner.setCenterY(height-57);
+        downLeftCorner.setCenterX(width/22.5);
+        downLeftCorner.setCenterY(height/1.1);
         downLeftCorner.setFill(Color.BLUE);
 //        downLeftCorner.setVisible(false);
         holes.add(downLeftCorner);
 
+        System.out.println("table height" + tableHeight);
+        System.out.println("height" + height);
+
         Circle upRightCorner = new Circle();
         upRightCorner.setRadius(cornerHoleRadius);
-        upRightCorner.setCenterX(width-58);
-        upRightCorner.setCenterY(55);
+        upRightCorner.setCenterX(width/1.05675);
+        upRightCorner.setCenterY(height/11);
         upRightCorner.setFill(Color.BLUE);
         //upRightCorner.setVisible(false);
         holes.add(upRightCorner);
 
         Circle downRightCorner = new Circle();
         downRightCorner.setRadius(cornerHoleRadius);
-        downRightCorner.setCenterX(width - 58);
-        downRightCorner.setCenterY(height- 57);
+        downRightCorner.setCenterX(width/1.05675);
+        downRightCorner.setCenterY(height/1.1);
         downRightCorner.setFill(Color.BLUE);
         //downRightCorner.setVisible(false);
         holes.add(downRightCorner);
 
         Circle upCenterCorner = new Circle();
         upCenterCorner.setRadius(centerHoleRadius);
-        upCenterCorner.setCenterX((width/2)-7);
-        upCenterCorner.setCenterY(41);
+        upCenterCorner.setCenterX((width/2)/1.014);
+        upCenterCorner.setCenterY(height/14.268);
         upCenterCorner.setFill(Color.BLUE);
         //upCenterCorner.setVisible(false);
         holes.add(upCenterCorner);
 
         Circle downCenterCorner = new Circle();
         downCenterCorner.setRadius(centerHoleRadius);
-        downCenterCorner.setCenterX((width/2) - 7);
-        downCenterCorner.setCenterY(height-47);
+        downCenterCorner.setCenterX((width/2)/1.014);
+        downCenterCorner.setCenterY((height)/1.08);
         //downCenterCorner.setVisible(false);
         downCenterCorner.setFill(Color.BLUE);
         holes.add(downCenterCorner);
@@ -230,33 +275,33 @@ public class TableView {
     }
     public void createLines(){
         //TODO Add the rest of the lines for the rest of the table border lines
-        TableBorderModel upLeftLine = new TableBorderModel(95, 65, 500, 65,1,-1);
+        TableBorderModel upLeftLine = new TableBorderModel(width/11.368, height/9, width/2.16, height/9,1,-1);
         upLeftLine.setStroke(Color.WHITE);
         upLeftLine.setStrokeWidth(3);
         TableBorderModel.addTableBorders(upLeftLine);
         //lines.add(upLeftLine);
 
-        TableBorderModel upRightLine = new TableBorderModel(565, 65, 975, 65,1,-1);
+        TableBorderModel upRightLine = new TableBorderModel(width/1.9115, height/9, width/1.1077, height/9,1,-1);
         upRightLine.setStroke(Color.WHITE);
         upRightLine.setStrokeWidth(3);
         TableBorderModel.addTableBorders(upRightLine);
 
-        TableBorderModel downLeftLine = new TableBorderModel(95, height-70, 500, height-70,1,-1);
+        TableBorderModel downLeftLine = new TableBorderModel(width/11.368, height/1.1359, width/2.16, height/1.1359,1,-1);
         downLeftLine.setStroke(Color.WHITE);
         downLeftLine.setStrokeWidth(3);
         TableBorderModel.addTableBorders(downLeftLine);
 
-        TableBorderModel downRightLine = new TableBorderModel(565, height-70, 975, height-70,1,-1);
+        TableBorderModel downRightLine = new TableBorderModel(width/1.9115, height/1.1359, width/1.1077, height/1.1359,1,-1);
         downRightLine.setStroke(Color.WHITE);
         downRightLine.setStrokeWidth(3);
         TableBorderModel.addTableBorders(downRightLine);
 
-        TableBorderModel centerLeftLine = new TableBorderModel(65, 103, 65, height-110,-1,1);
+        TableBorderModel centerLeftLine = new TableBorderModel(width/16.6154, height/5.68, width/16.6154, height/1.2316,-1,1);
         centerLeftLine.setStroke(Color.WHITE);
         centerLeftLine.setStrokeWidth(3);
         TableBorderModel.addTableBorders(centerLeftLine);
 
-        TableBorderModel centerRightLine = new TableBorderModel(1010, 103, 1010, height-110,-1,1);
+        TableBorderModel centerRightLine = new TableBorderModel(width/1.0693, height/5.68, width/1.0693, height/1.2316,-1,1);
         centerRightLine.setStroke(Color.WHITE);
         centerRightLine.setStrokeWidth(3);
         TableBorderModel.addTableBorders(centerRightLine);
@@ -272,5 +317,7 @@ public class TableView {
     public ArrayList<Circle> getHoles() {
         return holes;
     }
+
+
 }
 

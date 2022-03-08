@@ -2,7 +2,10 @@ package io.pool.eightpool;
 
 import io.pool.view.*;
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.transform.Scale;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -10,8 +13,8 @@ import java.io.IOException;
 public class game extends Application {
     public final static int eightPoolTableX = 0;
     public final static int eightPoolTableY = 50;
-    public final static int eightPoolTableWidth = 1920;
-    public final static int eightPoolTableHeight = 1080;
+    public final static int eightPoolTableWidth = (int) Screen.getPrimary().getVisualBounds().getWidth();
+    public final static int eightPoolTableHeight = (int) Screen.getPrimary().getVisualBounds().getHeight();
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -28,6 +31,7 @@ public class game extends Application {
         MainMenuView mmv = new MainMenuView(stage);
 
         Scene scene = new Scene(mmv);
+        System.out.println(Screen.getPrimary().getVisualBounds().getHeight());
 
         stage.setTitle("EightPool");
         stage.setFullScreen(true);
