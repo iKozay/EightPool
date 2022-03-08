@@ -25,14 +25,14 @@ public class DBConnection {
     }
 
     //Player table
-    public static void createNewPlayerDB(){
+    public static void createNewPlayerDB(String name){
         connect();
         PreparedStatement ps;
 
         String sql = "INSERT INTO PlayerTable (name) VALUES (?)";
         try{
             ps = connection.prepareStatement(sql);
-            ps.setString(1, "player name test");
+            ps.setString(1, name);
             //TODO add other data to player table
             ps.execute();
             System.out.println("Player created!");
@@ -41,14 +41,14 @@ public class DBConnection {
         }
     }
 
-    public static void removePlayerDB(int playerNB){
+    public static void removePlayerDB(String name){
         connect();
         PreparedStatement ps;
-        String sql = "delete from Player WHERE playerNumber = ? ";
+        String sql = "delete from Player WHERE name = ? ";
 
         try{
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, playerNB);
+            ps.setString(1, name);
             ps.execute();
             System.out.println("Player removed successfully!");
         } catch (SQLException e) {
@@ -61,31 +61,46 @@ public class DBConnection {
     }
 
     public static void updatePlayerTableDB(){
-        //TODO
+        connect();
+        PreparedStatement ps;
+        String sql;
     }
 
-    public static boolean hasBeenCalled = false;
-    public static void createNewSavedPosition(){
+    /**
+     This is to set up the first line of the database where the most recent game position will be saved.
+     */
+    public static void instantiateLastLayoutDB(int gameType){
         connect();
         PreparedStatement ps;
 
-        String sqlName = "INSERT INTO BallConfiguration (layoutName) VALUES (?)";
+        String sqlName = "INSERT INTO BallConfiguration (layoutNumber, layoutName) VALUES (?, ?)";
         try{
             ps = connection.prepareStatement(sqlName);
-            ps.setString(1, "layout name test");
+            ps.setInt(1, gameType);
+            ps.setString(2, "lastPosition");
             ps.execute();
-            System.out.println("Layout saved!");
+            System.out.println("last layout instantiated in database");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
+    /** boolean is to check if the updateLastPosition method has been called after all balls have stopped
+        we only want this method called once every time the balls have stopped
+        updateLastPosition only updates the first line of the database.
+        The first line of the database is exclusive to the most recent position of the balls.
+     */
+    public static boolean hasBeenCalled = false;
+    public static void updateLastPosition(){
+        connect();
+        PreparedStatement ps;
         try{
             for(BallModel e: bc.ballModelArrayList()){
             String sqlPos = "UPDATE BallConfiguration set (x"+e.getNumber()+")=?, (y"+e.getNumber()+")=? WHERE layoutName = ?";
             ps = connection.prepareStatement(sqlPos);
             ps.setFloat(1, e.getPositionX().floatValue());
             ps.setFloat(2, e.getPositionY().floatValue());
-            ps.setString(3, "layout name test");
+            ps.setString(3, "lastPosition");
             ps.execute();
             System.out.println("New layout saved!");
         }
@@ -115,9 +130,6 @@ public class DBConnection {
         //TODO
     }
 
-    public static void updateSavedPosition(){
-        //TODO
-    }
 
     /**Deletes all data from BallConfiguration Table*/
     public static void deleteAllData(){

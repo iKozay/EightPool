@@ -41,6 +41,7 @@ public class game extends Application {
         DBConnection.deleteAllData();
 
 
+
     }
     public static void main(String[] args) {
         launch();

@@ -29,6 +29,7 @@ public class GameController {
     private ArrayList<BallModel> bModelIn = new ArrayList<>();
 
 
+
     /**
      * Main Constructor of GameController
      * @param gView Instance of GameView
@@ -79,7 +80,7 @@ public class GameController {
                         gView.displayPoolCue(true);
 
                         if(!DBConnection.hasBeenCalled) {
-                            DBConnection.createNewSavedPosition();
+                            DBConnection.updateLastPosition();
                             DBConnection.hasBeenCalled = true;
                         }
                     }else{

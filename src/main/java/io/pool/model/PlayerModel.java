@@ -9,7 +9,6 @@ public class PlayerModel {
 
 
     public PlayerModel(String username) {
-
         this.username = username;
     }
 
