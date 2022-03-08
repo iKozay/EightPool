@@ -1,5 +1,7 @@
 package io.pool.controller;
 
+import io.pool.Database.DBConnection;
+import io.pool.model.GameModel;
 import io.pool.view.GameView;
 import io.pool.view.MainMenuView;
 import io.pool.view.SettingsView;
@@ -79,7 +81,7 @@ public class MainMenuController {
 
     }
 
-
+    GameModel gameModel = new GameModel();
     public void solo1Action(){
 
         mmv.getSolo1Btn().setOnMouseClicked(event -> {
@@ -91,6 +93,8 @@ public class MainMenuController {
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
+            gameModel.setGameType(1);
+            DBConnection.instantiateLastLayoutDB(gameModel.getGameType());
         });
 
         mmv.getSolo1Btn().setOnMouseExited(event -> {
