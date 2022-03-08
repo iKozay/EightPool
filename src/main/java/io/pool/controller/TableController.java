@@ -49,5 +49,6 @@ public class TableController {
 
         double rs1 = ballView.getBall().getRadius() + hole.getRadius();
         return centerToCenter <= rs1;
+        //return hole.contains(ballView.getBall().getLayoutX(),ballView.getBall().getLayoutY());
     }
 }

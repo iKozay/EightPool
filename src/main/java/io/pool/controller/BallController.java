@@ -21,7 +21,8 @@ public class BallController {
     public static ArrayList<BallView> bViewList = new ArrayList<>();
     /**ArrayList that contains all the BallModels*/
     public static ArrayList<BallModel> bModelList = new ArrayList<>();
-
+    public static BallModel whiteBallModel;
+    public static BallView whiteBallView;
     private int tableX = game.eightPoolTableX;
     private int tableY = game.eightPoolTableY;
 
@@ -41,6 +42,7 @@ public class BallController {
         for (int i=1;i<=16;i++){
             if(i==16){
                 bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/white.jpg").toURI().toURL().toExternalForm()));
+                whiteBallModel = bModel;
             }else{
                 bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/ball"+i+".jpg").toURI().toURL().toExternalForm()));
             }
@@ -48,8 +50,8 @@ public class BallController {
             bModel.setPositionY(new BigDecimal(300));
 
             bView = new BallView(bModel.getImg(),BallModel.RADIUS);
-
             if(i==16) {
+                whiteBallView = bView;
                 /**
                  * Getting the position of the mouse to set the new position of the white ball when dragged
                 */
@@ -76,7 +78,6 @@ public class BallController {
                     }
                 });
             }
-
             /**
              * Adding the bModel and bView to their respective ArrayList
              */
@@ -215,10 +216,9 @@ public class BallController {
 
     public void ballInHole(BallModel ballModel,GameView gameView) {
         if(ballModelArrayList().contains(ballModel)){
-            System.out.println("works");
-            BallView bView1 = ballViewArrayList().get(ballModelArrayList().indexOf(ballModel));
             ballModel.setVelocityX(PhysicsModule.ZERO);
             ballModel.setVelocityY(PhysicsModule.ZERO);
+            BallView bView1 = ballViewArrayList().get(ballModelArrayList().indexOf(ballModel));
             gameView.getChildren().remove(bView1.getBall());
             ballModelArrayList().remove(ballModel);
             ballViewArrayList().remove(bView1);

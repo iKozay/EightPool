@@ -1,6 +1,7 @@
 package io.pool.model;
 
 import io.pool.view.BallView;
+import javafx.scene.transform.Rotate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -20,7 +21,7 @@ public class PhysicsModule {
     /**
      * Friction coefficient for ball-table rolling
      */
-    private static final double ROLLING_FRICTION_COEFFICIENT = 0.035;
+    private static final double ROLLING_FRICTION_COEFFICIENT = 0.02;
     private static final double BALL_BALL_FRICTION_COEFFICIENT = 0.1;
 
 
@@ -49,12 +50,6 @@ public class PhysicsModule {
      */
     private BigDecimal accelerationX;
     private BigDecimal accelerationY;
-
-    /**
-     * Force in component form
-     */
-    private BigDecimal forceX;
-    private BigDecimal forceY;
 
     /**
      * Main constructor of the Physics Module
@@ -92,8 +87,8 @@ public class PhysicsModule {
      */
     private void randomizeVelocity() {
         Random rnd = new Random();
-        this.velocityX = new BigDecimal(rnd.nextInt(8) + 1);
-        this.velocityY = new BigDecimal(rnd.nextInt(8) + 1);
+        this.velocityX = new BigDecimal(rnd.nextInt(10) + 1);
+        this.velocityY = new BigDecimal(rnd.nextInt(10) + 1);
         this.accelerationY = ZERO;
         this.accelerationX = ZERO;
         this.isMoving = true;
@@ -154,39 +149,75 @@ public class PhysicsModule {
     private void applyFriction(double frictionCoefficient) {
         /** Get the friction magnitude */
         BigDecimal frictionForceMag = new BigDecimal(frictionCoefficient * PhysicsModule.MASS_BALL_KG * PhysicsModule.GRAVITATIONAL_FORCE, MathContext.DECIMAL32);
+        BigDecimal ratio;
         /** Calculate the velocity ratio */
-        double velocityRatio = getVelocityX().abs().doubleValue() / getVelocityY().abs().doubleValue();
+        //double velocityRatio = getVelocityX().abs().doubleValue() / getVelocityY().abs().doubleValue();
+        ////TODO Acceleration does not get added. Big Problem
+        //setAccelerationY((new BigDecimal(Math.sqrt(Math.pow(frictionForceMag.doubleValue(), 2)) / (Math.pow(velocityRatio, 2) + 1), MathContext.DECIMAL32)));
+        //setAccelerationX(new BigDecimal(velocityRatio * getAccelerationY().doubleValue(), MathContext.DECIMAL32));
+        //////////////////////////////////////////////
+        //Acceleration Magnitude
+        BigDecimal VecMag = new BigDecimal(Math.sqrt((getVelocityX().pow(2).add(getVelocityY().pow(2)).doubleValue())));
+        if((VecMag.doubleValue()>frictionForceMag.doubleValue())&&(VecMag.doubleValue()!=0)) {
+            ratio = VecMag.subtract(frictionForceMag);
+            ratio = ratio.divide(VecMag, MathContext.DECIMAL32);
+            /**
+             * frictionForceMag is basically the acceleration magnitude
+             *              (VecMag - frictionForceMag)
+             * ratio = 1 -  ___________________________  = 1 - 0.988 = 0.012 (for example)
+             *                       VecMag
+             * ratio is the percentage at which the velocity will get reduced. Example to show my point:
+             * The simplest way to apply friction: setVelocityX(getVelocityX().multiply(0.988))
+             * I am doing that but by incorporating the friction(or acceleration) magnitude
+             * If the new velocity is 0.988 of the original, then it got reduced by a ratio of 0.012
+             * The acceleration is simply that reduction that happened with the velocity.
+             * Another important point, the ratio will be negative to simplify the computations
+             * Therefore,
+             *              AccelerationX is equal to VelocityX * ratio
+             *              AccelerationY is equal to VelocityY * ratio
+             * Down further in the code, the new Velocity will be equal to oldVelocity+Acceleration
+             * which is the same thing as doing setVelocityX(getVelocityX().multiply(0.988))
+             */
+            ratio = new BigDecimal(1).subtract(ratio);
+            ratio = ratio.negate();
+            setAccelerationX(getVelocityX().multiply(ratio));
+            setAccelerationY(getVelocityY().multiply(ratio));
+        }else{
+            setAccelerationX(getVelocityX());
+            setAccelerationY(getVelocityY());
+        }
 
-        setAccelerationY((new BigDecimal(Math.sqrt(Math.pow(frictionForceMag.doubleValue(), 2)) / (Math.pow(velocityRatio, 2) + 1), MathContext.DECIMAL32)));
-        setAccelerationX(new BigDecimal(velocityRatio * getAccelerationY().doubleValue(), MathContext.DECIMAL32));
-
-        /**
-         * Make the acceleration opposite to the velocity if it is positive
-         * Acceleration is negative by default
-         */
-        if (getVelocityX().doubleValue() > 0) {
-            setAccelerationX(getAccelerationX().multiply(BigDecimal.valueOf(-1)));
-        }
-        if (getVelocityY().doubleValue() > 0) {
-            setAccelerationY(getAccelerationY().multiply(BigDecimal.valueOf(-1)));
-        }
-
-        /**
-         * Checks if the acceleration is bigger than the velocity.
-         * This means that the ball will become be stationary.
-         * If it is not, it assigns the new velocity
-         */
-        if (getVelocityX().abs().doubleValue() < getAccelerationX().abs().doubleValue()) {
-            setVelocityX(ZERO);
-        } else {
-            setVelocityX(getVelocityX().add(getAccelerationX(), MathContext.DECIMAL32));
-        }
-        if (getVelocityY().abs().doubleValue() < getAccelerationY().abs().doubleValue()) {
-            setVelocityY(ZERO);
-        } else {
-            setVelocityY(getVelocityY().add(getAccelerationY(), MathContext.DECIMAL32));
-        }
-        //System.out.println(getVelocityX()+" , "+getVelocityY());
+        //////////////////////////////////////////////
+        // Got simplified using the ratio
+//        /**
+//         * Make the acceleration opposite to the velocity if it is positive
+//         * Acceleration is negative by default
+//         */
+//        if (getVelocityX().doubleValue() > 0) {
+//            setAccelerationX(getAccelerationX().multiply(BigDecimal.valueOf(-1)));
+//        }
+//        if (getVelocityY().doubleValue() > 0) {
+//            setAccelerationY(getAccelerationY().multiply(BigDecimal.valueOf(-1)));
+//        }
+        // SIMPLIFIED VERSION BELOW
+//        /**
+//         * Checks if the acceleration is bigger than the velocity.
+//         * This means that the ball will become be stationary.
+//         * If it is not, it assigns the new velocity
+//         */
+//        if (getVelocityX().abs().doubleValue() < getAccelerationX().abs().doubleValue()) {
+//            setVelocityX(ZERO);
+//        } else {
+//            setVelocityX(getVelocityX().add(getAccelerationX(), MathContext.DECIMAL32));
+//        }
+//        if (getVelocityY().abs().doubleValue() < getAccelerationY().abs().doubleValue()) {
+//            setVelocityY(ZERO);
+//        } else {
+//            setVelocityY(getVelocityY().add(getAccelerationY(), MathContext.DECIMAL32));
+//        }
+        setVelocityX(getVelocityX().add(getAccelerationX(), MathContext.DECIMAL32));
+        setVelocityY(getVelocityY().add(getAccelerationY(), MathContext.DECIMAL32));
+        System.out.println(getVelocityX()+" , "+getVelocityY());
     }
 
     /**
@@ -452,42 +483,6 @@ public class PhysicsModule {
      */
     public void setAccelerationY(BigDecimal accelerationY) {
         this.accelerationY = accelerationY;
-    }
-
-    /**
-     * Gets the component X of the force
-     *
-     * @return component X of the force
-     */
-    public BigDecimal getForceX() {
-        return forceX;
-    }
-
-    /**
-     * Sets the component X of the force
-     *
-     * @param forceX The new X component of the force
-     */
-    public void setForceX(BigDecimal forceX) {
-        this.forceX = forceX;
-    }
-
-    /**
-     * Gets the component Y of the force
-     *
-     * @return component Y of the force
-     */
-    public BigDecimal getForceY() {
-        return forceY;
-    }
-
-    /**
-     * Sets the component Y of the force
-     *
-     * @param forceY The new Y component of the force
-     */
-    public void setForceY(BigDecimal forceY) {
-        this.forceY = forceY;
     }
 
     /**

@@ -1,10 +1,14 @@
 package io.pool.controller;
 
 import io.pool.model.BallModel;
+import io.pool.model.PhysicsModule;
 import io.pool.model.PlayerModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
+import javafx.animation.FadeTransition;
+import javafx.util.Duration;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
@@ -51,7 +55,15 @@ public class GameController {
                         for (int i = 0; i < gView.getTableView().getHoles().size(); i++) {
                             if(tableController.checkInterBallsHoles(ballView, i)) {
                                 bModelIn.add(ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView)));
-
+//                                FadeTransition gettingInTheHole = new FadeTransition();
+//                                gettingInTheHole.setDuration(Duration.seconds(5));
+//                                gettingInTheHole.setNode(ballView.getBall());
+//                                gettingInTheHole.setFromValue(1.0);
+//                                gettingInTheHole.setToValue(0.0);
+//                                gettingInTheHole.setOnFinished(event -> {
+//                                    gameView.getChildren().remove(ballView.getBall());
+//                                });
+//                                gettingInTheHole.play();
                             }
                         }
                     }
@@ -62,8 +74,8 @@ public class GameController {
                         if(moving) break;
                     }
                     if(!moving){
-                        //gView.getCueView().getCue().setLayoutX(BallController.bModelList.get(15).getPositionX().doubleValue());
-                        //gView.getCueView().getCue().setLayoutY(BallController.bModelList.get(15).getPositionY().doubleValue());
+                        gView.getCueView().getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue()+(BallModel.RADIUS));
+                        gView.getCueView().getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue()-(gView.getCueView().getCue().getHeight()/2));
                         gView.displayPoolCue(true);
                     }else{
                         gView.displayPoolCue(false);

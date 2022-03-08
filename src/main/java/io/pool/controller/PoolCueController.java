@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
+import java.math.BigDecimal;
+
 public class PoolCueController {
 
     PoolCueView poolCueView;
@@ -32,13 +34,12 @@ public class PoolCueController {
                 //System.out.println(newAngleDegrees);
 
 
-
-                Rotate rotate = new Rotate(newAngleDegrees - poolCueView.getPreviousAngle());
-               // rotate.setPivotX(BallController.bModelList.get(15).getPositionX().doubleValue());
-               // rotate.setPivotY(BallController.bModelList.get(15).getPositionY().doubleValue());
+                Rotate rotate = new Rotate(1);
+                rotate.setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
+                rotate.setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
                 //rotate.setAngle();
                 poolCueView.getCue().getTransforms().add(rotate);
-                poolCueView.setPreviousAngle(newAngleDegrees);
+                //poolCueView.setPreviousAngle(newAngleDegrees);
                 //System.out.println(newAngleDegrees);
             }
         });

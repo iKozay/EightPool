@@ -2,8 +2,6 @@ package io.pool.model;
 
 import javafx.scene.image.Image;
 
-import java.math.BigDecimal;
-
 public class BallModel extends PhysicsModule{
 
     /** The radius of the ball */
@@ -21,11 +19,6 @@ public class BallModel extends PhysicsModule{
         super();
         this.number = number;
         this.img  = img;
-        /** The BallModel does not need the use of force
-         * Setting them to zero by calling the overridden methods
-         * */
-        setForceX(null);
-        setForceY(null);
     }
 
     /**
@@ -55,20 +48,5 @@ public class BallModel extends PhysicsModule{
      */
     public int getNumber() {
         return this.number;
-    }
-
-    /**
-     * Overriding the Force setter methods
-     * because the ball does not need them. These properties are always
-     * equal to zero. The BallModel only uses the acceleration.
-     */
-    @Override
-    public void setForceX(BigDecimal forceX) {
-        super.setForceX(ZERO);
-    }
-
-    @Override
-    public void setForceY(BigDecimal forceY) {
-        super.setForceY(ZERO);
     }
 }
