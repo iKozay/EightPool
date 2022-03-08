@@ -4,23 +4,19 @@ import io.pool.controller.MainMenuController;
 import io.pool.eightpool.game;
 import io.pool.model.BallModel;
 import io.pool.model.TableBorderModel;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -29,28 +25,30 @@ import java.util.ArrayList;
 
 public class TableView {
 
-    private final BorderPane borderPane;
+    private final AnchorPane anchorPane;
     private final Pane table; // all components of the table
     private final ArrayList<Circle> holes = new ArrayList<>();
-    public final static int cornerHoleRadius = (int) (game.eightPoolTableWidth/64);
-    public final static int centerHoleRadius = (int) (game.eightPoolTableWidth/76.8);
-    private final int width = (int) (game.eightPoolTableWidth/1.777777777); // the width of the pane
-    private final int height = (int) (game.eightPoolTableHeight/1.777777777); // the height of the pane
+    private final static int width = (int) (game.eightPoolTableWidth/1.5); // the width of the pane
+    private final static int height = (int) (game.eightPoolTableHeight/1.5); // the height of the pane
+    private int cornerHoleRadius = (int) (width/36);
+    private int centerHoleRadius = (int) (width/43.2);
     private double tableHeight;
 
     boolean selectionCircleClicked;
 
     public TableView(Pane root) throws MalformedURLException {
 
+
         double layoutX = game.eightPoolTableX + 0.1*game.eightPoolTableX; // the XPosition in the general pane
         double layoutY = game.eightPoolTableY + 0.1*game.eightPoolTableY; // the YPosition in the general pane
 
-        borderPane = new BorderPane();
+        anchorPane = new AnchorPane();
 
-        borderPane.setPrefWidth(1500);
-        borderPane.setPrefHeight(height);
+        anchorPane.setPrefWidth(game.eightPoolTableWidth);
+        anchorPane.setPrefHeight(game.eightPoolTableHeight);
 
         table = new Pane();
+        table.setPadding(new Insets(width/43.2, 0, 0, 0));
         table.setPrefWidth(width);
         table.setPrefHeight(height);
         table.setLayoutX(layoutX);
@@ -64,55 +62,35 @@ public class TableView {
 
         table.getChildren().addAll(tableImageView);
 
-
-        Label player1Lbl = new Label("player1");
-        player1Lbl.setStyle("-fx-font-size: 24");
-        Label player2Lbl = new Label("player2");
-        player2Lbl.setStyle("-fx-font-size: 24");
-        HBox playersIcon = new HBox(700,player1Lbl,player2Lbl);
-
+        GridPane playersIcon = new GridPane();
+        playersIcon.setHgap(width/21.6);
+        playersIcon.setPadding(new Insets(0,0,width/21.6,0));
         playersIcon.setAlignment(Pos.CENTER);
-        playersIcon.setStyle("-fx-border-color: black");
-        playersIcon.setPrefHeight(50);
-
-//        Text information = new Text();
-//        information.setText("Ball 1: " + "" + "\n" + "Ball 1: " + "" + "\n" + "Ball 2: " + "" + "\n" + "Ball 3: " + ""
-//                + "\n" + "Ball 4: " + "" + "\n" + "Ball 5: " + "" + "\n" + "Ball 6: " + "" + "\n" + "Ball 7: " + "" + "\n"
-//                + "Ball 8: " + "" + "\n" + "Ball 9: " + "" + "\n" + "Ball 10: " + "" + "\n" + "Ball 11: " + "" + "\n"
-//                + "Ball 12: " + "" + "\n" + "Ball 13: " + "" + "\n" + "Ball 14: " + "" + "\n" + "Ball 15: " + ""
-//                + "\n" + "Ball 16: " + "" + "\n" + "Ball Cue: " + "" + "\n");
-//        information.setStyle("-fx-font-size: 15");
-//        Slider sldFriction = new Slider();
-//        sldFriction.setShowTickLabels(true);
-//        Label sldLblFriction = new Label("Friction");
-//        Slider sldForce = new Slider();
-//        sldForce.setShowTickLabels(true);
-//        Label sldLblForce = new Label("Force");
-//        Button goToMenu = new Button("Go to main menu");
-//        goToMenu.setOnAction(e->{
-//            MainMenuController.gotoMainMenu();
-//        });
-//        VBox ballInformation = new VBox(information,sldLblForce,sldForce,sldLblFriction,sldFriction,goToMenu);
-//
-//        ballInformation.setAlignment(Pos.CENTER_LEFT);
-//        ballInformation.setPrefHeight(500);
-//        ballInformation.setPrefWidth(220);
-//        ballInformation.setStyle("-fx-border-color: black");
-//
-//        borderPane.setRight(ballInformation);
-//        borderPane.setTop(playersIcon);
-//        borderPane.setCenter(table);
+        playersIcon.setPrefWidth(width);
+        playersIcon.setPrefHeight(height/9);
+        Button player1Lbl = new Button("player1");
+        player1Lbl.setPrefWidth((width/2) - width/43.2);
+        player1Lbl.setStyle("-fx-background-color: #3D4956");
+        player1Lbl.setTextFill(Color.WHITE);
+        player1Lbl.setFont(Font.font("Verdana", FontWeight.BOLD, width/43.2));
+        Button player2Lbl = new Button("player2");
+        player2Lbl.setPrefWidth(width/2 - width/43.2);
+        player2Lbl.setStyle("-fx-background-color: #3D4956");
+        player2Lbl.setTextFill(Color.WHITE);
+        player2Lbl.setFont(Font.font("Verdana", FontWeight.BOLD, width/43.2));
+        playersIcon.add(player1Lbl, 0,0);
+        playersIcon.add(player2Lbl, 1,0);
 
         VBox rightContainer = new VBox();
-        rightContainer.setSpacing(25);
-        rightContainer.setMaxWidth(400);
-        rightContainer.setPadding(new Insets(25,25,25,25));
+        rightContainer.setSpacing(width/43.2);
+        rightContainer.setMaxWidth(width/2.7);
         rightContainer.setAlignment(Pos.TOP_CENTER);
+        rightContainer.setPadding(new Insets(0, 25, 0, 0));
 
         GridPane principalBar = new GridPane();
         principalBar.setAlignment(Pos.CENTER_LEFT);
-        principalBar.setMaxHeight(75);
-        principalBar.setPrefWidth(350);
+        principalBar.setMaxHeight(height/7.8);
+        principalBar.setMaxWidth(width/2.7);
         principalBar.setStyle("-fx-background-color: #3D4956");
 
         Button backButton, ballsButton, tableButton, cueButton;
@@ -120,14 +98,14 @@ public class TableView {
         ImageView leaveArrowImageView = new ImageView();
         Image leaveImage = new Image(new File("src/main/resources/UI icons/arrow.png").toURI().toURL().toExternalForm());
         leaveArrowImageView.setImage(leaveImage);
-        leaveArrowImageView.setFitWidth(30);
+        leaveArrowImageView.setFitWidth(width/36);
         leaveArrowImageView.setPreserveRatio(true);
         backButton = new Button("");
         backButton.setGraphic(leaveArrowImageView);
         backButton.setContentDisplay(ContentDisplay.CENTER);
         backButton.setStyle("-fx-background-color: red");
-        backButton.setMaxWidth(30);
-        backButton.setMaxHeight(75);
+        backButton.setMaxWidth(width/36);
+        backButton.setMaxHeight(height/7.8);
         backButton.setOnAction(e->{
             MainMenuController.gotoMainMenu();
         });
@@ -136,19 +114,19 @@ public class TableView {
         ballsButton.setTextFill(Color.WHITE);
         ballsButton.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         ballsButton.setStyle("-fx-background-color: transparent");
-        ballsButton.setPrefWidth(100);
+        ballsButton.setPrefWidth(width/10.8);
 
         tableButton = new Button("Table");
         tableButton.setTextFill(Color.WHITE);
         tableButton.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         tableButton.setStyle("-fx-background-color: transparent");
-        tableButton.setPrefWidth(100);
+        tableButton.setPrefWidth(width/10.8);
 
         cueButton = new Button("Cue");
         cueButton.setTextFill(Color.WHITE);
         cueButton.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         cueButton.setStyle("-fx-background-color: transparent");
-        cueButton.setPrefWidth(100);
+        cueButton.setPrefWidth(width/10.8);
 
         principalBar.add(backButton, 0,0);
         principalBar.add(ballsButton, 1,0);
@@ -159,24 +137,24 @@ public class TableView {
         FlowPane ballsPrimaryPane = new FlowPane();
         ballsPrimaryPane.setLayoutX(0);
         ballsPrimaryPane.setLayoutY(0);
-        ballsPrimaryPane.setMaxWidth(350);
-        ballsPrimaryPane.setPadding(new Insets(25,25,25,25));
+        ballsPrimaryPane.setMaxWidth(width/2.7);
+        ballsPrimaryPane.setPadding(new Insets(25,0,25,0));
         ballsPrimaryPane.setAlignment(Pos.CENTER);
         ballsPrimaryPane.setStyle("-fx-background-color: #3D4956");
-        ballsPrimaryPane.setVgap(25);
-        ballsPrimaryPane.setHgap(35);
+        ballsPrimaryPane.setVgap(height/23.4);
+        ballsPrimaryPane.setHgap(width/25);
 
         FlowPane ballsStrokePane = new FlowPane();
         ballsPrimaryPane.setLayoutX(0);
         ballsPrimaryPane.setLayoutY(0);
-        ballsStrokePane.setPadding(new Insets(25,25,25,25));
+        ballsStrokePane.setPadding(new Insets(25,0,25,0));
         ballsStrokePane.setAlignment(Pos.CENTER);
         ballsStrokePane.setStyle("-fx-background-color: #3D4956");
-        ballsStrokePane.setVgap(25);
-        ballsStrokePane.setHgap(35);
+        ballsStrokePane.setVgap(height/23.4);
+        ballsStrokePane.setHgap(width/30.857);
 
-        Pane ballsPane = new Pane();
-        ballsPane.setMaxSize(400, 200);
+        StackPane ballsPane = new StackPane();
+        ballsPane.setMaxSize(width/2.7, height/2.925);
         ballsPane.getChildren().addAll(ballsPrimaryPane);
 
         for (int i=1;i<16;i++) {
@@ -203,9 +181,13 @@ public class TableView {
 
         rightContainer.getChildren().addAll(principalBar, ballsPane);
 
-        borderPane.setRight(rightContainer);
-        borderPane.setTop(playersIcon);
-        borderPane.setCenter(table);
+        anchorPane.getChildren().addAll(rightContainer, playersIcon, table);
+
+        AnchorPane.setLeftAnchor(table, width/43.2);
+        AnchorPane.setTopAnchor(playersIcon, 0.0);
+        AnchorPane.setLeftAnchor(playersIcon, width/43.2);
+        AnchorPane.setTopAnchor(rightContainer, 0.0);
+        AnchorPane.setRightAnchor(rightContainer,0.0);
 
         Line whiteLine = new Line();
         whiteLine.setStartX(width-(width/3.6));
@@ -215,7 +197,7 @@ public class TableView {
         whiteLine.setStroke(Color.WHITE);
         whiteLine.setStrokeWidth(3);
 
-        root.getChildren().add(borderPane); // adding the table to the main pain of the project.
+        root.getChildren().add(anchorPane); // adding the table to the main pain of the project.
 
         createHoles();
         createLines();
@@ -321,6 +303,8 @@ public class TableView {
         return holes;
     }
 
-
+    public static int getTableWidth() {
+        return width;
+    }
 }
 
