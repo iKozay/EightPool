@@ -93,6 +93,14 @@ public class BallController {
     public void testingBallController(Pane root) throws MalformedURLException {
         BallModel bModel1 = new BallModel(1, new Image(new File("src/main/resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm()));
         BallModel bModel2 = new BallModel(2, new Image(new File("src/main/resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm()));
+        bModel1.setPositionX(new BigDecimal(500));
+        bModel1.setPositionY(new BigDecimal(200));
+        bModel2.setPositionX(new BigDecimal(500));
+        bModel2.setPositionY(new BigDecimal(500));
+        bModel1.setVelocityX(PhysicsModule.ZERO);
+        bModel1.setVelocityY(new BigDecimal(10));
+        bModel2.setVelocityX(PhysicsModule.ZERO);
+        bModel2.setVelocityY(PhysicsModule.ZERO);
         bModelList.add(bModel1);
         bModelList.add(bModel2);
         BallView bView1 = new BallView(bModel1.getImg(),BallModel.RADIUS);
@@ -109,9 +117,17 @@ public class BallController {
         detectCollisionWithTable();
         detectCollisionWithOtherBalls();
         for (BallModel bModel : bModelList) {
-            bModel.updatePosition(bViewList.get(bModelList.indexOf(bModel)));
+            bModel.updatePosition();
+            updateBallViewPosition(bModel);
         }
     }
+
+    public static void updateBallViewPosition(BallModel bModel) {
+        BallView bView = bViewList.get(bModelList.indexOf(bModel));
+        bView.getBall().setLayoutX(bModel.getPositionX().doubleValue());
+        bView.getBall().setLayoutY(bModel.getPositionY().doubleValue());
+    }
+
     /**
      * Detects any collision between a ball and the table
      * */
@@ -142,7 +158,7 @@ public class BallController {
                 if (!ballA.equals(ballB)) {
                     if((ballA.isMoving)||(ballB.isMoving)){
                         distance = ballA.distance(ballB);
-                        if(distance.compareTo(new BigDecimal(2*BallModel.RADIUS))<=0){
+                        if(distance.compareTo(new BigDecimal(2*BallModel.RADIUS))<0){
                             if(collisionChecked.size()==0){
                                 collisionChecked.add(ballA.getNumber() + "," + ballB.getNumber());
                             }else {
@@ -161,7 +177,7 @@ public class BallController {
                             }
                             if(!foundInArray){
 
-                                ballA.handleMomentum(ballB);
+                                ballA.handleMomentum(ballB, distance.doubleValue());
                             }
                             foundInArray=false;
                         }

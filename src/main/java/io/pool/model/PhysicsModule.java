@@ -1,5 +1,6 @@
 package io.pool.model;
 
+import io.pool.controller.BallController;
 import io.pool.view.BallView;
 import javafx.scene.transform.Rotate;
 
@@ -96,10 +97,8 @@ public class PhysicsModule {
 
     /**
      * Updates the BallModel and the BallView positions
-     *
-     * @param bView The BallView that represents this ball
      */
-    public void updatePosition(BallView bView) {
+    public void updatePosition() {
         setIsMoving();
         /** Updates the position of the ball only if it is moving */
         if (isMoving) {
@@ -107,9 +106,6 @@ public class PhysicsModule {
             /** Updates the BallModel position */
             setPositionX(getPositionX().add(getVelocityX()));
             setPositionY(getPositionY().add(getVelocityY()));
-            /** Updates the BallView position */
-            bView.getBall().setLayoutX(getPositionX().doubleValue());
-            bView.getBall().setLayoutY(getPositionY().doubleValue());
             /** Add rotation animation */
             //Rotate rx = new Rotate(-getVelocityY().doubleValue(), 0, 0, 0, Rotate.X_AXIS);
             //Rotate ry = new Rotate(getVelocityX().doubleValue(), 0, 0, 0, Rotate.Y_AXIS);
@@ -228,47 +224,67 @@ public class PhysicsModule {
      * @param module Second object that extends PhysicsModule
      * @see <a href="https://vobarian.com/collisions/2dcollisions2.pdf">2-Dimensional Elastic Collisions without Trigonometry</a>
      */
-    public void handleMomentum(PhysicsModule module) {
-        /**1
-         * find unit normal and unit tangent vector
-         */
-        PhysicsModule pm1 = this, pm2=module;
-        BigDecimal normalXComponent,normalYComponent;
+    public void handleMomentum(PhysicsModule module, double distance) {
+        boolean completedOverlapCorrection = false;
         /**
          * It is the ball hitting another ball
          * pm1 is the first ball
          * pm2 is the second ball
          */
-        normalXComponent = pm2.getPositionX().subtract(pm1.getPositionX());
-        normalYComponent = pm2.getPositionY().subtract(pm1.getPositionY());
+        PhysicsModule pm1 = this, pm2 = module;
+        BigDecimal normalXComponent, normalYComponent, unitNormalX = ZERO, unitNormalY = ZERO, unitTangentX, unitTangentY;
+        while (!completedOverlapCorrection) {
+            /**1
+             * find unit normal and unit tangent vector
+             */
+            normalXComponent = pm2.getPositionX().subtract(pm1.getPositionX());
+            normalYComponent = pm2.getPositionY().subtract(pm1.getPositionY());
 
 
-        BigDecimal magnitude = (normalYComponent.pow(2).add(normalXComponent.pow(2))).sqrt(MathContext.DECIMAL32);
-        if(magnitude.compareTo(ZERO)==0){
-            System.out.println("PROBLEM");
+            BigDecimal magnitude = (normalYComponent.pow(2).add(normalXComponent.pow(2))).sqrt(MathContext.DECIMAL32);
+            unitNormalX = normalXComponent.divide(magnitude, MathContext.DECIMAL32);
+            unitNormalY = normalYComponent.divide(magnitude, MathContext.DECIMAL32);
+            //double distance = magnitude.doubleValue();
+            if (distance>(2*BallModel.RADIUS)) {
+                /**
+                 * Find the minimum distance X and Y to prevent overlapping
+                 */
+                BigDecimal distanceX = normalXComponent.multiply(new BigDecimal((2 * BallModel.RADIUS - distance) / (distance)));
+                BigDecimal distanceY = normalYComponent.multiply(new BigDecimal((2 * BallModel.RADIUS - distance) / (distance)));
+                /**
+                 * Push-Pull Balls apart
+                 */
+                if(pm1.isMoving&&pm2.isMoving) {
+                    distanceX = distanceX.divide(new BigDecimal(2));
+                    distanceY = distanceY.divide(new BigDecimal(2));
+                    BigDecimal signumX1 = new BigDecimal(pm1.getVelocityX().negate().signum());
+                    BigDecimal signumY1 = new BigDecimal(pm1.getVelocityY().negate().signum());
+                    BigDecimal signumX2 = new BigDecimal(pm2.getVelocityX().negate().signum());
+                    BigDecimal signumY2 = new BigDecimal(pm2.getVelocityY().negate().signum());
+                    pm1.setPositionX(pm1.getPositionX().add(distanceX.multiply(signumX1)));
+                    pm1.setPositionY(pm1.getPositionY().add(distanceY.multiply(signumY1)));
+                    pm2.setPositionX(pm2.getPositionX().add(distanceX.multiply(signumX2)));
+                    pm2.setPositionY(pm2.getPositionY().add(distanceY.multiply(signumY2)));
+                }else{
+                    PhysicsModule movingBall;
+                    if (pm1.isMoving) {
+                        movingBall = pm1;
+                    } else{
+                        movingBall = pm2;
+                    }
+                    BigDecimal signumX = new BigDecimal(movingBall.getVelocityX().negate().signum());
+                    BigDecimal signumY = new BigDecimal(movingBall.getVelocityY().negate().signum());
+                    movingBall.setPositionX(movingBall.getPositionX().add(distanceX.multiply(signumX)));
+                    movingBall.setPositionY(movingBall.getPositionX().add(distanceY.multiply(signumY)));
+                }
+                //BallController.updateBallViewPosition((BallModel) pm1);
+                //BallController.updateBallViewPosition((BallModel) pm2);
+            } else {
+                completedOverlapCorrection = true;
+            }
         }
-        BigDecimal unitNormalX = normalXComponent.divide(magnitude, MathContext.DECIMAL32);
-        BigDecimal unitNormalY = normalYComponent.divide(magnitude, MathContext.DECIMAL32);
-
-        BigDecimal unitTangentX = unitNormalY.negate();
-        BigDecimal unitTangentY = unitNormalX;
-
-
-        /**
-         * Find the minimum distance X and Y to prevent overlapping
-         */
-        //BigDecimal distanceX = normalXComponent.multiply(new BigDecimal((2*BallModel.RADIUS-distance)/distance));
-        //BigDecimal distanceY = normalYComponent.multiply(new BigDecimal((2*BallModel.RADIUS-distance)/distance));
-
-        /**
-         * Push-Pull Balls apart
-         */
-
-        //pm1.setPositionX(pm1.getPositionX().add(distanceX.divide(new BigDecimal(2))));
-        //pm1.setPositionY(pm1.getPositionY().add(distanceY.divide(new BigDecimal(2))));
-        //pm2.setPositionX(pm2.getPositionX().subtract(distanceX.divide(new BigDecimal(2))));
-        //pm2.setPositionY(pm2.getPositionY().subtract(distanceY.divide(new BigDecimal(2))));
-
+        unitTangentX = unitNormalY.negate();
+        unitTangentY = unitNormalX;
 
         /**2 (step 2 is skipped because we already have the balls vectors
          * Resolve velocity vectors of ball 1 and 2 into normal and tangential components
@@ -323,6 +339,7 @@ public class PhysicsModule {
         //pm2.applyFriction(BALL_BALL_FRICTION_COEFFICIENT);
     }
 
+
     /**
      * Gets the distance between this object and another object
      * <p>
@@ -332,29 +349,24 @@ public class PhysicsModule {
      * @return The distance between two objects
      */
     public BigDecimal distance(PhysicsModule module) {
-        // TODO handle distance with table and pool cue
-        /** This method only applies to BallModel
-         * Must check is it is called from BallModel
-         * */
         BigDecimal distance;
-        BigDecimal x2=ZERO, y2=ZERO, x1=ZERO, y1=ZERO;
+        BigDecimal x2, y2, x1, y1;
         /**
          * Assigns the x and y variables depending on the object
          */
-        BallModel otherBall = (BallModel) module;
-        x2 = otherBall.getPositionX();
-        y2 = otherBall.getPositionY();
+        x2 = module.getPositionX();
+        y2 = module.getPositionY();
         x1 = getPositionX();
         y1 = getPositionY();
 
         /**
          * Finds distance
          */
-        BigDecimal a = x2.subtract(x1, MathContext.DECIMAL32);
-        BigDecimal b = y2.subtract(y1, MathContext.DECIMAL32);
-        a = a.pow(2, MathContext.DECIMAL32);
-        b = b.pow(2, MathContext.DECIMAL32);
-        BigDecimal subtotal = a.add(b, MathContext.DECIMAL32);
+        BigDecimal a = x2.subtract(x1);
+        BigDecimal b = y2.subtract(y1);
+        a = a.pow(2);
+        b = b.pow(2);
+        BigDecimal subtotal = a.add(b);
         distance = subtotal.sqrt(MathContext.DECIMAL32);
         return distance;
     }
