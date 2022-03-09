@@ -53,7 +53,6 @@ public class MainMenuView extends Pane{
 
     public MainMenuView(Stage stage) throws IOException {
         this.setStyle("-fx-background-color: White");
-        mainMenuController = new MainMenuController(this, stage);
         //Adding texture
         //Green
         p1 = new Polygon();
@@ -240,13 +239,7 @@ public class MainMenuView extends Pane{
         buttonGroup = new Group();
         buttonGroup.getChildren().addAll(pve1Btn,pve2Btn,pve3Btn);
 
-        initializeViews();
-
-    }
-
-    private void initializeViews() throws IOException {
-        this.mainMenuController.setSettingsView(new SettingsView());
-        this.mainMenuController.setGameView(new GameView());
+        mainMenuController = new MainMenuController(this, stage);
     }
 
     public Text getPvpText() {

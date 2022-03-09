@@ -38,6 +38,7 @@ public class TableView {
 
     public TableView(Pane root) throws MalformedURLException {
 
+        BallModel.RADIUS = getTableWidth()/70;
 
         double layoutX = game.eightPoolTableX + 0.1*game.eightPoolTableX; // the XPosition in the general pane
         double layoutY = game.eightPoolTableY + 0.1*game.eightPoolTableY; // the YPosition in the general pane
@@ -112,19 +113,19 @@ public class TableView {
 
         ballsButton = new Button("Balls");
         ballsButton.setTextFill(Color.WHITE);
-        ballsButton.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+        ballsButton.setFont(Font.font("Verdana", FontWeight.BOLD, width/72));
         ballsButton.setStyle("-fx-background-color: transparent");
         ballsButton.setPrefWidth(width/10.8);
 
         tableButton = new Button("Table");
         tableButton.setTextFill(Color.WHITE);
-        tableButton.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+        tableButton.setFont(Font.font("Verdana", FontWeight.BOLD, width/72));
         tableButton.setStyle("-fx-background-color: transparent");
         tableButton.setPrefWidth(width/10.8);
 
         cueButton = new Button("Cue");
         cueButton.setTextFill(Color.WHITE);
-        cueButton.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+        cueButton.setFont(Font.font("Verdana", FontWeight.BOLD, width/72));
         cueButton.setStyle("-fx-background-color: transparent");
         cueButton.setPrefWidth(width/10.8);
 

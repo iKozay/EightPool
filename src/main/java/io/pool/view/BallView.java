@@ -32,6 +32,9 @@ public class BallView {
     public Sphere getBall() {
         return ball;
     }
+    public void setBallNull() {
+        this.ball=null;
+    }
 
     /**
      * Gets the sphere

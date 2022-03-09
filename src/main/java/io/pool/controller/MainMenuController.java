@@ -22,12 +22,19 @@ public class MainMenuController {
         this.mmv = mmv;
         this.stage = stage;
         mmv.setController(this);
+        try {
+            solo1Action();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        pvAIAction();
+        pvpAction();
     }
 
     public static void gotoMainMenu(){
-        stage.getScene().setRoot(mmv);
         gameView.getGameController().getPoolCueController().resetEventHandler(stage.getScene());
         gameView.getGameController().resetGame();
+        stage.getScene().setRoot(mmv);
     }
     public void gotoSettings(){
         stage.getScene().setRoot(settingsView.getNewLoadedPane());
@@ -82,8 +89,8 @@ public class MainMenuController {
     }
 
     GameModel gameModel = new GameModel();
-    public void solo1Action(){
-
+    public void solo1Action() throws MalformedURLException {
+        gameView = new GameView();
         mmv.getSolo1Btn().setOnMouseClicked(event -> {
             stage.getScene().setRoot(gameView);
             this.gameView.getGameController().getPoolCueController().handleRotateCue(stage.getScene());
@@ -121,13 +128,5 @@ public class MainMenuController {
 
     public void setSettingsView(SettingsView settingsView) {
         this.settingsView = settingsView;
-    }
-
-    public void setGameView(GameView root) {
-        this.gameView = root;
-        solo1Action();
-        pvAIAction();
-        pvpAction();
-
     }
 }

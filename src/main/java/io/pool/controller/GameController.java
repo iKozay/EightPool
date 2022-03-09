@@ -29,7 +29,6 @@ public class GameController {
     private ArrayList<BallModel> bModelIn = new ArrayList<>();
 
 
-
     /**
      * Main Constructor of GameController
      * @param gView Instance of GameView

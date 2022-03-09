@@ -26,21 +26,17 @@ public class PoolCueController {
     public void handleRotateCue(Scene scene){
 
         scene.setOnMouseMoved(event -> {
-            double deltaX = event.getX() - poolCueView.getXPos();
-            double deltaY = event.getY() - (poolCueView.getYPos() + poolCueView.getCue().getHeight()/2);
+
+            double deltaX = event.getX() - BallController.whiteBallModel.getPositionX().doubleValue();
+            double deltaY = event.getY() - BallController.whiteBallModel.getPositionY().doubleValue();
 
             if (deltaX != 0) {
-                double newAngleDegrees = Math.toDegrees(Math.atan2(deltaY, deltaX)) + 90;
-                //System.out.println(newAngleDegrees);
-
-
-                Rotate rotate = new Rotate(1);
+                double newAngleDegrees = Math.toDegrees(Math.atan2(deltaY, deltaX));
+                Rotate rotate = new Rotate(newAngleDegrees- poolCueView.getPreviousAngle());
                 rotate.setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
                 rotate.setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
-                //rotate.setAngle();
                 poolCueView.getCue().getTransforms().add(rotate);
-                //poolCueView.setPreviousAngle(newAngleDegrees);
-                //System.out.println(newAngleDegrees);
+                poolCueView.setPreviousAngle(newAngleDegrees);
             }
         });
 
