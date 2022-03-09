@@ -74,10 +74,8 @@ public class GameController {
                         if(moving) break;
                     }
                     if(!moving){ /**methods when all balls have stopped moving*/
-                        gView.getCueView().getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue()+(BallModel.RADIUS));
-                        gView.getCueView().getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue()-(gView.getCueView().getCue().getHeight()/2));
+                        poolCueController.enablePoolCueControl();
                         gView.displayPoolCue(true);
-
                         if(!DBConnection.hasBeenCalled) {
                             DBConnection.updateLastPosition();
                             DBConnection.hasBeenCalled = true;

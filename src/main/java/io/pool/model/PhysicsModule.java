@@ -146,13 +146,7 @@ public class PhysicsModule {
         /** Get the friction magnitude */
         BigDecimal frictionForceMag = new BigDecimal(frictionCoefficient * PhysicsModule.MASS_BALL_KG * PhysicsModule.GRAVITATIONAL_FORCE, MathContext.DECIMAL32);
         BigDecimal ratio;
-        /** Calculate the velocity ratio */
-        //double velocityRatio = getVelocityX().abs().doubleValue() / getVelocityY().abs().doubleValue();
-        ////TODO Acceleration does not get added. Big Problem
-        //setAccelerationY((new BigDecimal(Math.sqrt(Math.pow(frictionForceMag.doubleValue(), 2)) / (Math.pow(velocityRatio, 2) + 1), MathContext.DECIMAL32)));
-        //setAccelerationX(new BigDecimal(velocityRatio * getAccelerationY().doubleValue(), MathContext.DECIMAL32));
-        //////////////////////////////////////////////
-        //Acceleration Magnitude
+        /** Calculate the ratio */
         BigDecimal VecMag = new BigDecimal(Math.sqrt((getVelocityX().pow(2).add(getVelocityY().pow(2)).doubleValue())));
         if((VecMag.doubleValue()>frictionForceMag.doubleValue())&&(VecMag.doubleValue()!=0)) {
             ratio = VecMag.subtract(frictionForceMag);
@@ -184,38 +178,8 @@ public class PhysicsModule {
             setVelocityX(ZERO);
             setVelocityY(ZERO);
         }
-
-        //////////////////////////////////////////////
-        // Got simplified using the ratio
-//        /**
-//         * Make the acceleration opposite to the velocity if it is positive
-//         * Acceleration is negative by default
-//         */
-//        if (getVelocityX().doubleValue() > 0) {
-//            setAccelerationX(getAccelerationX().multiply(BigDecimal.valueOf(-1)));
-//        }
-//        if (getVelocityY().doubleValue() > 0) {
-//            setAccelerationY(getAccelerationY().multiply(BigDecimal.valueOf(-1)));
-//        }
-        // SIMPLIFIED VERSION BELOW
-//        /**
-//         * Checks if the acceleration is bigger than the velocity.
-//         * This means that the ball will become be stationary.
-//         * If it is not, it assigns the new velocity
-//         */
-//        if (getVelocityX().abs().doubleValue() < getAccelerationX().abs().doubleValue()) {
-//            setVelocityX(ZERO);
-//        } else {
-//            setVelocityX(getVelocityX().add(getAccelerationX(), MathContext.DECIMAL32));
-//        }
-//        if (getVelocityY().abs().doubleValue() < getAccelerationY().abs().doubleValue()) {
-//            setVelocityY(ZERO);
-//        } else {
-//            setVelocityY(getVelocityY().add(getAccelerationY(), MathContext.DECIMAL32));
-//        }
         setVelocityX(getVelocityX().add(getAccelerationX(), MathContext.DECIMAL32));
         setVelocityY(getVelocityY().add(getAccelerationY(), MathContext.DECIMAL32));
-        //System.out.println(getVelocityX()+" , "+getVelocityY());
     }
 
     /**

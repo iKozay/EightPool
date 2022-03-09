@@ -15,6 +15,8 @@ public class PoolCueController {
 
     PoolCueView poolCueView;
     PoolCueModel poolCueModel;
+    private static final int MAX_POWER=300;
+    private boolean enablePoolCueControl=false;
 
     public PoolCueController(PoolCueView poolCueView) {
         this.poolCueView = poolCueView;
@@ -26,45 +28,59 @@ public class PoolCueController {
     public void handleRotateCue(Scene scene){
 
         scene.setOnMouseMoved(event -> {
+            if(enablePoolCueControl) {
+                if (!isPressed) {
+                    poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue() + (BallModel.RADIUS));
+                    poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (poolCueView.getCue().getHeight() / 2));
 
-            double deltaX = event.getX() - BallController.whiteBallModel.getPositionX().doubleValue();
-            double deltaY = event.getY() - BallController.whiteBallModel.getPositionY().doubleValue();
-
-            if (deltaX != 0) {
-                double newAngleDegrees = Math.toDegrees(Math.atan2(deltaY, deltaX));
-                Rotate rotate = new Rotate(newAngleDegrees- poolCueView.getPreviousAngle());
-                rotate.setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
-                rotate.setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
-                poolCueView.getCue().getTransforms().add(rotate);
-                poolCueView.setPreviousAngle(newAngleDegrees);
+                    double deltaX = event.getX() - BallController.whiteBallModel.getPositionX().doubleValue();
+                    double deltaY = event.getY() - BallController.whiteBallModel.getPositionY().doubleValue();
+                    if (deltaX != 0) {
+                        double newAngleDegrees = Math.toDegrees(Math.atan2(deltaY, deltaX));
+                        Rotate rotate = new Rotate(newAngleDegrees - poolCueView.getPreviousAngle());
+                        rotate.setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
+                        rotate.setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
+                        poolCueView.getCue().getTransforms().add(rotate);
+                        poolCueView.setPreviousAngle(newAngleDegrees);
+                    }
+                }
             }
         });
 
     }
 
-    double mouseAnchorX;
-    double mouseAnchorY;
-    double draggedDistanceX;
-    double draggedDistanceY;
-    double draggedDistance;
+    double deltaX;
+    double deltaY;
+    double maxDisplacementX;
+    double maxDisplacementY;
     public void hit(Scene scene){
         scene.setOnMousePressed(event -> {
-            mouseAnchorX = event.getSceneX();
-            mouseAnchorY = event.getSceneY();
-            isPressed = true;
+            if(enablePoolCueControl) {
+                deltaX = (event.getX() - poolCueView.getCue().getLayoutX());
+                deltaY = (event.getY() - poolCueView.getCue().getLayoutY());
+                double poolCueAngle = Math.toRadians(poolCueView.getPreviousAngle());
+                maxDisplacementX = MAX_POWER * Math.cos(poolCueAngle);
+                maxDisplacementY = MAX_POWER * Math.sin(poolCueAngle);
+                isPressed = true;
+            }
         });
         scene.setOnMouseDragged(event -> {
-            draggedDistanceX = event.getSceneX() - mouseAnchorX;
-            draggedDistanceY = event.getSceneY() - mouseAnchorY;
-            draggedDistance = Math.sqrt(Math.pow(draggedDistanceX, 2) + Math.pow(draggedDistanceY, 2));
-            Translate translate = new Translate();
-
-            translate.setX(draggedDistance * Math.cos(poolCueView.getPreviousAngle() +2.7));
-            translate.setY(draggedDistance * Math.sin(poolCueView.getPreviousAngle() +2.7));
-            poolCueView.getCue().getTransforms().addAll(translate);
+            if(enablePoolCueControl) {
+                System.out.println("Current: "+poolCueView.getCue().getLayoutX()+" ; "+poolCueView.getCue().getLayoutY());
+                if ((Math.abs(poolCueView.getCue().getLayoutX()) < maxDisplacementX) && (Math.abs(poolCueView.getCue().getLayoutY()) < maxDisplacementY)) {
+                    poolCueView.getCue().setLayoutX(deltaX);
+                    poolCueView.getCue().setLayoutY(deltaY);
+                } else {
+                    poolCueView.getCue().setLayoutX(maxDisplacementX);
+                    poolCueView.getCue().setLayoutY(maxDisplacementY);
+                }
+                System.out.println("NEW: "+poolCueView.getCue().getLayoutX()+" ; "+poolCueView.getCue().getLayoutY());
+            }
         });
         scene.setOnMouseReleased(event -> {
             isPressed = false;
+            poolCueView.getCue().setLayoutX(0);
+            poolCueView.getCue().setLayoutY(0);
         });
 
     }
@@ -75,5 +91,12 @@ public class PoolCueController {
         scene.setOnMouseDragged(null);
         scene.setOnMouseReleased(null);
 
+    }
+
+    public void enablePoolCueControl() {
+        enablePoolCueControl=true;
+    }
+    public void disablePoolCueControl() {
+        enablePoolCueControl=false;
     }
 }
