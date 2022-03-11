@@ -22,8 +22,8 @@ public class PhysicsModule {
     /**
      * Friction coefficient for ball-table rolling
      */
-    private static final double ROLLING_FRICTION_COEFFICIENT = 0.02;
-    private static final double BALL_BALL_FRICTION_COEFFICIENT = 0.1;
+    private static final double ROLLING_FRICTION_COEFFICIENT = 0.01;
+    private static final double BALL_BALL_FRICTION_COEFFICIENT = 0.05;
 
 
     /**
@@ -107,10 +107,9 @@ public class PhysicsModule {
             setPositionX(getPositionX().add(getVelocityX()));
             setPositionY(getPositionY().add(getVelocityY()));
             /** Add rotation animation */
-            //Rotate rx = new Rotate(-getVelocityY().doubleValue(), 0, 0, 0, Rotate.X_AXIS);
-            //Rotate ry = new Rotate(getVelocityX().doubleValue(), 0, 0, 0, Rotate.Y_AXIS);
-            //bView.getBall().getTransforms().addAll(rx, ry);
-
+            Rotate rx = new Rotate(-getVelocityY().doubleValue(), 0, 0, 0, Rotate.X_AXIS);
+            Rotate ry = new Rotate(getVelocityX().doubleValue(), 0, 0, 0, Rotate.Y_AXIS);
+            BallController.getBallViewFromBallModel((BallModel)this).getBall().getTransforms().addAll(rx, ry);
         }
     }
 
@@ -294,6 +293,8 @@ public class PhysicsModule {
         BigDecimal finalBall1Y = normalYFinalBall1.add(tangentialYFinalBall1, MathContext.DECIMAL32);
         BigDecimal finalBall2X = normalXFinalBall2.add(tangentialXFinalBall2, MathContext.DECIMAL32);
         BigDecimal finalBall2Y = normalYFinalBall2.add(tangentialYFinalBall2, MathContext.DECIMAL32);
+
+        //TODO Apply kinetic energy loss
 
         pm1.setVelocityX(finalBall1X);
         pm1.setVelocityY(finalBall1Y);

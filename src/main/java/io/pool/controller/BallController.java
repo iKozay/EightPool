@@ -292,10 +292,17 @@ public class BallController {
         if(ballModelArrayList().contains(ballModel)){
             ballModel.setVelocityX(PhysicsModule.ZERO);
             ballModel.setVelocityY(PhysicsModule.ZERO);
-            BallView bView1 = ballViewArrayList().get(ballModelArrayList().indexOf(ballModel));
+            BallView bView1 = getBallViewFromBallModel(ballModel);
             gameView.getChildren().remove(bView1.getBall());
             ballModelArrayList().remove(ballModel);
             ballViewArrayList().remove(bView1);
         }
+    }
+
+    public static BallModel getBallModelFromBallView(BallView bView){
+        return bModelList.get(bViewList.indexOf(bView));
+    }
+    public static BallView getBallViewFromBallModel(BallModel bModel){
+        return bViewList.get(bModelList.indexOf(bModel));
     }
 }

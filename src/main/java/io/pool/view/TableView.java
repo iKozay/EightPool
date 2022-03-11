@@ -19,6 +19,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
@@ -38,7 +39,7 @@ public class TableView {
 
     public TableView(Pane root) throws MalformedURLException {
 
-        BallModel.RADIUS = getTableWidth()/70;
+        BallModel.RADIUS = getTableWidth()/75;
 
         double layoutX = game.eightPoolTableX + 0.1*game.eightPoolTableX; // the XPosition in the general pane
         double layoutY = game.eightPoolTableY + 0.1*game.eightPoolTableY; // the YPosition in the general pane
@@ -260,40 +261,42 @@ public class TableView {
 
     }
     public void createLines(){
+        //Height:   680
+        //Width:    1280
         //TODO Add the rest of the lines for the rest of the table border lines
-        TableBorderModel upLeftLine = new TableBorderModel(width/11.368, height/9, width/2.16, height/9,1,-1);
-        upLeftLine.setStroke(Color.WHITE);
-        upLeftLine.setStrokeWidth(3);
-        TableBorderModel.addTableBorders(upLeftLine);
-        //lines.add(upLeftLine);
+        
+        new TableBorderModel("upLeftLine",width/11.228, height/9.0667, width/2.16, height/9.0667,1,-1);
 
-        TableBorderModel upRightLine = new TableBorderModel(width/1.9115, height/9, width/1.1077, height/9,1,-1);
-        upRightLine.setStroke(Color.WHITE);
-        upRightLine.setStrokeWidth(3);
-        TableBorderModel.addTableBorders(upRightLine);
+        new TableBorderModel("upRightLine",width/1.9115, height/9, width/1.10919, height/9,1,-1);
 
-        TableBorderModel downLeftLine = new TableBorderModel(width/11.368, height/1.1359, width/2.16, height/1.1359,1,-1);
-        downLeftLine.setStroke(Color.WHITE);
-        downLeftLine.setStrokeWidth(3);
-        TableBorderModel.addTableBorders(downLeftLine);
+        new TableBorderModel("downLeftLine",width/11.175561, height/1.13145, width/2.165, height/1.13145,1,-1);
 
-        TableBorderModel downRightLine = new TableBorderModel(width/1.9115, height/1.1359, width/1.1077, height/1.1359,1,-1);
-        downRightLine.setStroke(Color.WHITE);
-        downRightLine.setStrokeWidth(3);
-        TableBorderModel.addTableBorders(downRightLine);
+        new TableBorderModel("downRightLine",width/1.9048, height/1.13145, width/1.10919, height/1.13145,1,-1);
 
-        TableBorderModel centerLeftLine = new TableBorderModel(width/16.6154, height/5.68, width/16.6154, height/1.2316,-1,1);
-        centerLeftLine.setStroke(Color.WHITE);
-        centerLeftLine.setStrokeWidth(3);
-        TableBorderModel.addTableBorders(centerLeftLine);
+        new TableBorderModel("centerLeftLine",width/16, height/5.9130, width/16, height/1.21429,-1,1);
 
-        TableBorderModel centerRightLine = new TableBorderModel(width/1.0693, height/5.68, width/1.0693, height/1.2316,-1,1);
-        centerRightLine.setStroke(Color.WHITE);
-        centerRightLine.setStrokeWidth(3);
-        TableBorderModel.addTableBorders(centerRightLine);
+        new TableBorderModel("centerRightLine",width/1.069, height/5.9130, width/1.069, height/1.21864,-1,1);
+
+        //TODO Fix reflection factor
+        new TableBorderModel("topLeftHoleA1",width/11.228,height/9.0667,width/14.062,height/12.9,1,1);
+        new TableBorderModel("topLeftHoleA2",width/16,height/5.9130,width/21.33333,height/7.15789,1,1);
+        new TableBorderModel("bottomLeftHoleB1",width/16.143,height/1.21429,width/22.9299,height/1.16587,1,1);
+        new TableBorderModel("bottomLeftHoleB2",width/11.175561,height/1.13145,width/14.221220,height/1.089777,1,1);
+        new TableBorderModel("bottomMiddleHoleC1",width/2.165,height/1.13145,width/2.128,height/1.09149,1,1);
+        new TableBorderModel("bottomMiddleHoleC2",width/1.9048,height/1.13145,width/1.935,height/1.09149,1,1);
+        new TableBorderModel("bottomRightHoleD1",width/1.109,height/1.13145,width/1.087,height/1.09149,1,1);
+        new TableBorderModel("bottomRightHoleD2",width/1.069,height/1.21864,width/1.047,height/1.16638,1,1);
+        new TableBorderModel("topRightHoleE1",width/1.069,height/5.9130,width/1.0518,height/7.15789,1,1);
+        new TableBorderModel("topRightHoleE2",width/1.10919,height/9,width/1.087,height/13.302,1,1);
+        new TableBorderModel("topMiddleHoleF1",width/1.9115,height/9,width/1.931,height/13.302,1,1);
+        new TableBorderModel("topMiddleHoleF2",width/2.16,height/9,width/2.130,height/13.302,1,1);
 
 
 
+        for (TableBorderModel tbm:TableBorderModel.tableBorder) {
+            tbm.setStroke(Color.WHITE);
+            tbm.setStrokeWidth(0.5);
+        }
         table.getChildren().addAll(TableBorderModel.tableBorder);
     }
     public Pane getFullTable() {

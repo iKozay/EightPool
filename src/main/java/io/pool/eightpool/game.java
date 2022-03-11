@@ -26,6 +26,9 @@ public class game extends Application {
         // https://stackoverflow.com/questions/68186839/javafx-3d-sphere-partial-texture
         //
 
+        System.out.println("Height: "+eightPoolTableHeight);
+        System.out.println("Width: "+eightPoolTableWidth);
+
         /**
          * Instantiates the Main Menu View and adds it the Scene
          */

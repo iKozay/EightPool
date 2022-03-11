@@ -9,15 +9,14 @@ public class TableBorderModel extends Line {
     public static ArrayList<TableBorderModel> tableBorder = new ArrayList<>();
     private BigDecimal reflectionXFactor;
     private BigDecimal reflectionYFactor;
+    private String description;
 
-    public static void addTableBorders(TableBorderModel model){
-        tableBorder.add(model);
-    }
-
-    public TableBorderModel(double startX, double startY, double endX, double endY, double xFactor, double yFactor) {
+    public TableBorderModel(String description, double startX, double startY, double endX, double endY, double xFactor, double yFactor) {
         super(startX,startY,endX,endY);
+        this.description = description;
         this.reflectionXFactor = new BigDecimal(xFactor);
         this.reflectionYFactor = new BigDecimal(yFactor);
+        tableBorder.add(this);
     }
 
     public BigDecimal getReflectionXFactor() {
@@ -26,5 +25,9 @@ public class TableBorderModel extends Line {
 
     public BigDecimal getReflectionYFactor() {
         return reflectionYFactor;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
