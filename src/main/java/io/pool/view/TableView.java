@@ -102,6 +102,7 @@ public class TableView {
         leaveArrowImageView.setImage(leaveImage);
         leaveArrowImageView.setFitWidth(width/36);
         leaveArrowImageView.setPreserveRatio(true);
+
         backButton = new Button("");
         backButton.setGraphic(leaveArrowImageView);
         backButton.setContentDisplay(ContentDisplay.CENTER);

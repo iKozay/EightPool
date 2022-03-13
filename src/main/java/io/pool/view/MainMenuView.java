@@ -2,8 +2,10 @@ package io.pool.view;
 
 import io.pool.controller.MainMenuController;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -24,6 +26,10 @@ import java.io.InputStream;
 
 public class MainMenuView extends Pane{
 
+    private Button backBtn;
+    private Button startBtn;
+    private BorderPane pvpRootMenu;
+    private Scene pvpSubMenu;
     private Text pvpText;
     private Text versusAIText;
     private Group buttonGroup;
@@ -50,6 +56,8 @@ public class MainMenuView extends Pane{
     private Button pve2Btn;
     private Button pve3Btn;
     private Text soloText;
+    private ComboBox comboBoxP1;
+    private ComboBox comboBoxP2;
 
     public MainMenuView(Stage stage) throws IOException {
         this.setStyle("-fx-background-color: White");
@@ -240,6 +248,60 @@ public class MainMenuView extends Pane{
         buttonGroup.getChildren().addAll(pve1Btn,pve2Btn,pve3Btn);
 
         mainMenuController = new MainMenuController(this, stage);
+
+        // PVP Sub MENU
+        pvpRootMenu = new BorderPane();
+
+
+        VBox rightBox = new VBox();
+        comboBoxP1 = new ComboBox();
+        comboBoxP1.setPrefSize(300,50);
+
+        backBtn = new Button("BACK");
+        backBtn.setPrefSize(300,50);
+        backBtn.setOnAction(event -> {
+            stage.getScene().setRoot(this);
+        });
+
+        VBox leftBox = new VBox();
+        comboBoxP2 = new ComboBox();
+        comboBoxP2.setPrefSize(300,50);
+
+        startBtn = new Button("Start");
+        startBtn.setPrefSize(300,50);
+
+        leftBox.setAlignment(Pos.CENTER_RIGHT);
+        rightBox.setAlignment(Pos.CENTER_RIGHT);
+        rightBox.getChildren().addAll(comboBoxP1,backBtn);
+        leftBox.getChildren().addAll(comboBoxP2,startBtn);
+
+        Group boxGroup = new Group(leftBox,rightBox);
+
+        pvpRootMenu.setPrefHeight(getScreenHeight());
+        pvpRootMenu.setPrefWidth(getScreenWidth());
+        pvpRootMenu.setCenter(boxGroup);
+
+
+    }
+
+    public Button getBackBtn() {
+        return backBtn;
+    }
+
+    public Button getStartBtn() {
+        return startBtn;
+    }
+
+    public ComboBox getComboBoxP1() {
+        return comboBoxP1;
+    }
+
+    public ComboBox getComboBoxP2() {
+        return comboBoxP2;
+    }
+
+    public BorderPane getPvpRootMenu() {
+        return pvpRootMenu;
     }
 
     public Text getPvpText() {

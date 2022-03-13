@@ -54,8 +54,13 @@ public class MainMenuController {
                 mmv.getPvpText().setText("PLAY");
             }
         });
+        mmv.getPvp1Btn().setOnAction(event -> {
+            stage.getScene().setRoot(mmv.getPvpRootMenu());
+        });
+
 
     }
+
 
     public void pvAIAction(){
         mmv.getButtonGroup().setOnMouseExited(event -> {
