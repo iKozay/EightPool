@@ -277,6 +277,7 @@ public class MainMenuView extends Pane{
 
         Group boxGroup = new Group(leftBox,rightBox);
 
+
         pvpRootMenu.setPrefHeight(getScreenHeight());
         pvpRootMenu.setPrefWidth(getScreenWidth());
         pvpRootMenu.setCenter(boxGroup);
