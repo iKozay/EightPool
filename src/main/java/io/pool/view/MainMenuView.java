@@ -2,6 +2,7 @@ package io.pool.view;
 
 import io.pool.controller.MainMenuController;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -252,37 +253,56 @@ public class MainMenuView extends Pane{
         // PVP Sub MENU
         pvpRootMenu = new BorderPane();
 
+        // Top Border Pane
+        HBox topBox = new HBox();
+        topBox.setAlignment(Pos.BOTTOM_CENTER);
+        topBox.setSpacing(300);
+        topBox.setMinHeight(400);
+        Label player2Lbl = new Label("Player 2");
+        player2Lbl.setFont(new Font(20));
+        Label player1Lbl = new Label("Player 1");
+        player1Lbl.setFont(new Font(20));
 
-        VBox rightBox = new VBox();
+        // Center Border Pane
+        HBox centerBox = new HBox();
+        centerBox.setPadding(new Insets(20));
+        centerBox.setMinHeight(100);
+        centerBox.setAlignment(Pos.TOP_CENTER);
+        centerBox.setSpacing(30);
+
+        // ComboBox Player 1
         comboBoxP1 = new ComboBox();
         comboBoxP1.setPrefSize(300,50);
-
+        DropShadow dp1 = new DropShadow();
+        dp1.setColor(Color.RED);
+        dp1.setHeight(50);
+        comboBoxP1.setEffect(dp1);
+        comboBoxP1.setStyle("-fx-background-color: #78282b");
         backBtn = new Button("BACK");
         backBtn.setPrefSize(300,50);
         backBtn.setOnAction(event -> {
             stage.getScene().setRoot(this);
         });
 
-        VBox leftBox = new VBox();
+        //Bottom Border Pane
+        HBox bottomBox = new HBox();
+        bottomBox.setMinHeight(700);
+        bottomBox.setAlignment(Pos.TOP_CENTER);
+        bottomBox.setSpacing(30);
+
+        // ComboBox Player 2
         comboBoxP2 = new ComboBox();
         comboBoxP2.setPrefSize(300,50);
-
         startBtn = new Button("Start");
         startBtn.setPrefSize(300,50);
 
-        leftBox.setAlignment(Pos.CENTER_RIGHT);
-        rightBox.setAlignment(Pos.CENTER_RIGHT);
-        rightBox.getChildren().addAll(comboBoxP1,backBtn);
-        leftBox.getChildren().addAll(comboBoxP2,startBtn);
-
-        Group boxGroup = new Group(leftBox,rightBox);
-
-
-        pvpRootMenu.setPrefHeight(getScreenHeight());
-        pvpRootMenu.setPrefWidth(getScreenWidth());
-        pvpRootMenu.setCenter(boxGroup);
-
-
+        topBox.getChildren().addAll(player1Lbl,player2Lbl);
+        centerBox.getChildren().addAll(comboBoxP1,comboBoxP2);
+        bottomBox.getChildren().addAll(startBtn,backBtn);
+        pvpRootMenu.setStyle("-fx-background-color: #2b7828");
+        pvpRootMenu.setTop(topBox);
+        pvpRootMenu.setCenter(centerBox);
+        pvpRootMenu.setBottom(bottomBox);
     }
 
     public Button getBackBtn() {
