@@ -256,7 +256,7 @@ public class MainMenuView extends Pane{
         // Top Border Pane
         HBox topBox = new HBox();
         topBox.setAlignment(Pos.BOTTOM_CENTER);
-        topBox.setSpacing(300);
+        topBox.setSpacing(500);
         topBox.setMinHeight(400);
         Label player2Lbl = new Label("Player 2");
         player2Lbl.setFont(new Font(20));
@@ -293,6 +293,11 @@ public class MainMenuView extends Pane{
         // ComboBox Player 2
         comboBoxP2 = new ComboBox();
         comboBoxP2.setPrefSize(300,50);
+        DropShadow dp2 = new DropShadow();
+        dp2.setColor(Color.BLUE);
+        dp2.setHeight(50);
+        comboBoxP2.setEffect(dp2);
+        comboBoxP2.setStyle("-fx-background-color: blue");
         startBtn = new Button("Start");
         startBtn.setPrefSize(300,50);
 

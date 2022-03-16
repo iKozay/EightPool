@@ -52,7 +52,7 @@ public class BallController {
             }else{
                 bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/ball"+i+".jpg").toURI().toURL().toExternalForm()));
             }
-            bModel.setPositionX(new BigDecimal(i*3*BallModel.RADIUS));
+            bModel.setPositionX(new BigDecimal(i*4*BallModel.RADIUS));
             bModel.setPositionY(new BigDecimal(300));
 
             bView = new BallView(bModel.getImg(),BallModel.RADIUS);

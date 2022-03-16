@@ -8,6 +8,7 @@ import io.pool.view.GameView;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class GameController {
@@ -85,6 +86,7 @@ public class GameController {
                     }
                     ballInHole();
                     allSolidBallsIn();
+                    allStripeBallsIn();
 
                 }
             }
@@ -119,6 +121,7 @@ public class GameController {
     public void turns(PlayerModel p1){
         System.out.println(p1.getUsername() + "," + "your turn!");
     }
+
     public void whiteBallIn(BallView ballView){
         BallModel bModel = ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView));
         if(bModel.getNumber()==16){
@@ -141,12 +144,27 @@ public class GameController {
     }
 
     public void allSolidBallsIn(){
-        for(int i = 0; i < 7 ;i++){
-            if(bModelIn.contains(BallController.getSolidBModelList())){
-                System.out.println("Yes");
+        for(int i = 0; i < BallController.getSolidBModelList().size() ;i++){
+            if(bModelIn.contains(BallController.getSolidBModelList().get(i))){
+                BallController.getSolidBModelList().remove(i);
+                BallController.getSolidBViewList().remove(i);
             }
-
-
+            if(BallController.getSolidBModelList().isEmpty()){
+                System.out.println("All in for Solid");
+                break;
+            }
+        }
+    }
+    public void allStripeBallsIn(){
+        for(int i = 0; i < BallController.getStripeBModelList().size() ;i++){
+            if(bModelIn.contains(BallController.getStripeBModelList().get(i))){
+                BallController.getStripeBModelList().remove(i);
+                BallController.getStripeBViewList().remove(i);
+            }
+            if(BallController.getStripeBModelList().isEmpty()){
+                System.out.println("All in for Stripe");
+                break;
+            }
         }
     }
 
