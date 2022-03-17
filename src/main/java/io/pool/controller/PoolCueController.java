@@ -49,15 +49,23 @@ public class PoolCueController {
 
     }
 
+    double draggedX;//
+    double draggedY;//
+    double mouseXLock;//
+    double mouseYLock;//
+    double draggedTotal;//
     double deltaX;
     double deltaY;
     double maxDisplacementX;
     double maxDisplacementY;
+
     public void hit(Scene scene){
         scene.setOnMousePressed(event -> {
             if(enablePoolCueControl) {
                 deltaX = (event.getX() - poolCueView.getCue().getLayoutX());
                 deltaY = (event.getY() - poolCueView.getCue().getLayoutY());
+                mouseXLock = event.getX();
+                mouseYLock = event.getY();
                 double poolCueAngle = Math.toRadians(poolCueView.getPreviousAngle());
                 maxDisplacementX = MAX_POWER * Math.cos(poolCueAngle);
                 maxDisplacementY = MAX_POWER * Math.sin(poolCueAngle);
@@ -65,18 +73,15 @@ public class PoolCueController {
             }
         });
         scene.setOnMouseDragged(event -> {
-            if(enablePoolCueControl) {
-                System.out.println("Current: "+poolCueView.getCue().getLayoutX()+" ; "+poolCueView.getCue().getLayoutY());
-                if ((Math.abs(poolCueView.getCue().getLayoutX()) < maxDisplacementX) && (Math.abs(poolCueView.getCue().getLayoutY()) < maxDisplacementY)) {
-                    poolCueView.getCue().setLayoutX(deltaX);
-                    poolCueView.getCue().setLayoutY(deltaY);
-                } else {
-                    poolCueView.getCue().setLayoutX(maxDisplacementX);
-                    poolCueView.getCue().setLayoutY(maxDisplacementY);
-                }
-                System.out.println("NEW: "+poolCueView.getCue().getLayoutX()+" ; "+poolCueView.getCue().getLayoutY());
+            if(enablePoolCueControl){
+                    draggedX = Math.abs(event.getX()-mouseXLock);
+                    draggedY = Math.abs(event.getY()-mouseYLock);
+                    draggedTotal = Math.sqrt(Math.pow(draggedX,2)+ Math.pow(draggedY,2));
+                    poolCueView.getCue().setLayoutX(draggedTotal*Math.cos(Math.toRadians(poolCueView.getPreviousAngle())));
+                    poolCueView.getCue().setLayoutY(draggedTotal*Math.sin(Math.toRadians(poolCueView.getPreviousAngle())));
             }
         });
+
         scene.setOnMouseReleased(event -> {
             isPressed = false;
             poolCueView.getCue().setLayoutX(0);
