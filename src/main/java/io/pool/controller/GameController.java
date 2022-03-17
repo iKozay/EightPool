@@ -112,6 +112,7 @@ public class GameController {
      * their respective method from BallController
      */
     public void resetGame() {
+        bModelIn.clear();
         gameLoopTimer.stop();
         ballController.destroyViews(this.gameView);
         ballController.destroyModels();
