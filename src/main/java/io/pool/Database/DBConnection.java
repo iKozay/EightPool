@@ -91,6 +91,10 @@ public class DBConnection {
         The first line of the database is exclusive to the most recent position of the balls.
      */
     public static boolean hasBeenCalled = false;
+    /**
+     Updates the first row of the database which is the most recent table state.
+     This is used to fetch the game if the application closes or if you go to settings and return back to the game.
+     */
     public static void updateLastPosition(){
         connect();
         PreparedStatement ps;
@@ -104,6 +108,39 @@ public class DBConnection {
             ps.execute();
             System.out.println("New layout saved!");
         }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     Saves custom positions in database
+     */
+    public static void createNewSavedPosition(int gameType, String layoutName){
+        connect();
+        PreparedStatement ps;
+
+        String sql = "INSERT INTO BallConfiguration (layoutNumber, layoutName) VALUES (?,?)";
+        try{
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, gameType);
+            ps.setString(2, layoutName);
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            for(BallModel e: bc.ballModelArrayList()){
+                String sqlPos = "UPDATE BallConfiguration set (x"+e.getNumber()+")=?, (y"+e.getNumber()+")=? WHERE layoutName = ?";
+                ps = connection.prepareStatement(sqlPos);
+                ps.setFloat(1, e.getPositionX().floatValue());
+                ps.setFloat(2, e.getPositionY().floatValue());
+                ps.setString(3, layoutName);
+                ps.execute();
+                System.out.println("New layout saved!");
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
