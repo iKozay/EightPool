@@ -13,8 +13,8 @@ public class PoolCueView {
         cue = new Rectangle();
         cue.setHeight(10);
         cue.setWidth(400);
-        cue.setX(-100);
-        cue.setY(-100);
+        cue.setX(0);
+        cue.setY(0);
     }
 
     public Rectangle getCue() {

@@ -15,7 +15,7 @@ public class PoolCueController {
 
     PoolCueView poolCueView;
     PoolCueModel poolCueModel;
-    private static final int MAX_POWER=300;
+    private static final int MAX_POWER=100;
     private boolean enablePoolCueControl=false;
 
     public PoolCueController(PoolCueView poolCueView) {
@@ -77,15 +77,25 @@ public class PoolCueController {
                     draggedX = Math.abs(event.getX()-mouseXLock);
                     draggedY = Math.abs(event.getY()-mouseYLock);
                     draggedTotal = Math.sqrt(Math.pow(draggedX,2)+ Math.pow(draggedY,2));
-                    poolCueView.getCue().setLayoutX(draggedTotal*Math.cos(Math.toRadians(poolCueView.getPreviousAngle())));
-                    poolCueView.getCue().setLayoutY(draggedTotal*Math.sin(Math.toRadians(poolCueView.getPreviousAngle())));
+                    if(draggedTotal<=MAX_POWER) {
+                        poolCueView.getCue().setLayoutX(draggedTotal * Math.cos(Math.toRadians(poolCueView.getPreviousAngle())));
+                        poolCueView.getCue().setLayoutY(draggedTotal * Math.sin(Math.toRadians(poolCueView.getPreviousAngle())));
+                    }else{
+                        //poolCueView.getCue().setLayoutX(maxDisplacementX);
+                        //poolCueView.getCue().setLayoutY(maxDisplacementY);
+                    }
             }
         });
 
         scene.setOnMouseReleased(event -> {
             isPressed = false;
+            BallController.whiteBallModel.setVelocityX(new BigDecimal(-poolCueView.getCue().getLayoutX()/10));
+            BallController.whiteBallModel.setVelocityY(new BigDecimal(-poolCueView.getCue().getLayoutY()/10));
             poolCueView.getCue().setLayoutX(0);
             poolCueView.getCue().setLayoutY(0);
+            poolCueView.getCue().setX(0);
+            poolCueView.getCue().setY(0);
+            disablePoolCueControl();
         });
 
     }
