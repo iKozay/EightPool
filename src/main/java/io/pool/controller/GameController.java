@@ -55,7 +55,7 @@ public class GameController {
                         for (int i = 0; i < gView.getTableView().getHoles().size(); i++) {
                             if(tableController.checkInterBallsHoles(ballView, i)) {
                                 whiteBallIn(ballView);
-                                //eightBallIn(ballView);
+                                winnerPlayerSolo(ballView);
 //                                FadeTransition gettingInTheHole = new FadeTransition();
 //                                gettingInTheHole.setDuration(Duration.seconds(5));
 //                                gettingInTheHole.setNode(ballView.getBall());
@@ -112,7 +112,7 @@ public class GameController {
      * their respective method from BallController
      */
     public void resetGame() {
-        bModelIn.clear();
+        //bModelIn.clear();
         gameLoopTimer.stop();
         ballController.destroyViews(this.gameView);
         ballController.destroyModels();
@@ -135,12 +135,18 @@ public class GameController {
         }
     }
 
-    public void eightBallIn(BallView ballView){
+    public void eightBallInIllegal(BallView ballView){
         BallModel bModel = ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView));
         if(bModel.getNumber() == 8){
             System.out.println("You got the 8 ball in, You lose!");
-            ballController.destroyModels();
-            ballController.destroyViews(this.gameView);
+            resetGame();
+        }
+    }
+    public void eightBallInLegal(BallView ballView){
+        BallModel bModel = ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView));
+        if(bModel.getNumber() == 8){
+            System.out.println("You got the 8 ball in, You win!");
+            resetGame();
         }
     }
 
@@ -152,11 +158,13 @@ public class GameController {
             }
             if(BallController.getSolidBModelList().isEmpty()){
                 System.out.println("All in for Solid");
+
+                BallController.setAllIn(true);
                 break;
             }
         }
     }
-    public void allStripeBallsIn(){
+    public boolean allStripeBallsIn(){
         for(int i = 0; i < BallController.getStripeBModelList().size() ;i++){
             if(bModelIn.contains(BallController.getStripeBModelList().get(i))){
                 BallController.getStripeBModelList().remove(i);
@@ -164,9 +172,12 @@ public class GameController {
             }
             if(BallController.getStripeBModelList().isEmpty()){
                 System.out.println("All in for Stripe");
+
+                BallController.setAllIn(true);
                 break;
             }
         }
+        return BallController.allIn;
     }
 
     public void ballInHole(){
@@ -178,9 +189,11 @@ public class GameController {
         //System.out.println();
     }
 
-    public void winnerPlayer(){
-        if(bModelIn.contains(ballController.ballModelArrayList().get(7))){
-
+    public void winnerPlayerSolo(BallView ballView ){
+        if(BallController.getAllIn()){
+            eightBallInLegal(ballView);
+        }else{
+            eightBallInIllegal(ballView);
         }
 
     }

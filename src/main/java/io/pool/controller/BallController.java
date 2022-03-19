@@ -26,7 +26,7 @@ public class BallController {
     /**ArrayList that contains all the stripe/solid*/
     public static ArrayList<BallModel> stripeBModelList = new ArrayList<>();
     public static ArrayList<BallModel> solidBModelList = new ArrayList<>();
-
+    public static Boolean allIn = false;
     public static BallModel whiteBallModel;
     public static BallView whiteBallView;
     private int tableX = game.eightPoolTableX;
@@ -297,6 +297,14 @@ public class BallController {
             ballModelArrayList().remove(ballModel);
             ballViewArrayList().remove(bView1);
         }
+    }
+
+    public static Boolean getAllIn() {
+        return allIn;
+    }
+
+    public static void setAllIn(Boolean allIn) {
+        BallController.allIn = allIn;
     }
 
     public static BallModel getBallModelFromBallView(BallView bView){
