@@ -6,12 +6,14 @@ import io.pool.model.PhysicsModule;
 import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
+import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
@@ -29,8 +31,6 @@ public class BallController {
     public static Boolean allIn = false;
     public static BallModel whiteBallModel;
     public static BallView whiteBallView;
-    private int tableX = game.eightPoolTableX;
-    private int tableY = game.eightPoolTableY;
 
     double mouseAnchorX,mouseAnchorY;
 
@@ -176,55 +176,45 @@ public class BallController {
     private void detectCollisionWithTable(){
             for (BallModel bModel : bModelList) {
                 for (TableBorderModel line : TableBorderModel.tableBorder) {
-                    // TODO work on collision with table
-                    BigDecimal radius = new BigDecimal(BallModel.RADIUS);
-                    Shape intersect = Shape.intersect(line,bViewList.get(bModelList.indexOf(bModel)).getCircleFromSphere());
-
-                    if ((intersect.getBoundsInLocal().getWidth()!=-1)||(intersect.getBoundsInLocal().getHeight()!=-1)) {
-                        bModel.setVelocityX(bModel.getVelocityX().multiply(line.getReflectionXFactor()));
-                        bModel.setVelocityY(bModel.getVelocityY().multiply(line.getReflectionYFactor()));
-                        //tableModel.handleMomentum(bModel);
+                    if(bModel.isMoving) {
+                        Shape intersect = Shape.intersect(line, bViewList.get(bModelList.indexOf(bModel)).getCircleFromSphere());
+                        if ((intersect.getBoundsInLocal().getWidth() != -1) || (intersect.getBoundsInLocal().getHeight() != -1)) {
+                            correctOverlap(bModel);
+                            bModel.setVelocityX(bModel.getVelocityX().multiply(line.getReflectionXFactor()));
+                            bModel.setVelocityY(bModel.getVelocityY().multiply(line.getReflectionYFactor()));
+                        }
                     }
                 }
             }
+    }
+
+    private void correctOverlap(BallModel bModel){
+        BigDecimal vectorLength = (bModel.getVelocityX().pow(2).add(bModel.getVelocityY().pow(2))).sqrt(MathContext.DECIMAL32);
+        if(vectorLength.doubleValue()!=0) {
+            bModel.setPositionX(bModel.getPositionX().subtract(bModel.getVelocityX().divide(vectorLength, MathContext.DECIMAL32)));
+            bModel.setPositionY(bModel.getPositionY().subtract(bModel.getVelocityY().divide(vectorLength, MathContext.DECIMAL32)));
+        }
     }
     /**
      * Detects all the collisions between the balls
      * */
     private void detectCollisionWithOtherBalls(){
-        ArrayList<String> collisionChecked = new ArrayList<>();
-        BigDecimal distance;
-        boolean foundInArray=false;
-        for (BallModel ballA : bModelList) {
-            for (BallModel ballB : bModelList) {
-                if (!ballA.equals(ballB)) {
-                    if((ballA.isMoving)||(ballB.isMoving)){
-                        distance = ballA.distance(ballB);
-                        if(distance.compareTo(new BigDecimal(2*BallModel.RADIUS))<0){
-                            if(collisionChecked.size()==0){
-                                collisionChecked.add(ballA.getNumber() + "," + ballB.getNumber());
-                            }else {
-                                String collision = "";
-                                for (String id : collisionChecked) {
-                                    if (!(id.contains(String.valueOf(ballA.getNumber())) && id.contains(String.valueOf(ballB.getNumber())))) {
-                                        collision = ballA.getNumber() + "," + ballB.getNumber();
-                                    } else {
-                                        foundInArray = true;
-                                        break;
-                                    }
-                                }
-                                if(!collision.isEmpty()){
-                                    collisionChecked.add(collision);
-                                }
-                            }
-                            if(!foundInArray){
-
-                                ballA.handleMomentum(ballB, distance.doubleValue());
-                            }
-                            foundInArray=false;
-                        }
-                    }
-                }
+        BallModel ballA,ballB;
+        /**
+         * Suppose we have the following list: [1,2,3,4]
+         * We want to check just the following collisions:
+         *          (1,2) , (1,3) , (1,4) , (2,3) , (2,4) , (3,4)
+         * And we want to avoid checking same collision twice.
+         * That is done using the double loop where i=0 and j=i+1
+         * That will guaranty that we go over all the collisions without
+         * going on the same collision twice and without checking collision
+         * with the same ball.
+         */
+        for (int i=0; i<bModelList.size();i++) {
+            for (int j=i+1; j<bModelList.size();j++) {
+                ballA = bModelList.get(i);
+                ballB = bModelList.get(j);
+                ballA.handleMomentum(ballB);
             }
         }
     }
@@ -312,5 +302,13 @@ public class BallController {
     }
     public static BallView getBallViewFromBallModel(BallModel bModel){
         return bViewList.get(bModelList.indexOf(bModel));
+    }
+    public BallModel getBallModelFromNumber(int number){
+        for (BallModel bModel:bModelList) {
+            if(bModel.getNumber()==number){
+                return bModel;
+            }
+        }
+        return null;
     }
 }

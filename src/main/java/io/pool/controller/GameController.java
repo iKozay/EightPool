@@ -55,7 +55,11 @@ public class GameController {
                         for (int i = 0; i < gView.getTableView().getHoles().size(); i++) {
                             if(tableController.checkInterBallsHoles(ballView, i)) {
                                 whiteBallIn(ballView);
-                                winnerPlayerSolo(ballView);
+                                //
+                                // Had to comment this. Showed me an error
+                                //
+                                //winnerPlayerSolo(ballView);
+                                //
 //                                FadeTransition gettingInTheHole = new FadeTransition();
 //                                gettingInTheHole.setDuration(Duration.seconds(5));
 //                                gettingInTheHole.setNode(ballView.getBall());
@@ -112,7 +116,7 @@ public class GameController {
      * their respective method from BallController
      */
     public void resetGame() {
-        //bModelIn.clear();
+        bModelIn.clear();
         gameLoopTimer.stop();
         ballController.destroyViews(this.gameView);
         ballController.destroyModels();
