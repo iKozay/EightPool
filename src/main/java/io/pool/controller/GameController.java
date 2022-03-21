@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class GameController {
     /** Instance of GameView that contains all the Ball,Table and Pool Cue Views*/
@@ -23,9 +25,9 @@ public class GameController {
     /** Animation Timer that helps to update the View every frame */
     private GameLoopTimer gameLoopTimer;
 
-    private PlayerModel p1;
-
-    private PlayerModel p2;
+    private PlayerModel p1 = new PlayerModel("ABC");
+    private PlayerModel p2 = new PlayerModel("XYZ");
+    private PlayerModel currentPlayer;
 
     private ArrayList<BallModel> bModelIn = new ArrayList<>();
 
@@ -106,6 +108,7 @@ public class GameController {
      * @throws MalformedURLException if the path to the ball images is incorrect
      */
     public void startGame() throws MalformedURLException {
+        currentPlayer=p1;
         ballController.prepareGame(this.gameView);
         System.out.println("START");
         //ballController.testingBallController(this.gameView);
@@ -118,7 +121,7 @@ public class GameController {
      * their respective method from BallController
      */
     public void resetGame() {
-        //bModelIn.clear();
+        bModelIn.clear();
         gameLoopTimer.stop();
         ballController.destroyViews(this.gameView);
         ballController.destroyModels();
