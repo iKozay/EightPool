@@ -39,7 +39,7 @@ public class TableView {
 
     public TableView(Pane root) throws MalformedURLException {
 
-        BallModel.RADIUS = getTableWidth()/75;
+        BallModel.RADIUS = getTableWidth()/80;
 
         double layoutX = game.eightPoolTableX + 0.1*game.eightPoolTableX; // the XPosition in the general pane
         double layoutY = game.eightPoolTableY + 0.1*game.eightPoolTableY; // the YPosition in the general pane
@@ -266,31 +266,31 @@ public class TableView {
         //Width:    1280
         //TODO Add the rest of the lines for the rest of the table border lines
         
-        new TableBorderModel("upLeftLine",width/11.228, height/9.0667, width/2.16, height/9.0667,1,-1);
+        new TableBorderModel("upLeftLine",width/11.228, height/9.0667, width/2.16, height/9.0667,0.9,-0.9);
 
-        new TableBorderModel("upRightLine",width/1.9115, height/9, width/1.10919, height/9,1,-1);
+        new TableBorderModel("upRightLine",width/1.9115, height/9, width/1.10919, height/9,0.9,-0.9);
 
-        new TableBorderModel("downLeftLine",width/11.175561, height/1.13145, width/2.165, height/1.13145,1,-1);
+        new TableBorderModel("downLeftLine",width/11.175561, height/1.13145, width/2.165, height/1.13145,0.9,-0.9);
 
-        new TableBorderModel("downRightLine",width/1.9048, height/1.13145, width/1.10919, height/1.13145,1,-1);
+        new TableBorderModel("downRightLine",width/1.9048, height/1.13145, width/1.10919, height/1.13145,0.985,-0.9);
 
-        new TableBorderModel("centerLeftLine",width/16, height/5.9130, width/16, height/1.21429,-1,1);
+        new TableBorderModel("centerLeftLine",width/16, height/5.9130, width/16, height/1.21429,-0.9,0.9);
 
-        new TableBorderModel("centerRightLine",width/1.069, height/5.9130, width/1.069, height/1.21864,-1,1);
+        new TableBorderModel("centerRightLine",width/1.069, height/5.9130, width/1.069, height/1.21864,-0.9,0.9);
 
-        //TODO Fix reflection factor
-        new TableBorderModel("topLeftHoleA1",width/11.228,height/9.0667,width/14.062,height/12.9,1,1);
-        new TableBorderModel("topLeftHoleA2",width/16,height/5.9130,width/21.33333,height/7.15789,1,1);
-        new TableBorderModel("bottomLeftHoleB1",width/16.143,height/1.21429,width/22.9299,height/1.16587,1,1);
-        new TableBorderModel("bottomLeftHoleB2",width/11.175561,height/1.13145,width/14.221220,height/1.089777,1,1);
-        new TableBorderModel("bottomMiddleHoleC1",width/2.165,height/1.13145,width/2.128,height/1.09149,1,1);
-        new TableBorderModel("bottomMiddleHoleC2",width/1.9048,height/1.13145,width/1.935,height/1.09149,1,1);
-        new TableBorderModel("bottomRightHoleD1",width/1.109,height/1.13145,width/1.087,height/1.09149,1,1);
-        new TableBorderModel("bottomRightHoleD2",width/1.069,height/1.21864,width/1.047,height/1.16638,1,1);
-        new TableBorderModel("topRightHoleE1",width/1.069,height/5.9130,width/1.0518,height/7.15789,1,1);
-        new TableBorderModel("topRightHoleE2",width/1.10919,height/9,width/1.087,height/13.302,1,1);
-        new TableBorderModel("topMiddleHoleF1",width/1.9115,height/9,width/1.931,height/13.302,1,1);
-        new TableBorderModel("topMiddleHoleF2",width/2.16,height/9,width/2.130,height/13.302,1,1);
+        //TODO Review these reflection factors to verify their effectiveness
+        new TableBorderModel("topLeftHoleA1",width/11.228,height/9.0667,width/14.062,height/12.9,-0.9,-0.9);
+        new TableBorderModel("topLeftHoleA2",width/16,height/5.9130,width/21.33333,height/7.15789,0.9,0.9);
+        new TableBorderModel("bottomLeftHoleB1",width/16.143,height/1.21429,width/22.9299,height/1.16587,0.9,-0.9);
+        new TableBorderModel("bottomLeftHoleB2",width/11.175561,height/1.13145,width/14.221220,height/1.089777,-0.9,0.9);
+        new TableBorderModel("bottomMiddleHoleC1",width/2.165,height/1.13145,width/2.128,height/1.09149,0.9,0.9);
+        new TableBorderModel("bottomMiddleHoleC2",width/1.9048,height/1.13145,width/1.935,height/1.09149,-0.9,0.9);
+        new TableBorderModel("bottomRightHoleD1",width/1.109,height/1.13145,width/1.087,height/1.09149,0.9,0.9);
+        new TableBorderModel("bottomRightHoleD2",width/1.069,height/1.21864,width/1.047,height/1.16638,-0.9,-0.9);
+        new TableBorderModel("topRightHoleE1",width/1.069,height/5.9130,width/1.0518,height/7.15789,-0.9,0.9);
+        new TableBorderModel("topRightHoleE2",width/1.10919,height/9,width/1.087,height/13.302,0.9,-0.9);
+        new TableBorderModel("topMiddleHoleF1",width/1.9115,height/9,width/1.931,height/13.302,-0.9,-0.9);
+        new TableBorderModel("topMiddleHoleF2",width/2.16,height/9,width/2.130,height/13.302,0.9,-0.9);
 
 
 
