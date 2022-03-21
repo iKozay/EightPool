@@ -5,6 +5,7 @@ import io.pool.model.BallModel;
 import io.pool.model.PlayerModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
+import io.pool.model.GameModel;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -24,6 +25,9 @@ public class GameController {
     private PoolCueController poolCueController;
     /** Animation Timer that helps to update the View every frame */
     private GameLoopTimer gameLoopTimer;
+    /** GameModel that helps keep track of game status*/
+    private GameModel gameModel;
+    private PlayerModel playerModel;
 
     private PlayerModel p1 = new PlayerModel("ABC");
     private PlayerModel p2 = new PlayerModel("XYZ");
@@ -38,6 +42,8 @@ public class GameController {
      */
     public GameController(GameView gView) {
         /** Assign the GameView and Instantiate the Controllers */
+        gameModel = new GameModel();
+        playerModel = new PlayerModel();
         this.gameView = gView;
         tableController = new TableController(this.gameView.getTableView());
         ballController = new BallController();
@@ -86,7 +92,7 @@ public class GameController {
                         poolCueController.enablePoolCueControl();
                         gView.displayPoolCue(true);
                         if(!DBConnection.hasBeenCalled) {
-                            DBConnection.updateLastPosition();
+                            DBConnection.updateLastPosition(playerModel.getBallType(),playerModel.getBallType(), gameModel.getPlayerTurn());
                             DBConnection.hasBeenCalled = true;
                         }
                     }else{

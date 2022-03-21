@@ -10,13 +10,22 @@ public class PlayerModel {
      * 0 = Solid
      * 1 = Stripe
      */
-    private int ballType;
+    private int ballType =1;
+    private int numberOfWins;
+    private int numberOfLoss;
+    private int averageNumberOfShotsPerGame;
 
+    public PlayerModel(){
+        this.username = null;
+    }
 
     public PlayerModel(String username) {
         this.username = username;
     }
 
+
+
+//getters and setters
     public int getBallType() {
         return ballType;
     }
@@ -32,4 +41,20 @@ public class PlayerModel {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public ArrayList<BallModel> getBallNeededIn() {return ballNeededIn;}
+
+    public void setBallNeededIn(ArrayList<BallModel> ballNeededIn) {this.ballNeededIn = ballNeededIn;}
+
+    public int getNumberOfWins() {return numberOfWins;}
+
+    public void setNumberOfWins(int numberOfWins) {this.numberOfWins = numberOfWins;}
+
+    public int getNumberOfLoss() {return numberOfLoss;}
+
+    public void setNumberOfLoss(int numberOfLoss) {this.numberOfLoss = numberOfLoss;}
+
+    public int getAverageNumberOfShotsPerGame() {return averageNumberOfShotsPerGame;}
+
+    public void setAverageNumberOfShotsPerGame(int averageNumberOfShotsPerGame) {this.averageNumberOfShotsPerGame = averageNumberOfShotsPerGame;}
 }
