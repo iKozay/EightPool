@@ -1,5 +1,7 @@
 package io.pool.model;
 
+import io.pool.controller.BallController;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Random;
@@ -220,6 +222,9 @@ public class PhysicsModule {
             pm1.setPositionY(pm1.getPositionY().subtract(distanceY));
             pm2.setPositionX(pm2.getPositionX().add(distanceX));
             pm2.setPositionY(pm2.getPositionY().add(distanceY));
+
+            BallController.updateBallViewPosition((BallModel) pm1);
+            BallController.updateBallViewPosition((BallModel) pm2);
 
             unitTangentX = unitNormalY.negate();
             unitTangentY = unitNormalX;

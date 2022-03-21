@@ -28,14 +28,6 @@ public class PoolCueController {
         scene.setOnMouseMoved(event -> {
             if(enablePoolCueControl) {
                 if (!isPressed) {
-                    poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue());// + (BallModel.RADIUS));
-                    poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue());// - (poolCueView.getCue().getImage().getHeight() / 2));
-
-                    System.out.println(BallController.whiteBallModel.getPositionX().doubleValue()+" ; "+BallController.whiteBallModel.getPositionY().doubleValue());
-                    System.out.println(BallController.whiteBallView.getBall().getLayoutX()+" ; "+BallController.whiteBallView.getBall().getLayoutY());
-                    System.out.println(poolCueView.getCue().getX()+" ; "+poolCueView.getCue().getY());
-                    System.out.println(poolCueView.getCue().getLayoutX()+" ; "+poolCueView.getCue().getLayoutY());
-                    System.out.println("/////////////////////////////////////");
                     double deltaX = event.getX() - BallController.whiteBallModel.getPositionX().doubleValue();
                     double deltaY = event.getY() - BallController.whiteBallModel.getPositionY().doubleValue();
                     if (deltaX != 0) {
@@ -77,10 +69,8 @@ public class PoolCueController {
         });
         scene.setOnMouseDragged(event -> {
             if(enablePoolCueControl){
-                    draggedX = event.getX()-mouseXLock;
-                    draggedY = event.getY()-mouseYLock;
-                    if(draggedX<0) draggedX=0;
-                    if(draggedY<0) draggedY=0;
+                    draggedX = Math.abs(event.getX()-mouseXLock);
+                    draggedY = Math.abs(event.getY()-mouseYLock);
                     draggedTotal = Math.sqrt(Math.pow(draggedX,2)+ Math.pow(draggedY,2));
                     if(draggedTotal> MAX_DISTANCE) draggedTotal= MAX_DISTANCE;
                 /**
@@ -96,6 +86,8 @@ public class PoolCueController {
         scene.setOnMouseReleased(event -> {
             isPressed = false;
             if(poolCueView.getCue().getLayoutX()!=0&&poolCueView.getCue().getLayoutY()!=0) {
+                poolCueView.getCue().getTransforms().clear();
+                poolCueView.setPreviousAngle(0);
                 BallController.whiteBallModel.setVelocityX(new BigDecimal(-poolCueView.getCue().getLayoutX() / 10));
                 BallController.whiteBallModel.setVelocityY(new BigDecimal(-poolCueView.getCue().getLayoutY() / 10));
                 poolCueView.getCue().setLayoutX(0);
@@ -111,7 +103,8 @@ public class PoolCueController {
         scene.setOnMousePressed(null);
         scene.setOnMouseDragged(null);
         scene.setOnMouseReleased(null);
-
+        poolCueView.getCue().getTransforms().clear();
+        poolCueView.setPreviousAngle(0);
     }
 
     public void enablePoolCueControl() {

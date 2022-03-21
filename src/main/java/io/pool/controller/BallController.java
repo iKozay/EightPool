@@ -19,48 +19,55 @@ import java.util.ArrayList;
 
 public class BallController {
 
-    /**ArrayList that contains all the BallViews*/
+    /**
+     * ArrayList that contains all the BallViews
+     */
     public static ArrayList<BallView> bViewList = new ArrayList<>();
     public static ArrayList<BallView> stripeBViewList = new ArrayList<>();
     public static ArrayList<BallView> solidBViewList = new ArrayList<>();
-    /**ArrayList that contains all the BallModels*/
+    /**
+     * ArrayList that contains all the BallModels
+     */
     public static ArrayList<BallModel> bModelList = new ArrayList<>();
-    /**ArrayList that contains all the stripe/solid*/
+    /**
+     * ArrayList that contains all the stripe/solid
+     */
     public static ArrayList<BallModel> stripeBModelList = new ArrayList<>();
     public static ArrayList<BallModel> solidBModelList = new ArrayList<>();
     public static Boolean allIn = false;
     public static BallModel whiteBallModel;
     public static BallView whiteBallView;
 
-    double mouseAnchorX,mouseAnchorY;
+    double mouseAnchorX, mouseAnchorY;
 
     public BallController() {
     }
 
     /**
      * Prepares the game by creating the BallModels and the BallViews. Adds the BallViews to the pane
+     *
      * @param root Pane where the balls will be added
-     * @exception MalformedURLException Throws this exception if the path to the ball image is incorrect
-     * */
+     * @throws MalformedURLException Throws this exception if the path to the ball image is incorrect
+     */
     public void prepareGame(Pane root) throws MalformedURLException {
         BallModel bModel;
         BallView bView;
-        for (int i=1;i<=16;i++){
-            if(i==16){
+        for (int i = 1; i <= 16; i++) {
+            if (i == 16) {
                 bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/white.jpg").toURI().toURL().toExternalForm()));
                 whiteBallModel = bModel;
-            }else{
-                bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/ball"+i+".jpg").toURI().toURL().toExternalForm()));
+            } else {
+                bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/ball" + i + ".jpg").toURI().toURL().toExternalForm()));
             }
-            bModel.setPositionX(new BigDecimal(i*4*BallModel.RADIUS));
+            bModel.setPositionX(new BigDecimal(i * 3 * BallModel.RADIUS+200));
             bModel.setPositionY(new BigDecimal(300));
 
-            bView = new BallView(bModel.getImg(),BallModel.RADIUS);
-            if(i==16) {
+            bView = new BallView(bModel.getImg(), BallModel.RADIUS);
+            if (i == 16) {
                 whiteBallView = bView;
                 /**
                  * Getting the position of the mouse to set the new position of the white ball when dragged
-                */
+                 */
 
                 bView.getBall().setOnMousePressed(mouseEvent -> {
 
@@ -69,12 +76,12 @@ public class BallController {
                 });
 
                 /** Assigning new variables because it will show an error if we use the same variables
-                    that are outside the lambda
-                */
-                 BallModel finalBModel = bModel;
+                 that are outside the lambda
+                 */
+                BallModel finalBModel = bModel;
                 BallView finalBView = bView;
                 bView.getBall().setOnMouseDragged(mouseEvent -> {
-                    if(!finalBModel.isMoving) {
+                    if (!finalBModel.isMoving) {
                         BigDecimal newPositionX = new BigDecimal(mouseEvent.getSceneX() - mouseAnchorX);
                         BigDecimal newPositionY = new BigDecimal(mouseEvent.getSceneY() - mouseAnchorY);
                         finalBModel.setPositionX(newPositionX);
@@ -93,28 +100,28 @@ public class BallController {
             /**
              * Adding the BallView to the Pane
              */
-             root.getChildren().add(bView.getBall());
+            root.getChildren().add(bView.getBall());
         }
 
-        for(int i = 8;i<15;i++){
+        for (int i = 8; i < 15; i++) {
             stripeBModelList.add(bModelList.get(i));
             stripeBViewList.add(bViewList.get(i));
         }
-        for(int i = 0;i<7;i++){
+        for (int i = 0; i < 7; i++) {
             solidBModelList.add(bModelList.get(i));
             solidBViewList.add(bViewList.get(i));
         }
 
         for (int i = 0; i < 7; i++) {
-            System.out.println("Stripe: "+stripeBModelList.get(i).getNumber());
+            System.out.println("Stripe: " + stripeBModelList.get(i).getNumber());
             System.out.println("Solid " + solidBModelList.get(i).getNumber());
 
         }
 
-        System.out.println("Model "+ballModelArrayList().size());
-        System.out.println("Solid "+solidBModelList.size());
-        System.out.println("Stripe "+stripeBViewList.size());
-        System.out.println("View "+ballViewArrayList().size());
+        System.out.println("Model " + ballModelArrayList().size());
+        System.out.println("Solid " + solidBModelList.size());
+        System.out.println("Stripe " + stripeBViewList.size());
+        System.out.println("View " + ballViewArrayList().size());
         System.out.println("Nodes " + root.getChildren().size());
     }
 
@@ -145,17 +152,17 @@ public class BallController {
         bModel2.setVelocityY(PhysicsModule.ZERO);
         bModelList.add(bModel1);
         bModelList.add(bModel2);
-        BallView bView1 = new BallView(bModel1.getImg(),BallModel.RADIUS);
-        BallView bView2 = new BallView(bModel2.getImg(),BallModel.RADIUS);
+        BallView bView1 = new BallView(bModel1.getImg(), BallModel.RADIUS);
+        BallView bView2 = new BallView(bModel2.getImg(), BallModel.RADIUS);
         bViewList.add(bView1);
         bViewList.add(bView2);
-        root.getChildren().addAll(bView1.getBall(),bView2.getBall());
+        root.getChildren().addAll(bView1.getBall(), bView2.getBall());
     }
 
     /**
      * Detects all the collisions and updates the ball position
-     * */
-    public void detectCollision(){
+     */
+    public void detectCollision() {
         detectCollisionWithTable();
         detectCollisionWithOtherBalls();
         for (BallModel bModel : bModelList) {
@@ -172,34 +179,36 @@ public class BallController {
 
     /**
      * Detects any collision between a ball and the table
-     * */
-    private void detectCollisionWithTable(){
-            for (BallModel bModel : bModelList) {
+     */
+    private void detectCollisionWithTable() {
+        for (BallModel bModel : bModelList) {
+            if (bModel.isMoving) {
                 for (TableBorderModel line : TableBorderModel.tableBorder) {
-                    if(bModel.isMoving) {
-                        Shape intersect = Shape.intersect(line, bViewList.get(bModelList.indexOf(bModel)).getCircleFromSphere());
-                        if ((intersect.getBoundsInLocal().getWidth() != -1) || (intersect.getBoundsInLocal().getHeight() != -1)) {
-                            correctOverlap(bModel);
-                            bModel.setVelocityX(bModel.getVelocityX().multiply(line.getReflectionXFactor()));
-                            bModel.setVelocityY(bModel.getVelocityY().multiply(line.getReflectionYFactor()));
-                        }
+                    Shape intersect = Shape.intersect(line, bViewList.get(bModelList.indexOf(bModel)).getCircleFromSphere());
+                    if ((intersect.getBoundsInLocal().getWidth() != -1) || (intersect.getBoundsInLocal().getHeight() != -1)) {
+                        correctOverlap(bModel);
+                        bModel.setVelocityX(bModel.getVelocityX().multiply(line.getReflectionXFactor()));
+                        bModel.setVelocityY(bModel.getVelocityY().multiply(line.getReflectionYFactor()));
                     }
                 }
             }
+        }
     }
 
-    private void correctOverlap(BallModel bModel){
+    private void correctOverlap(BallModel bModel) {
         BigDecimal vectorLength = (bModel.getVelocityX().pow(2).add(bModel.getVelocityY().pow(2))).sqrt(MathContext.DECIMAL32);
-        if(vectorLength.doubleValue()!=0) {
+        if (vectorLength.doubleValue() != 0) {
             bModel.setPositionX(bModel.getPositionX().subtract(bModel.getVelocityX().divide(vectorLength, MathContext.DECIMAL32)));
             bModel.setPositionY(bModel.getPositionY().subtract(bModel.getVelocityY().divide(vectorLength, MathContext.DECIMAL32)));
         }
+        updateBallViewPosition(bModel);
     }
+
     /**
      * Detects all the collisions between the balls
-     * */
-    private void detectCollisionWithOtherBalls(){
-        BallModel ballA,ballB;
+     */
+    private void detectCollisionWithOtherBalls() {
+        BallModel ballA, ballB;
         /**
          * Suppose we have the following list: [1,2,3,4]
          * We want to check just the following collisions:
@@ -210,8 +219,8 @@ public class BallController {
          * going on the same collision twice and without checking collision
          * with the same ball.
          */
-        for (int i=0; i<bModelList.size();i++) {
-            for (int j=i+1; j<bModelList.size();j++) {
+        for (int i = 0; i < bModelList.size(); i++) {
+            for (int j = i + 1; j < bModelList.size(); j++) {
                 ballA = bModelList.get(i);
                 ballB = bModelList.get(j);
                 ballA.handleMomentum(ballB);
@@ -221,6 +230,7 @@ public class BallController {
 
     /**
      * Gets all the BallViews
+     *
      * @return the ArrayList that contains all the BallViews
      */
     public ArrayList<BallView> ballViewArrayList() {
@@ -229,9 +239,12 @@ public class BallController {
 
     /**
      * Gets all the BallModels
+     *
      * @return the ArrayList that contains all the BallModels
      */
-    public ArrayList<BallModel> ballModelArrayList() {return bModelList; }
+    public ArrayList<BallModel> ballModelArrayList() {
+        return bModelList;
+    }
 
     public static ArrayList<BallView> getStripeBViewList() {
         return stripeBViewList;
@@ -251,14 +264,15 @@ public class BallController {
 
     /**
      * Removes all the BallViews from the Pane then Clears the BallView ArrayList
+     *
      * @param gameView The Pane that contains the BallViews
      */
     public void destroyViews(GameView gameView) {
-        for(BallView bView : bViewList){
+        for (BallView bView : bViewList) {
             gameView.getChildren().remove(bView.getBall());
         }
         bViewList.clear();
-        System.out.println("Cleared All BallViews: "+bViewList.size());
+        System.out.println("Cleared All BallViews: " + bViewList.size());
     }
 
     /**
@@ -266,20 +280,21 @@ public class BallController {
      */
     public void destroyModels() {
         bModelList.clear();
-        System.out.println("Cleared All BallModels: "+bModelList.size());
+        System.out.println("Cleared All BallModels: " + bModelList.size());
     }
 
     public ArrayList<Double> xballPos = new ArrayList<>();
     public ArrayList<Double> yballPos = new ArrayList<>();
-    public void addBallsPosition(){
-        for(BallView bv: bViewList){
+
+    public void addBallsPosition() {
+        for (BallView bv : bViewList) {
             xballPos.add(bv.getBall().getLayoutX());
             yballPos.add(bv.getBall().getLayoutY());
         }
     }
 
-    public void ballInHole(BallModel ballModel,GameView gameView) {
-        if(ballModelArrayList().contains(ballModel)){
+    public void ballInHole(BallModel ballModel, GameView gameView) {
+        if (ballModelArrayList().contains(ballModel)) {
             ballModel.setVelocityX(PhysicsModule.ZERO);
             ballModel.setVelocityY(PhysicsModule.ZERO);
             BallView bView1 = getBallViewFromBallModel(ballModel);
@@ -297,15 +312,17 @@ public class BallController {
         BallController.allIn = allIn;
     }
 
-    public static BallModel getBallModelFromBallView(BallView bView){
+    public static BallModel getBallModelFromBallView(BallView bView) {
         return bModelList.get(bViewList.indexOf(bView));
     }
-    public static BallView getBallViewFromBallModel(BallModel bModel){
+
+    public static BallView getBallViewFromBallModel(BallModel bModel) {
         return bViewList.get(bModelList.indexOf(bModel));
     }
-    public BallModel getBallModelFromNumber(int number){
-        for (BallModel bModel:bModelList) {
-            if(bModel.getNumber()==number){
+
+    public BallModel getBallModelFromNumber(int number) {
+        for (BallModel bModel : bModelList) {
+            if (bModel.getNumber() == number) {
                 return bModel;
             }
         }

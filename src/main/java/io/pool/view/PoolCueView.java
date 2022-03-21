@@ -20,8 +20,8 @@ public class PoolCueView {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        cue.setX(-100);
-        cue.setY(-100);
+        cue.setX(0);
+        cue.setY(0);
     }
 
     public ImageView getCue() {
