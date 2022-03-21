@@ -58,7 +58,6 @@ public class GameController {
                                 //
                                 // Had to comment this. Showed me an error
                                 //
-                                //winnerPlayerSolo(ballView);
                                 //
 //                                FadeTransition gettingInTheHole = new FadeTransition();
 //                                gettingInTheHole.setDuration(Duration.seconds(5));
@@ -72,6 +71,7 @@ public class GameController {
                             }
                         }
                     }
+                    winnerPlayerSolo();
                     /**Check if all balls are not moving to display the poolCue and update the database*/
                     boolean moving=false;
                     for(BallModel bModel : ballController.ballModelArrayList()){
@@ -118,7 +118,7 @@ public class GameController {
      * their respective method from BallController
      */
     public void resetGame() {
-        bModelIn.clear();
+        //bModelIn.clear();
         gameLoopTimer.stop();
         ballController.destroyViews(this.gameView);
         ballController.destroyModels();
@@ -141,16 +141,14 @@ public class GameController {
         }
     }
 
-    public void eightBallInIllegal(BallView ballView){
-        BallModel bModel = ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView));
-        if(bModel.getNumber() == 8){
+    public void eightBallInIllegal(){
+        if(bModelIn.contains(BallController.eightBallModel)) {
             System.out.println("You got the 8 ball in, You lose!");
             resetGame();
         }
     }
-    public void eightBallInLegal(BallView ballView){
-        BallModel bModel = ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView));
-        if(bModel.getNumber() == 8){
+    public void eightBallInLegal(){
+        if(bModelIn.contains(BallController.eightBallModel)) {
             System.out.println("You got the 8 ball in, You win!");
             resetGame();
         }
@@ -165,7 +163,7 @@ public class GameController {
             if(BallController.getSolidBModelList().isEmpty()){
                 System.out.println("All in for Solid");
 
-                BallController.setAllIn(true);
+                BallController.setAllInSolid(true);
                 break;
             }
         }
@@ -179,11 +177,11 @@ public class GameController {
             if(BallController.getStripeBModelList().isEmpty()){
                 System.out.println("All in for Stripe");
 
-                BallController.setAllIn(true);
+                BallController.setAllInStripe(true);
                 break;
             }
         }
-        return BallController.allIn;
+        return BallController.allInStripe;
     }
 
     public void ballInHole(){
@@ -195,11 +193,11 @@ public class GameController {
         //System.out.println();
     }
 
-    public void winnerPlayerSolo(BallView ballView ){
-        if(BallController.getAllIn()){
-            eightBallInLegal(ballView);
+    public void winnerPlayerSolo(){
+        if(BallController.getAllInSolid() && BallController.getAllInStripe()){
+            eightBallInLegal();
         }else{
-            eightBallInIllegal(ballView);
+            eightBallInIllegal();
         }
 
     }
