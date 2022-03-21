@@ -181,14 +181,19 @@ public class BallController {
      * Detects any collision between a ball and the table
      */
     private void detectCollisionWithTable() {
+        boolean collisionChecked;
         for (BallModel bModel : bModelList) {
+            collisionChecked=false;
             if (bModel.isMoving) {
                 for (TableBorderModel line : TableBorderModel.tableBorder) {
-                    Shape intersect = Shape.intersect(line, bViewList.get(bModelList.indexOf(bModel)).getCircleFromSphere());
-                    if ((intersect.getBoundsInLocal().getWidth() != -1) || (intersect.getBoundsInLocal().getHeight() != -1)) {
-                        correctOverlap(bModel);
-                        bModel.setVelocityX(bModel.getVelocityX().multiply(line.getReflectionXFactor()));
-                        bModel.setVelocityY(bModel.getVelocityY().multiply(line.getReflectionYFactor()));
+                    if(!collisionChecked) {
+                        Shape intersect = Shape.intersect(line, bViewList.get(bModelList.indexOf(bModel)).getCircleFromSphere());
+                        if ((intersect.getBoundsInLocal().getWidth() != -1) || (intersect.getBoundsInLocal().getHeight() != -1)) {
+                            correctOverlap(bModel);
+                            bModel.setVelocityX(bModel.getVelocityX().multiply(line.getReflectionXFactor()));
+                            bModel.setVelocityY(bModel.getVelocityY().multiply(line.getReflectionYFactor()));
+                            collisionChecked = true;
+                        }
                     }
                 }
             }

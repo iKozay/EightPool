@@ -223,8 +223,8 @@ public class PhysicsModule {
             pm2.setPositionX(pm2.getPositionX().add(distanceX));
             pm2.setPositionY(pm2.getPositionY().add(distanceY));
 
-            BallController.updateBallViewPosition((BallModel) pm1);
-            BallController.updateBallViewPosition((BallModel) pm2);
+            //BallController.updateBallViewPosition((BallModel) pm1);
+            //BallController.updateBallViewPosition((BallModel) pm2);
 
             unitTangentX = unitNormalY.negate();
             unitTangentY = unitNormalX;

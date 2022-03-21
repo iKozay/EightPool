@@ -279,18 +279,18 @@ public class TableView {
         new TableBorderModel("centerRightLine",width/1.069, height/5.9130, width/1.069, height/1.21864,-0.9,0.9);
 
         //TODO Review these reflection factors to verify their effectiveness
-        new TableBorderModel("topLeftHoleA1",width/11.228,height/9.0667,width/14.062,height/12.9,0.95,-0.95);
-        new TableBorderModel("topLeftHoleA2",width/16,height/5.9130,width/21.33333,height/7.15789,0.95,-0.95);
-        new TableBorderModel("bottomLeftHoleB1",width/16.143,height/1.21429,width/22.9299,height/1.16587,-0.95,0.95);
-        new TableBorderModel("bottomLeftHoleB2",width/11.175561,height/1.13145,width/14.221220,height/1.089777,-0.95,0.95);
-        new TableBorderModel("bottomMiddleHoleC1",width/2.165,height/1.13145,width/2.128,height/1.09149,-0.95,0.95);
-        new TableBorderModel("bottomMiddleHoleC2",width/1.9048,height/1.13145,width/1.935,height/1.09149,-0.95,0.95);
-        new TableBorderModel("bottomRightHoleD1",width/1.109,height/1.13145,width/1.087,height/1.09149,-0.95,0.95);
-        new TableBorderModel("bottomRightHoleD2",width/1.069,height/1.21864,width/1.047,height/1.16638,-0.95,0.95);
-        new TableBorderModel("topRightHoleE1",width/1.069,height/5.9130,width/1.0518,height/7.15789,0.95,-0.95);
-        new TableBorderModel("topRightHoleE2",width/1.10919,height/9,width/1.087,height/13.302,0.95,-0.95);
-        new TableBorderModel("topMiddleHoleF1",width/1.9115,height/9,width/1.931,height/13.302,0.95,-0.95);
-        new TableBorderModel("topMiddleHoleF2",width/2.16,height/9,width/2.130,height/13.302,0.95,-0.95);
+        new TableBorderModel("topLeftHoleA1",width/11.228,height/9.0667,width/14.062,height/12.9,-0.9,-0.9);
+        new TableBorderModel("topLeftHoleA2",width/16,height/5.9130,width/21.33333,height/7.15789,0.9,0.9);
+        new TableBorderModel("bottomLeftHoleB1",width/16.143,height/1.21429,width/22.9299,height/1.16587,0.9,-0.9);
+        new TableBorderModel("bottomLeftHoleB2",width/11.175561,height/1.13145,width/14.221220,height/1.089777,-0.9,0.9);
+        new TableBorderModel("bottomMiddleHoleC1",width/2.165,height/1.13145,width/2.128,height/1.09149,0.9,0.9);
+        new TableBorderModel("bottomMiddleHoleC2",width/1.9048,height/1.13145,width/1.935,height/1.09149,-0.9,0.9);
+        new TableBorderModel("bottomRightHoleD1",width/1.109,height/1.13145,width/1.087,height/1.09149,0.9,0.9);
+        new TableBorderModel("bottomRightHoleD2",width/1.069,height/1.21864,width/1.047,height/1.16638,-0.9,-0.9);
+        new TableBorderModel("topRightHoleE1",width/1.069,height/5.9130,width/1.0518,height/7.15789,-0.9,0.9);
+        new TableBorderModel("topRightHoleE2",width/1.10919,height/9,width/1.087,height/13.302,0.9,-0.9);
+        new TableBorderModel("topMiddleHoleF1",width/1.9115,height/9,width/1.931,height/13.302,-0.9,-0.9);
+        new TableBorderModel("topMiddleHoleF2",width/2.16,height/9,width/2.130,height/13.302,0.9,-0.9);
 
 
 
