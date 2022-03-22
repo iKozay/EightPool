@@ -22,8 +22,8 @@ public class PhysicsModule {
     /**
      * Friction coefficient for ball-table rolling
      */
-    private static final double ROLLING_FRICTION_COEFFICIENT = 0.02;
-    private static final BigDecimal KINETIC_ENERGY_LOSS_RATIO = new BigDecimal(0.85);
+    private static final double ROLLING_FRICTION_COEFFICIENT = 0.015;
+    private static final BigDecimal KINETIC_ENERGY_LOSS_RATIO= new BigDecimal(0.95);
 
 
     /**
@@ -63,7 +63,6 @@ public class PhysicsModule {
 
     /**
      * Constructor that defines the position and sets the velocity to zero
-     *
      * @param positionX Position X of the object
      * @param positionY Position X of the object
      */
