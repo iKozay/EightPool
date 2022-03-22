@@ -24,16 +24,20 @@ public class GameController {
     /** Pool Cue Controller */
     private PoolCueController poolCueController;
     /** Animation Timer that helps to update the View every frame */
-    private GameLoopTimer gameLoopTimer;
+    public static GameLoopTimer gameLoopTimer;
     /** GameModel that helps keep track of game status*/
     private GameModel gameModel;
     private PlayerModel playerModel;
 
-    private PlayerModel p1 = new PlayerModel("ABC");
-    private PlayerModel p2 = new PlayerModel("XYZ");
+    private PlayerModel p1=null;
+    private PlayerModel p2=null;
     private PlayerModel currentPlayer;
+    public static boolean foul=false;
+    private boolean firstPlay=true,setBallType=false;
+    public static boolean waitingForInput=true;
 
     private ArrayList<BallModel> bModelIn = new ArrayList<>();
+    private ArrayList<BallModel> bModelInEachTurn = new ArrayList<>();
 
 
     /**
@@ -60,8 +64,7 @@ public class GameController {
                     ballController.detectCollision();
                     /** Check if ball gets inside any of the holes */
                     for (BallView ballView : ballController.ballViewArrayList()) {
-                        for (int i = 0; i < gView.getTableView().getHoles().size(); i++) {
-                            if(tableController.checkInterBallsHoles(ballView, i)) {
+                            if(tableController.checkInterBallsHoles(ballView)) {
                                 whiteBallIn(ballView);
                                 //
                                 // Had to comment this. Showed me an error
@@ -77,9 +80,7 @@ public class GameController {
 //                                });
 //                                gettingInTheHole.play();
                             }
-                        }
                     }
-                    winnerPlayerSolo();
                     /**Check if all balls are not moving to display the poolCue and update the database*/
                     boolean moving=false;
                     for(BallModel bModel : ballController.ballModelArrayList()){
@@ -87,6 +88,7 @@ public class GameController {
                         if(moving) break;
                     }
                     if(!moving){ /**methods when all balls have stopped moving*/
+                        waitingForInput=true;
                         poolCueController.poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue() + (BallModel.RADIUS));
                         poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (poolCueController.poolCueView.getCue().getImage().getHeight() / 2));
                         poolCueController.enablePoolCueControl();
@@ -98,10 +100,10 @@ public class GameController {
                     }else{
                         gView.displayPoolCue(false);
                     }
+                    if(!waitingForInput) {
+                        turns();
+                    }
                     ballInHole();
-                    allSolidBallsIn();
-                    allStripeBallsIn();
-
                 }
             }
         };
@@ -113,14 +115,32 @@ public class GameController {
      * Then starts the gameLoopTimer
      * @throws MalformedURLException if the path to the ball images is incorrect
      */
-    public void startGame() throws MalformedURLException {
-        currentPlayer=p1;
+    public void startGame(int gameType) throws MalformedURLException {
         ballController.prepareGame(this.gameView);
+
+        if(gameType==0){
+            // SOLO
+            p1 = new PlayerModel("ABC");
+            p1.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
+            p1.getBallNeededIn().remove(BallController.eightBallModel);
+            p1.getBallNeededIn().remove(BallController.whiteBallModel);
+        }else if(gameType==1) {
+            // Instead get the selected player from the combobox
+            p1 = new PlayerModel("ABC");
+            p2 = new PlayerModel("XYZ");
+            p1.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
+            p2.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
+            p1.getBallNeededIn().remove(BallController.eightBallModel);
+            p1.getBallNeededIn().remove(BallController.whiteBallModel);
+            p2.getBallNeededIn().remove(BallController.eightBallModel);
+            p2.getBallNeededIn().remove(BallController.whiteBallModel);
+        }
+        currentPlayer=p1;
+
         System.out.println("START");
         //ballController.testingBallController(this.gameView);
         gameLoopTimer.start();
     }
-
     /**
      * Stops the gameLoopTimer
      * Destroys all the instances of BallModels and BallViews by calling
@@ -134,19 +154,83 @@ public class GameController {
         System.out.println("Reset");
     }
 
-    public void turns(PlayerModel p1){
-        System.out.println(p1.getUsername() + "," + "your turn!");
+    public void turns(){
+        allSolidBallsIn();
+        allStripeBallsIn();
+
+        if(p2==null) {
+            winnerPlayerSolo();
+            return;
+        }
+
+        if(bModelInEachTurn.isEmpty()){
+            setCurrentPlayer();
+            if(foul){
+                ballController.makeDraggable();
+            }
+        }else{
+            if(foul){
+                setCurrentPlayer();
+                ballController.makeDraggable();
+            }else{
+                firstPlay = false;
+            }
+        }
+
+        if(!firstPlay && !setBallType){
+            for(int i = 0;i<BallController.getSolidBModelList().size();i++){
+                if(bModelInEachTurn.contains(BallController.getSolidBModelList().get(i))){
+                    currentPlayer.getBallNeededIn().removeAll(bModelInEachTurn);
+                    currentPlayer.getBallNeededIn().removeAll(BallController.stripeBModelList);
+
+                    getNextPlayer().getBallNeededIn().removeAll(bModelInEachTurn);
+                    getNextPlayer().getBallNeededIn().removeAll(BallController.solidBModelList);
+
+                    setBallType = true;
+                    System.out.println(currentPlayer.getUsername() + ": solid");
+                    System.out.println(getNextPlayer().getUsername() + ": stripe");
+                }
+            }
+            for(int i = 0;i<BallController.getStripeBModelList().size();i++){
+                if(bModelInEachTurn.contains(BallController.getStripeBModelList().get(i))){
+                    getNextPlayer().getBallNeededIn().removeAll(bModelInEachTurn);
+                    getNextPlayer().getBallNeededIn().removeAll(BallController.stripeBModelList);
+
+                    currentPlayer.getBallNeededIn().removeAll(bModelInEachTurn);
+                    currentPlayer.getBallNeededIn().removeAll(BallController.solidBModelList);
+                    setBallType = true;
+                    System.out.println(currentPlayer.getUsername() + ": stripe");
+                    System.out.println(getNextPlayer().getUsername() + ": solid");
+                }
+            }
+        }
+
+        bModelInEachTurn.clear();
+        System.out.println(currentPlayer.getUsername() + "," + "your turn!");
+        waitingForInput=true;
     }
 
+
+    private void setCurrentPlayer(){
+        currentPlayer = getNextPlayer();
+    }
+    private PlayerModel getNextPlayer(){
+        if(currentPlayer.equals(p1)){
+            return p2;
+        }
+        return p1;
+    }
     public void whiteBallIn(BallView ballView){
         BallModel bModel = ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView));
         if(bModel.getNumber()==16){
+            this.foul = true;
             bModel.setPositionX(new BigDecimal(tableController.getTableView().getFullTable().getWidth()/2));
             bModel.setPositionY(new BigDecimal(tableController.getTableView().getFullTable().getHeight()/2));
             bModel.setVelocityX(new BigDecimal(0.1));
             bModel.setVelocityY(new BigDecimal(0.1));
         }else{
             bModelIn.add(bModel);
+            bModelInEachTurn.add(bModel);
         }
     }
 
@@ -195,11 +279,8 @@ public class GameController {
 
     public void ballInHole(){
         for (BallModel b:bModelIn) {
-        //     System.out.println(b.getNumber());
             ballController.ballInHole(b, gameView);
-
         }
-        //System.out.println();
     }
 
     public void winnerPlayerSolo(){
@@ -236,5 +317,4 @@ public class GameController {
     public PoolCueController getPoolCueController() {
         return poolCueController;
     }
-
 }

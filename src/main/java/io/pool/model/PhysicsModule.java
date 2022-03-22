@@ -191,7 +191,7 @@ public class PhysicsModule {
      * @param module Second object that extends PhysicsModule
      * @see <a href="https://vobarian.com/collisions/2dcollisions2.pdf">2-Dimensional Elastic Collisions without Trigonometry</a>
      */
-    public void handleMomentum(PhysicsModule module) {
+    public boolean handleMomentum(PhysicsModule module) {
         /**
          * It is the ball hitting another ball
          * pm1 is the first ball
@@ -210,6 +210,7 @@ public class PhysicsModule {
         unitNormalX = normalXComponent.divide(distance, MathContext.DECIMAL32);
         unitNormalY = normalYComponent.divide(distance, MathContext.DECIMAL32);
         if (distance.doubleValue() < (2 * BallModel.RADIUS)) {
+
             /**
              * Find the minimum distance X and Y to prevent overlapping
              */
@@ -277,7 +278,9 @@ public class PhysicsModule {
             pm1.setVelocityY(finalBall1Y.multiply(KINETIC_ENERGY_LOSS_RATIO));
             pm2.setVelocityX(finalBall2X.multiply(KINETIC_ENERGY_LOSS_RATIO));
             pm2.setVelocityY(finalBall2Y.multiply(KINETIC_ENERGY_LOSS_RATIO));
+            return true;
         }
+        return false;
     }
 
 

@@ -11,6 +11,7 @@ public class BallView {
      * The sphere that represents the BallModel
      * */
     private Sphere ball;
+    private Circle ballCircle;
     /**
      * Main constructor of BallView
      * @param img The image that will be applied on the sphere
@@ -23,6 +24,7 @@ public class BallView {
         material.setSpecularColor(Color.WHITE);
         material.setSpecularPower(100);
         ball.setMaterial(material);
+        ballCircle = new Circle(ball.getRadius());
     }
 
     /**
@@ -41,6 +43,8 @@ public class BallView {
      * @return The sphere
      * */
     public Circle getCircleFromSphere() {
-        return new Circle(ball.getLayoutX(),ball.getLayoutY(),ball.getRadius());
+        ballCircle.setCenterX(ball.getLayoutX());
+        ballCircle.setCenterY(ball.getLayoutY());
+        return ballCircle;
     }
 }

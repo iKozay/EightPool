@@ -40,6 +40,7 @@ public class BallController {
     public static BallView whiteBallView;
     public static BallModel eightBallModel;
     public static BallView eightBallView;
+    private boolean draggable=false;
 
     double mouseAnchorX, mouseAnchorY;
 
@@ -95,7 +96,7 @@ public class BallController {
                 BallModel finalBModel = bModel;
                 BallView finalBView = bView;
                 bView.getBall().setOnMouseDragged(mouseEvent -> {
-                    if (!finalBModel.isMoving) {
+                    if (draggable) {
                         BigDecimal newPositionX = new BigDecimal(mouseEvent.getSceneX() - mouseAnchorX);
                         BigDecimal newPositionY = new BigDecimal(mouseEvent.getSceneY() - mouseAnchorY);
                         finalBModel.setPositionX(newPositionX);
@@ -122,31 +123,11 @@ public class BallController {
         bViewList.addAll(solidBViewList);
         bViewList.add(whiteBallView);
         bViewList.add(eightBallView);
-//        for (int i = 0; i < 7; i++) {
-//            System.out.println("Stripe: " + stripeBModelList.get(i).getNumber());
-//            System.out.println("Solid " + solidBModelList.get(i).getNumber());
-//        }
-//
-//        System.out.println("Model " + ballModelArrayList().size());
-//        System.out.println("Solid " + solidBModelList.size());
-//        System.out.println("Stripe " + stripeBViewList.size());
-//        System.out.println("View " + ballViewArrayList().size());
-//        System.out.println("Nodes " + root.getChildren().size());
     }
 
-//    public void makeWhiteBallDraggable(){
-//        whiteBallView.getBall().setOnMousePressed(event -> {
-//            double xPosMouse = event.getX();
-//            double yPosMouse = event.getY();
-//            double xPosSphere = whiteBallView.getBall().getLayoutX();
-//            double yPosSphere = whiteBallView.getBall().getLayoutY();
-//            System.out.println("xPos Mouse: " + xPosMouse + "\n" + "yPos Mouse: " + yPosMouse + "\n" + "xPos Sphere: " + xPosSphere + "\n"  + "yPos Sphere: " + yPosSphere + "\n" );
-//
-//            whiteBallView.getBall().setTranslateX(xPosSphere+xPosMouse);
-//            whiteBallView.getBall().setTranslateY(yPosSphere+yPosMouse);
-//
-//        });
-//    }
+    public void makeDraggable(){
+        draggable=!draggable;
+    }
 
     public void testingBallController(Pane root) throws MalformedURLException {
         BallModel bModel1 = new BallModel(1, new Image(new File("src/main/resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm()));
@@ -237,7 +218,12 @@ public class BallController {
             for (int j = i + 1; j < bModelList.size(); j++) {
                 ballA = bModelList.get(i);
                 ballB = bModelList.get(j);
-                ballA.handleMomentum(ballB);
+
+                if(ballA.handleMomentum(ballB)){
+                    if((ballA.equals(whiteBallModel)||ballB.equals(whiteBallModel))&&(ballA.equals(eightBallModel)||ballB.equals(eightBallModel))){
+                        GameController.foul=true;
+                    }
+                }
             }
         }
     }

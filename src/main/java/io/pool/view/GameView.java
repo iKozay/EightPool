@@ -51,6 +51,7 @@ public class GameView extends Pane {
         return cueView;
     }
     public void displayPoolCue(boolean visibility){
+        this.cueView.getCue().toFront();
         this.cueView.getCue().setVisible(visibility);
     }
 }
