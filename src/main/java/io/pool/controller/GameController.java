@@ -5,11 +5,14 @@ import io.pool.model.BallModel;
 import io.pool.model.PlayerModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
+import io.pool.model.GameModel;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class GameController {
     /** Instance of GameView that contains all the Ball,Table and Pool Cue Views*/
@@ -22,10 +25,13 @@ public class GameController {
     private PoolCueController poolCueController;
     /** Animation Timer that helps to update the View every frame */
     private GameLoopTimer gameLoopTimer;
+    /** GameModel that helps keep track of game status*/
+    private GameModel gameModel;
+    private PlayerModel playerModel;
 
-    private PlayerModel p1;
-
-    private PlayerModel p2;
+    private PlayerModel p1 = new PlayerModel("ABC");
+    private PlayerModel p2 = new PlayerModel("XYZ");
+    private PlayerModel currentPlayer;
 
     private ArrayList<BallModel> bModelIn = new ArrayList<>();
 
@@ -36,6 +42,8 @@ public class GameController {
      */
     public GameController(GameView gView) {
         /** Assign the GameView and Instantiate the Controllers */
+        gameModel = new GameModel();
+        playerModel = new PlayerModel();
         this.gameView = gView;
         tableController = new TableController(this.gameView.getTableView());
         ballController = new BallController();
@@ -58,7 +66,6 @@ public class GameController {
                                 //
                                 // Had to comment this. Showed me an error
                                 //
-                                //winnerPlayerSolo(ballView);
                                 //
 //                                FadeTransition gettingInTheHole = new FadeTransition();
 //                                gettingInTheHole.setDuration(Duration.seconds(5));
@@ -72,6 +79,7 @@ public class GameController {
                             }
                         }
                     }
+                    winnerPlayerSolo();
                     /**Check if all balls are not moving to display the poolCue and update the database*/
                     boolean moving=false;
                     for(BallModel bModel : ballController.ballModelArrayList()){
@@ -84,7 +92,7 @@ public class GameController {
                         poolCueController.enablePoolCueControl();
                         gView.displayPoolCue(true);
                         if(!DBConnection.hasBeenCalled) {
-                            DBConnection.updateLastPosition();
+                            DBConnection.updateLastPosition(playerModel.getBallType(),playerModel.getBallType(), gameModel.getPlayerTurn());
                             DBConnection.hasBeenCalled = true;
                         }
                     }else{
@@ -106,6 +114,7 @@ public class GameController {
      * @throws MalformedURLException if the path to the ball images is incorrect
      */
     public void startGame() throws MalformedURLException {
+        currentPlayer=p1;
         ballController.prepareGame(this.gameView);
         System.out.println("START");
         //ballController.testingBallController(this.gameView);
@@ -141,16 +150,14 @@ public class GameController {
         }
     }
 
-    public void eightBallInIllegal(BallView ballView){
-        BallModel bModel = ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView));
-        if(bModel.getNumber() == 8){
+    public void eightBallInIllegal(){
+        if(bModelIn.contains(BallController.eightBallModel)) {
             System.out.println("You got the 8 ball in, You lose!");
             resetGame();
         }
     }
-    public void eightBallInLegal(BallView ballView){
-        BallModel bModel = ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView));
-        if(bModel.getNumber() == 8){
+    public void eightBallInLegal(){
+        if(bModelIn.contains(BallController.eightBallModel)) {
             System.out.println("You got the 8 ball in, You win!");
             resetGame();
         }
@@ -165,7 +172,7 @@ public class GameController {
             if(BallController.getSolidBModelList().isEmpty()){
                 System.out.println("All in for Solid");
 
-                BallController.setAllIn(true);
+                BallController.setAllInSolid(true);
                 break;
             }
         }
@@ -179,11 +186,11 @@ public class GameController {
             if(BallController.getStripeBModelList().isEmpty()){
                 System.out.println("All in for Stripe");
 
-                BallController.setAllIn(true);
+                BallController.setAllInStripe(true);
                 break;
             }
         }
-        return BallController.allIn;
+        return BallController.allInStripe;
     }
 
     public void ballInHole(){
@@ -195,11 +202,11 @@ public class GameController {
         //System.out.println();
     }
 
-    public void winnerPlayerSolo(BallView ballView ){
-        if(BallController.getAllIn()){
-            eightBallInLegal(ballView);
+    public void winnerPlayerSolo(){
+        if(BallController.getAllInSolid() && BallController.getAllInStripe()){
+            eightBallInLegal();
         }else{
-            eightBallInIllegal(ballView);
+            eightBallInIllegal();
         }
 
     }

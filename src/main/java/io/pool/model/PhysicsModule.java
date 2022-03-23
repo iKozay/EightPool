@@ -1,6 +1,7 @@
 package io.pool.model;
 
 import io.pool.controller.BallController;
+import javafx.scene.transform.Rotate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -22,8 +23,8 @@ public class PhysicsModule {
     /**
      * Friction coefficient for ball-table rolling
      */
-    private static final double ROLLING_FRICTION_COEFFICIENT = 0.015;
-    private static final BigDecimal KINETIC_ENERGY_LOSS_RATIO= new BigDecimal(0.95);
+    private static final double ROLLING_FRICTION_COEFFICIENT = 0.02;
+    private static final BigDecimal KINETIC_ENERGY_LOSS_RATIO = new BigDecimal(0.95);
 
 
     /**
@@ -63,6 +64,7 @@ public class PhysicsModule {
 
     /**
      * Constructor that defines the position and sets the velocity to zero
+     *
      * @param positionX Position X of the object
      * @param positionY Position X of the object
      */
@@ -107,9 +109,10 @@ public class PhysicsModule {
             setPositionX(getPositionX().add(getVelocityX()));
             setPositionY(getPositionY().add(getVelocityY()));
             /** Add rotation animation */
-            //Rotate rx = new Rotate(-getVelocityY().doubleValue(), 0, 0, 0, Rotate.X_AXIS);
-            //Rotate ry = new Rotate(getVelocityX().doubleValue(), 0, 0, 0, Rotate.Y_AXIS);
-            //BallController.getBallViewFromBallModel((BallModel)this).getBall().getTransforms().addAll(rx, ry);
+            //BigDecimal vectorLength = (getVelocityX().pow(2).add(getVelocityY().pow(2))).sqrt(MathContext.DECIMAL32);
+            //Rotate rx = new Rotate(vectorLength.doubleValue(),0,0,0,Rotate.Y_AXIS);
+            //Rotate ry = new Rotate(-vectorLength.doubleValue(), 0, 0,0,Rotate.X_AXIS);
+            //BallController.getBallViewFromBallModel((BallModel)this).getBall().getTransforms().addAll(rx,ry);
         }
     }
 
@@ -221,9 +224,6 @@ public class PhysicsModule {
             pm1.setPositionY(pm1.getPositionY().subtract(distanceY));
             pm2.setPositionX(pm2.getPositionX().add(distanceX));
             pm2.setPositionY(pm2.getPositionY().add(distanceY));
-
-            //BallController.updateBallViewPosition((BallModel) pm1);
-            //BallController.updateBallViewPosition((BallModel) pm2);
 
             unitTangentX = unitNormalY.negate();
             unitTangentY = unitNormalX;

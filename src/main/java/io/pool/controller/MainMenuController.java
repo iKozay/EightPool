@@ -2,6 +2,7 @@ package io.pool.controller;
 
 import io.pool.Database.DBConnection;
 import io.pool.model.GameModel;
+import io.pool.model.PlayerModel;
 import io.pool.view.GameView;
 import io.pool.view.MainMenuView;
 import io.pool.view.SettingsView;
@@ -106,7 +107,7 @@ public class MainMenuController {
                 e.printStackTrace();
             }
             gameModel.setGameType(1);
-            DBConnection.instantiateLastLayoutDB(gameModel.getGameType());
+            DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test"), new PlayerModel());
         });
 
         mmv.getSolo1Btn().setOnMouseExited(event -> {

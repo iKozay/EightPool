@@ -9,13 +9,17 @@ public class GameModel {
      4:Medium Bot
      5:Hard Bot
      */
-   private int gameType;
+    private int gameType;
+    public String playerTurn = "Test";
 
-    public GameModel() {
 
-    }
+
 
     public int getGameType() {return gameType;}
 
     public void setGameType(int gameType) {this.gameType = gameType;}
+
+    public String getPlayerTurn() {return playerTurn;}
+
+    public void setPlayerTurn(String playerTurn) {this.playerTurn = playerTurn;}
 }

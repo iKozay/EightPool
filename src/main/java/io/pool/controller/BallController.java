@@ -34,9 +34,12 @@ public class BallController {
      */
     public static ArrayList<BallModel> stripeBModelList = new ArrayList<>();
     public static ArrayList<BallModel> solidBModelList = new ArrayList<>();
-    public static Boolean allIn = false;
+    public static Boolean allInStripe = false;
+    public static Boolean allInSolid = false;
     public static BallModel whiteBallModel;
     public static BallView whiteBallView;
+    public static BallModel eightBallModel;
+    public static BallView eightBallView;
 
     double mouseAnchorX, mouseAnchorY;
 
@@ -58,12 +61,23 @@ public class BallController {
                 whiteBallModel = bModel;
             } else {
                 bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/ball" + i + ".jpg").toURI().toURL().toExternalForm()));
+                if(i==8){
+                    eightBallModel=bModel;
+                }else if(i<8){
+                    solidBModelList.add(bModel);
+                }else{
+                    stripeBModelList.add(bModel);
+                }
             }
             bModel.setPositionX(new BigDecimal(i * 3 * BallModel.RADIUS+200));
             bModel.setPositionY(new BigDecimal(300));
 
             bView = new BallView(bModel.getImg(), BallModel.RADIUS);
-            if (i == 16) {
+            if(i==8){
+                eightBallView=bView;
+            }else if(i<8){
+                solidBViewList.add(bView);
+            }else if (i == 16) {
                 whiteBallView = bView;
                 /**
                  * Getting the position of the mouse to set the new position of the white ball when dragged
@@ -90,39 +104,34 @@ public class BallController {
                         finalBView.getBall().setLayoutY(finalBModel.getPositionY().doubleValue());
                     }
                 });
+            }else{
+                stripeBViewList.add(bView);
             }
-            /**
-             * Adding the bModel and bView to their respective ArrayList
-             */
-            bModelList.add(bModel);
-            bViewList.add(bView);
 
             /**
              * Adding the BallView to the Pane
              */
             root.getChildren().add(bView.getBall());
         }
+        bModelList.addAll(stripeBModelList);
+        bModelList.addAll(solidBModelList);
+        bModelList.add(whiteBallModel);
+        bModelList.add(eightBallModel);
 
-        for (int i = 8; i < 15; i++) {
-            stripeBModelList.add(bModelList.get(i));
-            stripeBViewList.add(bViewList.get(i));
-        }
-        for (int i = 0; i < 7; i++) {
-            solidBModelList.add(bModelList.get(i));
-            solidBViewList.add(bViewList.get(i));
-        }
-
-        for (int i = 0; i < 7; i++) {
-            System.out.println("Stripe: " + stripeBModelList.get(i).getNumber());
-            System.out.println("Solid " + solidBModelList.get(i).getNumber());
-
-        }
-
-        System.out.println("Model " + ballModelArrayList().size());
-        System.out.println("Solid " + solidBModelList.size());
-        System.out.println("Stripe " + stripeBViewList.size());
-        System.out.println("View " + ballViewArrayList().size());
-        System.out.println("Nodes " + root.getChildren().size());
+        bViewList.addAll(stripeBViewList);
+        bViewList.addAll(solidBViewList);
+        bViewList.add(whiteBallView);
+        bViewList.add(eightBallView);
+//        for (int i = 0; i < 7; i++) {
+//            System.out.println("Stripe: " + stripeBModelList.get(i).getNumber());
+//            System.out.println("Solid " + solidBModelList.get(i).getNumber());
+//        }
+//
+//        System.out.println("Model " + ballModelArrayList().size());
+//        System.out.println("Solid " + solidBModelList.size());
+//        System.out.println("Stripe " + stripeBViewList.size());
+//        System.out.println("View " + ballViewArrayList().size());
+//        System.out.println("Nodes " + root.getChildren().size());
     }
 
 //    public void makeWhiteBallDraggable(){
@@ -277,6 +286,8 @@ public class BallController {
             gameView.getChildren().remove(bView.getBall());
         }
         bViewList.clear();
+        solidBViewList.clear();
+        stripeBViewList.clear();
         System.out.println("Cleared All BallViews: " + bViewList.size());
     }
 
@@ -285,6 +296,8 @@ public class BallController {
      */
     public void destroyModels() {
         bModelList.clear();
+        solidBModelList.clear();
+        stripeBModelList.clear();
         System.out.println("Cleared All BallModels: " + bModelList.size());
     }
 
@@ -309,12 +322,19 @@ public class BallController {
         }
     }
 
-    public static Boolean getAllIn() {
-        return allIn;
+    public static Boolean getAllInStripe() {
+        return allInStripe;
     }
 
-    public static void setAllIn(Boolean allIn) {
-        BallController.allIn = allIn;
+    public static void setAllInStripe(Boolean allInStripe) {
+        BallController.allInStripe = allInStripe;
+    }
+    public static Boolean getAllInSolid() {
+        return allInSolid;
+    }
+
+    public static void setAllInSolid(Boolean allInSolid) {
+        BallController.allInSolid = allInSolid;
     }
 
     public static BallModel getBallModelFromBallView(BallView bView) {
