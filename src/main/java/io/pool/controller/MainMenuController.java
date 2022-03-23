@@ -55,6 +55,17 @@ public class MainMenuController {
                 mmv.getPvpText().setText("PLAY");
             }
         });
+        mmv.getPVPstartBtn().setOnAction(e->{
+            stage.getScene().setRoot(gameView);
+            this.gameView.getGameController().getPoolCueController().handleRotateCue(stage.getScene());
+            this.gameView.getGameController().getPoolCueController().hit(stage.getScene());
+            try {
+                gameView.getGameController().startGame(1);
+            } catch (MalformedURLException ex) {
+                ex.printStackTrace();
+            }
+
+        });
         mmv.getPvp1Btn().setOnAction(event -> {
             stage.getScene().setRoot(mmv.getPvpRootMenu());
         });
@@ -102,11 +113,11 @@ public class MainMenuController {
             this.gameView.getGameController().getPoolCueController().handleRotateCue(stage.getScene());
             this.gameView.getGameController().getPoolCueController().hit(stage.getScene());
             try {
-                gameView.getGameController().startGame();
+                gameView.getGameController().startGame(0);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-            gameModel.setGameType(1);
+            //gameModel.setGameType(1);
             DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test"), new PlayerModel());
         });
 

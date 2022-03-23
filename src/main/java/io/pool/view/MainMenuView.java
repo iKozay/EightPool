@@ -28,7 +28,7 @@ import java.io.InputStream;
 public class MainMenuView extends Pane{
 
     private Button backBtn;
-    private Button startBtn;
+    private Button PVPstartBtn;
     private BorderPane pvpRootMenu;
     private Scene pvpSubMenu;
     private Text pvpText;
@@ -248,6 +248,8 @@ public class MainMenuView extends Pane{
         buttonGroup = new Group();
         buttonGroup.getChildren().addAll(pve1Btn,pve2Btn,pve3Btn);
 
+        PVPstartBtn = new Button("Start");
+
         mainMenuController = new MainMenuController(this, stage);
 
         // PVP Sub MENU
@@ -298,12 +300,11 @@ public class MainMenuView extends Pane{
         dp2.setHeight(50);
         comboBoxP2.setEffect(dp2);
         comboBoxP2.setStyle("-fx-background-color: blue");
-        startBtn = new Button("Start");
-        startBtn.setPrefSize(300,50);
+        PVPstartBtn.setPrefSize(300,50);
 
         topBox.getChildren().addAll(player1Lbl,player2Lbl);
         centerBox.getChildren().addAll(comboBoxP1,comboBoxP2);
-        bottomBox.getChildren().addAll(startBtn,backBtn);
+        bottomBox.getChildren().addAll(PVPstartBtn,backBtn);
         pvpRootMenu.setStyle("-fx-background-color: #2b7828");
         pvpRootMenu.setTop(topBox);
         pvpRootMenu.setCenter(centerBox);
@@ -314,8 +315,8 @@ public class MainMenuView extends Pane{
         return backBtn;
     }
 
-    public Button getStartBtn() {
-        return startBtn;
+    public Button getPVPstartBtn() {
+        return PVPstartBtn;
     }
 
     public ComboBox getComboBoxP1() {

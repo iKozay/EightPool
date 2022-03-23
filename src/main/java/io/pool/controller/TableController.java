@@ -39,16 +39,18 @@ public class TableController {
     /**
      * Checks if the BallView is inside the hole
      * @param ballView the BallView
-     * @param holeNum the Hole Number
      * @return <code>true</code> if the ball is inside the hole. <code>false</code> otherwise
      */
-    public boolean checkInterBallsHoles(BallView ballView, int holeNum) {
-        //TODO Small fix. If PosX and PosY inside hole, then return true
-        Circle hole = tableView.getHoles().get(holeNum);
-        double centerToCenter = Math.sqrt(Math.pow(ballView.getBall().getLayoutX() - tableX - (hole.getCenterX()), 2) + Math.pow(ballView.getBall().getLayoutY() - tableY - (hole.getCenterY()), 2));
-
-        double rs1 = ballView.getBall().getRadius() + hole.getRadius();
-        return centerToCenter <= rs1;
-        //return hole.contains(ballView.getBall().getLayoutX(),ballView.getBall().getLayoutY());
+    public boolean checkInterBallsHoles(BallView ballView) {
+        for(Circle hole:tableView.getHoles()) {
+            double centerToCenter = Math.sqrt(Math.pow(ballView.getBall().getLayoutX() - tableX - (hole.getLayoutX()), 2) + Math.pow(ballView.getBall().getLayoutY() - tableY - (hole.getLayoutY()), 2));
+            double rs1 = ballView.getBall().getRadius() + hole.getRadius();
+            if(centerToCenter < rs1) {
+                ballView.getBall().setLayoutX(hole.getCenterX());
+                ballView.getBall().setLayoutY(hole.getCenterY());
+                return true;
+            }
+        }
+        return false;
     }
 }

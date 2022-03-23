@@ -93,6 +93,7 @@ public class PoolCueController {
                 poolCueView.getCue().setLayoutX(0);
                 poolCueView.getCue().setLayoutY(0);
                 disablePoolCueControl();
+                GameController.waitingForInput=false;
             }
         });
 

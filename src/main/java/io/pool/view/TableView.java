@@ -105,14 +105,16 @@ public class TableView {
         upLeftCorner.setRadius(cornerHoleRadius);
         upLeftCorner.setCenterX(width/22.5);
         upLeftCorner.setCenterY(height/11.);
+        upLeftCorner.setLayoutX(width/22.5);
+        upLeftCorner.setLayoutY(height/11);
         upLeftCorner.setFill(Color.BLUE);
         upLeftCorner.setVisible(false);
         holes.add(upLeftCorner);
 
         Circle downLeftCorner = new Circle();
         downLeftCorner.setRadius(cornerHoleRadius);
-        downLeftCorner.setCenterX(width/22.5);
-        downLeftCorner.setCenterY(height/1.1);
+        downLeftCorner.setLayoutX(width/22.5);
+        downLeftCorner.setLayoutY(height/1.1);
         downLeftCorner.setFill(Color.BLUE);
         downLeftCorner.setVisible(false);
         holes.add(downLeftCorner);
@@ -127,8 +129,8 @@ public class TableView {
 
         Circle downRightCorner = new Circle();
         downRightCorner.setRadius(cornerHoleRadius);
-        downRightCorner.setCenterX(width/1.05675);
-        downRightCorner.setCenterY(height/1.1);
+        downRightCorner.setLayoutX(width/1.05675);
+        downRightCorner.setLayoutY(height/1.1);
         downRightCorner.setFill(Color.BLUE);
         downRightCorner.setVisible(false);
         holes.add(downRightCorner);
@@ -137,6 +139,8 @@ public class TableView {
         upCenterCorner.setRadius(centerHoleRadius);
         upCenterCorner.setCenterX((width/2.)/1.014);
         upCenterCorner.setCenterY(height/14.268);
+        upCenterCorner.setLayoutX((width/2)/1.014);
+        upCenterCorner.setLayoutY(height/14.268);
         upCenterCorner.setFill(Color.BLUE);
         upCenterCorner.setVisible(false);
         holes.add(upCenterCorner);
@@ -146,6 +150,9 @@ public class TableView {
         downCenterCorner.setCenterX((width/2.)/1.014);
         downCenterCorner.setCenterY((height)/1.08);
         downCenterCorner.setVisible(false);
+        downCenterCorner.setLayoutX((width/2)/1.014);
+        downCenterCorner.setLayoutY((height)/1.08);
+        //downCenterCorner.setVisible(false);
         downCenterCorner.setFill(Color.BLUE);
         holes.add(downCenterCorner);
 
@@ -182,19 +189,6 @@ public class TableView {
         new TableBorderModel("topRightHoleE2",width/1.10919,height/9,width/1.087,height/13.302,0.9,-0.9);
         new TableBorderModel("topMiddleHoleF1",width/1.9115,height/9,width/1.931,height/13.302,-0.9,-0.9);
         new TableBorderModel("topMiddleHoleF2",width/2.16,height/9,width/2.130,height/13.302,0.9,-0.9);
-        //TODO Fix reflection factor
-        new TableBorderModel("topLeftHoleA1",width/11.228,height/9.0667,width/14.062,height/12.9,1,1);
-        new TableBorderModel("topLeftHoleA2",width/16.,height/5.9130,width/21.33333,height/7.15789,1,1);
-        new TableBorderModel("bottomLeftHoleB1",width/16.143,height/1.21429,width/22.9299,height/1.16587,1,1);
-        new TableBorderModel("bottomLeftHoleB2",width/11.175561,height/1.13145,width/14.221220,height/1.089777,1,1);
-        new TableBorderModel("bottomMiddleHoleC1",width/2.165,height/1.13145,width/2.128,height/1.09149,1,1);
-        new TableBorderModel("bottomMiddleHoleC2",width/1.9048,height/1.13145,width/1.935,height/1.09149,1,1);
-        new TableBorderModel("bottomRightHoleD1",width/1.109,height/1.13145,width/1.087,height/1.09149,1,1);
-        new TableBorderModel("bottomRightHoleD2",width/1.069,height/1.21864,width/1.047,height/1.16638,1,1);
-        new TableBorderModel("topRightHoleE1",width/1.069,height/5.9130,width/1.0518,height/7.15789,1,1);
-        new TableBorderModel("topRightHoleE2",width/1.10919,height/9.,width/1.087,height/13.302,1,1);
-        new TableBorderModel("topMiddleHoleF1",width/1.9115,height/9.,width/1.931,height/13.302,1,1);
-        new TableBorderModel("topMiddleHoleF2",width/2.16,height/9.,width/2.130,height/13.302,1,1);
 
 
 
