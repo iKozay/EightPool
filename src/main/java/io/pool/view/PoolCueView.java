@@ -1,7 +1,10 @@
 package io.pool.view;
 
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 import java.io.File;
@@ -11,6 +14,7 @@ public class PoolCueView {
 
     /** The cylinder that will represent the pool cue */
     private static ImageView cue;
+    private Line poolLine;
 
     double previousAngle = 0;
 
@@ -22,6 +26,10 @@ public class PoolCueView {
         }
         cue.setX(0);
         cue.setY(0);
+        poolLine = new Line();
+        poolLine.setStroke(Color.WHITE);
+        poolLine.setStrokeWidth(3);
+        poolLine.setFill(Color.WHITE);
     }
 
     public ImageView getCue() {
@@ -36,5 +44,7 @@ public class PoolCueView {
         this.previousAngle = angle;
     }
 
-
+    public Line getPoolLine() {
+        return poolLine;
+    }
 }

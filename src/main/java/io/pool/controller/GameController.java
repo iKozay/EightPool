@@ -81,6 +81,7 @@ public class GameController {
 //                                gettingInTheHole.play();
                             }
                     }
+                    winnerPlayerSolo();
                     /**Check if all balls are not moving to display the poolCue and update the database*/
                     boolean moving=false;
                     for(BallModel bModel : ballController.ballModelArrayList()){
@@ -91,6 +92,13 @@ public class GameController {
                         waitingForInput=true;
                         poolCueController.poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue() + (BallModel.RADIUS));
                         poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (poolCueController.poolCueView.getCue().getImage().getHeight() / 2));
+
+                        poolCueController.poolCueView.getPoolLine().setStartX(BallController.whiteBallModel.getPositionX().doubleValue());
+                        poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
+
+                        poolCueController.poolCueView.getPoolLine().setEndX(BallController.whiteBallModel.getPositionX().doubleValue() + 40);
+                        poolCueController.poolCueView.getPoolLine().setEndY(BallController.whiteBallModel.getPositionX().doubleValue() + 40);
+
                         poolCueController.enablePoolCueControl();
                         gView.displayPoolCue(true);
                         if(!DBConnection.hasBeenCalled) {

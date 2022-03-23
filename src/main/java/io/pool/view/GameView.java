@@ -46,6 +46,7 @@ public class GameView extends Pane {
 
     private FlowPane ballsPrimaryPane;
     private GridPane tableThemesPane;
+    private GridPane ballDataPane;
 
     private Pane cueSettingsPane;
 
@@ -72,8 +73,7 @@ public class GameView extends Pane {
         cueView = new PoolCueView();
         displayPoolCue(false);
         gameController = new GameController(this);
-        this.getChildren().addAll(cueView.getCue());
-
+        this.getChildren().addAll(cueView.getCue(), cueView.getPoolLine());
         gamePane = tableView.getGamePane();
 
         /** working on the right corner setting section **/
@@ -101,6 +101,11 @@ public class GameView extends Pane {
         ballsPrimaryPane.setVgap(TableView.height/23.4);
         ballsPrimaryPane.setHgap(TableView.width/25.);
         ballsPrimaryPane.setPadding(new Insets(25));
+
+
+        ballDataPane = new GridPane();
+        ballsPrimaryPane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
+
 
         createImageViews();
 
@@ -207,7 +212,7 @@ public class GameView extends Pane {
             bView.getBall().setOnMouseEntered(event -> selectionCircle.setVisible(true));
             bView.getBall().setOnMouseExited(event -> selectionCircle.setVisible(false));
             bView.getBall().setOnMouseClicked(event -> {
-                selectionCircle.setStroke(Color.AZURE);
+
             });
             StackPane ball = new StackPane();
             ball.getChildren().addAll(selectionCircle, bView.getBall());
