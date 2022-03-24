@@ -1,6 +1,5 @@
 package io.pool.controller;
 
-import io.pool.model.BallModel;
 import io.pool.model.PoolCueModel;
 import io.pool.view.PoolCueView;
 
@@ -90,7 +89,7 @@ public class PoolCueController {
             }
         });
 
-        if (!rightButtonClicked) {
+        //if (!rightButtonClicked) {
             scene.setOnMouseReleased(event -> {
                 if (event.getButton() == MouseButton.PRIMARY) {
                     isPressed = false;
@@ -106,7 +105,7 @@ public class PoolCueController {
                     }
                 }
             });
-        }
+        //}
 
         scene.setOnMouseClicked(event -> {
             isPressed = false;

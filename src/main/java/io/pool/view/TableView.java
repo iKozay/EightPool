@@ -103,77 +103,56 @@ public class TableView {
     public void createHoles(){
         Circle upLeftCorner = new Circle();
         upLeftCorner.setRadius(cornerHoleRadius);
-        upLeftCorner.setCenterX(width/22.5);
-        upLeftCorner.setCenterY(height/11.);
         upLeftCorner.setLayoutX(width/22.5);
         upLeftCorner.setLayoutY(height/11);
-        upLeftCorner.setFill(Color.BLUE);
-        upLeftCorner.setVisible(false);
         holes.add(upLeftCorner);
 
         Circle downLeftCorner = new Circle();
         downLeftCorner.setRadius(cornerHoleRadius);
         downLeftCorner.setLayoutX(width/22.5);
         downLeftCorner.setLayoutY(height/1.1);
-        downLeftCorner.setFill(Color.BLUE);
-        downLeftCorner.setVisible(false);
         holes.add(downLeftCorner);
 
         Circle upRightCorner = new Circle();
         upRightCorner.setRadius(cornerHoleRadius);
-        upRightCorner.setCenterX(width/1.05675);
-        upRightCorner.setCenterY(height/11.);
-        upRightCorner.setFill(Color.BLUE);
-        upRightCorner.setVisible(false);
+        upRightCorner.setLayoutX(width/1.05675);
+        upRightCorner.setLayoutY(height/11);
         holes.add(upRightCorner);
 
         Circle downRightCorner = new Circle();
         downRightCorner.setRadius(cornerHoleRadius);
         downRightCorner.setLayoutX(width/1.05675);
         downRightCorner.setLayoutY(height/1.1);
-        downRightCorner.setFill(Color.BLUE);
-        downRightCorner.setVisible(false);
         holes.add(downRightCorner);
 
         Circle upCenterCorner = new Circle();
         upCenterCorner.setRadius(centerHoleRadius);
-        upCenterCorner.setCenterX((width/2.)/1.014);
-        upCenterCorner.setCenterY(height/14.268);
         upCenterCorner.setLayoutX((width/2)/1.014);
         upCenterCorner.setLayoutY(height/14.268);
-        upCenterCorner.setFill(Color.BLUE);
-        upCenterCorner.setVisible(false);
         holes.add(upCenterCorner);
 
         Circle downCenterCorner = new Circle();
         downCenterCorner.setRadius(centerHoleRadius);
-        downCenterCorner.setCenterX((width/2.)/1.014);
-        downCenterCorner.setCenterY((height)/1.08);
-        downCenterCorner.setVisible(false);
         downCenterCorner.setLayoutX((width/2)/1.014);
         downCenterCorner.setLayoutY((height)/1.08);
-        //downCenterCorner.setVisible(false);
-        downCenterCorner.setFill(Color.BLUE);
         holes.add(downCenterCorner);
+
+        for(Circle hole:holes){
+            //hole.setFill(Color.BLUE);
+            //hole.setVisible(true);
+        }
 
         table.getChildren().addAll(holes);
 
     }
     public void createLines(){
-        //TODO Add the rest of the lines for the rest of the table border lines
-        
         new TableBorderModel("upLeftLine",width/11.228, height/9.0667, width/2.16, height/9.0667,0.9,-0.9);
-
         new TableBorderModel("upRightLine",width/1.9115, height/9., width/1.10919, height/9.,1,-1);
         new TableBorderModel("upRightLine",width/1.9115, height/9, width/1.10919, height/9,0.9,-0.9);
-
         new TableBorderModel("downLeftLine",width/11.175561, height/1.13145, width/2.165, height/1.13145,0.9,-0.9);
-
         new TableBorderModel("downRightLine",width/1.9048, height/1.13145, width/1.10919, height/1.13145,0.985,-0.9);
-
         new TableBorderModel("centerLeftLine",width/16, height/5.9130, width/16, height/1.21429,-0.9,0.9);
         new TableBorderModel("centerLeftLine",width/16., height/5.9130, width/16., height/1.21429,-1,1);
-
         new TableBorderModel("centerRightLine",width/1.069, height/5.9130, width/1.069, height/1.21864,-0.9,0.9);
 
         //TODO Review these reflection factors to verify their effectiveness
@@ -190,11 +169,10 @@ public class TableView {
         new TableBorderModel("topMiddleHoleF1",width/1.9115,height/9,width/1.931,height/13.302,-0.9,-0.9);
         new TableBorderModel("topMiddleHoleF2",width/2.16,height/9,width/2.130,height/13.302,0.9,-0.9);
 
-
-
         for (TableBorderModel tbm:TableBorderModel.tableBorder) {
             tbm.setStroke(Color.WHITE);
             tbm.setStrokeWidth(0.5);
+            tbm.setVisible(false);
         }
         table.getChildren().addAll(TableBorderModel.tableBorder);
     }

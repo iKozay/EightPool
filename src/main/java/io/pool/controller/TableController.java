@@ -1,10 +1,13 @@
 package io.pool.controller;
 
 import io.pool.eightpool.game;
+import io.pool.model.BallModel;
 import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
 import io.pool.view.TableView;
 import javafx.scene.shape.Circle;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class TableController {
@@ -41,13 +44,14 @@ public class TableController {
      * @param ballView the BallView
      * @return <code>true</code> if the ball is inside the hole. <code>false</code> otherwise
      */
-    public boolean checkInterBallsHoles(BallView ballView) {
+    public boolean checkBallInHole(BallView ballView) {
         for(Circle hole:tableView.getHoles()) {
-            double centerToCenter = Math.sqrt(Math.pow(ballView.getBall().getLayoutX() - tableX - (hole.getLayoutX()), 2) + Math.pow(ballView.getBall().getLayoutY() - tableY - (hole.getLayoutY()), 2));
-            double rs1 = ballView.getBall().getRadius() + hole.getRadius();
-            if(centerToCenter < rs1) {
-                ballView.getBall().setLayoutX(hole.getCenterX());
-                ballView.getBall().setLayoutY(hole.getCenterY());
+            double xSquared = Math.pow((ballView.getBall().getLayoutX() - tableX - hole.getLayoutX()), 2);
+            double ySquared = Math.pow((ballView.getBall().getLayoutY() - tableY - hole.getLayoutY()), 2);
+            double centerToCenter = Math.sqrt(xSquared+ySquared)-BallModel.RADIUS;
+            if(centerToCenter < hole.getRadius()) {
+                // TODO Verify that it is 100% working
+                System.out.println("Center2Center: "+centerToCenter+"\tRadius: "+hole.getRadius());
                 return true;
             }
         }

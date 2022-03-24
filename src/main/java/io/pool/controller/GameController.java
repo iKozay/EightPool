@@ -9,10 +9,7 @@ import io.pool.model.GameModel;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class GameController {
     /** Instance of GameView that contains all the Ball,Table and Pool Cue Views*/
@@ -64,12 +61,8 @@ public class GameController {
                     ballController.detectCollision();
                     /** Check if ball gets inside any of the holes */
                     for (BallView ballView : ballController.ballViewArrayList()) {
-                            if(tableController.checkInterBallsHoles(ballView)) {
+                            if(tableController.checkBallInHole(ballView)) {
                                 whiteBallIn(ballView);
-                                //
-                                // Had to comment this. Showed me an error
-                                //
-                                //
 //                                FadeTransition gettingInTheHole = new FadeTransition();
 //                                gettingInTheHole.setDuration(Duration.seconds(5));
 //                                gettingInTheHole.setNode(ballView.getBall());
