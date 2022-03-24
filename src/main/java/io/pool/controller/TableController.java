@@ -14,12 +14,10 @@ public class TableController {
 
     /** Instance of the table that will be shown to the user */
     private TableView tableView;
-    /** ArrayList that contains all the holes */
-    private ArrayList<Circle> holes;
 
     /** tableX and tableY */
-    private int tableX = game.eightPoolTableX;
-    private int tableY = game.eightPoolTableY;
+    private double tableX;
+    private double tableY;
 
 
     /**
@@ -28,7 +26,9 @@ public class TableController {
      */
     public TableController(TableView tableView) {
         this.tableView = tableView;
-        this.holes = tableView.getHoles();
+        //TODO The problem is caused by the real position of table
+        tableX = tableView.getTableImageView().getLayoutX();
+        tableY = tableView.getTableImageView().getLayoutY();
     }
 
     /**
@@ -50,7 +50,6 @@ public class TableController {
             double ySquared = Math.pow((ballView.getBall().getLayoutY() - tableY - hole.getLayoutY()), 2);
             double centerToCenter = Math.sqrt(xSquared+ySquared)-BallModel.RADIUS;
             if(centerToCenter < hole.getRadius()) {
-                // TODO Verify that it is 100% working
                 System.out.println("Center2Center: "+centerToCenter+"\tRadius: "+hole.getRadius());
                 return true;
             }

@@ -27,7 +27,7 @@ public class TableView {
     private final ArrayList<Circle> holes = new ArrayList<>();
     public final static int width = (int) (game.eightPoolTableWidth/1.5); // the width of the pane
     public final static int height = (int) (game.eightPoolTableHeight/1.5); // the height of the pane
-    private final int cornerHoleRadius = (width/36);
+    private final int cornerHoleRadius = (int)(width/36);
     private final int centerHoleRadius = (int) (width/43.2);
     private final ImageView tableImageView;
 
@@ -138,8 +138,8 @@ public class TableView {
         holes.add(downCenterCorner);
 
         for(Circle hole:holes){
-            //hole.setFill(Color.BLUE);
-            //hole.setVisible(true);
+            hole.setFill(Color.BLUE);
+            hole.setVisible(true);
         }
 
         table.getChildren().addAll(holes);
