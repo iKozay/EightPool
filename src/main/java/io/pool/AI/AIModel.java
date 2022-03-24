@@ -1,8 +1,14 @@
-package io.pool.controller;
+package io.pool.AI;
 
 import java.util.Random;
 
-public class AI {
+public class AIModel {
+
+    /**
+     * We will put all the constants here as well as
+     * the randomiser for the shots.
+     *
+     */
 
     private final int MAX_POWER = 100;
     private final int MAX_ANGLE = 360;
@@ -12,7 +18,7 @@ public class AI {
     private double finalAngle;
 
 
-    public AI() {
+    public AIModel() {
 
         play();
 
