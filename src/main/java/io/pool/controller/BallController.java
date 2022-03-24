@@ -1,12 +1,11 @@
 package io.pool.controller;
 
-import io.pool.eightpool.game;
 import io.pool.model.BallModel;
 import io.pool.model.PhysicsModule;
 import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
-import javafx.geometry.Point2D;
+import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
@@ -40,7 +39,7 @@ public class BallController {
     public static BallView whiteBallView;
     public static BallModel eightBallModel;
     public static BallView eightBallView;
-    private boolean draggable=false;
+    private boolean draggable = false;
 
     double mouseAnchorX, mouseAnchorY;
 
@@ -62,23 +61,23 @@ public class BallController {
                 whiteBallModel = bModel;
             } else {
                 bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/ball" + i + ".jpg").toURI().toURL().toExternalForm()));
-                if(i==8){
-                    eightBallModel=bModel;
-                }else if(i<8){
+                if (i == 8) {
+                    eightBallModel = bModel;
+                } else if (i < 8) {
                     solidBModelList.add(bModel);
-                }else{
+                } else {
                     stripeBModelList.add(bModel);
                 }
             }
-            bModel.setPositionX(new BigDecimal(i * 3 * BallModel.RADIUS+200));
+            bModel.setPositionX(new BigDecimal(i * 3 * BallModel.RADIUS + 200));
             bModel.setPositionY(new BigDecimal(300));
 
             bView = new BallView(bModel.getImg(), BallModel.RADIUS);
-            if(i==8){
-                eightBallView=bView;
-            }else if(i<8){
+            if (i == 8) {
+                eightBallView = bView;
+            } else if (i < 8) {
                 solidBViewList.add(bView);
-            }else if (i == 16) {
+            } else if (i == 16) {
                 whiteBallView = bView;
                 /**
                  * Getting the position of the mouse to set the new position of the white ball when dragged
@@ -105,7 +104,7 @@ public class BallController {
                         finalBView.getBall().setLayoutY(finalBModel.getPositionY().doubleValue());
                     }
                 });
-            }else{
+            } else {
                 stripeBViewList.add(bView);
             }
 
@@ -125,29 +124,29 @@ public class BallController {
         bViewList.add(eightBallView);
     }
 
-    public void makeDraggable(){
-        draggable=!draggable;
+    public void makeDraggable() {
+        draggable = !draggable;
     }
-
-    public void testingBallController(Pane root) throws MalformedURLException {
-        BallModel bModel1 = new BallModel(1, new Image(new File("src/main/resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm()));
-        BallModel bModel2 = new BallModel(2, new Image(new File("src/main/resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm()));
-        bModel1.setPositionX(new BigDecimal(500));
-        bModel1.setPositionY(new BigDecimal(200));
-        bModel2.setPositionX(new BigDecimal(500));
-        bModel2.setPositionY(new BigDecimal(500));
-        bModel1.setVelocityX(PhysicsModule.ZERO);
-        bModel1.setVelocityY(new BigDecimal(10));
-        bModel2.setVelocityX(PhysicsModule.ZERO);
-        bModel2.setVelocityY(PhysicsModule.ZERO);
-        bModelList.add(bModel1);
-        bModelList.add(bModel2);
-        BallView bView1 = new BallView(bModel1.getImg(), BallModel.RADIUS);
-        BallView bView2 = new BallView(bModel2.getImg(), BallModel.RADIUS);
-        bViewList.add(bView1);
-        bViewList.add(bView2);
-        root.getChildren().addAll(bView1.getBall(), bView2.getBall());
-    }
+//
+//    public void testingBallController(Pane root) throws MalformedURLException {
+//        BallModel bModel1 = new BallModel(1, new Image(new File("src/main/resources/billiards3D/ball1.jpg").toURI().toURL().toExternalForm()));
+//        BallModel bModel2 = new BallModel(2, new Image(new File("src/main/resources/billiards3D/ball2.jpg").toURI().toURL().toExternalForm()));
+//        bModel1.setPositionX(new BigDecimal(500));
+//        bModel1.setPositionY(new BigDecimal(200));
+//        bModel2.setPositionX(new BigDecimal(500));
+//        bModel2.setPositionY(new BigDecimal(500));
+//        bModel1.setVelocityX(PhysicsModule.ZERO);
+//        bModel1.setVelocityY(new BigDecimal(10));
+//        bModel2.setVelocityX(PhysicsModule.ZERO);
+//        bModel2.setVelocityY(PhysicsModule.ZERO);
+//        bModelList.add(bModel1);
+//        bModelList.add(bModel2);
+//        BallView bView1 = new BallView(bModel1.getImg(), BallModel.RADIUS);
+//        BallView bView2 = new BallView(bModel2.getImg(), BallModel.RADIUS);
+//        bViewList.add(bView1);
+//        bViewList.add(bView2);
+//        root.getChildren().addAll(bView1.getBall(), bView2.getBall());
+//    }
 
     /**
      * Detects all the collisions and updates the ball position
@@ -172,31 +171,30 @@ public class BallController {
      */
     private void detectCollisionWithTable() {
         boolean collisionChecked;
+        Bounds intersectBounds;
         for (BallModel bModel : bModelList) {
-            collisionChecked=false;
-            if (bModel.isMoving) {
-                for (TableBorderModel line : TableBorderModel.tableBorder) {
-                    if(!collisionChecked) {
-                        Shape intersect = Shape.intersect(line, bViewList.get(bModelList.indexOf(bModel)).getCircleFromSphere());
-                        if ((intersect.getBoundsInLocal().getWidth() != -1) || (intersect.getBoundsInLocal().getHeight() != -1)) {
-                            correctOverlap(bModel);
-                            bModel.setVelocityX(bModel.getVelocityX().multiply(line.getReflectionXFactor()));
-                            bModel.setVelocityY(bModel.getVelocityY().multiply(line.getReflectionYFactor()));
-                            collisionChecked = true;
-                        }
+            collisionChecked = false;
+            for (TableBorderModel line : TableBorderModel.tableBorder) {
+                if (!collisionChecked) {
+                    intersectBounds = Shape.intersect(line, getBallViewFromBallModel(bModel).getCircleFromSphere()).getBoundsInLocal();
+                    if ((intersectBounds.getWidth() != -1)) {
+                        BigDecimal normalXComponent = new BigDecimal(intersectBounds.getCenterX() - bModel.getPositionX().doubleValue());
+                        BigDecimal normalYComponent = new BigDecimal(intersectBounds.getCenterY() - bModel.getPositionY().doubleValue());
+                        BigDecimal distance = (normalYComponent.pow(2).add(normalXComponent.pow(2))).sqrt(MathContext.DECIMAL32);
+
+                        BigDecimal distanceX = normalXComponent.multiply(new BigDecimal((BallModel.RADIUS - distance.doubleValue()) / (distance.doubleValue())));
+                        BigDecimal distanceY = normalYComponent.multiply(new BigDecimal((BallModel.RADIUS - distance.doubleValue()) / (distance.doubleValue())));
+
+                        bModel.setPositionX(bModel.getPositionX().subtract(distanceX));
+                        bModel.setPositionY(bModel.getPositionY().subtract(distanceY));
+
+                        bModel.setVelocityX(bModel.getVelocityX().multiply(line.getReflectionXFactor()));
+                        bModel.setVelocityY(bModel.getVelocityY().multiply(line.getReflectionYFactor()));
+                        collisionChecked = true;
                     }
                 }
             }
         }
-    }
-
-    private void correctOverlap(BallModel bModel) {
-        BigDecimal vectorLength = (bModel.getVelocityX().pow(2).add(bModel.getVelocityY().pow(2))).sqrt(MathContext.DECIMAL32);
-        if (vectorLength.doubleValue() != 0) {
-            bModel.setPositionX(bModel.getPositionX().subtract(bModel.getVelocityX().divide(vectorLength, MathContext.DECIMAL32)));
-            bModel.setPositionY(bModel.getPositionY().subtract(bModel.getVelocityY().divide(vectorLength, MathContext.DECIMAL32)));
-        }
-        updateBallViewPosition(bModel);
     }
 
     /**
@@ -218,10 +216,9 @@ public class BallController {
             for (int j = i + 1; j < bModelList.size(); j++) {
                 ballA = bModelList.get(i);
                 ballB = bModelList.get(j);
-
-                if(ballA.handleMomentum(ballB)){
-                    if((ballA.equals(whiteBallModel)||ballB.equals(whiteBallModel))&&(ballA.equals(eightBallModel)||ballB.equals(eightBallModel))){
-                        GameController.foul=true;
+                if (ballA.handleMomentum(ballB)) {
+                    if ((ballA.equals(whiteBallModel) || ballB.equals(whiteBallModel)) && (ballA.equals(eightBallModel) || ballB.equals(eightBallModel))) {
+                        GameController.foul = true;
                     }
                 }
             }
@@ -315,6 +312,7 @@ public class BallController {
     public static void setAllInStripe(Boolean allInStripe) {
         BallController.allInStripe = allInStripe;
     }
+
     public static Boolean getAllInSolid() {
         return allInSolid;
     }
