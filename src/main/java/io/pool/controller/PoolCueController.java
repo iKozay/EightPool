@@ -5,6 +5,7 @@ import io.pool.model.PoolCueModel;
 import io.pool.view.PoolCueView;
 
 import javafx.scene.Scene;
+import javafx.scene.input.MouseButton;
 import javafx.scene.transform.Rotate;
 
 import java.math.BigDecimal;
@@ -36,7 +37,9 @@ public class PoolCueController {
                         rotate.setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
                         rotate.setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
                         poolCueView.getCue().getTransforms().add(rotate);
+                        poolCueView.getPoolLine().getTransforms().add(rotate);
                         poolCueView.setPreviousAngle(newAngleDegrees);
+
                     }
                 }
             }
@@ -53,18 +56,22 @@ public class PoolCueController {
     double deltaY;
     double maxDisplacementX;
     double maxDisplacementY;
+    double poolCueAngle;
+    boolean rightButtonClicked;
 
     public void hit(Scene scene){
         scene.setOnMousePressed(event -> {
-            if(enablePoolCueControl) {
-                deltaX = (event.getX() - poolCueView.getCue().getLayoutX());
-                deltaY = (event.getY() - poolCueView.getCue().getLayoutY());
-                mouseXLock = event.getX();
-                mouseYLock = event.getY();
-                double poolCueAngle = Math.toRadians(poolCueView.getPreviousAngle());
-                maxDisplacementX = MAX_DISTANCE * Math.cos(poolCueAngle);
-                maxDisplacementY = MAX_DISTANCE * Math.sin(poolCueAngle);
-                isPressed = true;
+            if (event.getButton() == MouseButton.PRIMARY) {
+                if(enablePoolCueControl) {
+                    deltaX = (event.getX() - poolCueView.getCue().getLayoutX());
+                    deltaY = (event.getY() - poolCueView.getCue().getLayoutY());
+                    mouseXLock = event.getX();
+                    mouseYLock = event.getY();
+                    poolCueAngle = Math.toRadians(poolCueView.getPreviousAngle());
+                    maxDisplacementX = MAX_DISTANCE * Math.cos(poolCueAngle);
+                    maxDisplacementY = MAX_DISTANCE * Math.sin(poolCueAngle);
+                    isPressed = true;
+                }
             }
         });
         scene.setOnMouseDragged(event -> {
@@ -83,18 +90,29 @@ public class PoolCueController {
             }
         });
 
-        scene.setOnMouseReleased(event -> {
+        if (!rightButtonClicked) {
+            scene.setOnMouseReleased(event -> {
+                if (event.getButton() == MouseButton.PRIMARY) {
+                    isPressed = false;
+                    if(poolCueView.getCue().getLayoutX()!=0&&poolCueView.getCue().getLayoutY()!=0) {
+                        poolCueView.getCue().getTransforms().clear();
+                        poolCueView.getPoolLine().getTransforms().clear();
+                        poolCueView.setPreviousAngle(0);
+                        BallController.whiteBallModel.setVelocityX(new BigDecimal(-poolCueView.getCue().getLayoutX() / 10));
+                        BallController.whiteBallModel.setVelocityY(new BigDecimal(-poolCueView.getCue().getLayoutY() / 10));
+                        poolCueView.getCue().setLayoutX(0);
+                        poolCueView.getCue().setLayoutY(0);
+                        disablePoolCueControl();
+                    }
+                }
+            });
+        }
+
+        scene.setOnMouseClicked(event -> {
             isPressed = false;
-            if(poolCueView.getCue().getLayoutX()!=0&&poolCueView.getCue().getLayoutY()!=0) {
-                poolCueView.getCue().getTransforms().clear();
-                poolCueView.setPreviousAngle(0);
-                BallController.whiteBallModel.setVelocityX(new BigDecimal(-poolCueView.getCue().getLayoutX() / 10));
-                BallController.whiteBallModel.setVelocityY(new BigDecimal(-poolCueView.getCue().getLayoutY() / 10));
-                poolCueView.getCue().setLayoutX(0);
-                poolCueView.getCue().setLayoutY(0);
-                disablePoolCueControl();
-                GameController.waitingForInput=false;
-            }
+            poolCueView.getCue().setLayoutX(0);
+            poolCueView.getCue().setLayoutY(0);
+            rightButtonClicked = true;
         });
 
     }
@@ -113,5 +131,9 @@ public class PoolCueController {
     }
     public void disablePoolCueControl() {
         enablePoolCueControl=false;
+    }
+
+    public PoolCueView getCueView() {
+        return poolCueView;
     }
 }
