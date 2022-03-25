@@ -89,8 +89,9 @@ public class GameController {
                         poolCueController.poolCueView.getPoolLine().setStartX(BallController.whiteBallModel.getPositionX().doubleValue());
                         poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
 
-                        poolCueController.poolCueView.getPoolLine().setEndX(BallController.whiteBallModel.getPositionX().doubleValue() + 40);
-                        poolCueController.poolCueView.getPoolLine().setEndY(BallController.whiteBallModel.getPositionX().doubleValue() + 40);
+                        poolCueController.poolCueDirectionLine();
+                        poolCueController.poolCueView.getPoolLine().setEndX(poolCueController.getxLocationOfIntersection());
+                        poolCueController.poolCueView.getPoolLine().setEndY(poolCueController.getyLocationOfIntersection());
 
                         poolCueController.enablePoolCueControl();
                         gView.displayPoolCue(true);

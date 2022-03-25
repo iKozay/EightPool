@@ -1,10 +1,15 @@
 package io.pool.controller;
 
+import io.pool.model.BallModel;
 import io.pool.model.PoolCueModel;
+import io.pool.view.BallView;
 import io.pool.view.PoolCueView;
 
+import io.pool.view.TableView;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 
 import java.math.BigDecimal;
@@ -111,6 +116,8 @@ public class PoolCueController {
             isPressed = false;
             poolCueView.getCue().setLayoutX(0);
             poolCueView.getCue().setLayoutY(0);
+            poolCueView.getCue().setLayoutX(0);
+            poolCueView.getCue().setLayoutY(0);
             rightButtonClicked = true;
         });
 
@@ -125,6 +132,39 @@ public class PoolCueController {
         poolCueView.setPreviousAngle(0);
     }
 
+    BallController ballController = new BallController();
+    private double xLocationOfIntersection;
+    private double yLocationOfIntersection;
+    public void poolCueDirectionLine(){
+
+        poolCueView.testLineView().setStartX(BallController.whiteBallModel.getPositionX().doubleValue()+BallModel.RADIUS+1);
+        poolCueView.testLineView().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
+
+        boolean didFindCollision = false;
+        for(int i = 1; i<TableView.getTableWidth(); i++){
+            poolCueView.testLineView().setEndX(i);
+            poolCueView.testLineView().setEndY(i);
+            for(int j=0; j<BallController.bViewList.size(); j++){
+                if(j == BallController.bViewList.size()-2){
+                    break;
+                }else{
+                    if (poolCueView.testLineView().intersects(BallController.bViewList.get(j).getBall().getLayoutBounds()));{
+                        xLocationOfIntersection = BallController.bViewList.get(j).getBall().getLayoutX();
+                        yLocationOfIntersection = BallController.bViewList.get(j).getBall().getLayoutY();
+                        didFindCollision = true;
+                        break;
+                    }
+            }
+            }
+        }
+        if(!didFindCollision){
+            //for()layout borders
+        }
+System.out.println(xLocationOfIntersection);
+        System.out.println(yLocationOfIntersection);
+    }
+
+
     public void enablePoolCueControl() {
         enablePoolCueControl=true;
     }
@@ -134,5 +174,13 @@ public class PoolCueController {
 
     public PoolCueView getCueView() {
         return poolCueView;
+    }
+
+    public double getxLocationOfIntersection() {
+        return xLocationOfIntersection;
+    }
+
+    public double getyLocationOfIntersection() {
+        return yLocationOfIntersection;
     }
 }

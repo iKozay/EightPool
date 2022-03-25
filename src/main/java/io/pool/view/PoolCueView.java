@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -30,6 +31,7 @@ public class PoolCueView {
         poolLine.setStroke(Color.WHITE);
         poolLine.setStrokeWidth(3);
         poolLine.setFill(Color.WHITE);
+        this.testLineView();
     }
 
     public ImageView getCue() {
@@ -47,4 +49,13 @@ public class PoolCueView {
     public Line getPoolLine() {
         return poolLine;
     }
+
+    public Line testLineView(){
+        Line testLine = new Line();
+        testLine.setStrokeWidth(3);
+        testLine.setFill(Color.ORANGE);
+
+        return testLine;
+    }
+
 }

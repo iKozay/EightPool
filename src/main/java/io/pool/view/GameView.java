@@ -475,6 +475,7 @@ public class GameView extends Pane {
     public void displayPoolCue(boolean visibility){
         this.cueView.getCue().toFront();
         this.cueView.getCue().setVisible(visibility);
+        this.cueView.getPoolLine().setVisible(visibility);
     }
 
     public AnchorPane getGamePane() {

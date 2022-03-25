@@ -283,38 +283,37 @@ public class PhysicsModule {
         return false;
     }
 
-
-    /**
-     * Gets the distance between this object and another object
-     * <p>
-     * D = sqrt [ (x<sub>2</sub>-x<sub>1</sub>)<sup>2</sup> + (y<sub>2</sub>-y<sub>1</sub>)<sup>2</sup> ]
-     * </p>
-     *
-     * @param module Another object that extends PhysicsModule
-     * @return The distance between two objects
-     */
-    public BigDecimal distance(PhysicsModule module) {
-        BigDecimal distance;
-        BigDecimal x2, y2, x1, y1;
-        /**
-         * Assigns the x and y variables depending on the object
-         */
-        x2 = module.getPositionX();
-        y2 = module.getPositionY();
-        x1 = getPositionX();
-        y1 = getPositionY();
-
-        /**
-         * Finds distance
-         */
-        BigDecimal a = x2.subtract(x1);
-        BigDecimal b = y2.subtract(y1);
-        a = a.pow(2);
-        b = b.pow(2);
-        BigDecimal subtotal = a.add(b);
-        distance = subtotal.sqrt(MathContext.DECIMAL32);
-        return distance;
-    }
+//    /**
+//     * Gets the distance between this object and another object
+//     * <p>
+//     * D = sqrt [ (x<sub>2</sub>-x<sub>1</sub>)<sup>2</sup> + (y<sub>2</sub>-y<sub>1</sub>)<sup>2</sup> ]
+//     * </p>
+//     *
+//     * @param module Another object that extends PhysicsModule
+//     * @return The distance between two objects
+//     */
+//    public BigDecimal distance(PhysicsModule module) {
+//        BigDecimal distance;
+//        BigDecimal x2, y2, x1, y1;
+//        /**
+//         * Assigns the x and y variables depending on the object
+//         */
+//        x2 = module.getPositionX();
+//        y2 = module.getPositionY();
+//        x1 = getPositionX();
+//        y1 = getPositionY();
+//
+//        /**
+//         * Finds distance
+//         */
+//        BigDecimal a = x2.subtract(x1);
+//        BigDecimal b = y2.subtract(y1);
+//        a = a.pow(2);
+//        b = b.pow(2);
+//        BigDecimal subtotal = a.add(b);
+//        distance = subtotal.sqrt(MathContext.DECIMAL32);
+//        return distance;
+//    }
 //    public BigDecimal getAngleFromVelocity(){
 //        BigDecimal angle = new BigDecimal(Math.atan(Math.abs(getVelocityY().doubleValue()/getVelocityX().doubleValue())));
 //        if ((getVelocityX().signum() == -1) && (getVelocityY().signum() == -1)) {
