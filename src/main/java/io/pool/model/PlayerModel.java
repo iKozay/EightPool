@@ -11,6 +11,7 @@ public class PlayerModel {
      * 1 = Stripe
      */
     private int ballType =1;
+    private int selectedPoolCue;
     private int numberOfWins;
     private int numberOfLoss;
     private int averageNumberOfShotsPerGame;
@@ -57,4 +58,12 @@ public class PlayerModel {
     public int getAverageNumberOfShotsPerGame() {return averageNumberOfShotsPerGame;}
 
     public void setAverageNumberOfShotsPerGame(int averageNumberOfShotsPerGame) {this.averageNumberOfShotsPerGame = averageNumberOfShotsPerGame;}
+
+    public int getSelectedPoolCue() {
+        return selectedPoolCue;
+    }
+
+    public void setSelectedPoolCue(int selectedPoolCue) {
+        this.selectedPoolCue = selectedPoolCue;
+    }
 }
