@@ -123,10 +123,10 @@ public class MainMenuController {
                 e.printStackTrace();
             }
             //gameModel.setGameType(1);
-            //DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test"), new PlayerModel());
+            DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test"), new PlayerModel());
 
             gameModel.setGameType(1);
-            //DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test"), new PlayerModel());
+            DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test"), new PlayerModel());
         });
 
         mmv.getSolo1Btn().setOnMouseExited(event -> {

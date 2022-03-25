@@ -96,7 +96,7 @@ public class GameController {
                         poolCueController.enablePoolCueControl();
                         gView.displayPoolCue(true);
                         if(!DBConnection.hasBeenCalled) {
-                            //DBConnection.updateLastPosition(playerModel.getBallType(),playerModel.getBallType(), gameModel.getPlayerTurn());
+                            DBConnection.updateLastPosition(playerModel.getBallType(),playerModel.getBallType(), gameModel.getPlayerTurn());
                             DBConnection.hasBeenCalled = true;
                         }
                     }else{
