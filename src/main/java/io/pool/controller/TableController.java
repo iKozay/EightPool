@@ -26,9 +26,8 @@ public class TableController {
      */
     public TableController(TableView tableView) {
         this.tableView = tableView;
-        //TODO The problem is caused by the real position of table
-        tableX = tableView.getTableImageView().getLayoutX();
-        tableY = tableView.getTableImageView().getLayoutY();
+        tableX = tableView.getFullTable().getLayoutX()+(TableView.width/43.2);
+        tableY = tableView.getFullTable().getLayoutY();
     }
 
     /**
@@ -46,9 +45,9 @@ public class TableController {
      */
     public boolean checkBallInHole(BallView ballView) {
         for(Circle hole:tableView.getHoles()) {
-            double xSquared = Math.pow((ballView.getBall().getLayoutX() - tableX - hole.getLayoutX()), 2);
-            double ySquared = Math.pow((ballView.getBall().getLayoutY() - tableY - hole.getLayoutY()), 2);
-            double centerToCenter = Math.sqrt(xSquared+ySquared)-BallModel.RADIUS;
+            double xSquared = Math.pow((ballView.getBall().getLayoutX() - tableX - hole.getCenterX()), 2);
+            double ySquared = Math.pow((ballView.getBall().getLayoutY() - tableY - hole.getCenterY()), 2);
+            double centerToCenter = Math.sqrt(xSquared+ySquared);
             if(centerToCenter < hole.getRadius()) {
                 System.out.println("Center2Center: "+centerToCenter+"\tRadius: "+hole.getRadius());
                 return true;
