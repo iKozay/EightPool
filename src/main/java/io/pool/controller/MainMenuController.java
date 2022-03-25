@@ -11,6 +11,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 
 public class MainMenuController {
@@ -23,6 +24,7 @@ public class MainMenuController {
     public MainMenuController(MainMenuView mmv,Stage stage) {
         this.mmv = mmv;
         this.stage = stage;
+        this.settingsView = new SettingsView();
         mmv.setController(this);
         try {
             solo1Action();
@@ -34,12 +36,14 @@ public class MainMenuController {
     }
 
     public static void gotoMainMenu(){
-        gameView.getGameController().getPoolCueController().resetEventHandler(stage.getScene());
-        gameView.getGameController().resetGame();
+        if(stage.getScene().getRoot().equals(gameView)) {
+            gameView.getGameController().getPoolCueController().resetEventHandler(stage.getScene());
+            gameView.getGameController().resetGame();
+        }
         stage.getScene().setRoot(mmv);
     }
     public void gotoSettings(){
-        stage.getScene().setRoot(settingsView.getNewLoadedPane());
+        stage.getScene().setRoot(settingsView);
     }
 
     public void pvpAction(){

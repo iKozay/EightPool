@@ -1,89 +1,125 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.pool.controller.settingsController">
-   <children>
-      <GridPane prefHeight="197.0" prefWidth="600.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints maxHeight="128.6666488647461" minHeight="0.0" prefHeight="31.33332633972168" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="318.3333333333333" minHeight="8.000010172526043" prefHeight="32.66667683919272" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="367.99998982747394" minHeight="10.0" prefHeight="31.999989827473954" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="367.99998982747394" minHeight="10.0" prefHeight="31.666667938232422" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="367.99998982747394" minHeight="10.0" prefHeight="43.999994913737" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="367.99998982747394" minHeight="10.0" prefHeight="60.33332570393881" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <MenuBar>
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem fx:id="close" mnemonicParsing="false" onAction="#handleclose" text="Close" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem fx:id="goToMainMenu" mnemonicParsing="false" onAction="#handleToMainMenu" text="Go to Main Menu" />
-                        <MenuItem mnemonicParsing="false" text="Profiles" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-            <HBox prefHeight="15.0" prefWidth="600.0" GridPane.rowIndex="1">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Go To Main Menu" />
+                  <MenuItem mnemonicParsing="false" text="About" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Close" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+      <BorderPane prefHeight="376.0" prefWidth="640.0">
+         <center>
+            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Control Option:" wrappingWidth="91.54623413085938" />
-                  <RadioButton mnemonicParsing="false" text="Keyboard" />
-                  <RadioButton mnemonicParsing="false" selected="true" text="Mouse" />
+                  <HBox prefHeight="20.0" prefWidth="640.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Control Option:" wrappingWidth="213.611328125" />
+                        <RadioButton mnemonicParsing="false" prefHeight="17.0" prefWidth="201.0" text="Keyboard" HBox.hgrow="ALWAYS" />
+                        <RadioButton mnemonicParsing="false" prefHeight="17.0" prefWidth="278.0" text="Mouse+Keyboard" />
+                     </children>
+                  </HBox>
+                  <VBox prefHeight="356.0" prefWidth="641.0">
+                     <children>
+                        <Separator prefWidth="200.0" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Friction Percentage:" textAlignment="CENTER" wrappingWidth="640.1367492675781" />
+                        <Slider blockIncrement="25.0" max="150.0" min="50.0" minorTickCount="0" prefHeight="14.0" prefWidth="549.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="100.0" />
+                        <Separator prefWidth="200.0" />
+                        <HBox prefHeight="293.0" prefWidth="641.0">
+                           <children>
+                              <TableView prefHeight="293.0" prefWidth="467.0">
+                                <columns>
+                                  <TableColumn editable="false" prefWidth="75.0" resizable="false" sortable="false" text="Username" />
+                                    <TableColumn editable="false" prefWidth="115.33334350585938" resizable="false" sortable="false" text="Selected Pool Cue" />
+                                  <TableColumn editable="false" prefWidth="46.0" resizable="false" sortable="false" text="Wins" />
+                                    <TableColumn editable="false" prefWidth="42.6666259765625" resizable="false" sortable="false" text="Losses" />
+                                    <TableColumn editable="false" prefWidth="164.66668701171875" resizable="false" sortable="false" text="Average Number of Shots" />
+                                </columns>
+                              </TableView>
+                              <VBox prefHeight="293.0" prefWidth="214.0">
+                                 <children>
+                                    <VBox prefHeight="78.0" prefWidth="194.0">
+                                       <children>
+                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="New Username: " textAlignment="CENTER" wrappingWidth="192.39063262939453">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </Text>
+                                          <TextField promptText="Enter Username" />
+                                          <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="195.0" text="Add Player">
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                             </VBox.margin>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                    <Separator prefHeight="33.0" prefWidth="194.0" />
+                                    <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="195.0" text="Delete Selected Player" />
+                                    <Button mnemonicParsing="false" prefHeight="43.0" prefWidth="193.0" text="Change Username of Selected Player" textAlignment="CENTER" wrapText="true" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
                </children>
-            </HBox>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Show White Ball Path:" GridPane.rowIndex="2" />
-            <ComboBox prefWidth="150.0" promptText="Pointer" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets left="120.0" />
-               </GridPane.margin>
-            </ComboBox>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Theme Selection:" GridPane.rowIndex="3" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Pool Cue Selection:" GridPane.rowIndex="4" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Friction Coefficient:" GridPane.rowIndex="5" />
-            <ComboBox prefWidth="150.0" promptText="Default Theme" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets left="100.0" />
-               </GridPane.margin>
-            </ComboBox>
-            <ComboBox prefWidth="150.0" promptText="Default Pool Cue" GridPane.rowIndex="4">
-               <GridPane.margin>
-                  <Insets left="110.0" />
-               </GridPane.margin>
-            </ComboBox>
-            <Slider blockIncrement="0.1" majorTickUnit="0.1" max="0.5" min="0.1" minorTickCount="0" prefHeight="37.0" prefWidth="429.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="0.3" GridPane.rowIndex="5">
-               <GridPane.margin>
-                  <Insets left="100.0" right="10.0" />
-               </GridPane.margin>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </Slider>
-         </children>
-      </GridPane>
-   </children>
-</Pane>
+            </VBox>
+         </center>
+      </BorderPane>
+  </children>
+</VBox>
