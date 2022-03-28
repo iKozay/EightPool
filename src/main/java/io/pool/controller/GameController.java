@@ -36,6 +36,9 @@ public class GameController {
     private ArrayList<BallModel> bModelIn = new ArrayList<>();
     private ArrayList<BallModel> bModelInEachTurn = new ArrayList<>();
 
+    private ArrayList<Double> ballsPositionX;
+    private ArrayList<Double> ballsPositionY;
+    private ArrayList<Double> ballsSpeed;
 
     /**
      * Main Constructor of GameController
@@ -49,6 +52,11 @@ public class GameController {
         tableController = new TableController(this.gameView.getTableView());
         ballController = new BallController();
         poolCueController = new PoolCueController(this.gameView.getCueView());
+
+        ballsPositionX = new ArrayList<>();
+        ballsPositionY = new ArrayList<>();
+        ballsSpeed = new ArrayList<>();
+
         /** Instantiate the gameLoopTimer and Override the tick Method */
         gameLoopTimer = new GameLoopTimer() {
             @Override
@@ -61,8 +69,8 @@ public class GameController {
                     ballController.detectCollision();
                     /** Check if ball gets inside any of the holes */
                     for (BallView ballView : ballController.ballViewArrayList()) {
-                            if(tableController.checkBallInHole(ballView)) {
-                                whiteBallIn(ballView);
+                        if(tableController.checkBallInHole(ballView)) {
+                            whiteBallIn(ballView);
 //                                FadeTransition gettingInTheHole = new FadeTransition();
 //                                gettingInTheHole.setDuration(Duration.seconds(5));
 //                                gettingInTheHole.setNode(ballView.getBall());
@@ -72,7 +80,18 @@ public class GameController {
 //                                    gameView.getChildren().remove(ballView.getBall());
 //                                });
 //                                gettingInTheHole.play();
-                            }
+                        }
+                    }
+                    if (gameView.getClickedBallNumber() > 0) {
+                        if (gameView.getClickedBallNumber() == 16) {
+                            gameView.getxPositionField().setText(String.valueOf(BallController.bModelList.get(15).getPositionX().doubleValue()));
+                            gameView.getyPositionField().setText(String.valueOf(BallController.bModelList.get(15).getPositionY().doubleValue()));
+                        } else {
+                            gameView.getxPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getPositionX().doubleValue()));
+                            gameView.getyPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getPositionY().doubleValue()));
+
+                        }
+
                     }
                     winnerPlayerSolo();
                     /**Check if all balls are not moving to display the poolCue and update the database*/
@@ -139,7 +158,6 @@ public class GameController {
         }
         currentPlayer=p1;
 
-        System.out.println("START");
         //ballController.testingBallController(this.gameView);
         gameLoopTimer.start();
     }
@@ -318,5 +336,13 @@ public class GameController {
      */
     public PoolCueController getPoolCueController() {
         return poolCueController;
+    }
+
+    public ArrayList<Double> getBallsPositionX() {
+        return ballsPositionX;
+    }
+
+    public ArrayList<Double> getBallsPositionY() {
+        return ballsPositionY;
     }
 }

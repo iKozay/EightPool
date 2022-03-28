@@ -113,15 +113,17 @@ public class BallController {
              */
             root.getChildren().add(bView.getBall());
         }
-        bModelList.addAll(stripeBModelList);
         bModelList.addAll(solidBModelList);
-        bModelList.add(whiteBallModel);
         bModelList.add(eightBallModel);
+        bModelList.addAll(stripeBModelList);
+        bModelList.add(whiteBallModel);
 
-        bViewList.addAll(stripeBViewList);
+//        System.out.println(bModelList.size());
+
         bViewList.addAll(solidBViewList);
-        bViewList.add(whiteBallView);
         bViewList.add(eightBallView);
+        bViewList.addAll(stripeBViewList);
+        bViewList.add(whiteBallView);
     }
 
     public void makeDraggable() {draggable = !draggable;}

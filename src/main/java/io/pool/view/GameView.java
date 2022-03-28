@@ -15,7 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -24,10 +23,10 @@ import javafx.util.Duration;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameView extends Pane {
+    private  ArrayList<BallView> ballViews = new ArrayList<>();
     /** Instance of GameController that will control the Ball,Table and PoolCue Controllers */
     private GameController gameController;
     /** Table that will be displayed to the user */
@@ -46,13 +45,18 @@ public class GameView extends Pane {
 
     private FlowPane ballsPrimaryPane;
     private GridPane tableThemesPane;
-    private GridPane ballDataPane;
+    private GridPane ballsDataPane;
 
     private Pane cueSettingsPane;
 
+    private TextField xPositionField;
+    private TextField yPositionField;
+    private TextField speedValueField;
+
     private ImageView menuIconImageView, leftArrowImageView, rightArrowImageView, leaveArrowImageView;
 
-    private Rectangle bounds;
+    private int clickedBallNumber = -1;
+    private ArrayList<Circle> selectionCircles = new ArrayList<>();
 
     /**
      * This is the arrayList that would hold the rectangles
@@ -60,7 +64,6 @@ public class GameView extends Pane {
      */
     private ArrayList<Circle> circles;
 
-    private ArrayList<Timeline> animations;
     /**
      * Main Constructor of GameView
      * @throws MalformedURLException if the path to the table image is incorrect
@@ -72,7 +75,7 @@ public class GameView extends Pane {
         tableView = new TableView(this);
         cueView = new PoolCueView();
         displayPoolCue(false);
-        gameController = new GameController(this);
+
         this.getChildren().addAll(cueView.getCue(), cueView.getPoolLine());
         gamePane = tableView.getGamePane();
 
@@ -103,8 +106,61 @@ public class GameView extends Pane {
         ballsPrimaryPane.setPadding(new Insets(25));
 
 
-        ballDataPane = new GridPane();
-        ballsPrimaryPane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
+        ballsDataPane = new GridPane();
+        ballsDataPane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
+        ballsDataPane.setMinWidth(TableView.width/2.15);
+        ballsDataPane.setPrefHeight(TableView.height/4.);
+        ballsDataPane.setVisible(false);
+        ballsDataPane.setPadding(new Insets(25));
+        ballsDataPane.setHgap(TableView.width/30.);
+        ballsDataPane.setVgap(TableView.height/20.);
+        // creating the components of the data Pane
+
+        Label positionLabel = new Label("Position ");
+        positionLabel.setTextFill(Color.WHITE);
+        positionLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
+
+
+        Label xLabel = new Label("X:");
+        xLabel.setTextFill(Color.WHITE);
+        xLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
+
+        Label yLabel = new Label("Y:");
+        yLabel.setTextFill(Color.WHITE);
+        yLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
+
+        Label speedLabel = new Label("Speed: ");
+        speedLabel.setTextFill(Color.WHITE);
+        speedLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
+
+        xPositionField = new TextField();
+        xPositionField.setEditable(false);
+        xPositionField.setAlignment(Pos.CENTER);
+        xPositionField.setText("xxxx");
+        xPositionField.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
+        xPositionField.setPrefWidth(TableView.width/15.);
+
+        yPositionField = new TextField();
+        yPositionField.setEditable(false);
+        yPositionField.setAlignment(Pos.CENTER);
+        yPositionField.setText("yyyy");
+        yPositionField.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
+        yPositionField.setPrefWidth(TableView.width/15.);
+
+        speedValueField = new TextField();
+        speedValueField.setEditable(false);
+        speedValueField.setAlignment(Pos.CENTER);
+        speedValueField.setText("position");
+        speedValueField.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
+
+        ballsDataPane.add(positionLabel, 0, 0);
+        ballsDataPane.add(xLabel, 1, 0);
+        ballsDataPane.add(yLabel, 3, 0);
+        ballsDataPane.add(xPositionField, 2, 0);
+        ballsDataPane.add(yPositionField, 4, 0);
+
+        //ballsDataPane.add(speedLabel, 0, 1);
+        //ballsDataPane.add(speedValueField, 1, 1);
 
 
         createImageViews();
@@ -210,15 +266,27 @@ public class GameView extends Pane {
             selectionCircle.setStrokeWidth(2);
             selectionCircle.setVisible(false);
             bView.getBall().setOnMouseEntered(event -> selectionCircle.setVisible(true));
-            bView.getBall().setOnMouseExited(event -> selectionCircle.setVisible(false));
-            bView.getBall().setOnMouseClicked(event -> {
-
+            bView.getBall().setOnMouseExited(event -> {
+                if (!selectionCircle.getStroke().equals(Color.GREENYELLOW)) selectionCircle.setVisible(false);
             });
+            ballViews.add(bView);
+            selectionCircles.add(selectionCircle);
             StackPane ball = new StackPane();
             ball.getChildren().addAll(selectionCircle, bView.getBall());
             ballsPrimaryPane.getChildren().add(ball);
 
+        }
+        System.out.println(ballViews);
 
+        for (int i = 0; i < ballViews.size(); i++) {
+            int finalI = i;
+            ballViews.get(i).getBall().setOnMouseClicked(event -> {
+                for (Circle circle : selectionCircles) circle.setVisible(false);
+                selectionCircles.get(finalI).setVisible(true);
+                selectionCircles.get(finalI).setStroke(Color.GREENYELLOW);
+                ballsDataPane.setVisible(true);
+                clickedBallNumber = finalI + 1;
+            });
         }
 
         tableThemesPane = new GridPane();
@@ -277,6 +345,7 @@ public class GameView extends Pane {
         });
          */
 
+        //creating circles for table themes
         circles = new ArrayList<>();
 
         for (int i = 0; i < 7; i++) {
@@ -284,24 +353,26 @@ public class GameView extends Pane {
             circle.setStroke(Color.WHITE);
             circle.setStrokeWidth(3);
             circles.add(circle);
+            circle.setOnMouseClicked(event -> {
+                circle.setVisible(true);
+                circle.setStroke(Color.GREENYELLOW);
+
+            });
         }
 
-        for (int i = 1; i <= circles.size(); i++) {
-            setOnCircleListener(circles.get(i-1), i);
-        }
 
-        ballsSettingsPane.getChildren().addAll(ballsPrimaryPane);
+        ballsSettingsPane.getChildren().addAll(ballsPrimaryPane, ballsDataPane);
 
         tableThemesPane.addRow(0, circles.get(0), circles.get(1), circles.get(2));
         tableThemesPane.addRow(1, circles.get(3), circles.get(4), circles.get(5));
         tableThemesPane.addRow(2,circles.get(6));
 
-
-
         tableButtonSetListener();
 
 
         gamePane.getChildren().addAll(principalBar, ballsSettingsPane, tableThemesPane);
+
+        gameController = new GameController(this);
 
         AnchorPane.setTopAnchor(principalBar, TableView.height/35.0);
         AnchorPane.setRightAnchor(principalBar, 7.);
@@ -311,21 +382,6 @@ public class GameView extends Pane {
         AnchorPane.setRightAnchor(tableThemesPane, 7.0);
     }
 
-    private void setOnCircleListener(Circle circle, int index) {
-        circle.setOnMouseClicked(event -> {
-
-            try {
-                tableView.getTableImageView().setImage(new Image(new File("src/main/resources/tableImage/" +index+".png").toURI().toURL().toExternalForm()));
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-            for (Circle c: circles) {
-                c.setStroke(Color.WHITE);
-            }
-            circle.setStroke(Color.GREENYELLOW);
-        });
-    }
 
     private void createImageViews() throws MalformedURLException {
         menuIconImageView = new ImageView();
@@ -526,7 +582,35 @@ public class GameView extends Pane {
         return cueSettingsPane;
     }
 
+    public TextField getxPositionField() {
+        return xPositionField;
+    }
+
+    public TextField getyPositionField() {
+        return yPositionField;
+    }
+
+    public TextField getSpeedValueField() {
+        return speedValueField;
+    }
+
+    public void setxPositionField(TextField positionValueField) {
+        this.xPositionField = positionValueField;
+    }
+
+    public void setyPositionField(TextField yPositionField) {
+        this.yPositionField = yPositionField;
+    }
+
+    public void setSpeedValueField(TextField speedValueField) {
+        this.speedValueField = speedValueField;
+    }
+
     public Circle getCircleFromSphere(Sphere ball) {
         return new Circle(ball.getLayoutX(),ball.getLayoutY(),ball.getRadius());
+    }
+
+    public int getClickedBallNumber() {
+        return clickedBallNumber;
     }
 }
