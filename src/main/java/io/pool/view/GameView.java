@@ -40,12 +40,12 @@ public class GameView extends Pane {
     private AtomicBoolean principalBarIsVisible;
     private GridPane principalBar;
 
-    private Button menuButton, backButton, ballsButton, tableButton, cueButton;
+    private Button menuButton, backButton, ballsButton, tableButton, cueButton, backTableButton, nextTableButton;
 
     private VBox ballsSettingsPane;
 
     private FlowPane ballsPrimaryPane;
-    private GridPane tableThemesPane;
+    private VBox tableThemesPane;
     private GridPane ballsDataPane;
 
     private Pane cueSettingsPane;
@@ -55,16 +55,10 @@ public class GameView extends Pane {
     private TextField xSpeedField;
     private TextField ySpeedField;
 
-    private ImageView menuIconImageView, leftArrowImageView, rightArrowImageView, leaveArrowImageView;
-
+    private ImageView menuIconImageView, leftArrowWhiteImageView, rightArrowWhiteImageView, leftArrowYellowImageView, rightArrowYellowImageView, leaveArrowImageView;
+    private ImageView tablePreviewImageView;
     private int clickedBallNumber = -1;
     private ArrayList<Circle> selectionCircles = new ArrayList<>();
-
-    /**
-     * This is the arrayList that would hold the rectangles
-     * Note: they are circles actually, but with the animation, they would transform into rectangles
-     */
-    private ArrayList<Circle> circles;
 
     /**
      * Main Constructor of GameView
@@ -109,7 +103,7 @@ public class GameView extends Pane {
 
 
         ballsDataPane = new GridPane();
-        ballsDataPane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
+        //ballsDataPane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
         ballsDataPane.setMinWidth(TableView.width/2.15);
         ballsDataPane.setPrefHeight(TableView.height/4.);
         ballsDataPane.setVisible(false);
@@ -198,8 +192,8 @@ public class GameView extends Pane {
         menuButton.setPrefHeight(75);
 
         menuButton.setOnMouseEntered(event -> {
-            if (principalBarIsVisible.get()) menuButton.setGraphic(rightArrowImageView);
-            else menuButton.setGraphic(leftArrowImageView);
+            if (principalBarIsVisible.get()) menuButton.setGraphic(rightArrowWhiteImageView);
+            else menuButton.setGraphic(leftArrowWhiteImageView);
         });
 
         menuButton.setOnMouseExited(event -> menuButton.setGraphic(menuIconImageView));
@@ -295,15 +289,6 @@ public class GameView extends Pane {
 
         updateOnBallsClickedListener();
 
-        tableThemesPane = new GridPane();
-        tableThemesPane.setVisible(false);
-        tableThemesPane.setPrefWidth(TableView.width/2.15);
-        tableThemesPane.setPrefHeight(TableView.height/2.15);
-        tableThemesPane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
-        tableThemesPane.setAlignment(Pos.CENTER);
-        tableThemesPane.setHgap(25);
-        tableThemesPane.setVgap(25);
-
         /**
         ToggleGroup rbGroup = new ToggleGroup();
 
@@ -351,27 +336,79 @@ public class GameView extends Pane {
         });
          */
 
-        //creating circles for table themes
-        circles = new ArrayList<>();
+        //working on table Theme section
+        tableThemesPane = new VBox();
+        tableThemesPane.setVisible(false);
+        tableThemesPane.setAlignment(Pos.TOP_LEFT);
+        tableThemesPane.setSpacing(40);
+        tableThemesPane.setPrefWidth(TableView.width/2.15);
+        tableThemesPane.setPrefHeight(TableView.height/1.5);
+        tableThemesPane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
+        tableThemesPane.setPadding(new Insets(20));
 
-        for (int i = 0; i < 7; i++) {
-            Circle circle = new Circle(30);
-            circle.setStroke(Color.WHITE);
-            circle.setStrokeWidth(3);
-            circles.add(circle);
-            circle.setOnMouseClicked(event -> {
-                circle.setVisible(true);
-                circle.setStroke(Color.GREENYELLOW);
+        int[] currentTableImageView = {1};
 
-            });
-        }
+        Label tableThemeLabel = new Label("Choose a table theme:");
+        tableThemeLabel.setTextFill(Color.WHITE);
+        tableThemeLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
 
+        backTableButton = new Button();
+        backTableButton.setGraphic(leftArrowYellowImageView);
+        backTableButton.setStyle("-fx-background-color: transparent");
+        backTableButton.setContentDisplay(ContentDisplay.CENTER);
+        backTableButton.setMaxWidth(TableView.width/36.);
+        backTableButton.setMaxHeight(TableView.height/7.8);
+        backTableButton.setPrefWidth(100);
+        backTableButton.setPrefHeight(100);
+
+        nextTableButton = new Button();
+        nextTableButton.setGraphic(rightArrowYellowImageView);
+        nextTableButton.setStyle("-fx-background-color: transparent");
+        nextTableButton.setContentDisplay(ContentDisplay.CENTER);
+        nextTableButton.setMaxWidth(TableView.width/36.);
+        nextTableButton.setMaxHeight(TableView.height/7.8);
+        nextTableButton.setPrefWidth(100);
+        nextTableButton.setPrefHeight(100);
+
+        tablePreviewImageView = new ImageView();
+        tablePreviewImageView.setImage(new Image(new File("src/main/resources/tableImage/1.png").toURI().toURL().toExternalForm()));
+        tablePreviewImageView.setFitWidth(TableView.width/3.6);
+        tablePreviewImageView.setPreserveRatio(true);
+
+        tablePreviewImageView.setOnMouseClicked(event -> {
+            tableView.getTableImageView().setImage(tablePreviewImageView.getImage());
+        });
+
+        backTableButton.setOnAction(event -> {
+            if (currentTableImageView[0] == 1) currentTableImageView[0] = 7;
+            else currentTableImageView[0]--;
+            try {
+                tablePreviewImageView.setImage(new Image(new File("src/main/resources/tableImage/"+ currentTableImageView[0] +".png").toURI().toURL().toExternalForm()));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        });
+
+        nextTableButton.setOnAction(event -> {
+            if (currentTableImageView[0] == 7) currentTableImageView[0] = 1;
+            else currentTableImageView[0]++;
+            try {
+                tablePreviewImageView.setImage(new Image(new File("src/main/resources/tableImage/"+ currentTableImageView[0] +".png").toURI().toURL().toExternalForm()));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        });
+
+        HBox tableSwitchPane = new HBox();
+        tableSwitchPane.setAlignment(Pos.CENTER);
+        tableSwitchPane.setSpacing(40);
+
+        tableSwitchPane.getChildren().addAll(backTableButton, tablePreviewImageView, nextTableButton);
+
+        tableThemesPane.getChildren().addAll(tableThemeLabel, tableSwitchPane);
 
         ballsSettingsPane.getChildren().addAll(ballsPrimaryPane, ballsDataPane);
 
-        tableThemesPane.addRow(0, circles.get(0), circles.get(1), circles.get(2));
-        tableThemesPane.addRow(1, circles.get(3), circles.get(4), circles.get(5));
-        tableThemesPane.addRow(2,circles.get(6));
 
         tableButtonSetListener();
 
@@ -409,17 +446,31 @@ public class GameView extends Pane {
         menuIconImageView.setFitWidth(TableView.width/36.);
         menuIconImageView.setPreserveRatio(true);
 
-        leftArrowImageView = new ImageView();
-        Image back = new Image(new File("src/main/resources/UI icons/simpleArrowLeft_white.png").toURI().toURL().toExternalForm());
-        leftArrowImageView.setImage(back);
-        leftArrowImageView.setFitWidth(TableView.width/36.);
-        leftArrowImageView.setPreserveRatio(true);
+        leftArrowWhiteImageView = new ImageView();
+        Image back1 = new Image(new File("src/main/resources/UI icons/simpleArrowLeft_white.png").toURI().toURL().toExternalForm());
+        leftArrowWhiteImageView.setImage(back1);
+        leftArrowWhiteImageView.setFitWidth(TableView.width/36.);
+        leftArrowWhiteImageView.setPreserveRatio(true);
 
-        rightArrowImageView = new ImageView();
-        Image next = new Image(new File("src/main/resources/UI icons/simpleArrowRight_white.png").toURI().toURL().toExternalForm());
-        rightArrowImageView.setImage(next);
-        rightArrowImageView.setFitWidth(TableView.width/36.);
-        rightArrowImageView.setPreserveRatio(true);
+
+        rightArrowWhiteImageView = new ImageView();
+        Image next1 = new Image(new File("src/main/resources/UI icons/simpleArrowRight_white.png").toURI().toURL().toExternalForm());
+        rightArrowWhiteImageView.setImage(next1);
+        rightArrowWhiteImageView.setFitWidth(TableView.width/36.);
+        rightArrowWhiteImageView.setPreserveRatio(true);
+
+        leftArrowYellowImageView = new ImageView();
+        Image back2 = new Image(new File("src/main/resources/UI icons/left_back_Yellow.png").toURI().toURL().toExternalForm());
+        leftArrowYellowImageView.setImage(back2);
+        leftArrowYellowImageView.setFitWidth(TableView.width/30.);
+        leftArrowYellowImageView.setPreserveRatio(true);
+
+
+        rightArrowYellowImageView = new ImageView();
+        Image next2 = new Image(new File("src/main/resources/UI icons/right_next_Yellow.png").toURI().toURL().toExternalForm());
+        rightArrowYellowImageView.setImage(next2);
+        rightArrowYellowImageView.setFitWidth(TableView.width/30.);
+        rightArrowYellowImageView.setPreserveRatio(true);
 
         leaveArrowImageView = new ImageView();
         Image leaveImage = new Image(new File("src/main/resources/UI icons/arrow.png").toURI().toURL().toExternalForm());
@@ -452,56 +503,7 @@ public class GameView extends Pane {
 
             ballsDataPane.setVisible(false);
             if (ballsPrimaryPane.isVisible()) ballsPrimaryPane.setVisible(false);
-
-            if (!tableThemesPane.isVisible()) {
-                tableThemesPane.setVisible(true);
-
-                /** creating animation */
-
-                Timeline animation1 = new Timeline(
-                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(0).fillProperty(), Color.SADDLEBROWN)),
-                        new KeyFrame(Duration.seconds(1), new KeyValue(circles.get(0).fillProperty(), Color.SADDLEBROWN)),
-                        new KeyFrame(Duration.seconds(2.5), new KeyValue(circles.get(0).fillProperty(), Color.YELLOW)),
-                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(0).fillProperty(), Color.GREEN))); // at the end of the animation the circle should reach the corners -> diameter = diagonale of rect
-
-
-                Timeline animation2 = new Timeline(
-                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(1).fillProperty(), Color.BLACK)),
-                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(1).fillProperty(), Color.SKYBLUE)));
-
-                Timeline animation3 = new Timeline(
-                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(2).fillProperty(), Color.BLACK)),
-                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(2).fillProperty(), Color.GREEN)));
-
-                Timeline animation4 = new Timeline(
-                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(3).fillProperty(), Color.BLUE)),
-                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(3).fillProperty(), Color.RED)));
-
-                Timeline animation5 = new Timeline(
-                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(4).fillProperty(), Color.BLUE)),
-                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(4).fillProperty(), Color.RED)));
-
-                Timeline animation6 = new Timeline(
-                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(5).fillProperty(), Color.BLUE)),
-                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(5).fillProperty(), Color.RED)));
-
-                Timeline animation7 = new Timeline(
-                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(6).fillProperty(), Color.BLUE)),
-                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(6).fillProperty(), Color.RED)));
-
-
-                animation1.playFromStart();
-                animation2.playFromStart();
-                animation3.playFromStart();
-                animation4.playFromStart();
-                animation5.playFromStart();
-                animation6.playFromStart();
-                animation7.playFromStart();
-
-            } else tableThemesPane.setVisible(false);
-
-
-
+            tableThemesPane.setVisible(!tableThemesPane.isVisible());
 
         });
     }
@@ -595,7 +597,7 @@ public class GameView extends Pane {
         return ballsPrimaryPane;
     }
 
-    public GridPane getTableThemesPane() {
+    public VBox getTableThemesPane() {
         return tableThemesPane;
     }
 
@@ -655,5 +657,47 @@ public class GameView extends Pane {
         this.clickedBallNumber = clickedBallNumber;
     }
 
+
+    //                /** creating animation */
+//
+//                Timeline animation1 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(0).fillProperty(), Color.SADDLEBROWN)),
+//                        new KeyFrame(Duration.seconds(1), new KeyValue(circles.get(0).fillProperty(), Color.SADDLEBROWN)),
+//                        new KeyFrame(Duration.seconds(2.5), new KeyValue(circles.get(0).fillProperty(), Color.YELLOW)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(0).fillProperty(), Color.GREEN))); // at the end of the animation the circle should reach the corners -> diameter = diagonale of rect
+//
+//
+//                Timeline animation2 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(1).fillProperty(), Color.BLACK)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(1).fillProperty(), Color.SKYBLUE)));
+//
+//                Timeline animation3 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(2).fillProperty(), Color.BLACK)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(2).fillProperty(), Color.GREEN)));
+//
+//                Timeline animation4 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(3).fillProperty(), Color.BLUE)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(3).fillProperty(), Color.RED)));
+//
+//                Timeline animation5 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(4).fillProperty(), Color.BLUE)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(4).fillProperty(), Color.RED)));
+//
+//                Timeline animation6 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(5).fillProperty(), Color.BLUE)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(5).fillProperty(), Color.RED)));
+//
+//                Timeline animation7 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(6).fillProperty(), Color.BLUE)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(6).fillProperty(), Color.RED)));
+//
+//
+//                animation1.playFromStart();
+//                animation2.playFromStart();
+//                animation3.playFromStart();
+//                animation4.playFromStart();
+//                animation5.playFromStart();
+//                animation6.playFromStart();
+//                animation7.playFromStart();
 
 }

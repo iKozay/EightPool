@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
@@ -41,9 +42,9 @@ public class TableView {
         double layoutY = game.eightPoolTableY + 0.1*game.eightPoolTableY; // the YPosition in the general pane
 
         anchorPane = new AnchorPane();
-
+        anchorPane.setStyle("-fx-background-color: #1d6809");
         anchorPane.setPrefWidth(game.eightPoolTableWidth);
-        anchorPane.setPrefHeight(game.eightPoolTableHeight);
+        anchorPane.setMinHeight(game.eightPoolTableHeight);
 
         table = new Pane();
         table.setPadding(new Insets(width/43.2, 0, 0, 0));
@@ -191,7 +192,6 @@ public class TableView {
     public AnchorPane getGamePane() {
         return anchorPane;
     }
-
 
     public ImageView getTableImageView() {
         return tableImageView;
