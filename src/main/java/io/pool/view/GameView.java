@@ -103,7 +103,7 @@ public class GameView extends Pane {
 
 
         ballsDataPane = new GridPane();
-        //ballsDataPane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
+        ballsDataPane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
         ballsDataPane.setMinWidth(TableView.width/2.15);
         ballsDataPane.setPrefHeight(TableView.height/4.);
         ballsDataPane.setVisible(false);
@@ -342,6 +342,7 @@ public class GameView extends Pane {
         tableThemesPane.setAlignment(Pos.TOP_LEFT);
         tableThemesPane.setSpacing(40);
         tableThemesPane.setPrefWidth(TableView.width/2.15);
+        tableThemesPane.setMaxWidth(TableView.width/2.15);
         tableThemesPane.setPrefHeight(TableView.height/1.5);
         tableThemesPane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
         tableThemesPane.setPadding(new Insets(20));
