@@ -76,7 +76,7 @@ public class GameView extends Pane {
         cueView = new PoolCueView();
         displayPoolCue(false);
 
-        this.getChildren().addAll(cueView.getCue(), cueView.getPoolLine());
+        this.getChildren().addAll(cueView.getCue(), cueView.getPoolLine(),cueView.getPath());
         gamePane = tableView.getGamePane();
 
         /** working on the right corner setting section **/

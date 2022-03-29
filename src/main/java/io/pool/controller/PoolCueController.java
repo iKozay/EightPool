@@ -2,14 +2,16 @@ package io.pool.controller;
 
 import io.pool.model.BallModel;
 import io.pool.model.PoolCueModel;
+import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
+import io.pool.view.GameView;
 import io.pool.view.PoolCueView;
 
 import io.pool.view.TableView;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 
 import java.math.BigDecimal;
@@ -33,6 +35,7 @@ public class PoolCueController {
         scene.setOnMouseMoved(event -> {
             if(enablePoolCueControl) {
                 if (!isPressed) {
+
                     double deltaX = event.getX() - BallController.whiteBallModel.getPositionX().doubleValue();
                     double deltaY = event.getY() - BallController.whiteBallModel.getPositionY().doubleValue();
                     if (deltaX != 0) {
@@ -41,8 +44,10 @@ public class PoolCueController {
                         rotate.setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
                         rotate.setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
                         poolCueView.getCue().getTransforms().add(rotate);
-                        poolCueView.getPoolLine().getTransforms().add(rotate);
+                        //poolCueView.getPoolLine().getTransforms().add(rotate);
+                        poolCueView.getPath().getTransforms().add(rotate);
                         poolCueView.setPreviousAngle(newAngleDegrees);
+                        poolCueDirectionLine();
 
                     }
                 }
@@ -107,6 +112,9 @@ public class PoolCueController {
                         poolCueView.getCue().setLayoutX(0);
                         poolCueView.getCue().setLayoutY(0);
                         disablePoolCueControl();
+                        poolCueView.getPath().getElements().clear();
+                        poolCueView.getPath().getTransforms().clear();
+                        GameController.waitingForInput = false;
                     }
                 }
             });
@@ -130,38 +138,55 @@ public class PoolCueController {
         scene.setOnMouseReleased(null);
         poolCueView.getCue().getTransforms().clear();
         poolCueView.setPreviousAngle(0);
+        poolCueView.getPoolLine().getTransforms().clear();
+        poolCueView.getPath().getTransforms().clear();
     }
 
     BallController ballController = new BallController();
     private double xLocationOfIntersection;
     private double yLocationOfIntersection;
+
     public void poolCueDirectionLine(){
 
-        poolCueView.testLineView().setStartX(BallController.whiteBallModel.getPositionX().doubleValue()+BallModel.RADIUS+1);
-        poolCueView.testLineView().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
+        MoveTo moveTo = new MoveTo();
+        moveTo.setX(BallController.whiteBallView.getBall().getLayoutX());
+        moveTo.setY(BallController.whiteBallView.getBall().getLayoutY());
+        LineTo lineTo = new LineTo();
+        lineTo.setX(poolCueView.getCue().getX()-1000);
+        lineTo.setY(poolCueView.getCue().getY());
 
-        boolean didFindCollision = false;
-        for(int i = 1; i<TableView.getTableWidth(); i++){
-            poolCueView.testLineView().setEndX(i);
-            poolCueView.testLineView().setEndY(i);
-            for(int j=0; j<BallController.bViewList.size(); j++){
-                if(j == BallController.bViewList.size()-2){
-                    break;
-                }else{
-                    if (poolCueView.testLineView().intersects(BallController.bViewList.get(j).getBall().getLayoutBounds()));{
-                        xLocationOfIntersection = BallController.bViewList.get(j).getBall().getLayoutX();
-                        yLocationOfIntersection = BallController.bViewList.get(j).getBall().getLayoutY();
-                        didFindCollision = true;
-                        break;
-                    }
-            }
+        poolCueView.getPath().setStrokeWidth(BallModel.RADIUS);
+        poolCueView.getPath().getElements().addAll(moveTo,lineTo);
+
+
+        // TABLE BORDER
+        for(TableBorderModel tbm : TableBorderModel.tableBorder){
+            Shape intersect = Shape.intersect(poolCueView.getPath(),tbm);
+            if(intersect.getBoundsInLocal().getWidth()!=-1){
+                poolCueView.getPoolLine().setEndX(intersect.getBoundsInLocal().getCenterX()-intersect.getBoundsInLocal().getWidth()/2);
+                poolCueView.getPoolLine().setEndY(intersect.getBoundsInLocal().getCenterY()-intersect.getBoundsInLocal().getHeight()/2);
+                poolCueView.getPoolLine().toFront();
             }
         }
-        if(!didFindCollision){
-            //for()layout borders
+
+        // BALL
+
+        for(BallView bView : BallController.bViewList){
+            if(BallController.getBallModelFromBallView(bView).equals(BallController.whiteBallModel)){
+                break;
+            }
+            // TODO choose the closest one
+            Shape intersect = Shape.intersect(poolCueView.getPath(),bView.getCircleFromSphere());
+            if(intersect.getBoundsInLocal().getWidth()!=-1){
+                double currentDistance = Math.hypot((poolCueView.getPoolLine().getStartX()-poolCueView.getPoolLine().getEndX()),(poolCueView.getPoolLine().getStartY()-poolCueView.getPoolLine().getEndY()));
+                double newDistance = Math.hypot((poolCueView.getPoolLine().getStartX()-intersect.getBoundsInLocal().getCenterX()),(poolCueView.getPoolLine().getStartY()-intersect.getBoundsInLocal().getCenterY()));
+                if(newDistance<currentDistance) {
+                    poolCueView.getPoolLine().setEndX(intersect.getBoundsInLocal().getCenterX() - intersect.getBoundsInLocal().getWidth() / 2);
+                    poolCueView.getPoolLine().setEndY(intersect.getBoundsInLocal().getCenterY() - intersect.getBoundsInLocal().getHeight() / 2);
+                }
+                poolCueView.getPoolLine().toFront();
+            }
         }
-System.out.println(xLocationOfIntersection);
-        System.out.println(yLocationOfIntersection);
     }
 
 

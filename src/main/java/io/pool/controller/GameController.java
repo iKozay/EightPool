@@ -101,16 +101,13 @@ public class GameController {
                         if(moving) break;
                     }
                     if(!moving){ /**methods when all balls have stopped moving*/
-                        waitingForInput=true;
+                        waitingForInput = true;
                         poolCueController.poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue() + (BallModel.RADIUS));
                         poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (poolCueController.poolCueView.getCue().getImage().getHeight() / 2));
 
                         poolCueController.poolCueView.getPoolLine().setStartX(BallController.whiteBallModel.getPositionX().doubleValue());
                         poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
 
-                        poolCueController.poolCueDirectionLine();
-                        poolCueController.poolCueView.getPoolLine().setEndX(poolCueController.getxLocationOfIntersection());
-                        poolCueController.poolCueView.getPoolLine().setEndY(poolCueController.getyLocationOfIntersection());
 
                         poolCueController.enablePoolCueControl();
                         gView.displayPoolCue(true);
@@ -124,6 +121,8 @@ public class GameController {
                     if(!waitingForInput) {
                         turns();
                     }
+
+
                     ballInHole();
                 }
             }
@@ -168,7 +167,7 @@ public class GameController {
      */
     public void resetGame() {
         bModelIn.clear();
-        gameLoopTimer.stop();
+        //gameLoopTimer.stop();
         ballController.destroyViews(this.gameView);
         ballController.destroyModels();
         System.out.println("Reset");
@@ -180,18 +179,20 @@ public class GameController {
 
         if(p2==null) {
             winnerPlayerSolo();
+            foul=false;
+            System.out.println(foul);
             return;
         }
 
         if(bModelInEachTurn.isEmpty()){
             setCurrentPlayer();
             if(foul){
-                ballController.makeDraggable();
+                //ballController.makeDraggable();
             }
         }else{
             if(foul){
                 setCurrentPlayer();
-                ballController.makeDraggable();
+                //ballController.makeDraggable();
             }else{
                 firstPlay = false;
             }
@@ -224,7 +225,7 @@ public class GameController {
                 }
             }
         }
-
+        foul=false;
         bModelInEachTurn.clear();
         System.out.println(currentPlayer.getUsername() + "," + "your turn!");
         waitingForInput=true;
@@ -251,6 +252,9 @@ public class GameController {
         }else{
             bModelIn.add(bModel);
             bModelInEachTurn.add(bModel);
+        }
+        if(foul){
+            ballController.makeDraggable();
         }
     }
 

@@ -1,10 +1,12 @@
 package io.pool.view;
 
+import io.pool.controller.BallController;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 
@@ -16,6 +18,8 @@ public class PoolCueView {
     /** The cylinder that will represent the pool cue */
     private static ImageView cue;
     private Line poolLine;
+    private Path path;
+
 
     double previousAngle = 0;
 
@@ -28,10 +32,22 @@ public class PoolCueView {
         cue.setX(0);
         cue.setY(0);
         poolLine = new Line();
+        path = new Path();
+        path.setFill(Color.TRANSPARENT);
+        path.setStroke(Color.TRANSPARENT);
         poolLine.setStroke(Color.WHITE);
-        poolLine.setStrokeWidth(3);
+        poolLine.setStrokeWidth(1);
         poolLine.setFill(Color.WHITE);
-        this.testLineView();
+
+        //this.testLineView();
+    }
+
+    public Path getPath() {
+        return path;
+    }
+
+    public void setPath(Path path) {
+        this.path = path;
     }
 
     public ImageView getCue() {
@@ -50,12 +66,15 @@ public class PoolCueView {
         return poolLine;
     }
 
-    public Line testLineView(){
-        Line testLine = new Line();
-        testLine.setStrokeWidth(3);
-        testLine.setFill(Color.ORANGE);
+//    public Line testLineView(){
+//        Line testLine = new Line();
+//        testLine.setStrokeWidth(3);
+//        testLine.setFill(Color.ORANGE);
+//
+//        return testLine;
+//    }
 
-        return testLine;
+    public void setPoolLine(Line poolLine) {
+        this.poolLine = poolLine;
     }
-
 }

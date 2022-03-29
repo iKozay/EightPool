@@ -49,7 +49,6 @@ public class TableController {
             double ySquared = Math.pow((ballView.getBall().getLayoutY() - tableY - hole.getCenterY()), 2);
             double centerToCenter = Math.sqrt(xSquared+ySquared);
             if(centerToCenter < hole.getRadius()) {
-                System.out.println("Center2Center: "+centerToCenter+"\tRadius: "+hole.getRadius());
                 return true;
             }
         }
