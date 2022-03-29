@@ -52,7 +52,8 @@ public class GameView extends Pane {
 
     private TextField xPositionField;
     private TextField yPositionField;
-    private TextField speedValueField;
+    private TextField xSpeedField;
+    private TextField ySpeedField;
 
     private ImageView menuIconImageView, leftArrowImageView, rightArrowImageView, leaveArrowImageView;
 
@@ -122,47 +123,68 @@ public class GameView extends Pane {
         positionLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
 
 
-        Label xLabel = new Label("X:");
-        xLabel.setTextFill(Color.WHITE);
-        xLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
+        Label xPosLabel = new Label("X:");
+        xPosLabel.setTextFill(Color.WHITE);
+        xPosLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
 
-        Label yLabel = new Label("Y:");
-        yLabel.setTextFill(Color.WHITE);
-        yLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
+        Label yPosLabel = new Label("Y:");
+        yPosLabel.setTextFill(Color.WHITE);
+        yPosLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
 
-        Label speedLabel = new Label("Speed: ");
+        Label xSpeedLabel = new Label("X:");
+        xSpeedLabel.setTextFill(Color.WHITE);
+        xSpeedLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
+
+        Label ySpeedLabel = new Label("Y:");
+        ySpeedLabel.setTextFill(Color.WHITE);
+        ySpeedLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
+
+
+        Label speedLabel = new Label("Speed ");
         speedLabel.setTextFill(Color.WHITE);
         speedLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
 
         xPositionField = new TextField();
         xPositionField.setEditable(false);
-        xPositionField.setAlignment(Pos.CENTER);
+        xPositionField.setAlignment(Pos.CENTER_LEFT);
         xPositionField.setText("xxxx");
         xPositionField.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
-        xPositionField.setPrefWidth(TableView.width/15.);
+        xPositionField.setMaxWidth(TableView.width/15.);
 
         yPositionField = new TextField();
         yPositionField.setEditable(false);
-        yPositionField.setAlignment(Pos.CENTER);
+        yPositionField.setAlignment(Pos.CENTER_LEFT);
         yPositionField.setText("yyyy");
         yPositionField.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
-        yPositionField.setPrefWidth(TableView.width/15.);
+        yPositionField.setMaxWidth(TableView.width/15.);
 
-        speedValueField = new TextField();
-        speedValueField.setEditable(false);
-        speedValueField.setAlignment(Pos.CENTER);
-        speedValueField.setText("position");
-        speedValueField.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
+        xSpeedField = new TextField();
+        xSpeedField.setEditable(false);
+        xSpeedField.setAlignment(Pos.CENTER_LEFT);
+        xSpeedField.setText("xxxx");
+        xSpeedField.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
+        xSpeedField.setMaxWidth(TableView.width/15.);
 
+        ySpeedField = new TextField();
+        ySpeedField.setEditable(false);
+        ySpeedField.setAlignment(Pos.CENTER_LEFT);
+        ySpeedField.setText("yyyy");
+        ySpeedField.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
+        ySpeedField.setMaxWidth(TableView.width/15.);
+
+        //adding Position components
         ballsDataPane.add(positionLabel, 0, 0);
-        ballsDataPane.add(xLabel, 1, 0);
-        ballsDataPane.add(yLabel, 3, 0);
+        ballsDataPane.add(xPosLabel, 1, 0);
+        ballsDataPane.add(yPosLabel, 3, 0);
         ballsDataPane.add(xPositionField, 2, 0);
         ballsDataPane.add(yPositionField, 4, 0);
 
-        //ballsDataPane.add(speedLabel, 0, 1);
-        //ballsDataPane.add(speedValueField, 1, 1);
-
+        //adding Speed components
+        ballsDataPane.add(speedLabel, 0, 1);
+        ballsDataPane.add(xSpeedLabel, 1, 1);
+        ballsDataPane.add(ySpeedLabel, 3, 1);
+        ballsDataPane.add(xSpeedField, 2, 1);
+        ballsDataPane.add(ySpeedField, 4, 1);
 
         createImageViews();
 
@@ -241,17 +263,6 @@ public class GameView extends Pane {
         principalBar.add(tableButton, 2,0);
         principalBar.add(cueButton, 3,0);
         principalBar.add(backButton, 4,0);
-        ///////
-
-//        FlowPane ballsStrokePane = new FlowPane();
-//        ballsPrimaryPane.setLayoutX(0);
-//        ballsPrimaryPane.setLayoutY(0);
-//        ballsStrokePane.setPadding(new Insets(25,0,25,0));
-//        ballsStrokePane.setAlignment(Pos.CENTER);
-//        ballsStrokePane.setStyle("-fx-background-color: #3D4956");
-//        ballsStrokePane.setVgap(TableView.height/23.4);
-//        ballsStrokePane.setHgap(TableView.width/30.857);
-
 
 
         for (int i=1;i<=16;i++) {
@@ -600,9 +611,11 @@ public class GameView extends Pane {
         return yPositionField;
     }
 
-    public TextField getSpeedValueField() {
-        return speedValueField;
+    public TextField getxSpeedField() {
+        return xSpeedField;
     }
+
+    public TextField getySpeedField() {return ySpeedField;}
 
     public void setxPositionField(TextField positionValueField) {
         this.xPositionField = positionValueField;
@@ -612,9 +625,11 @@ public class GameView extends Pane {
         this.yPositionField = yPositionField;
     }
 
-    public void setSpeedValueField(TextField speedValueField) {
-        this.speedValueField = speedValueField;
+    public void setxSpeedField(TextField xSpeedField) {
+        this.xSpeedField = xSpeedField;
     }
+
+
 
     public Circle getCircleFromSphere(Sphere ball) {
         return new Circle(ball.getLayoutX(),ball.getLayoutY(),ball.getRadius());
@@ -639,4 +654,6 @@ public class GameView extends Pane {
     public void setClickedBallNumber(int clickedBallNumber) {
         this.clickedBallNumber = clickedBallNumber;
     }
+
+
 }
