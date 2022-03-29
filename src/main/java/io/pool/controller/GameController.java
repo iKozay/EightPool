@@ -50,7 +50,7 @@ public class GameController {
         playerModel = new PlayerModel();
         this.gameView = gView;
         tableController = new TableController(this.gameView.getTableView());
-        ballController = new BallController();
+        ballController = new BallController(this);
         poolCueController = new PoolCueController(this.gameView.getCueView());
 
         ballsPositionX = new ArrayList<>();
@@ -82,16 +82,10 @@ public class GameController {
 //                                gettingInTheHole.play();
                         }
                     }
+                    //The problem happens when balls fall into the hole
                     if (gameView.getClickedBallNumber() > 0) {
-                        if (gameView.getClickedBallNumber() == 16) {
-                            gameView.getxPositionField().setText(String.valueOf(BallController.bModelList.get(15).getPositionX().doubleValue()));
-                            gameView.getyPositionField().setText(String.valueOf(BallController.bModelList.get(15).getPositionY().doubleValue()));
-                        } else {
-                            gameView.getxPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getPositionX().doubleValue()));
-                            gameView.getyPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getPositionY().doubleValue()));
-
-                        }
-
+                        gameView.getxPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getPositionX().doubleValue()));
+                        gameView.getyPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getPositionY().doubleValue()));
                     }
                     winnerPlayerSolo();
                     /**Check if all balls are not moving to display the poolCue and update the database*/

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameView extends Pane {
+    private ArrayList<StackPane> balls = new ArrayList<>();
     private  ArrayList<BallView> ballViews = new ArrayList<>();
     /** Instance of GameController that will control the Ball,Table and PoolCue Controllers */
     private GameController gameController;
@@ -265,7 +266,10 @@ public class GameView extends Pane {
             selectionCircle.setStroke(Color.WHITE);
             selectionCircle.setStrokeWidth(2);
             selectionCircle.setVisible(false);
-            bView.getBall().setOnMouseEntered(event -> selectionCircle.setVisible(true));
+            bView.getBall().setOnMouseEntered(event -> {
+                selectionCircle.setVisible(true);
+                selectionCircle.setStroke(Color.WHITE);
+            });
             bView.getBall().setOnMouseExited(event -> {
                 if (!selectionCircle.getStroke().equals(Color.GREENYELLOW)) selectionCircle.setVisible(false);
             });
@@ -273,21 +277,12 @@ public class GameView extends Pane {
             selectionCircles.add(selectionCircle);
             StackPane ball = new StackPane();
             ball.getChildren().addAll(selectionCircle, bView.getBall());
+            balls.add(ball);
             ballsPrimaryPane.getChildren().add(ball);
 
         }
-        System.out.println(ballViews);
 
-        for (int i = 0; i < ballViews.size(); i++) {
-            int finalI = i;
-            ballViews.get(i).getBall().setOnMouseClicked(event -> {
-                for (Circle circle : selectionCircles) circle.setVisible(false);
-                selectionCircles.get(finalI).setVisible(true);
-                selectionCircles.get(finalI).setStroke(Color.GREENYELLOW);
-                ballsDataPane.setVisible(true);
-                clickedBallNumber = finalI + 1;
-            });
-        }
+        updateOnBallsClickedListener();
 
         tableThemesPane = new GridPane();
         tableThemesPane.setVisible(false);
@@ -383,6 +378,19 @@ public class GameView extends Pane {
     }
 
 
+    public void updateOnBallsClickedListener() {
+        for (int i = 0; i < ballViews.size(); i++) {
+            int finalI = i;
+            ballViews.get(i).getBall().setOnMouseClicked(event -> {
+                for (Circle circle : selectionCircles) circle.setVisible(false);
+                selectionCircles.get(finalI).setVisible(true);
+                selectionCircles.get(finalI).setStroke(Color.GREENYELLOW);
+                ballsDataPane.setVisible(true);
+                clickedBallNumber = finalI + 1;
+            });
+        }
+    }
+
     private void createImageViews() throws MalformedURLException {
         menuIconImageView = new ImageView();
         Image menu = new Image(new File("src/main/resources/UI icons/menu_white.png").toURI().toURL().toExternalForm());
@@ -413,7 +421,7 @@ public class GameView extends Pane {
         ballsButton.setOnAction(event -> {
             ballsPrimaryPane.setVisible(!ballsPrimaryPane.isVisible());
             if (tableThemesPane.isVisible()) tableThemesPane.setVisible(false);
-
+            ballsDataPane.setVisible(false);
         });
 
     }
@@ -431,6 +439,7 @@ public class GameView extends Pane {
 
         tableButton.setOnAction(event -> {
 
+            ballsDataPane.setVisible(false);
             if (ballsPrimaryPane.isVisible()) ballsPrimaryPane.setVisible(false);
 
             if (!tableThemesPane.isVisible()) {
@@ -490,6 +499,7 @@ public class GameView extends Pane {
         menuButton.setOnAction(event -> {
 
             ballsPrimaryPane.setVisible(false);
+            ballsDataPane.setVisible(false);
             tableThemesPane.setVisible(false);
 
             if (principalBarIsVisible.get()) {
@@ -612,5 +622,21 @@ public class GameView extends Pane {
 
     public int getClickedBallNumber() {
         return clickedBallNumber;
+    }
+
+    public ArrayList<BallView> getBallViews() {
+        return ballViews;
+    }
+
+    public ArrayList<Circle> getSelectionCircles() {
+        return selectionCircles;
+    }
+
+    public ArrayList<StackPane> getBalls() {
+        return balls;
+    }
+
+    public void setClickedBallNumber(int clickedBallNumber) {
+        this.clickedBallNumber = clickedBallNumber;
     }
 }

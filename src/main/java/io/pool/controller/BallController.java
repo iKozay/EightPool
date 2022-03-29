@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 public class BallController {
 
+    private GameController gameController;
     /**
      * ArrayList that contains all the BallViews
      */
@@ -44,6 +45,9 @@ public class BallController {
     double mouseAnchorX, mouseAnchorY;
 
     public BallController() {
+    }
+    public BallController(GameController gameController){
+        this.gameController = gameController;
     }
 
     /**
@@ -279,10 +283,17 @@ public class BallController {
         if (ballModelArrayList().contains(ballModel)) {
             ballModel.setVelocityX(PhysicsModule.ZERO);
             ballModel.setVelocityY(PhysicsModule.ZERO);
+            int index = ballModelArrayList().indexOf(ballModel);
             BallView bView1 = getBallViewFromBallModel(ballModel);
             gameView.getChildren().remove(bView1.getBall());
             ballModelArrayList().remove(ballModel);
             ballViewArrayList().remove(bView1);
+            gameView.getBallsPrimaryPane().getChildren().remove(gameView.getBalls().get(index));
+            gameView.getBallViews().remove(index);
+            gameView.getSelectionCircles().remove(index);
+            gameView.setClickedBallNumber(gameView.getClickedBallNumber()-1);
+            gameView.updateOnBallsClickedListener();
+            System.out.println(ballModelArrayList().size());
         }
     }
 
