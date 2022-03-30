@@ -2,6 +2,7 @@ package io.pool.view;
 
 import io.pool.controller.GameController;
 import io.pool.controller.MainMenuController;
+import io.pool.eightpool.ResourcesLoader;
 import io.pool.model.BallModel;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -260,11 +261,8 @@ public class GameView extends Pane {
 
 
         for (int i=1;i<=16;i++) {
-            BallModel bModel;
             BallView bView;
-            if (i==16) bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/white.jpg").toURI().toURL().toExternalForm()));
-            else bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/ball" + i + ".jpg").toURI().toURL().toExternalForm()));
-            bView = new BallView(bModel.getImg(),BallModel.RADIUS + (TableView.width/150));
+            bView = new BallView(ResourcesLoader.ballImages.get(i-1),BallModel.RADIUS + (TableView.width/150));
 
             Circle selectionCircle = getCircleFromSphere(bView.getBall());
             selectionCircle.setFill(Color.TRANSPARENT);

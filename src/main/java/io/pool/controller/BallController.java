@@ -58,11 +58,10 @@ public class BallController {
         BallModel bModel;
         BallView bView;
         for (int i = 1; i <= 16; i++) {
+            bModel = new BallModel(i);
             if (i == 16) {
-                bModel = new BallModel(i);
                 whiteBallModel = bModel;
             } else {
-                bModel = new BallModel(i);
                 if (i == 8) {
                     eightBallModel = bModel;
                 } else if (i < 8) {
@@ -74,7 +73,7 @@ public class BallController {
             bModel.setPositionX(new BigDecimal(i * 3 * BallModel.RADIUS + 200));
             bModel.setPositionY(new BigDecimal(300));
 
-            bView = new BallView(ResourcesLoader.ballImages.get(i), BallModel.RADIUS);
+            bView = new BallView(ResourcesLoader.ballImages.get(i-1), BallModel.RADIUS);
             if (i == 8) {
                 eightBallView = bView;
             } else if (i < 8) {
