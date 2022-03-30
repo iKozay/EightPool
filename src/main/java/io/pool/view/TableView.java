@@ -1,5 +1,6 @@
 package io.pool.view;
 
+import io.pool.eightpool.ResourcesLoader;
 import io.pool.eightpool.game;
 import io.pool.model.BallModel;
 import io.pool.model.TableBorderModel;
@@ -10,14 +11,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 
@@ -34,7 +33,7 @@ public class TableView {
 
     //boolean selectionCircleClicked;
 
-    public TableView(Pane root) throws MalformedURLException {
+    public TableView(Pane root) {
 
         BallModel.RADIUS = getTableWidth()/80;
 
@@ -54,7 +53,7 @@ public class TableView {
         table.setLayoutY(layoutY);
 
         tableImageView = new ImageView(); // the image view of the table
-        Image tableImage = new Image(new File("src/main/resources/tableImage/1.png").toURI().toURL().toExternalForm());
+        Image tableImage = ResourcesLoader.tableImages.get(0);
         tableImageView.setImage(tableImage);
         tableImageView.setFitWidth(width);
         tableImageView.setFitHeight(height);

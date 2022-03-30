@@ -1,14 +1,8 @@
 package io.pool.controller;
 
-import io.pool.eightpool.game;
-import io.pool.model.BallModel;
-import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
 import io.pool.view.TableView;
 import javafx.scene.shape.Circle;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
 
 public class TableController {
 

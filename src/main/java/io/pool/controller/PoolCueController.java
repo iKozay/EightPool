@@ -89,13 +89,8 @@ public class PoolCueController {
                     draggedY = Math.abs(event.getY()-mouseYLock);
                     draggedTotal = Math.sqrt(Math.pow(draggedX,2)+ Math.pow(draggedY,2));
                     if(draggedTotal> MAX_DISTANCE) draggedTotal= MAX_DISTANCE;
-                /**
-                 * make poolCueView an actual image of pool cue in resources
-                 * ---------------------------
-                 * Debug poolcue positioning
-                 */
-                        poolCueView.getCue().setLayoutX(draggedTotal * Math.cos(Math.toRadians(poolCueView.getPreviousAngle())));
-                        poolCueView.getCue().setLayoutY(draggedTotal * Math.sin(Math.toRadians(poolCueView.getPreviousAngle())));
+                    poolCueView.getCue().setLayoutX(draggedTotal * Math.cos(Math.toRadians(poolCueView.getPreviousAngle())));
+                    poolCueView.getCue().setLayoutY(draggedTotal * Math.sin(Math.toRadians(poolCueView.getPreviousAngle())));
             }
         });
 

@@ -11,7 +11,6 @@ import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -21,8 +20,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -63,9 +60,8 @@ public class GameView extends Pane {
 
     /**
      * Main Constructor of GameView
-     * @throws MalformedURLException if the path to the table image is incorrect
      */
-    public GameView() throws MalformedURLException {
+    public GameView() {
         /**
          * Instantiates the Views and GameController
          */
@@ -370,7 +366,7 @@ public class GameView extends Pane {
         nextTableButton.setPrefHeight(100);
 
         tablePreviewImageView = new ImageView();
-        tablePreviewImageView.setImage(new Image(new File("src/main/resources/tableImage/1.png").toURI().toURL().toExternalForm()));
+        tablePreviewImageView.setImage(ResourcesLoader.tableImages.get(0));
         tablePreviewImageView.setFitWidth(TableView.width/3.6);
         tablePreviewImageView.setPreserveRatio(true);
 
@@ -381,21 +377,13 @@ public class GameView extends Pane {
         backTableButton.setOnAction(event -> {
             if (currentTableImageView[0] == 1) currentTableImageView[0] = 7;
             else currentTableImageView[0]--;
-            try {
-                tablePreviewImageView.setImage(new Image(new File("src/main/resources/tableImage/"+ currentTableImageView[0] +".png").toURI().toURL().toExternalForm()));
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+            tablePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentTableImageView[0]));
         });
 
         nextTableButton.setOnAction(event -> {
             if (currentTableImageView[0] == 7) currentTableImageView[0] = 1;
             else currentTableImageView[0]++;
-            try {
-                tablePreviewImageView.setImage(new Image(new File("src/main/resources/tableImage/"+ currentTableImageView[0] +".png").toURI().toURL().toExternalForm()));
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+            tablePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentTableImageView[0]));
         });
 
         HBox tableSwitchPane = new HBox();
@@ -438,42 +426,36 @@ public class GameView extends Pane {
         }
     }
 
-    private void createImageViews() throws MalformedURLException {
+    private void createImageViews() {
         menuIconImageView = new ImageView();
-        Image menu = new Image(new File("src/main/resources/UI icons/menu_white.png").toURI().toURL().toExternalForm());
-        menuIconImageView.setImage(menu);
+        menuIconImageView.setImage(ResourcesLoader.iconImages.get(0));
         menuIconImageView.setFitWidth(TableView.width/36.);
         menuIconImageView.setPreserveRatio(true);
 
         leftArrowWhiteImageView = new ImageView();
-        Image back1 = new Image(new File("src/main/resources/UI icons/simpleArrowLeft_white.png").toURI().toURL().toExternalForm());
-        leftArrowWhiteImageView.setImage(back1);
+        leftArrowWhiteImageView.setImage(ResourcesLoader.iconImages.get(1));
         leftArrowWhiteImageView.setFitWidth(TableView.width/36.);
         leftArrowWhiteImageView.setPreserveRatio(true);
 
 
         rightArrowWhiteImageView = new ImageView();
-        Image next1 = new Image(new File("src/main/resources/UI icons/simpleArrowRight_white.png").toURI().toURL().toExternalForm());
-        rightArrowWhiteImageView.setImage(next1);
+        rightArrowWhiteImageView.setImage(ResourcesLoader.iconImages.get(2));
         rightArrowWhiteImageView.setFitWidth(TableView.width/36.);
         rightArrowWhiteImageView.setPreserveRatio(true);
 
         leftArrowYellowImageView = new ImageView();
-        Image back2 = new Image(new File("src/main/resources/UI icons/left_back_Yellow.png").toURI().toURL().toExternalForm());
-        leftArrowYellowImageView.setImage(back2);
+        leftArrowYellowImageView.setImage(ResourcesLoader.iconImages.get(3));
         leftArrowYellowImageView.setFitWidth(TableView.width/30.);
         leftArrowYellowImageView.setPreserveRatio(true);
 
 
         rightArrowYellowImageView = new ImageView();
-        Image next2 = new Image(new File("src/main/resources/UI icons/right_next_Yellow.png").toURI().toURL().toExternalForm());
-        rightArrowYellowImageView.setImage(next2);
+        rightArrowYellowImageView.setImage(ResourcesLoader.iconImages.get(4));
         rightArrowYellowImageView.setFitWidth(TableView.width/30.);
         rightArrowYellowImageView.setPreserveRatio(true);
 
         leaveArrowImageView = new ImageView();
-        Image leaveImage = new Image(new File("src/main/resources/UI icons/arrow.png").toURI().toURL().toExternalForm());
-        leaveArrowImageView.setImage(leaveImage);
+        leaveArrowImageView.setImage(ResourcesLoader.iconImages.get(5));
         leaveArrowImageView.setFitWidth(TableView.width/36.);
         leaveArrowImageView.setPreserveRatio(true);
     }
