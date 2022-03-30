@@ -28,7 +28,7 @@ public class game extends Application {
 
         System.out.println("Height: "+eightPoolTableHeight);
         System.out.println("Width: "+eightPoolTableWidth);
-
+        ResourcesLoader.load();
         /**
          * Instantiates the Main Menu View and adds it the Scene
          */

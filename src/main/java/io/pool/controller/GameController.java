@@ -129,9 +129,8 @@ public class GameController {
     /**
      * Calls prepareGame method in BallController to instantiate the BallModels and BallViews
      * Then starts the gameLoopTimer
-     * @throws MalformedURLException if the path to the ball images is incorrect
      */
-    public void startGame(int gameType) throws MalformedURLException {
+    public void startGame(int gameType) {
         ballController.prepareGame(this.gameView);
 
         if(gameType==0){

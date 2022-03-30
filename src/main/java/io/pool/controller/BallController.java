@@ -1,16 +1,15 @@
 package io.pool.controller;
 
+import io.pool.eightpool.ResourcesLoader;
 import io.pool.model.BallModel;
 import io.pool.model.PhysicsModule;
 import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
 import javafx.geometry.Bounds;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.net.MalformedURLException;
@@ -54,17 +53,16 @@ public class BallController {
      * Prepares the game by creating the BallModels and the BallViews. Adds the BallViews to the pane
      *
      * @param root Pane where the balls will be added
-     * @throws MalformedURLException Throws this exception if the path to the ball image is incorrect
      */
-    public void prepareGame(Pane root) throws MalformedURLException {
+    public void prepareGame(Pane root) {
         BallModel bModel;
         BallView bView;
         for (int i = 1; i <= 16; i++) {
             if (i == 16) {
-                bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/white.jpg").toURI().toURL().toExternalForm()));
+                bModel = new BallModel(i);
                 whiteBallModel = bModel;
             } else {
-                bModel = new BallModel(i, new Image(new File("src/main/resources/billiards3D/ball" + i + ".jpg").toURI().toURL().toExternalForm()));
+                bModel = new BallModel(i);
                 if (i == 8) {
                     eightBallModel = bModel;
                 } else if (i < 8) {
@@ -76,7 +74,7 @@ public class BallController {
             bModel.setPositionX(new BigDecimal(i * 3 * BallModel.RADIUS + 200));
             bModel.setPositionY(new BigDecimal(300));
 
-            bView = new BallView(bModel.getImg(), BallModel.RADIUS);
+            bView = new BallView(ResourcesLoader.ballImages.get(i), BallModel.RADIUS);
             if (i == 8) {
                 eightBallView = bView;
             } else if (i < 8) {
@@ -121,8 +119,6 @@ public class BallController {
         bModelList.add(eightBallModel);
         bModelList.addAll(stripeBModelList);
         bModelList.add(whiteBallModel);
-
-//        System.out.println(bModelList.size());
 
         bViewList.addAll(solidBViewList);
         bViewList.add(eightBallView);

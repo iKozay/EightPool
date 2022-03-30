@@ -1,24 +1,19 @@
 package io.pool.model;
 
-import javafx.scene.image.Image;
-
 public class BallModel extends PhysicsModule{
 
     /** The radius of the ball */
     public static int RADIUS;
     /** The number of the ball */
     private int number;
-    /** The image that will be on the sphere */
-    private Image img;
 
 
     /**
      * Main constructor of BallModel
      * */
-    public BallModel(int number, Image img){
+    public BallModel(int number){
         super();
         this.number = number;
-        this.img  = img;
     }
 
     /**
@@ -32,14 +27,6 @@ public class BallModel extends PhysicsModule{
         if (otherBall == null || getClass() != otherBall.getClass()) return false;
         BallModel ballModel = (BallModel) otherBall;
         return number == ballModel.number;
-    }
-
-    /**
-     * Gets the image that will be used for this ball
-     * @return Path to image
-     */
-    public Image getImg() {
-        return img;
     }
 
     /**
