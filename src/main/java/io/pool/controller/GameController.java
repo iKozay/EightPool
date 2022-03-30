@@ -8,7 +8,6 @@ import io.pool.view.GameView;
 import io.pool.model.GameModel;
 
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class GameController {

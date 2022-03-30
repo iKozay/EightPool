@@ -1,6 +1,7 @@
 package io.pool.view;
 
 import io.pool.controller.MainMenuController;
+import io.pool.eightpool.ResourcesLoader;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -71,16 +72,9 @@ public class MainMenuView extends Pane{
                 this.getScreenWidth()/4, this.getScreenHeight(),
                 0.0, this.getScreenHeight());
 
-        Image tableTextureImage;
         ImagePattern tableTexturePattern;
-        try {
-            InputStream tableTextureStream = new FileInputStream("src/main/resources/MainMenu/TableTexture.jpg");
-            tableTextureImage = new Image(tableTextureStream);
-            tableTexturePattern = new ImagePattern(tableTextureImage);
-            p1.setFill(tableTexturePattern);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        tableTexturePattern = new ImagePattern(ResourcesLoader.tableTextures.get(0));
+        p1.setFill(tableTexturePattern);
         //Red
         p2 = new Polygon();
         this.getChildren().add(p2);
@@ -89,16 +83,9 @@ public class MainMenuView extends Pane{
                 this.getScreenWidth()*7/12, this.getScreenHeight(),
                 this.getScreenWidth()/4, this.getScreenHeight());
 
-        Image RedtableTextureImage;
         ImagePattern RedtableTexturePattern;
-        try {
-            InputStream RedtableTextureStream = new FileInputStream("src/main/resources/MainMenu/RedTableTexture.jpg");
-            RedtableTextureImage = new Image(RedtableTextureStream);
-            RedtableTexturePattern = new ImagePattern(RedtableTextureImage);
-            p2.setFill(RedtableTexturePattern);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        RedtableTexturePattern = new ImagePattern(ResourcesLoader.tableTextures.get(1));
+        p2.setFill(RedtableTexturePattern);
 
         //Blue
         p3 = new Polygon();
@@ -108,16 +95,9 @@ public class MainMenuView extends Pane{
                 this.getScreenWidth(), this.getScreenHeight(),
                 this.getScreenWidth()*7/12, this.getScreenHeight());
 
-        Image BluetableTextureImage;
         ImagePattern BluetableTexturePattern;
-        try {
-            InputStream BluetableTextureStream = new FileInputStream("src/main/resources/MainMenu/BlueTableTexture.jpg");
-            BluetableTextureImage = new Image(BluetableTextureStream);
-            BluetableTexturePattern = new ImagePattern(BluetableTextureImage);
-            p3.setFill(BluetableTexturePattern);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        BluetableTexturePattern = new ImagePattern(ResourcesLoader.tableTextures.get(2));
+        p3.setFill(BluetableTexturePattern);
 
         //adding text
         Font font = new Font(this.getScreenWidth()*0.05);

@@ -1,6 +1,7 @@
 package io.pool.view;
 
 import io.pool.controller.BallController;
+import io.pool.eightpool.ResourcesLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,7 +12,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 
 import java.io.File;
-import java.net.MalformedURLException;
 
 public class PoolCueView {
 
@@ -24,11 +24,7 @@ public class PoolCueView {
     double previousAngle = 0;
 
     public PoolCueView() {
-        try {
-            cue = new ImageView(new Image(new File("src/main/resources/cueImages/cue1.png").toURI().toURL().toExternalForm()));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        cue = new ImageView(ResourcesLoader.poolCueImages.get(0));
         cue.setX(0);
         cue.setY(0);
         poolLine = new Line();

@@ -11,12 +11,16 @@ public class ResourcesLoader {
     public static ArrayList<Image> ballImages = new ArrayList<>();
     public static ArrayList<Image> tableImages = new ArrayList<>();
     public static ArrayList<Image> iconImages = new ArrayList<>();
+    public static ArrayList<Image> tableTextures = new ArrayList<>();
+    public static ArrayList<Image> poolCueImages = new ArrayList<>();
 
     public static void load(){
         try {
             loadBallImages();
             loadTableImages();
             loadIcons();
+            loadTableTextures();
+            loadPoolCues();
         } catch (MalformedURLException e) {
             e.printStackTrace();
             System.exit(-1);
@@ -44,5 +48,13 @@ public class ResourcesLoader {
         Image next2 = new Image(new File("src/main/resources/UI icons/right_next_Yellow.png").toURI().toURL().toExternalForm());
         Image leaveImage = new Image(new File("src/main/resources/UI icons/arrow.png").toURI().toURL().toExternalForm());
         iconImages.addAll(Arrays.asList(menu,back1,next1,back2,next2,leaveImage));
+    }
+    private static void loadTableTextures() throws MalformedURLException{
+        tableTextures.add(new Image(new File("src/main/resources/MainMenu/TableTexture.jpg").toURI().toURL().toExternalForm()));
+        tableTextures.add(new Image(new File("src/main/resources/MainMenu/RedTableTexture.jpg").toURI().toURL().toExternalForm()));
+        tableTextures.add(new Image(new File("src/main/resources/MainMenu/BlueTableTexture.jpg").toURI().toURL().toExternalForm()));
+    }
+    private static void loadPoolCues() throws MalformedURLException{
+        poolCueImages.add(new Image(new File("src/main/resources/cueImages/cue1.png").toURI().toURL().toExternalForm()));
     }
 }

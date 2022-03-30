@@ -5,14 +5,8 @@ import io.pool.model.GameModel;
 import io.pool.model.PlayerModel;
 import io.pool.view.GameView;
 import io.pool.view.MainMenuView;
-import io.pool.view.PoolCueView;
 import io.pool.view.SettingsView;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
 
 public class MainMenuController {
 
@@ -26,11 +20,7 @@ public class MainMenuController {
         this.stage = stage;
         this.settingsView = new SettingsView();
         mmv.setController(this);
-        try {
-            solo1Action();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        solo1Action();
         pvAIAction();
         pvpAction();
     }
@@ -106,7 +96,7 @@ public class MainMenuController {
     }
 
     GameModel gameModel = new GameModel();
-    public void solo1Action() throws MalformedURLException {
+    public void solo1Action() {
         gameView = new GameView();
         mmv.getSolo1Btn().setOnMouseClicked(event -> {
             stage.getScene().setRoot(gameView);

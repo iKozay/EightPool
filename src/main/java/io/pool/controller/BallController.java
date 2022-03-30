@@ -12,7 +12,6 @@ import javafx.scene.shape.Shape;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class BallController {
