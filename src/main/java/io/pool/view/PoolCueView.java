@@ -1,7 +1,9 @@
 package io.pool.view;
 
 import io.pool.controller.BallController;
+import io.pool.controller.PoolCueController;
 import io.pool.eightpool.ResourcesLoader;
+import io.pool.model.BallModel;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,11 +26,14 @@ public class PoolCueView {
     double previousAngle = 0;
 
     public PoolCueView() {
+
         cue = new ImageView(ResourcesLoader.poolCueImages.get(0));
         cue.setX(0);
         cue.setY(0);
         poolLine = new Line();
         path = new Path();
+        //poolCueView.getCue().getTransforms().add(rotate);
+        //poolCueView.getPath().getTransforms().add(rotate);
         path.setFill(Color.TRANSPARENT);
         path.setStroke(Color.TRANSPARENT);
         poolLine.setStroke(Color.WHITE);
@@ -72,5 +77,13 @@ public class PoolCueView {
 
     public void setPoolLine(Line poolLine) {
         this.poolLine = poolLine;
+    }
+
+    public void setRotationTransform(PoolCueController pcc) {
+        cue.getTransforms().add(pcc.getRotate());
+        path.getTransforms().add(pcc.getRotate());
+        path.setStrokeWidth(BallModel.RADIUS);
+        path.getElements().addAll(pcc.getMoveTo(),pcc.getLineTo());
+
     }
 }

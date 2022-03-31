@@ -30,7 +30,7 @@ public class GameController {
     private PlayerModel currentPlayer;
     public static boolean foul=false;
     private boolean firstPlay=true,setBallType=false;
-    public static boolean waitingForInput=true;
+    public static boolean waitingForInput=false;
 
     private ArrayList<BallModel> bModelIn = new ArrayList<>();
     private ArrayList<BallModel> bModelInEachTurn = new ArrayList<>();
@@ -67,57 +67,51 @@ public class GameController {
                     /** Detect collisions */
                     ballController.detectCollision();
                     /** Check if ball gets inside any of the holes */
+                    boolean moving=false;
+                    BallModel bModel;
                     for (BallView ballView : ballController.ballViewArrayList()) {
+                        bModel = BallController.getBallModelFromBallView(ballView);
+                        if(!moving){
+                            moving=bModel.isMoving;
+                        }
+                        bModel.updatePosition();
+                        BallController.updateBallViewPosition(bModel);
                         if(tableController.checkBallInHole(ballView)) {
                             whiteBallIn(ballView);
-//                                FadeTransition gettingInTheHole = new FadeTransition();
-//                                gettingInTheHole.setDuration(Duration.seconds(5));
-//                                gettingInTheHole.setNode(ballView.getBall());
-//                                gettingInTheHole.setFromValue(1.0);
-//                                gettingInTheHole.setToValue(0.0);
-//                                gettingInTheHole.setOnFinished(event -> {
-//                                    gameView.getChildren().remove(ballView.getBall());
-//                                });
-//                                gettingInTheHole.play();
                         }
                     }
                     if (gameView.getClickedBallNumber() > 0) {
                         gameView.getxPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getPositionX().doubleValue()));
                         gameView.getyPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getPositionY().doubleValue()));
-
                         gameView.getxSpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getVelocityX().doubleValue()));
                         gameView.getySpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getVelocityY().doubleValue()));
                     }
                     winnerPlayerSolo();
                     /**Check if all balls are not moving to display the poolCue and update the database*/
-                    boolean moving=false;
-                    for(BallModel bModel : ballController.ballModelArrayList()){
-                        moving = bModel.isMoving;
-                        if(moving) break;
-                    }
-                    if(!moving){ /**methods when all balls have stopped moving*/
+                    if(!moving) { /**methods when all balls have stopped moving*/
                         waitingForInput = true;
-                        poolCueController.poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue() + (BallModel.RADIUS));
-                        poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (poolCueController.poolCueView.getCue().getImage().getHeight() / 2));
-
-                        poolCueController.poolCueView.getPoolLine().setStartX(BallController.whiteBallModel.getPositionX().doubleValue());
-                        poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
-
+                        if (!poolCueController.isEnablePoolCueControl()){
+                            poolCueController.poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue() + (BallModel.RADIUS));
+                            poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (poolCueController.poolCueView.getCue().getImage().getHeight() / 2));
+                            poolCueController.getRotate().setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
+                            poolCueController.getRotate().setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
+                            poolCueController.poolCueView.getPoolLine().setStartX(BallController.whiteBallModel.getPositionX().doubleValue());
+                            poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
+                        }
 
                         poolCueController.enablePoolCueControl();
                         gView.displayPoolCue(true);
                         if(!DBConnection.hasBeenCalled) {
-                            DBConnection.updateLastPosition(playerModel.getBallType(),playerModel.getBallType(), gameModel.getPlayerTurn());
+                            //DBConnection.updateLastPosition(playerModel.getBallType(),playerModel.getBallType(), gameModel.getPlayerTurn());
                             DBConnection.hasBeenCalled = true;
                         }
                     }else{
                         gView.displayPoolCue(false);
+                        poolCueController.disablePoolCueControl();
                     }
                     if(!waitingForInput) {
                         turns();
                     }
-
-
                     ballInHole();
                 }
             }
@@ -161,9 +155,14 @@ public class GameController {
      */
     public void resetGame() {
         bModelIn.clear();
-        //gameLoopTimer.stop();
+        bModelInEachTurn.clear();
+        gameLoopTimer.stop();
         ballController.destroyViews(this.gameView);
         ballController.destroyModels();
+        foul=false;
+        waitingForInput=false;
+        firstPlay=true;
+        setBallType=false;
         System.out.println("Reset");
     }
 
@@ -174,7 +173,6 @@ public class GameController {
         if(p2==null) {
             winnerPlayerSolo();
             foul=false;
-            System.out.println(foul);
             return;
         }
 

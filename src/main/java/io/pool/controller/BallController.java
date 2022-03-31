@@ -133,10 +133,6 @@ public class BallController {
     public void detectCollision() {
         detectCollisionWithTable();
         detectCollisionWithOtherBalls();
-        for (BallModel bModel : bModelList) {
-            bModel.updatePosition();
-            updateBallViewPosition(bModel);
-        }
     }
 
     public static void updateBallViewPosition(BallModel bModel) {
@@ -157,12 +153,12 @@ public class BallController {
                 if (!collisionChecked) {
                     intersectBounds = Shape.intersect(line, getBallViewFromBallModel(bModel).getCircleFromSphere()).getBoundsInLocal();
                     if ((intersectBounds.getWidth() != -1)) {
-                        BigDecimal normalXComponent = new BigDecimal(intersectBounds.getCenterX() - bModel.getPositionX().doubleValue());
-                        BigDecimal normalYComponent = new BigDecimal(intersectBounds.getCenterY() - bModel.getPositionY().doubleValue());
-                        BigDecimal distance = (normalYComponent.pow(2).add(normalXComponent.pow(2))).sqrt(MathContext.DECIMAL32);
+                        double normalXComponent = (intersectBounds.getCenterX() - bModel.getPositionX().doubleValue());
+                        double normalYComponent = (intersectBounds.getCenterY() - bModel.getPositionY().doubleValue());
+                        double distance = Math.sqrt(Math.pow(normalXComponent,2)+Math.pow(normalYComponent,2));
 
-                        BigDecimal distanceX = normalXComponent.multiply(new BigDecimal((BallModel.RADIUS - distance.doubleValue()) / (distance.doubleValue())));
-                        BigDecimal distanceY = normalYComponent.multiply(new BigDecimal((BallModel.RADIUS - distance.doubleValue()) / (distance.doubleValue())));
+                        BigDecimal distanceX = new BigDecimal(normalXComponent*((BallModel.RADIUS - distance) / distance));
+                        BigDecimal distanceY = new BigDecimal(normalYComponent*((BallModel.RADIUS - distance) / (distance)));
 
                         bModel.setPositionX(bModel.getPositionX().subtract(distanceX));
                         bModel.setPositionY(bModel.getPositionY().subtract(distanceY));

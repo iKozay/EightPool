@@ -19,6 +19,7 @@ public class game extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
         //TODO Units: 0.04pixels/m
         //TODO Links for 3D Balls:
         // https://openjfx.io/javadoc/16/javafx.graphics/javafx/scene/paint/PhongMaterial.html
@@ -26,8 +27,9 @@ public class game extends Application {
         // https://stackoverflow.com/questions/68186839/javafx-3d-sphere-partial-texture
         //
 
-        System.out.println("Height: "+eightPoolTableHeight);
-        System.out.println("Width: "+eightPoolTableWidth);
+        System.out.println("Height: " + eightPoolTableHeight);
+        System.out.println("Width: " + eightPoolTableWidth);
+
         ResourcesLoader.load();
         /**
          * Instantiates the Main Menu View and adds it the Scene
@@ -44,8 +46,8 @@ public class game extends Application {
         DBConnection.deleteAllData();
 
 
-
     }
+
     public static void main(String[] args) {
         launch();
     }

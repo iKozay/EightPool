@@ -2,17 +2,20 @@ package io.pool.eightpool;
 
 import javafx.scene.image.Image;
 
-import java.io.File;
+import javax.sound.sampled.*;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ResourcesLoader {
-    public static ArrayList<Image> ballImages = new ArrayList<>();
-    public static ArrayList<Image> tableImages = new ArrayList<>();
-    public static ArrayList<Image> iconImages = new ArrayList<>();
-    public static ArrayList<Image> tableTextures = new ArrayList<>();
-    public static ArrayList<Image> poolCueImages = new ArrayList<>();
+    public static final List<Image> ballImages = new ArrayList<>();
+    public static final List<Image> tableImages = new ArrayList<>();
+    public static final List<Image> iconImages = new ArrayList<>();
+    public static final List<Image> tableTextures = new ArrayList<>();
+    public static final List<Image> poolCueImages = new ArrayList<>();
+    public static final List<AudioInputStream> soundFiles = new ArrayList<>();
 
     public static void load(){
         try {
@@ -21,7 +24,11 @@ public class ResourcesLoader {
             loadIcons();
             loadTableTextures();
             loadPoolCues();
-        } catch (MalformedURLException e) {
+            loadSoundFiles();
+        } catch (MalformedURLException | FileNotFoundException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        } catch (UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
             System.exit(-1);
         }
@@ -56,5 +63,11 @@ public class ResourcesLoader {
     }
     private static void loadPoolCues() throws MalformedURLException{
         poolCueImages.add(new Image(new File("src/main/resources/cueImages/cue1.png").toURI().toURL().toExternalForm()));
+    }
+    private static void loadSoundFiles() throws IOException, UnsupportedAudioFileException {
+//        soundFiles.add(AudioSystem.getAudioInputStream(new FileInputStream("src/main/resources/sound/BallsCollide.wav")));
+//        soundFiles.add(AudioSystem.getAudioInputStream(new FileInputStream("src/main/resources/sound/Hole.wav")));
+//        soundFiles.add(AudioSystem.getAudioInputStream(new FileInputStream("src/main/resources/sound/Side.wav")));
+//        soundFiles.add(AudioSystem.getAudioInputStream(new FileInputStream("src/main/resources/sound/Strike.wav")));
     }
 }
