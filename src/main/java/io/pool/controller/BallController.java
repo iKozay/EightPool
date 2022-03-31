@@ -162,6 +162,7 @@ public class BallController {
 
                         bModel.setPositionX(bModel.getPositionX().subtract(distanceX));
                         bModel.setPositionY(bModel.getPositionY().subtract(distanceY));
+                        BallController.updateBallViewPosition(bModel);
 
                         bModel.setVelocityX(bModel.getVelocityX().multiply(line.getReflectionXFactor()));
                         bModel.setVelocityY(bModel.getVelocityY().multiply(line.getReflectionYFactor()));
@@ -276,6 +277,14 @@ public class BallController {
             int index = ballModelArrayList().indexOf(ballModel);
             BallView bView1 = getBallViewFromBallModel(ballModel);
             gameView.getChildren().remove(bView1.getBall());
+
+            if(stripeBModelList.contains(ballModel)){
+                allStripeBallsIn(ballModel);
+            }
+
+            if(solidBModelList.contains(ballModel)){
+                allSolidBallsIn(ballModel);
+            }
             ballModelArrayList().remove(ballModel);
             ballViewArrayList().remove(bView1);
             gameView.getBallsPrimaryPane().getChildren().remove(gameView.getBalls().get(index));
@@ -283,7 +292,23 @@ public class BallController {
             gameView.getSelectionCircles().remove(index);
             gameView.setClickedBallNumber(gameView.getClickedBallNumber()-1);
             gameView.updateOnBallsClickedListener();
-            System.out.println(ballModelArrayList().size());
+        }
+    }
+
+    public void allSolidBallsIn(BallModel bModel){
+        BallController.getSolidBModelList().remove(bModel);
+        //BallController.getSolidBViewList().remove(i);
+        if(BallController.getSolidBModelList().isEmpty()){
+            System.out.println("All in for Solid");
+            allInSolid=true;
+        }
+    }
+    public void allStripeBallsIn(BallModel bModel){
+        BallController.getStripeBModelList().remove(bModel);
+        //BallController.getStripeBViewList().remove(i);
+        if(BallController.getStripeBModelList().isEmpty()){
+            System.out.println("All in for Stripe");
+            allInStripe=true;
         }
     }
 

@@ -24,7 +24,7 @@ public class PhysicsModule {
      * Friction coefficient for ball-table rolling
      */
     private static final double ROLLING_FRICTION_COEFFICIENT = 0.02;
-    private static final BigDecimal KINETIC_ENERGY_LOSS_RATIO = new BigDecimal(0.95);
+    private static final double KINETIC_ENERGY_LOSS_RATIO = 0.95;
 
 
     /**
@@ -198,133 +198,94 @@ public class PhysicsModule {
          * pm2 is the second ball
          */
         PhysicsModule pm1 = this, pm2 = module;
-        BigDecimal normalXComponent, normalYComponent, unitNormalX = ZERO, unitNormalY = ZERO, unitTangentX, unitTangentY;
+        double normalXComponent, normalYComponent, unitNormalX, unitNormalY, unitTangentX, unitTangentY;
         /**1
          * find unit normal and unit tangent vector
          */
-        normalXComponent = pm2.getPositionX().subtract(pm1.getPositionX());
-        normalYComponent = pm2.getPositionY().subtract(pm1.getPositionY());
+        normalXComponent = pm2.getPositionX().doubleValue() - pm1.getPositionX().doubleValue();
+        normalYComponent = pm2.getPositionY().doubleValue() - pm1.getPositionY().doubleValue();
 
 
-        BigDecimal distance = (normalYComponent.pow(2).add(normalXComponent.pow(2))).sqrt(MathContext.DECIMAL32);
-        unitNormalX = normalXComponent.divide(distance, MathContext.DECIMAL32);
-        unitNormalY = normalYComponent.divide(distance, MathContext.DECIMAL32);
-        if (distance.doubleValue() < (2 * BallModel.RADIUS)) {
+        double distance = Math.sqrt(Math.pow(normalXComponent,2)+Math.pow(normalYComponent,2));
+        unitNormalX = normalXComponent / distance;
+        unitNormalY = normalYComponent / distance;
+        if (distance < (2 * BallModel.RADIUS)) {
 
             /**
              * Find the minimum distance X and Y to prevent overlapping
              */
-            BigDecimal distanceX = normalXComponent.multiply(new BigDecimal((2 * BallModel.RADIUS - distance.doubleValue()) / (distance.doubleValue())));
-            BigDecimal distanceY = normalYComponent.multiply(new BigDecimal((2 * BallModel.RADIUS - distance.doubleValue()) / (distance.doubleValue())));
+            double distanceX = normalXComponent * ((2 * BallModel.RADIUS - distance) / (distance));
+            double distanceY = normalYComponent * ((2 * BallModel.RADIUS - distance) / (distance));
             /**
              * Push-Pull Balls apart
              */
-            distanceX = distanceX.divide(new BigDecimal(2));
-            distanceY = distanceY.divide(new BigDecimal(2));
-            pm1.setPositionX(pm1.getPositionX().subtract(distanceX));
-            pm1.setPositionY(pm1.getPositionY().subtract(distanceY));
-            pm2.setPositionX(pm2.getPositionX().add(distanceX));
-            pm2.setPositionY(pm2.getPositionY().add(distanceY));
+            distanceX = distanceX/2;
+            distanceY = distanceY/2;
+            pm1.setPositionX(pm1.getPositionX().subtract(new BigDecimal(distanceX)));
+            pm1.setPositionY(pm1.getPositionY().subtract(new BigDecimal(distanceY)));
+            pm2.setPositionX(pm2.getPositionX().add(new BigDecimal(distanceX)));
+            pm2.setPositionY(pm2.getPositionY().add(new BigDecimal(distanceY)));
 
-            unitTangentX = unitNormalY.negate();
+            BallController.updateBallViewPosition((BallModel) pm1);
+            BallController.updateBallViewPosition((BallModel) pm2);
+
+            unitTangentX = -unitNormalY;
             unitTangentY = unitNormalX;
 
             /**2 (step 2 is skipped because we already have the balls vectors
              * Resolve velocity vectors of ball 1 and 2 into normal and tangential components
              * this is done by using the dot product of the balls initial velocity and using the unitVectors
              */
-            BigDecimal v1n = (unitNormalX.multiply(pm1.getVelocityX()).add(unitNormalY.multiply(pm1.getVelocityY())));
-            BigDecimal v1t = (unitTangentX.multiply(pm1.getVelocityX())).add(unitTangentY.multiply(pm1.getVelocityY()));
-            BigDecimal v2n = (unitNormalX.multiply(pm2.getVelocityX())).add(unitNormalY.multiply(pm2.getVelocityY()));
-            BigDecimal v2t = (unitTangentX.multiply(pm2.getVelocityX())).add(unitTangentY.multiply(pm2.getVelocityY()));
+            double v1n = (unitNormalX * (pm1.getVelocityX().doubleValue())) + (unitNormalY * (pm1.getVelocityY().doubleValue()));
+            double v1t = (unitTangentX * (pm1.getVelocityX().doubleValue())) + (unitTangentY * (pm1.getVelocityY().doubleValue()));
+            double v2n = (unitNormalX * (pm2.getVelocityX().doubleValue())) + (unitNormalY * (pm2.getVelocityY().doubleValue()));
+            double v2t = (unitTangentX * (pm2.getVelocityX().doubleValue())) + (unitTangentY * (pm2.getVelocityY().doubleValue()));
 
             /**3
              * Find new tangential velocities
              * they are equal to the initial ones
              */
-            BigDecimal v1tp = v1t;
-            BigDecimal v2tp = v2t;
+            double v1tp = v1t;
+            double v2tp = v2t;
 
             /**4
              * Find new normal velocities
              * all the instances of 1 in this equation are substitutes for mass
              * this is assuming all the balls have equal mass
              */
-            BigDecimal v1np = v2n;
-            BigDecimal v2np = v1n;
+            double v1np = v2n;
+            double v2np = v1n;
 
             /**5
              * Convert scalar normal and tangential velocites into vectors
              */
-            BigDecimal normalXFinalBall1 = unitNormalX.multiply(v1np);
-            BigDecimal normalYFinalBall1 = unitNormalY.multiply(v1np);
-            BigDecimal normalXFinalBall2 = unitNormalX.multiply(v2np);
-            BigDecimal normalYFinalBall2 = unitNormalY.multiply(v2np);
+            double normalXFinalBall1 = unitNormalX * (v1np);
+            double normalYFinalBall1 = unitNormalY * (v1np);
+            double normalXFinalBall2 = unitNormalX * (v2np);
+            double normalYFinalBall2 = unitNormalY * (v2np);
 
-            BigDecimal tangentialXFinalBall1 = unitTangentX.multiply(v1tp);
-            BigDecimal tangentialYFinalBall1 = unitTangentY.multiply(v1tp);
-            BigDecimal tangentialXFinalBall2 = unitTangentX.multiply(v2tp);
-            BigDecimal tangentialYFinalBall2 = unitTangentY.multiply(v2tp);
+            double tangentialXFinalBall1 = unitTangentX * (v1tp);
+            double tangentialYFinalBall1 = unitTangentY * (v1tp);
+            double tangentialXFinalBall2 = unitTangentX * (v2tp);
+            double tangentialYFinalBall2 = unitTangentY * (v2tp);
 
             /**6
              * Add normal and tangential vectors for each ball
              */
-            BigDecimal finalBall1X = normalXFinalBall1.add(tangentialXFinalBall1, MathContext.DECIMAL32);
-            BigDecimal finalBall1Y = normalYFinalBall1.add(tangentialYFinalBall1, MathContext.DECIMAL32);
-            BigDecimal finalBall2X = normalXFinalBall2.add(tangentialXFinalBall2, MathContext.DECIMAL32);
-            BigDecimal finalBall2Y = normalYFinalBall2.add(tangentialYFinalBall2, MathContext.DECIMAL32);
+            double finalBall1X = (normalXFinalBall1 + (tangentialXFinalBall1))*KINETIC_ENERGY_LOSS_RATIO;
+            double finalBall1Y = (normalYFinalBall1 + (tangentialYFinalBall1))*KINETIC_ENERGY_LOSS_RATIO;
+            double finalBall2X = (normalXFinalBall2 + (tangentialXFinalBall2))*KINETIC_ENERGY_LOSS_RATIO;
+            double finalBall2Y = (normalYFinalBall2 + (tangentialYFinalBall2))*KINETIC_ENERGY_LOSS_RATIO;
 
-            pm1.setVelocityX(finalBall1X.multiply(KINETIC_ENERGY_LOSS_RATIO));
-            pm1.setVelocityY(finalBall1Y.multiply(KINETIC_ENERGY_LOSS_RATIO));
-            pm2.setVelocityX(finalBall2X.multiply(KINETIC_ENERGY_LOSS_RATIO));
-            pm2.setVelocityY(finalBall2Y.multiply(KINETIC_ENERGY_LOSS_RATIO));
+
+            pm1.setVelocityX(new BigDecimal(finalBall1X));
+            pm1.setVelocityY(new BigDecimal(finalBall1Y));
+            pm2.setVelocityX(new BigDecimal(finalBall2X));
+            pm2.setVelocityY(new BigDecimal(finalBall2Y));
             return true;
         }
         return false;
     }
-
-//    /**
-//     * Gets the distance between this object and another object
-//     * <p>
-//     * D = sqrt [ (x<sub>2</sub>-x<sub>1</sub>)<sup>2</sup> + (y<sub>2</sub>-y<sub>1</sub>)<sup>2</sup> ]
-//     * </p>
-//     *
-//     * @param module Another object that extends PhysicsModule
-//     * @return The distance between two objects
-//     */
-//    public BigDecimal distance(PhysicsModule module) {
-//        BigDecimal distance;
-//        BigDecimal x2, y2, x1, y1;
-//        /**
-//         * Assigns the x and y variables depending on the object
-//         */
-//        x2 = module.getPositionX();
-//        y2 = module.getPositionY();
-//        x1 = getPositionX();
-//        y1 = getPositionY();
-//
-//        /**
-//         * Finds distance
-//         */
-//        BigDecimal a = x2.subtract(x1);
-//        BigDecimal b = y2.subtract(y1);
-//        a = a.pow(2);
-//        b = b.pow(2);
-//        BigDecimal subtotal = a.add(b);
-//        distance = subtotal.sqrt(MathContext.DECIMAL32);
-//        return distance;
-//    }
-//    public BigDecimal getAngleFromVelocity(){
-//        BigDecimal angle = new BigDecimal(Math.atan(Math.abs(getVelocityY().doubleValue()/getVelocityX().doubleValue())));
-//        if ((getVelocityX().signum() == -1) && (getVelocityY().signum() == -1)) {
-//            angle = angle.add(new BigDecimal(Math.PI));
-//        } else if ((getVelocityX().signum() == -1) && (getVelocityY().signum() == 1)) {
-//            angle = angle.add(new BigDecimal(Math.PI/2));
-//        } else if ((getVelocityX().signum() == 1) && (getVelocityY().signum() == -1)) {
-//            angle = angle.add(new BigDecimal(3*Math.PI/4));
-//        }
-//        return angle;
-//    }
 
 
     /**

@@ -32,12 +32,12 @@ public class GameController {
     private boolean firstPlay=true,setBallType=false;
     public static boolean waitingForInput=false;
 
-    private ArrayList<BallModel> bModelIn = new ArrayList<>();
+//    private ArrayList<BallModel> bModelIn = new ArrayList<>();
     private ArrayList<BallModel> bModelInEachTurn = new ArrayList<>();
 
-    private ArrayList<Double> ballsPositionX;
-    private ArrayList<Double> ballsPositionY;
-    private ArrayList<Double> ballsSpeed;
+//    private ArrayList<Double> ballsPositionX;
+//    private ArrayList<Double> ballsPositionY;
+//    private ArrayList<Double> ballsSpeed;
 
     /**
      * Main Constructor of GameController
@@ -52,9 +52,9 @@ public class GameController {
         ballController = new BallController(this);
         poolCueController = new PoolCueController(this.gameView.getCueView());
 
-        ballsPositionX = new ArrayList<>();
-        ballsPositionY = new ArrayList<>();
-        ballsSpeed = new ArrayList<>();
+//        ballsPositionX = new ArrayList<>();
+//        ballsPositionY = new ArrayList<>();
+//        ballsSpeed = new ArrayList<>();
 
         /** Instantiate the gameLoopTimer and Override the tick Method */
         gameLoopTimer = new GameLoopTimer() {
@@ -97,13 +97,12 @@ public class GameController {
                             poolCueController.getRotate().setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
                             poolCueController.poolCueView.getPoolLine().setStartX(BallController.whiteBallModel.getPositionX().doubleValue());
                             poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
-                        }
-
-                        poolCueController.enablePoolCueControl();
-                        gView.displayPoolCue(true);
-                        if(!DBConnection.hasBeenCalled) {
-                            //DBConnection.updateLastPosition(playerModel.getBallType(),playerModel.getBallType(), gameModel.getPlayerTurn());
-                            DBConnection.hasBeenCalled = true;
+                            if(!DBConnection.hasBeenCalled) {
+                                //DBConnection.updateLastPosition(playerModel.getBallType(),playerModel.getBallType(), gameModel.getPlayerTurn());
+                                DBConnection.hasBeenCalled = true;
+                            }
+                            poolCueController.enablePoolCueControl();
+                            gView.displayPoolCue(true);
                         }
                     }else{
                         gView.displayPoolCue(false);
@@ -154,7 +153,7 @@ public class GameController {
      * their respective method from BallController
      */
     public void resetGame() {
-        bModelIn.clear();
+        //bModelIn.clear();
         bModelInEachTurn.clear();
         gameLoopTimer.stop();
         ballController.destroyViews(this.gameView);
@@ -163,12 +162,9 @@ public class GameController {
         waitingForInput=false;
         firstPlay=true;
         setBallType=false;
-        System.out.println("Reset");
     }
 
     public void turns(){
-        allSolidBallsIn();
-        allStripeBallsIn();
 
         if(p2==null) {
             winnerPlayerSolo();
@@ -234,7 +230,7 @@ public class GameController {
         return p1;
     }
     public void whiteBallIn(BallView ballView){
-        BallModel bModel = ballController.ballModelArrayList().get(ballController.ballViewArrayList().indexOf(ballView));
+        BallModel bModel = BallController.getBallModelFromBallView(ballView);
         if(bModel.getNumber()==16){
             this.foul = true;
             bModel.setPositionX(new BigDecimal(tableController.getTableView().getFullTable().getWidth()/2));
@@ -242,7 +238,7 @@ public class GameController {
             bModel.setVelocityX(new BigDecimal(0.1));
             bModel.setVelocityY(new BigDecimal(0.1));
         }else{
-            bModelIn.add(bModel);
+            //bModelIn.add(bModel);
             bModelInEachTurn.add(bModel);
         }
         if(foul){
@@ -251,51 +247,23 @@ public class GameController {
     }
 
     public void eightBallInIllegal(){
-        if(bModelIn.contains(BallController.eightBallModel)) {
+        if(bModelInEachTurn.contains(BallController.eightBallModel)) {
             System.out.println("You got the 8 ball in, You lose!");
             resetGame();
         }
     }
     public void eightBallInLegal(){
-        if(bModelIn.contains(BallController.eightBallModel)) {
+        if(bModelInEachTurn.contains(BallController.eightBallModel)) {
             System.out.println("You got the 8 ball in, You win!");
             resetGame();
         }
     }
 
-    public void allSolidBallsIn(){
-        for(int i = 0; i < BallController.getSolidBModelList().size() ;i++){
-            if(bModelIn.contains(BallController.getSolidBModelList().get(i))){
-                BallController.getSolidBModelList().remove(i);
-                BallController.getSolidBViewList().remove(i);
-            }
-            if(BallController.getSolidBModelList().isEmpty()){
-                System.out.println("All in for Solid");
-
-                BallController.setAllInSolid(true);
-                break;
-            }
-        }
-    }
-    public boolean allStripeBallsIn(){
-        for(int i = 0; i < BallController.getStripeBModelList().size() ;i++){
-            if(bModelIn.contains(BallController.getStripeBModelList().get(i))){
-                BallController.getStripeBModelList().remove(i);
-                BallController.getStripeBViewList().remove(i);
-            }
-            if(BallController.getStripeBModelList().isEmpty()){
-                System.out.println("All in for Stripe");
-
-                BallController.setAllInStripe(true);
-                break;
-            }
-        }
-        return BallController.allInStripe;
-    }
-
     public void ballInHole(){
-        for (BallModel b:bModelIn) {
-            ballController.ballInHole(b, gameView);
+        if(!bModelInEachTurn.isEmpty()) {
+            for (BallModel b : bModelInEachTurn) {
+                ballController.ballInHole(b, gameView);
+            }
         }
     }
 
@@ -334,11 +302,11 @@ public class GameController {
         return poolCueController;
     }
 
-    public ArrayList<Double> getBallsPositionX() {
-        return ballsPositionX;
-    }
-
-    public ArrayList<Double> getBallsPositionY() {
-        return ballsPositionY;
-    }
+//    public ArrayList<Double> getBallsPositionX() {
+//        return ballsPositionX;
+//    }
+//
+//    public ArrayList<Double> getBallsPositionY() {
+//        return ballsPositionY;
+//    }
 }

@@ -98,6 +98,7 @@ public class PoolCueController {
                             poolCueView.setPreviousAngle(0);
                             BallController.whiteBallModel.setVelocityX(new BigDecimal(-poolCueView.getCue().getLayoutX() / 10));
                             BallController.whiteBallModel.setVelocityY(new BigDecimal(-poolCueView.getCue().getLayoutY() / 10));
+                            BallController.whiteBallModel.setIsMoving();
                             poolCueView.getCue().setLayoutX(0);
                             poolCueView.getCue().setLayoutY(0);
                             disablePoolCueControl();
