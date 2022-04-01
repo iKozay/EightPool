@@ -156,7 +156,7 @@ public class TableView {
         new TableBorderModel("centerRightLine",width/1.069, height/5.9130, width/1.069, height/1.21864,-0.9,0.9);
 
         //TODO Review these reflection factors to verify their effectiveness
-        new TableBorderModel("topLeftHoleA1",width/11.228,height/9.0667,width/14.062,height/12.9,-0.9,-0.9);
+        new TableBorderModel("topLeftHoleA1",width/11.228,height/9.0667,width/14.062,height/12.9,-0.9,0.9);
         new TableBorderModel("topLeftHoleA2",width/16,height/5.9130,width/21.33333,height/7.15789,0.9,0.9);
         new TableBorderModel("bottomLeftHoleB1",width/16.143,height/1.21429,width/22.9299,height/1.16587,0.9,-0.9);
         new TableBorderModel("bottomLeftHoleB2",width/11.175561,height/1.13145,width/14.221220,height/1.089777,-0.9,0.9);
