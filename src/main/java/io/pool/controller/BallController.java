@@ -166,6 +166,8 @@ public class BallController {
 
                         bModel.setVelocityX(bModel.getVelocityX().multiply(line.getReflectionXFactor()));
                         bModel.setVelocityY(bModel.getVelocityY().multiply(line.getReflectionYFactor()));
+
+                        SoundController.BallBounce();
                         collisionChecked = true;
                     }
                 }
@@ -193,6 +195,7 @@ public class BallController {
                 ballA = bModelList.get(i);
                 ballB = bModelList.get(j);
                 if (ballA.handleMomentum(ballB)) {
+                    SoundController.BallsCollide();
                     if ((ballA.equals(whiteBallModel) || ballB.equals(whiteBallModel)) && (ballA.equals(eightBallModel) || ballB.equals(eightBallModel))) {
                         GameController.foul = true;
                     }

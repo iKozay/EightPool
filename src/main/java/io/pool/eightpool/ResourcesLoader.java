@@ -1,9 +1,11 @@
 package io.pool.eightpool;
 
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
 
-import javax.sound.sampled.*;
-import java.io.*;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +17,7 @@ public class ResourcesLoader {
     public static final List<Image> iconImages = new ArrayList<>();
     public static final List<Image> tableTextures = new ArrayList<>();
     public static final List<Image> poolCueImages = new ArrayList<>();
-    public static final List<AudioInputStream> soundFiles = new ArrayList<>();
+    public static final List<AudioClip> soundFiles = new ArrayList<>();
 
     public static void load(){
         try {
@@ -36,38 +38,39 @@ public class ResourcesLoader {
     private static void loadBallImages() throws MalformedURLException {
         for (int i = 1; i <= 16; i++) {
             if (i != 16) {
-                ballImages.add(new Image(new File("src/main/resources/billiards3D/ball" + i + ".jpg").toURI().toURL().toExternalForm()));
+                
+                ballImages.add(new Image(ResourcesLoader.class.getResource("/billiards3D/ball" + i + ".jpg").toExternalForm()));
             }else{
-                ballImages.add(new Image(new File("src/main/resources/billiards3D/white.jpg").toURI().toURL().toExternalForm()));
+                ballImages.add(new Image(ResourcesLoader.class.getResource("/billiards3D/white.jpg").toExternalForm()));
             }
         }
     }
     private static void loadTableImages() throws MalformedURLException{
         for(int i=0;i<8;i++){
-            tableImages.add(new Image(new File("src/main/resources/tableImage/" + (i+1) + ".png").toURI().toURL().toExternalForm()));
+            tableImages.add(new Image(ResourcesLoader.class.getResource("/tableImage/" + (i+1) + ".png").toExternalForm()));
         }
     }
     private static void loadIcons() throws MalformedURLException{
-        Image menu = new Image(new File("src/main/resources/UI icons/menu_white.png").toURI().toURL().toExternalForm());
-        Image back1 = new Image(new File("src/main/resources/UI icons/simpleArrowLeft_white.png").toURI().toURL().toExternalForm());
-        Image next1 = new Image(new File("src/main/resources/UI icons/simpleArrowRight_white.png").toURI().toURL().toExternalForm());
-        Image back2 = new Image(new File("src/main/resources/UI icons/left_back_Yellow.png").toURI().toURL().toExternalForm());
-        Image next2 = new Image(new File("src/main/resources/UI icons/right_next_Yellow.png").toURI().toURL().toExternalForm());
-        Image leaveImage = new Image(new File("src/main/resources/UI icons/arrow.png").toURI().toURL().toExternalForm());
+        Image menu = new Image(ResourcesLoader.class.getResource("/UI icons/menu_white.png").toExternalForm());
+        Image back1 = new Image(ResourcesLoader.class.getResource("/UI icons/simpleArrowLeft_white.png").toExternalForm());
+        Image next1 = new Image(ResourcesLoader.class.getResource("/UI icons/simpleArrowRight_white.png").toExternalForm());
+        Image back2 = new Image(ResourcesLoader.class.getResource("/UI icons/left_back_Yellow.png").toExternalForm());
+        Image next2 = new Image(ResourcesLoader.class.getResource("/UI icons/right_next_Yellow.png").toExternalForm());
+        Image leaveImage = new Image(ResourcesLoader.class.getResource("/UI icons/arrow.png").toExternalForm());
         iconImages.addAll(Arrays.asList(menu,back1,next1,back2,next2,leaveImage));
     }
     private static void loadTableTextures() throws MalformedURLException{
-        tableTextures.add(new Image(new File("src/main/resources/MainMenu/TableTexture.jpg").toURI().toURL().toExternalForm()));
-        tableTextures.add(new Image(new File("src/main/resources/MainMenu/RedTableTexture.jpg").toURI().toURL().toExternalForm()));
-        tableTextures.add(new Image(new File("src/main/resources/MainMenu/BlueTableTexture.jpg").toURI().toURL().toExternalForm()));
+        tableTextures.add(new Image(ResourcesLoader.class.getResource("/MainMenu/TableTexture.jpg").toExternalForm()));
+        tableTextures.add(new Image(ResourcesLoader.class.getResource("/MainMenu/RedTableTexture.jpg").toExternalForm()));
+        tableTextures.add(new Image(ResourcesLoader.class.getResource("/MainMenu/BlueTableTexture.jpg").toExternalForm()));
     }
     private static void loadPoolCues() throws MalformedURLException{
-        poolCueImages.add(new Image(new File("src/main/resources/cueImages/cue1.png").toURI().toURL().toExternalForm()));
+        poolCueImages.add(new Image(ResourcesLoader.class.getResource("/cueImages/cue1.png").toExternalForm()));
     }
     private static void loadSoundFiles() throws IOException, UnsupportedAudioFileException {
-//        soundFiles.add(AudioSystem.getAudioInputStream(new FileInputStream("src/main/resources/sound/BallsCollide.wav")));
-//        soundFiles.add(AudioSystem.getAudioInputStream(new FileInputStream("src/main/resources/sound/Hole.wav")));
-//        soundFiles.add(AudioSystem.getAudioInputStream(new FileInputStream("src/main/resources/sound/Side.wav")));
-//        soundFiles.add(AudioSystem.getAudioInputStream(new FileInputStream("src/main/resources/sound/Strike.wav")));
+        soundFiles.add(new AudioClip(ResourcesLoader.class.getResource("/SoundFiles/BallsCollide.wav").toExternalForm()));
+        soundFiles.add(new AudioClip(ResourcesLoader.class.getResource("/SoundFiles/Hole.wav").toExternalForm()));
+        soundFiles.add(new AudioClip(ResourcesLoader.class.getResource("/SoundFiles/Side.wav").toExternalForm()));
+        soundFiles.add(new AudioClip(ResourcesLoader.class.getResource("/SoundFiles/Strike.wav").toExternalForm()));
     }
 }

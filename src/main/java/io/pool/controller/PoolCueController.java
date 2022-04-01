@@ -104,6 +104,7 @@ public class PoolCueController {
                             disablePoolCueControl();
                             //poolCueView.getPath().getElements().clear();
                             //poolCueView.getPath().getTransforms().clear();
+                            SoundController.BallHit();
                             GameController.waitingForInput = false;
                         }
                     }
