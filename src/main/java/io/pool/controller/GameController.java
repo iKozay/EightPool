@@ -63,55 +63,43 @@ public class GameController {
                 /** The time between each frame should be less than 1 second
                  * Any value bigger than 1 second is incorrect
                  * */
-                if(secondsSinceLastFrame<1){
-                    /** Detect collisions */
-                    ballController.detectCollision();
-                    /** Check if ball gets inside any of the holes */
-                    boolean moving=false;
-                    BallModel bModel;
-                    for (BallView ballView : ballController.ballViewArrayList()) {
-                        bModel = BallController.getBallModelFromBallView(ballView);
-                        if(!moving){
-                            moving=bModel.isMoving;
+                if(secondsSinceLastFrame<1) {
+                        /** Detect collisions */
+                        ballController.detectCollision(tableController);
+                        if (gameView.getClickedBallNumber() > 0) {
+                            gameView.getxPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getPositionX().doubleValue()));
+                            gameView.getyPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getPositionY().doubleValue()));
+                            gameView.getxSpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityX().doubleValue()));
+                            gameView.getySpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityY().doubleValue()));
                         }
-                        bModel.updatePosition();
-                        BallController.updateBallViewPosition(bModel);
-                        if(tableController.checkBallInHole(ballView)) {
-                            whiteBallIn(ballView);
-                        }
-                    }
-                    if (gameView.getClickedBallNumber() > 0) {
-                        gameView.getxPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getPositionX().doubleValue()));
-                        gameView.getyPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getPositionY().doubleValue()));
-                        gameView.getxSpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getVelocityX().doubleValue()));
-                        gameView.getySpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber()-1).getVelocityY().doubleValue()));
-                    }
-                    winnerPlayerSolo();
-                    /**Check if all balls are not moving to display the poolCue and update the database*/
-                    if(!moving) { /**methods when all balls have stopped moving*/
-                        waitingForInput = true;
-                        if (!poolCueController.isEnablePoolCueControl()){
-                            poolCueController.poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue() + (BallModel.RADIUS));
-                            poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (poolCueController.poolCueView.getCue().getImage().getHeight() / 2));
-                            poolCueController.getRotate().setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
-                            poolCueController.getRotate().setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
-                            poolCueController.poolCueView.getPoolLine().setStartX(BallController.whiteBallModel.getPositionX().doubleValue());
-                            poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
-                            if(!DBConnection.hasBeenCalled) {
-                                //DBConnection.updateLastPosition(playerModel.getBallType(),playerModel.getBallType(), gameModel.getPlayerTurn());
-                                DBConnection.hasBeenCalled = true;
+                        winnerPlayerSolo();
+                        /**Check if all balls are not moving to display the poolCue and update the database*/
+                        if (!ballController.isMoving) { /**methods when all balls have stopped moving*/
+                            waitingForInput = true;
+                            if (!poolCueController.isEnablePoolCueControl()) {
+                                gView.displayPoolCue(true);
+                                poolCueController.poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue() + (BallModel.RADIUS));
+                                poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (poolCueController.poolCueView.getCue().getImage().getHeight() / 2));
+                                poolCueController.getRotate().setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
+                                poolCueController.getRotate().setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
+                                poolCueController.getRotate().setAngle(poolCueController.getCueView().getPreviousAngle());
+                                poolCueController.poolCueView.getPoolLine().setStartX(BallController.whiteBallModel.getPositionX().doubleValue());
+                                poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
+                                if (!DBConnection.hasBeenCalled) {
+                                    DBConnection.updateLastPosition(playerModel.getBallType(), playerModel.getBallType(), gameModel.getPlayerTurn());
+                                    DBConnection.hasBeenCalled = true;
+                                }
+                                poolCueController.enablePoolCueControl();
                             }
-                            poolCueController.enablePoolCueControl();
-                            gView.displayPoolCue(true);
+                        } else {
+                            gView.displayPoolCue(false);
+                            poolCueController.disablePoolCueControl();
                         }
-                    }else{
-                        gView.displayPoolCue(false);
-                        poolCueController.disablePoolCueControl();
-                    }
-                    if(!waitingForInput) {
+                    if (!waitingForInput) {
                         turns();
                     }
-                    ballInHole();
+                        ballInHole();
+                        ballController.isMoving=false;
                 }
             }
         };
@@ -214,6 +202,7 @@ public class GameController {
             }
         }
         foul=false;
+        ballController.makeUnDraggable();
         bModelInEachTurn.clear();
         System.out.println(currentPlayer.getUsername() + "," + "your turn!");
         waitingForInput=true;
@@ -302,6 +291,9 @@ public class GameController {
         return poolCueController;
     }
 
+    public GameView getGameView() {
+        return gameView;
+    }
 //    public ArrayList<Double> getBallsPositionX() {
 //        return ballsPositionX;
 //    }
