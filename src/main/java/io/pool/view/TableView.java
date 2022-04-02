@@ -221,14 +221,10 @@ public class TableView {
         area.getElements().add(new LineTo(width/11.228, height/9));
         area.getElements().add(new LineTo(width/14.062,height/12.9));
 
-        area.setFill(Color.BLUE);
-        area.setStroke(Color.BLUE);
-        //area.setVisible(false);
+        area.setVisible(false);
         //
 
         for (TableBorderModel tbm:TableBorderModel.tableBorder) {
-            //tbm.setStroke(Color.RED);
-            //tbm.setStrokeWidth(0.5);
             tbm.setVisible(false);
         }
 

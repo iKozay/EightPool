@@ -43,7 +43,6 @@ public class PoolCueController {
                         if (deltaX != 0) {
                             double newAngleDegrees = Math.toDegrees(Math.atan2(deltaY, deltaX));
                             rotate.setAngle(newAngleDegrees);
-                            //Rotate rotate = new Rotate(newAngleDegrees - poolCueView.getPreviousAngle());
                             poolCueView.setPreviousAngle(newAngleDegrees);
                             poolCueDirectionLine();
                         }

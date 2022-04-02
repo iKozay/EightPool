@@ -165,27 +165,18 @@ public class BallController {
      * Detects any collision between a ball and the table
      */
     private void detectCollisionWithTable() {
-        boolean reflectionApplied;
         Bounds intersectBounds;
-        for (BallModel bModel : bModelList) {
-            reflectionApplied = false;
+        for (BallModel bModel : bModelList) {;
             intersectBounds = Shape.intersect(TableBorderModel.tableBorderArea, getBallViewFromBallModel(bModel).getCircleFromSphere()).getBoundsInLocal();
             //TODO fix infinite collision
             if ((intersectBounds.getWidth() != -1)&&(intersectBounds.getHeight() != -1)) {
                 double normalXComponent = (intersectBounds.getCenterX() - bModel.getPositionX().doubleValue());
                 double normalYComponent = (intersectBounds.getCenterY() - bModel.getPositionY().doubleValue());
                 double distance = Math.sqrt(Math.pow(normalXComponent, 2) + Math.pow(normalYComponent, 2));
-
                 double distanceX = ((normalXComponent * (((BallModel.RADIUS*1.05) - distance) / distance)));
                 double distanceY = ((normalYComponent * (((BallModel.RADIUS*1.05) - distance) / (distance))));
-
                 bModel.setPositionX(bModel.getPositionX().subtract(new BigDecimal(distanceX)));
                 bModel.setPositionY(bModel.getPositionY().subtract(new BigDecimal(distanceY)));
-                //BallController.;
-//                if (!collisionChecked) {
-//                }
-//                collisionChecked = true;
-
                 TableBorderModel.applyReflection(bModel, gameController.getGameView().getTableView());
                 updateBallViewPosition(bModel);
             }
