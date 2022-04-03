@@ -1,17 +1,12 @@
 package io.pool.controller;
 
-import io.pool.model.BallModel;
 import io.pool.model.PoolCueModel;
 import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
-import io.pool.view.GameView;
 import io.pool.view.PoolCueView;
 
-import io.pool.view.TableView;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 

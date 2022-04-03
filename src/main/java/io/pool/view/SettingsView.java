@@ -22,43 +22,38 @@ import java.util.Arrays;
 
 public class SettingsView extends BorderPane {
     ObservableList<String> option1List = FXCollections.observableList(new ArrayList<String>(Arrays.asList("Mouse + Keyboard","Keyboard Only")));
+    ObservableList<String> option2List = FXCollections.observableList(new ArrayList<String>(Arrays.asList("Yes","No")));
 
     public SettingsView() {
         VBox main = new VBox();
         main.setAlignment(Pos.CENTER);
         this.setCenter(main);
 
-        HBox option1Box = new HBox();
-        option1Box.setAlignment(Pos.CENTER);
-        option1Box.setPadding(new Insets(0.02*game.eightPoolTableHeight,0.01*game.eightPoolTableWidth,0.02*game.eightPoolTableHeight,0.01*game.eightPoolTableWidth));
-        option1Box.setSpacing(0.01*game.eightPoolTableWidth);
-        //option1Box.setPrefWidth(0.95*game.eightPoolTableWidth);
+        HBox settings1Box = new HBox();
+        settings1Box.setAlignment(Pos.CENTER);
+        settings1Box.setPadding(new Insets(0.02*game.eightPoolTableHeight,0.01*game.eightPoolTableWidth,0.02*game.eightPoolTableHeight,0.01*game.eightPoolTableWidth));
+        settings1Box.setSpacing(0.02*game.eightPoolTableWidth);
+
         Text option1Text = new Text("Control Option:");
         ComboBox<String> option1 = new ComboBox<String>(option1List);
         option1.getSelectionModel().select(0);
-        option1Box.getChildren().addAll(option1Text,option1);
-        main.getChildren().add(option1Box);
 
+        Text option2Text = new Text("Pool Cue Helper:");
+        ComboBox<String> option2 = new ComboBox<String>(option2List);
+        option2.getSelectionModel().select(0);
 
-        VBox option2Box = new VBox();
-        option2Box.setAlignment(Pos.CENTER);
-        option2Box.setPadding(new Insets(0,0.01*game.eightPoolTableWidth,0.02*game.eightPoolTableHeight,0.01*game.eightPoolTableWidth));
-        option2Box.setSpacing(0.01*game.eightPoolTableWidth);
-
-        Separator sep1 = new Separator();
-
-        Text option2Text = new Text("Friction Percentage: ");
-        Slider option2 = new Slider();
-        option2.setMin(50);
-        option2.setMax(150);
-        option2.setValue(100);
-        option2.setBlockIncrement(25);
-        option2.setShowTickLabels(true);
-        option2.setShowTickMarks(true);
-        option2.setMajorTickUnit(25);
-        option2.setMinorTickCount(0);
-        option2.setSnapToTicks(true);
-        option2.setLabelFormatter(new StringConverter<Double>() {
+        Text option3Text = new Text("Friction Percentage: ");
+        Slider option3 = new Slider();
+        option3.setMin(50);
+        option3.setMax(150);
+        option3.setValue(100);
+        option3.setBlockIncrement(25);
+        option3.setShowTickLabels(true);
+        option3.setShowTickMarks(true);
+        option3.setMajorTickUnit(25);
+        option3.setMinorTickCount(0);
+        option3.setSnapToTicks(true);
+        option3.setLabelFormatter(new StringConverter<Double>() {
             @Override
             public String toString(Double object) {
                 return (object.intValue())+"%";
@@ -69,8 +64,22 @@ public class SettingsView extends BorderPane {
                 return Double.valueOf(string.substring(0,string.length()-1));
             }
         });
+        option3.setPrefWidth(0.25*game.eightPoolTableWidth);
 
-        Separator sep2 = new Separator();
+        Separator sep1 = new Separator();
+
+        settings1Box.getChildren().addAll(option1Text,option1,option2Text,option2,option3Text,option3,sep1);
+        main.getChildren().add(settings1Box);
+
+
+        VBox settings2Box = new VBox();
+        settings2Box.setAlignment(Pos.CENTER);
+        settings2Box.setPadding(new Insets(0,0.01*game.eightPoolTableWidth,0.02*game.eightPoolTableHeight,0.01*game.eightPoolTableWidth));
+        settings2Box.setSpacing(0.01*game.eightPoolTableWidth);
+
+
+
+
 
         HBox profileBox = new HBox();
         profileBox.setAlignment(Pos.CENTER);
@@ -120,7 +129,7 @@ public class SettingsView extends BorderPane {
         newPlayerButton.setPrefWidth(newPlayerBox.getMinWidth());
         newPlayerBox.getChildren().addAll(newPlayerText,newPlayerTextField,newPlayerButton);
 
-        Separator sep3 = new Separator();
+        Separator sep2 = new Separator();
 
         Button deletePlayer = new Button("Delete Selected Player");
         deletePlayer.setTextAlignment(TextAlignment.CENTER);
@@ -132,14 +141,14 @@ public class SettingsView extends BorderPane {
             MainMenuController.gotoMainMenu();
         });
 
-        profileControlsBox.getChildren().addAll(newPlayerBox,sep3,deletePlayer,renamePlayer,backButton);
+        profileControlsBox.getChildren().addAll(newPlayerBox,deletePlayer,renamePlayer,backButton);
 
         profileBox.getChildren().addAll(profilesTable,profileControlsBox);
 
-        option2Box.getChildren().addAll(sep1,option2Text,option2,sep2,profileBox);
+        settings2Box.getChildren().addAll(sep2,profileBox);
 
 
-        main.getChildren().add(option2Box);
+        main.getChildren().add(settings2Box);
 
     }
 }
