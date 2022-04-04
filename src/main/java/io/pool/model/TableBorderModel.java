@@ -65,7 +65,7 @@ public class TableBorderModel extends Line {
         } else {
             Circle hole = tView.getHoles().get(reflectionLine.type - 1);
             double angle = Math.atan2(((tView.getFullTable().getLayoutY() + hole.getCenterY()) - bModel.getPositionY().doubleValue()), ((tView.getFullTable().getLayoutX() + (TableView.width / 43.2) + hole.getCenterX()) - bModel.getPositionX().doubleValue()));
-            double velocityMag = Math.sqrt(Math.pow((bModel.getVelocityX().doubleValue()), 2) + Math.pow((bModel.getVelocityY().doubleValue()), 2)) * 0.8;
+            double velocityMag = Math.sqrt(Math.pow((bModel.getVelocityX().doubleValue()), 2) + Math.pow((bModel.getVelocityY().doubleValue()), 2)) * 0.9;
             bModel.setVelocityX(new BigDecimal(velocityMag * Math.cos(angle)));
             bModel.setVelocityY(new BigDecimal(velocityMag * Math.sin(angle)));
         }

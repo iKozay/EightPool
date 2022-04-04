@@ -83,4 +83,12 @@ public class PlayerModel {
     public String toString() {
         return username;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayerModel that = (PlayerModel) o;
+        return username.equals(that.username);
+    }
 }

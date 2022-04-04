@@ -77,7 +77,11 @@ public class GameController {
                             gameView.getxSpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityX().doubleValue()));
                             gameView.getySpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityY().doubleValue()));
                         }
-                        winnerPlayerSolo();
+                        if(gameType==0) {
+                            winnerPlayerSolo();
+                        }else{
+                            winnerPlayerPVP();
+                        }
                         /**Check if all balls are not moving to display the poolCue and update the database*/
                         if (!ballController.isMoving) { /**methods when all balls have stopped moving*/
                             waitingForInput = true;
@@ -159,18 +163,17 @@ public class GameController {
     public void turns(){
 
         if(gameType==0) {
-            winnerPlayerSolo();
             foul=false;
             return;
         }
-        System.out.println("Made a collision ?"+ballController.isCollide);
+        //System.out.println("Made a collision ?"+ballController.isCollide);
 
         if(gameType==1) {
-            winnerPlayerPVP();
+            //winnerPlayerPVP();
             if (!scored || foul) {
                 setCurrentPlayer();
                 ballController.isCollide=false;
-                System.out.println("switch");
+                //System.out.println("switch");
             }
         }
 
@@ -224,14 +227,6 @@ public class GameController {
         currentPlayer.setTurn(false);
         currentPlayer = getNextPlayer();
         currentPlayer.setTurn(true);
-//        if(p1.isTurn()){
-//            p1.setTurn(false);
-//            p2.setTurn(true);
-//        }else{
-//            p1.setTurn(true);
-//            p2.setTurn(false);
-//
-//        }
     }
     private PlayerModel getNextPlayer(){
         if(currentPlayer.equals(p1)){
@@ -258,13 +253,13 @@ public class GameController {
 
     public void eightBallInIllegal(){
         if(bModelInEachTurn.contains(BallController.eightBallModel)) {
-            System.out.println("You got the 8 ball in, You lose!");
+            System.out.println(currentPlayer + " got the 8 ball in, "+currentPlayer+" lose!");
             resetGame();
         }
     }
     public void eightBallInLegal(){
         if(bModelInEachTurn.contains(BallController.eightBallModel)) {
-            System.out.println("You got the 8 ball in, You win!");
+            System.out.println(currentPlayer + " got the 8 ball in, "+currentPlayer+" win!");
             resetGame();
         }
     }
@@ -295,6 +290,11 @@ public class GameController {
     public void winnerPlayerPVP(){
         //System.out.println(currentPlayer+" : "+currentPlayer.getBallNeededIn());
         if(currentPlayer.getBallNeededIn().isEmpty()){
+            currentPlayer.getBallNeededIn().add(BallController.eightBallModel);
+        }
+//        System.out.println(currentPlayer+" : "+currentPlayer.getBallNeededIn());
+//        System.out.println(currentPlayer+" eight ball needed: "+currentPlayer.getBallNeededIn().contains(BallController.eightBallModel));
+        if(currentPlayer.isTurn() && currentPlayer.getBallNeededIn().contains(BallController.eightBallModel)){
             eightBallInLegal();
         }else{
             eightBallInIllegal();

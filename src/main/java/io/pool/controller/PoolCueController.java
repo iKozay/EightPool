@@ -90,8 +90,8 @@ public class PoolCueController {
                             //poolCueView.getCue().getTransforms().clear();
                             //poolCueView.getPoolLine().getTransforms().clear();
                             poolCueView.setPreviousAngle(0);
-                            BallController.whiteBallModel.setVelocityX(new BigDecimal(-poolCueView.getCue().getLayoutX() / 7.5));
-                            BallController.whiteBallModel.setVelocityY(new BigDecimal(-poolCueView.getCue().getLayoutY() / 7.5));
+                            BallController.whiteBallModel.setVelocityX(new BigDecimal(-poolCueView.getCue().getLayoutX() / 8));
+                            BallController.whiteBallModel.setVelocityY(new BigDecimal(-poolCueView.getCue().getLayoutY() / 8));
                             BallController.whiteBallModel.setIsMoving();
                             poolCueView.getCue().setLayoutX(0);
                             poolCueView.getCue().setLayoutY(0);
