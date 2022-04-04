@@ -11,7 +11,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 
 public class BallController {
@@ -32,6 +31,8 @@ public class BallController {
      */
     public static ArrayList<BallModel> stripeBModelList = new ArrayList<>();
     public static ArrayList<BallModel> solidBModelList = new ArrayList<>();
+    public static ArrayList<BallModel> stripFull = new ArrayList<>();
+    public static ArrayList<BallModel> solidFull = new ArrayList<>();
     public static Boolean allInStripe = false;
     public static Boolean allInSolid = false;
     public static BallModel whiteBallModel;
@@ -40,6 +41,7 @@ public class BallController {
     public static BallView eightBallView;
     private boolean draggable = false;
     public boolean isMoving=false;
+    public boolean isCollide=false;
 
     double mouseAnchorX, mouseAnchorY;
 
@@ -66,8 +68,10 @@ public class BallController {
                 if (i == 8) {
                     eightBallModel = bModel;
                 } else if (i < 8) {
+                    bModel.setBallType(0);
                     solidBModelList.add(bModel);
                 } else {
+                    bModel.setBallType(1);
                     stripeBModelList.add(bModel);
                 }
             }
@@ -115,6 +119,9 @@ public class BallController {
              */
             root.getChildren().add(bView.getBall());
         }
+        stripFull.addAll(stripeBModelList);
+        solidFull.addAll(solidBModelList);
+
         bModelList.addAll(solidBModelList);
         bModelList.add(eightBallModel);
         bModelList.addAll(stripeBModelList);
@@ -168,8 +175,8 @@ public class BallController {
         Bounds intersectBounds;
         for (BallModel bModel : bModelList) {;
             intersectBounds = Shape.intersect(TableBorderModel.tableBorderArea, getBallViewFromBallModel(bModel).getCircleFromSphere()).getBoundsInLocal();
-            //TODO fix infinite collision
             if ((intersectBounds.getWidth() != -1)&&(intersectBounds.getHeight() != -1)) {
+                isCollide=true;
                 double normalXComponent = (intersectBounds.getCenterX() - bModel.getPositionX().doubleValue());
                 double normalYComponent = (intersectBounds.getCenterY() - bModel.getPositionY().doubleValue());
                 double distance = Math.sqrt(Math.pow(normalXComponent, 2) + Math.pow(normalYComponent, 2));
@@ -204,46 +211,13 @@ public class BallController {
                 ballB = bModelList.get(j);
                 if (ballA.handleMomentum(ballB)) {
                     SoundController.BallsCollide();
+                    isCollide=true;
                     if ((ballA.equals(whiteBallModel) || ballB.equals(whiteBallModel)) && (ballA.equals(eightBallModel) || ballB.equals(eightBallModel))) {
                         GameController.foul = true;
                     }
                 }
             }
         }
-    }
-
-    /**
-     * Gets all the BallViews
-     *
-     * @return the ArrayList that contains all the BallViews
-     */
-    public ArrayList<BallView> ballViewArrayList() {
-        return bViewList;
-    }
-
-    /**
-     * Gets all the BallModels
-     *
-     * @return the ArrayList that contains all the BallModels
-     */
-    public ArrayList<BallModel> ballModelArrayList() {
-        return bModelList;
-    }
-
-    public static ArrayList<BallView> getStripeBViewList() {
-        return stripeBViewList;
-    }
-
-    public static ArrayList<BallView> getSolidBViewList() {
-        return solidBViewList;
-    }
-
-    public static ArrayList<BallModel> getStripeBModelList() {
-        return stripeBModelList;
-    }
-
-    public static ArrayList<BallModel> getSolidBModelList() {
-        return solidBModelList;
     }
 
     /**
@@ -324,6 +298,40 @@ public class BallController {
         }
     }
 
+    /**
+     * Gets all the BallViews
+     *
+     * @return the ArrayList that contains all the BallViews
+     */
+    public ArrayList<BallView> ballViewArrayList() {
+        return bViewList;
+    }
+
+    /**
+     * Gets all the BallModels
+     *
+     * @return the ArrayList that contains all the BallModels
+     */
+    public ArrayList<BallModel> ballModelArrayList() {
+        return bModelList;
+    }
+
+    public static ArrayList<BallView> getStripeBViewList() {
+        return stripeBViewList;
+    }
+
+    public static ArrayList<BallView> getSolidBViewList() {
+        return solidBViewList;
+    }
+
+    public static ArrayList<BallModel> getStripeBModelList() {
+        return stripeBModelList;
+    }
+
+    public static ArrayList<BallModel> getSolidBModelList() {
+        return solidBModelList;
+    }
+
     public static Boolean getAllInStripe() {
         return allInStripe;
     }
@@ -346,6 +354,14 @@ public class BallController {
 
     public static BallView getBallViewFromBallModel(BallModel bModel) {
         return bViewList.get(bModelList.indexOf(bModel));
+    }
+
+    public static ArrayList<BallModel> getStripFull() {
+        return stripFull;
+    }
+
+    public static ArrayList<BallModel> getSolidFull() {
+        return solidFull;
     }
 
     public BallModel getBallModelFromNumber(int number) {

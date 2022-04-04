@@ -10,23 +10,35 @@ public class PlayerModel {
      * 0 = Solid
      * 1 = Stripe
      */
-    private int ballType =1;
+    private int ballType = 1;
     private int selectedPoolCue;
     private int numberOfWins;
     private int numberOfLoss;
     private int averageNumberOfShotsPerGame;
+    private boolean turn;
+
 
     public PlayerModel(){
         this.username = null;
     }
 
-    public PlayerModel(String username) {
+    public PlayerModel(String username,boolean turn) {
         this.username = username;
+        this.turn = turn;
     }
 
 
 
 //getters and setters
+
+    public boolean isTurn() {
+        return turn;
+    }
+
+    public void setTurn(boolean turn) {
+        this.turn = turn;
+    }
+
     public int getBallType() {
         return ballType;
     }
@@ -65,5 +77,10 @@ public class PlayerModel {
 
     public void setSelectedPoolCue(int selectedPoolCue) {
         this.selectedPoolCue = selectedPoolCue;
+    }
+
+    @Override
+    public String toString() {
+        return username;
     }
 }

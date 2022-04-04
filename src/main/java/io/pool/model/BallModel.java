@@ -6,6 +6,7 @@ public class BallModel extends PhysicsModule{
     public static int RADIUS;
     /** The number of the ball */
     private int number;
+    private int ballType;
 
 
     /**
@@ -35,5 +36,18 @@ public class BallModel extends PhysicsModule{
      */
     public int getNumber() {
         return this.number;
+    }
+
+    public int getBallType() {
+        return ballType;
+    }
+
+    public void setBallType(int ballType) {
+        this.ballType = ballType;
+    }
+
+    @Override
+    public String toString() {
+        return ""+number;
     }
 }

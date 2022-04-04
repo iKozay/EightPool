@@ -1,5 +1,6 @@
 package io.pool.view;
 
+import io.pool.controller.GameController;
 import io.pool.eightpool.ResourcesLoader;
 import io.pool.eightpool.game;
 import io.pool.model.BallModel;
@@ -7,6 +8,7 @@ import io.pool.model.TableBorderModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -29,6 +31,7 @@ public class TableView {
     private final int cornerHoleRadius = (int)(width/36);
     private final int centerHoleRadius = (int) (width/43.2);
     private final ImageView tableImageView;
+    private Label player1Lbl,player2Lbl;
 
     //boolean selectionCircleClicked;
 
@@ -73,12 +76,12 @@ public class TableView {
         playersIcon.setAlignment(Pos.CENTER);
         playersIcon.setPrefWidth(width);
         playersIcon.setPrefHeight(height/9.);
-        Button player1Lbl = new Button("player1");
+        player1Lbl = new Label("player1");
         player1Lbl.setPrefWidth((width/2.) - width/43.2);
         player1Lbl.setStyle("-fx-background-color: #3D4956");
         player1Lbl.setTextFill(Color.WHITE);
         player1Lbl.setFont(Font.font("Verdana", FontWeight.BOLD, width/43.2));
-        Button player2Lbl = new Button("player2");
+        player2Lbl = new Label("player2");
         player2Lbl.setPrefWidth(width/2. - width/43.2);
         player2Lbl.setStyle("-fx-background-color: #3D4956");
         player2Lbl.setTextFill(Color.WHITE);
@@ -231,6 +234,23 @@ public class TableView {
         table.getChildren().addAll(TableBorderModel.tableBorderArea);
         table.getChildren().addAll(TableBorderModel.tableBorder);
     }
+
+    public Label getPlayer1Lbl() {
+        return player1Lbl;
+    }
+
+    public void setPlayer1Lbl(Label player1Lbl) {
+        this.player1Lbl = player1Lbl;
+    }
+
+    public Label getPlayer2Lbl() {
+        return player2Lbl;
+    }
+
+    public void setPlayer2Lbl(Label player2Lbl) {
+        this.player2Lbl = player2Lbl;
+    }
+
     public Pane getFullTable() {
         return table;
     }

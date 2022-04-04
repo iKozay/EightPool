@@ -90,8 +90,8 @@ public class PhysicsModule {
      */
     private void randomizeVelocity() {
         Random rnd = new Random();
-        this.velocityX = new BigDecimal(rnd.nextInt(10) + 1);
-        this.velocityY = new BigDecimal(rnd.nextInt(10) + 1);
+        this.velocityX = new BigDecimal(0);
+        this.velocityY = new BigDecimal(0);
         this.accelerationY = ZERO;
         this.accelerationX = ZERO;
         this.isMoving = true;

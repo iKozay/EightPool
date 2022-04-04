@@ -47,6 +47,19 @@ public class TableController {
                 return true;
             }
         }
+
         return false;
+    }
+    public void turnView(GameController gameController){
+        if(gameController.getP1().isTurn()){
+            tableView.getPlayer1Lbl().setStyle("-fx-background-color: green");
+            if(gameController.getGameType() == 1) {
+                tableView.getPlayer2Lbl().setStyle("-fx-background-color: #3D4956");
+            }
+        }else{
+            tableView.getPlayer2Lbl().setStyle("-fx-background-color: green");
+            tableView.getPlayer1Lbl().setStyle("-fx-background-color: #3D4956");
+
+        }
     }
 }
