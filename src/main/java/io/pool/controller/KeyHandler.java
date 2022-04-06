@@ -6,11 +6,11 @@ import javafx.scene.input.KeyCode;
 import java.util.HashSet;
 import java.util.Set;
 
-class KeyHandler {
+@Deprecated class KeyHandler {
     /**The set of keys that are currently pressed down*/
-    private static final Set<KeyCode> keysCurrentlyDown = new HashSet<>();
+    public static final Set<KeyCode> keysCurrentlyDown = new HashSet<>();
 
-    private static void resetKeyHandler(Scene scene){
+    public static void resetKeyHandler(Scene scene){
         keysCurrentlyDown.clear();
         if (scene != null) {
             scene.setOnKeyPressed(null);
@@ -24,11 +24,16 @@ class KeyHandler {
      * is removed from the Set. That feature helps to add thrust
      * to the spaceship while turning it at the same time.
      */
-    private static void setSceneKeyHandler(Scene scene) {
+    public static void setSceneKeyHandler(Scene scene,boolean keyboardOnly) {
         scene.setOnKeyPressed((keyEvent -> {
             keysCurrentlyDown.add(keyEvent.getCode());
-            if(keyEvent.getCode().equals(KeyCode.SPACE)){
+            if(keyboardOnly){
+
+            }
+            if(keyEvent.getCode().equals(KeyCode.W)){
                 // Pause the game
+            }else if(keyEvent.getCode().equals(KeyCode.S)){
+
             }
         }));
         scene.setOnKeyReleased((keyEvent -> {
@@ -42,7 +47,7 @@ class KeyHandler {
      * @return <code>true</code> - If <code>keyCode</code> is in the Set <code>keysCurrentlyDown</code>;
      *         <code>false</code> - Otherwise.
      */
-    private static boolean isDown(KeyCode keyCode) {
+    public static boolean isDown(KeyCode keyCode) {
         return keysCurrentlyDown.contains(keyCode);
     }
 }
