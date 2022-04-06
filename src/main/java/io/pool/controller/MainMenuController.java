@@ -104,9 +104,9 @@ public class MainMenuController {
             this.gameView.getGameController().getPoolCueController().hit(stage.getScene());
             gameView.getGameController().startGame(0);
 
-            //DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test"), new PlayerModel());
+            DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test",false), new PlayerModel());
             gameModel.setGameType(1);
-            //DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test"), new PlayerModel());
+//            DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test",false), new PlayerModel());
         });
 
         mmv.getSolo1Btn().setOnMouseExited(event -> {

@@ -53,11 +53,15 @@ public class TableController {
     public void turnView(GameController gameController){
         if(gameController.getP1().isTurn()){
             tableView.getPlayer1Lbl().setStyle("-fx-background-color: green");
+            tableView.getPlayer1Lbl().setText(gameController.getP1().getUsername() + " " + gameController.getP1().getBallNeededIn());
             if(gameController.getGameType() == 1) {
                 tableView.getPlayer2Lbl().setStyle("-fx-background-color: #3D4956");
+                tableView.getPlayer2Lbl().setText(gameController.getP2().getUsername() + " " + gameController.getP2().getBallNeededIn());
             }
         }else{
             tableView.getPlayer2Lbl().setStyle("-fx-background-color: green");
+            tableView.getPlayer1Lbl().setText(gameController.getP1().getUsername() + " " + gameController.getP1().getBallNeededIn());
+            tableView.getPlayer2Lbl().setText(gameController.getP2().getUsername() + " " + gameController.getP2().getBallNeededIn());
             tableView.getPlayer1Lbl().setStyle("-fx-background-color: #3D4956");
 
         }

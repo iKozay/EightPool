@@ -42,6 +42,8 @@ public class BallController {
     private boolean draggable = false;
     public boolean isMoving=false;
     public boolean isCollide=false;
+    private BallModel firstCollide=null;
+
 
     double mouseAnchorX, mouseAnchorY;
 
@@ -90,7 +92,6 @@ public class BallController {
                  */
 
                 bView.getBall().setOnMousePressed(mouseEvent -> {
-
                     mouseAnchorX = mouseEvent.getX();
                     mouseAnchorY = mouseEvent.getY();
                 });
@@ -102,12 +103,21 @@ public class BallController {
                 BallView finalBView = bView;
                 bView.getBall().setOnMouseDragged(mouseEvent -> {
                     if (draggable) {
+                        // TODO take into consideration the position of the table pane
                         BigDecimal newPositionX = new BigDecimal(mouseEvent.getSceneX() - mouseAnchorX);
                         BigDecimal newPositionY = new BigDecimal(mouseEvent.getSceneY() - mouseAnchorY);
-                        finalBModel.setPositionX(newPositionX);
-                        finalBModel.setPositionY(newPositionY);
-                        finalBView.getBall().setLayoutX(finalBModel.getPositionX().doubleValue());
-                        finalBView.getBall().setLayoutY(finalBModel.getPositionY().doubleValue());
+                        if(TableBorderModel.tableBorderArea.getBoundsInLocal().contains(newPositionX.doubleValue(),newPositionY.doubleValue())){
+                            finalBModel.setPositionX(newPositionX);
+                            finalBModel.setPositionY(newPositionY);
+                            finalBView.getBall().setLayoutX(finalBModel.getPositionX().doubleValue());
+                            finalBView.getBall().setLayoutY(finalBModel.getPositionY().doubleValue());
+                        }else{
+                            finalBModel.setPositionX(new BigDecimal(400));
+                            finalBModel.setPositionY(new BigDecimal(400));
+                            finalBView.getBall().setLayoutX(finalBModel.getPositionX().doubleValue());
+                            finalBView.getBall().setLayoutY(finalBModel.getPositionY().doubleValue());
+
+                        }
                     }
                 });
             } else {
@@ -176,7 +186,6 @@ public class BallController {
         for (BallModel bModel : bModelList) {;
             intersectBounds = Shape.intersect(TableBorderModel.tableBorderArea, getBallViewFromBallModel(bModel).getCircleFromSphere()).getBoundsInLocal();
             if ((intersectBounds.getWidth() != -1)&&(intersectBounds.getHeight() != -1)) {
-                isCollide=true;
                 double normalXComponent = (intersectBounds.getCenterX() - bModel.getPositionX().doubleValue());
                 double normalYComponent = (intersectBounds.getCenterY() - bModel.getPositionY().doubleValue());
                 double distance = Math.sqrt(Math.pow(normalXComponent, 2) + Math.pow(normalYComponent, 2));
@@ -210,6 +219,13 @@ public class BallController {
                 ballA = bModelList.get(i);
                 ballB = bModelList.get(j);
                 if (ballA.handleMomentum(ballB)) {
+                    if(firstCollide==null){
+                        if(ballA.equals(whiteBallModel)){
+                            firstCollide=ballB;
+                        }else if(ballB.equals(whiteBallModel)){
+                            firstCollide=ballA;
+                        }
+                    }
                     SoundController.BallsCollide();
                     isCollide=true;
                     if ((ballA.equals(whiteBallModel) || ballB.equals(whiteBallModel)) && (ballA.equals(eightBallModel) || ballB.equals(eightBallModel))) {
@@ -362,6 +378,18 @@ public class BallController {
 
     public static ArrayList<BallModel> getSolidFull() {
         return solidFull;
+    }
+
+    public BallModel getFirstCollide() {
+        return firstCollide;
+    }
+
+    public void setFirstCollide(BallModel firstCollide) {
+        this.firstCollide = firstCollide;
+    }
+
+    public boolean isDraggable() {
+        return draggable;
     }
 
     public BallModel getBallModelFromNumber(int number) {

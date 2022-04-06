@@ -160,17 +160,17 @@ public class TableView {
 
         //TODO Review these reflection factors to verify their effectiveness
         new TableBorderModel("topLeftHoleA1",width/11.228,height/9,width/14.062,height/12.9,1);
-        new TableBorderModel("topLeftHoleA2",width/16,height/5.9130,width/22.9299,height/7.15789,1);
-        new TableBorderModel("bottomLeftHoleB1",width/16,height/1.21429,width/22.9299,height/1.16587,2);
+        new TableBorderModel("topLeftHoleA2",width/16,height/5.9130,width/22.9299,height/7.15789,2);
+        new TableBorderModel("bottomLeftHoleB1",width/16,height/1.21429,width/22.9299,height/1.16587,1);
         new TableBorderModel("bottomLeftHoleB2",width/11.175561,height/1.13145,width/14.221220,height/1.089777,2);
-        new TableBorderModel("bottomMiddleHoleC1",width/2.165,height/1.13145,width/2.128,height/1.09149,3);
-        new TableBorderModel("bottomMiddleHoleC2",width/1.9048,height/1.13145,width/1.935,height/1.09149,3);
-        new TableBorderModel("bottomRightHoleD1",width/1.10919,height/1.13145,width/1.087,height/1.09149,4);
-        new TableBorderModel("bottomRightHoleD2",width/1.069,height/1.21864,width/1.047,height/1.16638,4);
-        new TableBorderModel("topRightHoleE1",width/1.069,height/5.9130,width/1.047,height/7.15789,5);
-        new TableBorderModel("topRightHoleE2",width/1.10719,height/9,width/1.084,height/13.302,5);
-        new TableBorderModel("topMiddleHoleF1",width/1.9115,height/9,width/1.931,height/13.302,6);
-        new TableBorderModel("topMiddleHoleF2",width/2.16,height/9,width/2.130,height/13.302,6);
+        new TableBorderModel("bottomMiddleHoleC1",width/2.165,height/1.13145,width/2.128,height/1.09149,1);
+        new TableBorderModel("bottomMiddleHoleC2",width/1.9048,height/1.13145,width/1.935,height/1.09149,2);
+        new TableBorderModel("bottomRightHoleD1",width/1.10919,height/1.13145,width/1.087,height/1.09149,1);
+        new TableBorderModel("bottomRightHoleD2",width/1.069,height/1.21864,width/1.047,height/1.16638,2);
+        new TableBorderModel("topRightHoleE1",width/1.069,height/5.9130,width/1.047,height/7.15789,1);
+        new TableBorderModel("topRightHoleE2",width/1.10719,height/9,width/1.084,height/13.302,2);
+        new TableBorderModel("topMiddleHoleF1",width/1.9115,height/9,width/1.931,height/13.302,1);
+        new TableBorderModel("topMiddleHoleF2",width/2.16,height/9,width/2.130,height/13.302,2);
 
 
         new TableBorderModel("upLeftLine",width/11.228, height/9, width/2.16, height/9,0.9,-0.9);

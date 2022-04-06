@@ -5,6 +5,7 @@ import io.pool.controller.SoundController;
 import io.pool.view.BallView;
 import io.pool.view.TableView;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
@@ -63,8 +64,27 @@ public class TableBorderModel extends Line {
             bModel.setVelocityY(bModel.getVelocityY().multiply(reflectionLine.getReflectionYFactor()));
             SoundController.BallBounce();
         } else {
-            Circle hole = tView.getHoles().get(reflectionLine.type - 1);
-            double angle = Math.atan2(((tView.getFullTable().getLayoutY() + hole.getCenterY()) - bModel.getPositionY().doubleValue()), ((tView.getFullTable().getLayoutX() + (TableView.width / 43.2) + hole.getCenterX()) - bModel.getPositionX().doubleValue()));
+            Point2D line = new Point2D(reflectionLine.getEndX()- reflectionLine.getStartX(),reflectionLine.getEndY()- reflectionLine.getStartY());
+            Point2D vec = new Point2D(bModel.getVelocityX().doubleValue(),bModel.getVelocityY().doubleValue());
+            double angleBetween = line.angle(vec);
+            double angle = Math.atan2(bModel.getVelocityY().doubleValue(),bModel.getVelocityX().doubleValue());
+
+
+            if(angleBetween<90){
+                if(reflectionLine.type==1) angle-=90;
+                if(reflectionLine.type==2) angle+=90;
+            }else if(angleBetween>90){
+                if(reflectionLine.type==1) angle+=90;
+                if(reflectionLine.type==2) angle-=90;
+            }else{
+                bModel.setVelocityX(bModel.getVelocityX().multiply(new BigDecimal(-0.9)));
+                bModel.setVelocityY(bModel.getVelocityY().multiply(new BigDecimal(-0.9)));
+                return;
+            }
+
+            //System.out.println(bModel+" : "+angleBetween+" --> "+angle);
+            //Circle hole = tView.getHoles().get(reflectionLine.type - 1);
+            //double angle = Math.atan2(((tView.getFullTable().getLayoutY() + hole.getCenterY()) - bModel.getPositionY().doubleValue()), ((tView.getFullTable().getLayoutX() + (TableView.width / 43.2) + hole.getCenterX()) - bModel.getPositionX().doubleValue()));
             double velocityMag = Math.sqrt(Math.pow((bModel.getVelocityX().doubleValue()), 2) + Math.pow((bModel.getVelocityY().doubleValue()), 2)) * 0.9;
             bModel.setVelocityX(new BigDecimal(velocityMag * Math.cos(angle)));
             bModel.setVelocityY(new BigDecimal(velocityMag * Math.sin(angle)));
