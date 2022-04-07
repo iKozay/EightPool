@@ -76,7 +76,7 @@ public class PlayerTableDB extends DBConnection{
             e.printStackTrace();
         }
     }
-    public static ArrayList<PlayerModel> fetchAllPlayers(){
+    public static void fetchAllPlayers(){
         connect();
         PreparedStatement ps;
         ResultSet rs;
@@ -97,5 +97,4 @@ public class PlayerTableDB extends DBConnection{
             e.printStackTrace();
         }
     }
-
 }
