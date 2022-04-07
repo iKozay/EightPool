@@ -1,37 +1,40 @@
 package io.pool.Database;
 
+import io.pool.model.PlayerModel;
+import javafx.scene.paint.Color;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class PlayerTableDB extends DBConnection{
 
     /**used for readData method*/
-    public String[] PlayerTableDBReadOptions = {"playerNumber", "name"};
+    public String[] PlayerTableDBReadOptions = {"ID", "Username", "SelectedPoolCue", "Win", "Loss", "AverageShots"};
 
-    public static void createNewPlayerDB(String name){
+    public static void createNewPlayerDB(PlayerModel player){
         connect();
         PreparedStatement ps;
 
-        String sql = "INSERT INTO PlayerTable (name) VALUES (?)";
+        String sql = "INSERT INTO PlayerTable (Username,SelectedPoolCue, Win, Loss, AverageShots) VALUES (?) 1 0 0 0";
         try{
             ps = connection.prepareStatement(sql);
-            ps.setString(1, name);
-            //TODO add other data to player table
+            ps.setString(1, player.getUsername());
             ps.execute();
-            System.out.println("Player created!");
+            System.out.println("Player Added to DB!");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static void removePlayerDB(String name){
+    public static void removePlayerDB(PlayerModel player){
         connect();
         PreparedStatement ps;
-        String sql = "delete from PlayerTable WHERE name = ? ";
+        String sql = "delete from PlayerTable WHERE Username = ? ";
         try{
             ps = connection.prepareStatement(sql);
-            ps.setString(1, name);
+            ps.setString(1, player.getUsername());
             ps.execute();
             System.out.println("Player removed successfully!");
         } catch (SQLException e) {
@@ -40,14 +43,14 @@ public class PlayerTableDB extends DBConnection{
     }
 
 
-    public static String readPlayerTableDB(String playerName, String readOption){
+    public static String readPlayerTableDB(PlayerModel player, String property){
         connect();
         PreparedStatement ps;
         ResultSet rs;
         try{
-            String sql = "SELECT " + readOption + " from PlayerTable WHERE name = ?";
+            String sql = "SELECT " + property + " from PlayerTable WHERE name = ?";
             ps = connection.prepareStatement(sql);
-            ps.setString(1, playerName);
+            ps.setString(1, player.getUsername());
             rs = ps.executeQuery();
 
             return rs.getString(1);
@@ -57,21 +60,42 @@ public class PlayerTableDB extends DBConnection{
         return null;
     }
 
-    public static void updatePlayerTableDB(int numberOfWins, int numberOfLoss, int averageShotsPerGame, String playerName){
+    public static void updatePlayerTableDB(PlayerModel player){
         connect();
         PreparedStatement ps;
         try{
-            String sql = "UPDATE PlayerTable set (numberOfWins)=?, (numberOfLoss)=?, (averageShotsPerGame)=? WHERE name = ?";
+            String sql = "UPDATE PlayerTable set (Win)=?, (Loss)=?, (AverageShots)=? WHERE name = ?";
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, numberOfWins);
-            ps.setInt(2, numberOfLoss);
-            ps.setInt(3, averageShotsPerGame);
-            ps.setString(4, playerName);
+            ps.setInt(1, player.getNumberOfWins());
+            ps.setInt(2, player.getNumberOfLoss());
+            ps.setInt(3, player.getAverageNumberOfShotsPerGame());
+            ps.setString(4, player.getUsername());
             ps.execute();
             System.out.println("PlayerTable updated!");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
+    public static ArrayList<PlayerModel> fetchAllPlayers(){
+        connect();
+        PreparedStatement ps;
+        ResultSet rs;
+        String sql = "SELECT * from PlayerTable";
+
+        try{
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                PlayerModel.playersList.add(new PlayerModel(rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5),rs.getInt(6)));
+            }
+            if(PlayerModel.playersList.size()==0) {
+                createNewPlayerDB(new PlayerModel("Player1",1,0,0,0));
+            }
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -1,9 +1,12 @@
 package io.pool.model;
 
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 
 public class PlayerModel {
 
+    public static ObservableList<PlayerModel> playersList;
     private ArrayList<BallModel> ballNeededIn;
     private String username;
     /**
@@ -25,6 +28,14 @@ public class PlayerModel {
     public PlayerModel(String username,boolean turn) {
         this.username = username;
         this.turn = turn;
+    }
+
+    public PlayerModel(String username,int selectedPoolCue, int numberOfWins,int numberOfLoss, int averageNumberOfShotsPerGame){
+        this.username=username;
+        this.selectedPoolCue=selectedPoolCue;
+        this.numberOfWins=numberOfWins;
+        this.numberOfLoss=numberOfLoss;
+        this.averageNumberOfShotsPerGame=averageNumberOfShotsPerGame;
     }
 
 
