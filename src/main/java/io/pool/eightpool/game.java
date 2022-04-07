@@ -1,5 +1,6 @@
 package io.pool.eightpool;
 
+import io.pool.Database.BallConfigurationDB;
 import io.pool.Database.DBConnection;
 import io.pool.view.*;
 import javafx.application.Application;
@@ -43,7 +44,7 @@ public class game extends Application {
         stage.setFullScreen(true);
         stage.setScene(scene);
         stage.show();
-        DBConnection.deleteAllData();
+        BallConfigurationDB.deleteAllData();
 
 
     }

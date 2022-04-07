@@ -1,5 +1,6 @@
 package io.pool.controller;
 
+import io.pool.Database.BallConfigurationDB;
 import io.pool.Database.DBConnection;
 import io.pool.model.BallModel;
 import io.pool.model.PlayerModel;
@@ -97,9 +98,9 @@ public class GameController {
                                     poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
 //                                }
                                 turns();
-                                if (!DBConnection.hasBeenCalled) {
-                                    DBConnection.updateLastPosition(playerModel.getBallType(), playerModel.getBallType(), gameModel.getPlayerTurn());
-                                    DBConnection.hasBeenCalled = true;
+                                if (!BallConfigurationDB.hasBeenCalled) {
+                                    BallConfigurationDB.updateLastPosition(playerModel.getBallType(), playerModel.getBallType(), gameModel.getPlayerTurn());
+                                    BallConfigurationDB.hasBeenCalled = true;
                                 }
                                 poolCueController.enablePoolCueControl();
                                 scored = false;

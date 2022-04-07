@@ -1,5 +1,6 @@
 package io.pool.controller;
 
+import io.pool.Database.BallConfigurationDB;
 import io.pool.Database.DBConnection;
 import io.pool.model.GameModel;
 import io.pool.model.PlayerModel;
@@ -104,7 +105,7 @@ public class MainMenuController {
             this.gameView.getGameController().getPoolCueController().hit(stage.getScene());
             gameView.getGameController().startGame(0);
 
-            DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test",false), new PlayerModel());
+            BallConfigurationDB.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test",false), new PlayerModel());
             gameModel.setGameType(1);
 //            DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test",false), new PlayerModel());
         });
