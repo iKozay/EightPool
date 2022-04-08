@@ -15,9 +15,9 @@ public class SettingsController {
 
     public SettingsController(SettingsView settingsView) {
         this.settingsView = settingsView;
-        controlOption = (int)SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[0]);
-        cueHelper = (int)SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[1]);
-        frictionRatio = SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[2]);
+        //controlOption = (int)SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[0]);
+        //cueHelper = (int)SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[1]);
+        //frictionRatio = SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[2]);
     }
 
     public int getControlOption() {
