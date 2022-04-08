@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class SettingsDB extends DBConnection{
 
     /**used for readData method*/
-    public String[] SettingsDBReadOptions = {"ControlOption", "PoolCueHelper", "FrictionPercentage", "CurrentTableTheme"};
+    public static String[] SettingsDBReadOptions = {"ControlOption", "PoolCueHelper", "FrictionPercentage", "CurrentTableTheme"};
 
 //    public static void createNewSavedSettings(String playerName){
 //        connect();
@@ -39,7 +39,7 @@ public class SettingsDB extends DBConnection{
 //        }
 //    }
 
-    public static String readSettingPreferencesDB(String setting){
+    public static double readSettingPreferencesDB(String setting){
         connect();
         PreparedStatement ps;
         ResultSet rs;
@@ -48,11 +48,11 @@ public class SettingsDB extends DBConnection{
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
 
-            return rs.getString(1);
+            return rs.getDouble(1);
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return null;
+        return -1;
     }
 
     /**updates all settings in settings DB table*/

@@ -23,6 +23,7 @@ public class PhysicsModule {
     /**
      * Friction coefficient for ball-table rolling
      */
+    public static double FRICTION_RATIO=1.0;
     private static final double ROLLING_FRICTION_COEFFICIENT = 0.02;
     private static final double KINETIC_ENERGY_LOSS_RATIO = 0.95;
 
@@ -287,6 +288,9 @@ public class PhysicsModule {
         return false;
     }
 
+    public double distanceFrom(PhysicsModule pm2){
+        return 0.0;
+    }
 
     /**
      *

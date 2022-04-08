@@ -1,8 +1,11 @@
 package io.pool.view;
 
 import io.pool.controller.MainMenuController;
+import io.pool.controller.SettingsController;
 import io.pool.eightpool.game;
 import io.pool.model.PlayerModel;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -22,9 +25,12 @@ import java.util.Arrays;
 
 public class SettingsView extends BorderPane {
     ObservableList<String> option1List = FXCollections.observableList(new ArrayList<String>(Arrays.asList("Mouse + Keyboard","Keyboard Only")));
-    ObservableList<String> option2List = FXCollections.observableList(new ArrayList<String>(Arrays.asList("Yes","No")));
+    ObservableList<String> option2List = FXCollections.observableList(new ArrayList<String>(Arrays.asList("No","Yes")));
+    private SettingsController settingsController;
 
     public SettingsView() {
+        settingsController = new SettingsController(this);
+
         VBox main = new VBox();
         main.setAlignment(Pos.CENTER);
         this.setCenter(main);
@@ -36,17 +42,23 @@ public class SettingsView extends BorderPane {
 
         Text option1Text = new Text("Control Option:");
         ComboBox<String> option1 = new ComboBox<String>(option1List);
-        option1.getSelectionModel().select(0);
+        option1.getSelectionModel().select(settingsController.getControlOption());
+        option1.setOnAction(e->{
+            settingsController.setControlOption(option1.getSelectionModel().getSelectedIndex());
+        });
 
         Text option2Text = new Text("Pool Cue Helper:");
         ComboBox<String> option2 = new ComboBox<String>(option2List);
-        option2.getSelectionModel().select(0);
+        option2.getSelectionModel().select(settingsController.getCueHelper());
+        option2.setOnAction(e->{
+            settingsController.setCueHelper(option2.getSelectionModel().getSelectedIndex());
+        });
 
         Text option3Text = new Text("Friction Percentage: ");
         Slider option3 = new Slider();
         option3.setMin(50);
         option3.setMax(150);
-        option3.setValue(100);
+        option3.setValue(settingsController.getFrictionPercentage());
         option3.setBlockIncrement(25);
         option3.setShowTickLabels(true);
         option3.setShowTickMarks(true);
@@ -65,6 +77,12 @@ public class SettingsView extends BorderPane {
             }
         });
         option3.setPrefWidth(0.25*game.eightPoolTableWidth);
+        option3.valueProperty().addListener(new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                settingsController.setFrictionPercentage(newValue.doubleValue());
+            }
+        });
 
         Separator sep1 = new Separator();
 
@@ -113,6 +131,7 @@ public class SettingsView extends BorderPane {
         profilesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         profilesTable.setEditable(false);
         profilesTable.setPrefWidth(0.70*game.eightPoolTableWidth);
+        profilesTable.setItems(PlayerModel.playersList);
 
         VBox profileControlsBox = new VBox();
         profileControlsBox.setAlignment(Pos.CENTER);

@@ -384,6 +384,22 @@ public class GameController {
     public void setGameType(int gameType) {
         this.gameType = gameType;
     }
+
+    public boolean isFirstPlay() {
+        return firstPlay;
+    }
+
+    public boolean isScored() {
+        return scored;
+    }
+
+    public static boolean isFoul() {
+        return foul;
+    }
+
+    public ArrayList<BallModel> getbModelInEachTurn() {
+        return bModelInEachTurn;
+    }
 //    public ArrayList<Double> getBallsPositionX() {
 //        return ballsPositionX;
 //    }
