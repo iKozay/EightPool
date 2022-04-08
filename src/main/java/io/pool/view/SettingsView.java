@@ -56,8 +56,8 @@ public class SettingsView extends BorderPane {
 
         Text option3Text = new Text("Friction Percentage: ");
         Slider option3 = new Slider();
-        option3.setMin(50);
-        option3.setMax(150);
+        option3.setMin(25);
+        option3.setMax(175);
         option3.setValue(settingsController.getFrictionPercentage());
         option3.setBlockIncrement(25);
         option3.setShowTickLabels(true);

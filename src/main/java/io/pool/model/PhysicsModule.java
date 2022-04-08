@@ -105,7 +105,7 @@ public class PhysicsModule {
         setIsMoving();
         /** Updates the position of the ball only if it is moving */
         if (isMoving) {
-            applyFriction(ROLLING_FRICTION_COEFFICIENT);
+            applyFriction(ROLLING_FRICTION_COEFFICIENT*FRICTION_RATIO);
             /** Updates the BallModel position */
             setPositionX(getPositionX().add(getVelocityX()));
             setPositionY(getPositionY().add(getVelocityY()));
