@@ -2,6 +2,7 @@ package io.pool.view;
 
 import io.pool.controller.GameController;
 import io.pool.controller.MainMenuController;
+import io.pool.controller.SettingsController;
 import io.pool.eightpool.ResourcesLoader;
 import io.pool.model.BallModel;
 import javafx.animation.Interpolator;
@@ -61,7 +62,7 @@ public class GameView extends Pane {
     /**
      * Main Constructor of GameView
      */
-    public GameView() {
+    public GameView(SettingsController settingsController) {
         /**
          * Instantiates the Views and GameController
          */
@@ -402,7 +403,7 @@ public class GameView extends Pane {
 
         gamePane.getChildren().addAll(principalBar, ballsSettingsPane, tableThemesPane);
 
-        gameController = new GameController(this);
+        gameController = new GameController(this, settingsController);
 
         AnchorPane.setTopAnchor(principalBar, TableView.height/35.0);
         AnchorPane.setRightAnchor(principalBar, 7.);

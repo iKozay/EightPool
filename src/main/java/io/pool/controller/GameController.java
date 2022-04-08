@@ -1,7 +1,7 @@
 package io.pool.controller;
 
+import io.pool.AI.AIModel;
 import io.pool.Database.BallConfigurationDB;
-import io.pool.Database.DBConnection;
 import io.pool.model.BallModel;
 import io.pool.model.PlayerModel;
 import io.pool.view.BallView;
@@ -25,6 +25,8 @@ public class GameController {
     /** GameModel that helps keep track of game status*/
     private GameModel gameModel;
     private PlayerModel playerModel;
+    private SettingsController settingsController;
+
 
     private PlayerModel p1=null;
     private PlayerModel p2=null;
@@ -46,7 +48,7 @@ public class GameController {
      * Main Constructor of GameController
      * @param gView Instance of GameView
      */
-    public GameController(GameView gView) {
+    public GameController(GameView gView, SettingsController settingsController) {
         /** Assign the GameView and Instantiate the Controllers */
         gameModel = new GameModel();
         playerModel = new PlayerModel();
@@ -54,6 +56,7 @@ public class GameController {
         tableController = new TableController(this.gameView.getTableView());
         ballController = new BallController(this);
         poolCueController = new PoolCueController(this.gameView.getCueView());
+        this.settingsController = settingsController;
 
 //        ballsPositionX = new ArrayList<>();
 //        ballsPositionY = new ArrayList<>();
@@ -94,8 +97,12 @@ public class GameController {
                                     poolCueController.getRotate().setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
                                     poolCueController.getRotate().setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
                                     poolCueController.getRotate().setAngle(poolCueController.getCueView().getPreviousAngle());
-                                    poolCueController.poolCueView.getPoolLine().setStartX(BallController.whiteBallModel.getPositionX().doubleValue());
-                                    poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
+                                    if(settingsController.getCueHelper()==1) {
+                                        poolCueController.poolCueView.getPoolLine().setStartX(BallController.whiteBallModel.getPositionX().doubleValue());
+                                        poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
+                                    }else{
+                                        poolCueController.poolCueView.getPoolLine().setVisible(false);
+                                    }
 //                                }
                                 turns();
                                 if (!BallConfigurationDB.hasBeenCalled) {
@@ -399,6 +406,14 @@ public class GameController {
 
     public ArrayList<BallModel> getbModelInEachTurn() {
         return bModelInEachTurn;
+    }
+
+    public void simulatePlay(AIModel aiModel) {
+        poolCueController.setPoolCue(aiModel.getPower(),aiModel.getRotation());
+    }
+
+    public void resetSimulation() {
+        //TODO Call method from DBController to load BallConfiguration
     }
 //    public ArrayList<Double> getBallsPositionX() {
 //        return ballsPositionX;

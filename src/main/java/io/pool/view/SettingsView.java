@@ -170,4 +170,8 @@ public class SettingsView extends BorderPane {
         main.getChildren().add(settings2Box);
 
     }
+
+    public SettingsController getSettingsController() {
+        return settingsController;
+    }
 }
