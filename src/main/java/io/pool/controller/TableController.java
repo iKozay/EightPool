@@ -8,7 +8,7 @@ public class TableController {
 
     /** Instance of the table that will be shown to the user */
     private TableView tableView;
-
+    private GameController gameController;
     /** tableX and tableY */
     private double tableX;
     private double tableY;
@@ -18,8 +18,9 @@ public class TableController {
      * Main constructor of TableController
      * @param tableView The Table View
      */
-    public TableController(TableView tableView) {
+    public TableController(TableView tableView, GameController gameController) {
         this.tableView = tableView;
+        this.gameController = gameController;
         tableX = tableView.getFullTable().getLayoutX()+(TableView.width/43.2);
         tableY = tableView.getFullTable().getLayoutY();
     }
@@ -64,6 +65,21 @@ public class TableController {
             tableView.getPlayer2Lbl().setText(gameController.getP2().getUsername() + " " + gameController.getP2().getBallNeededIn());
             tableView.getPlayer1Lbl().setStyle("-fx-background-color: #3D4956");
 
+        }
+    }
+    public void turnsColor(){
+        if(!(gameController.getP2() == null)){
+            tableView.getPlayer2Lbl().setText(gameController.getP2().getUsername());
+        }else{
+
+            tableView.getPlayer1Lbl().setText(gameController.getP1().getUsername());
+        }
+        if(gameController.getP1().isTurn()){
+            tableView.getPlayer1Lbl().setStyle("-fx-background-color: green");
+            tableView.getPlayer2Lbl().setStyle("-fx-background-color: #3D4956");
+        }else{
+            tableView.getPlayer2Lbl().setStyle("-fx-background-color: green");
+            tableView.getPlayer1Lbl().setStyle("-fx-background-color: #3D4956");
         }
     }
 }

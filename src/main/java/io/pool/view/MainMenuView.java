@@ -127,7 +127,7 @@ public class MainMenuView extends Pane{
         menuBar.setMinWidth(screenWidth);
         menuBar.setMinHeight(10);
         menuBar.setStyle("-fx-background-color: transparent");
-        this.getChildren().add(menuBar);
+
         //Menu File
         menuFile = new Menu("File");
         //MenuFile Items
@@ -291,6 +291,8 @@ public class MainMenuView extends Pane{
         pvpRootMenu.setCenter(centerBox);
         pvpRootMenu.setBottom(bottomBox);
         menuBar.toFront();
+        this.getChildren().add(menuBar);
+
     }
 
     public Button getBackBtn() {

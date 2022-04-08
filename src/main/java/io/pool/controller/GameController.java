@@ -9,6 +9,7 @@ import io.pool.view.GameView;
 import io.pool.model.GameModel;
 
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class GameController {
@@ -53,7 +54,7 @@ public class GameController {
         gameModel = new GameModel();
         playerModel = new PlayerModel();
         this.gameView = gView;
-        tableController = new TableController(this.gameView.getTableView());
+        tableController = new TableController(this.gameView.getTableView(),this);
         ballController = new BallController(this);
         poolCueController = new PoolCueController(this.gameView.getCueView());
         this.settingsController = settingsController;
@@ -72,6 +73,7 @@ public class GameController {
                  * */
                 if(secondsSinceLastFrame<1) {
                         /** Detect collisions */
+                        firstCollidePlay();
                         assignBallType();
                         tableController.turnView(gameController);
                         ballController.detectCollision(tableController);
@@ -185,7 +187,6 @@ public class GameController {
             foul=false;
             return;
         }
-        //System.out.println("Made a collision ?"+ballController.isCollide);
 
         if(gameType==1) {
             //winnerPlayerPVP();
@@ -195,15 +196,14 @@ public class GameController {
                 //System.out.println("switch");
             }
         }
-
+        System.out.println(currentPlayer.getBallType());
         foul=false;
         ballController.setFirstCollide(null);
         firstPlay = false;
         bModelInEachTurn.clear();
         System.out.println(currentPlayer.getUsername() + "," + "your turn!");
         waitingForInput=true;
-        //System.out.println(firstPlay + ";" + setBallType);
-        //System.out.println(p1.isTurn() + ";" + p2.isTurn());
+
     }
 
     public void assignBallType(){
@@ -267,6 +267,7 @@ public class GameController {
             bModel.setPositionY(new BigDecimal(tableController.getTableView().getFullTable().getHeight()/2));
             bModel.setVelocityX(new BigDecimal(0.1));
             bModel.setVelocityY(new BigDecimal(0.1));
+            System.out.println("whiteBall");
         }else{
             //bModelIn.add(bModel);
             bModelInEachTurn.add(bModel);
@@ -286,23 +287,40 @@ public class GameController {
             resetGame();
         }
     }
+    public void firstCollidePlay(){
+        if(ballController.getFirstCollide() != null && setBallType) {
+            if (currentPlayer.isTurn() && !(ballController.getFirstCollide().getBallType() == currentPlayer.getBallType())) {
+                foul = true;
+                System.out.println("Wrong ball");
+            }
+        }
+
+    }
 
     public void ballInHole(){
         if(!bModelInEachTurn.isEmpty()) {
             for (BallModel b : bModelInEachTurn) {
                 ballController.ballInHole(b, gameView);
                 scored = true;
-                if(p1.getBallNeededIn().contains(b)){
-                    p1.getBallNeededIn().remove(b);
-                }else{
-                    foul=true;
-                }
-                if(gameType==1) {
-                    if (p2.getBallNeededIn().contains(b)) {
-                        p2.getBallNeededIn().remove(b);
+                if(gameType == 1 && p1.isTurn()) {
+                    if (p1.getBallNeededIn().contains(b)) {
+                        p1.getBallNeededIn().remove(b);
+                        System.out.println("yes");
                     } else {
                         foul = true;
+
                     }
+                    if (gameType == 1 && p2.isTurn()) {
+                        if (p2.getBallNeededIn().contains(b)) {
+                            System.out.println("yes1");
+                            p2.getBallNeededIn().remove(b);
+                        } else {
+                            foul = true;
+
+
+                        }
+                    }
+
                 }
             }
         }
@@ -408,9 +426,9 @@ public class GameController {
         return bModelInEachTurn;
     }
 
-    public void simulatePlay(AIModel aiModel) {
-        poolCueController.setPoolCue(aiModel.getPower(),aiModel.getRotation());
-    }
+//    public void simulatePlay(AIModel aiModel) {
+//        poolCueController.setPoolCue(aiModel.getPower(),aiModel.getRotation());
+//    }
 
     public void resetSimulation() {
         //TODO Call method from DBController to load BallConfiguration

@@ -92,6 +92,7 @@ public class BallController {
                  */
 
                 bView.getBall().setOnMousePressed(mouseEvent -> {
+
                     mouseAnchorX = mouseEvent.getX();
                     mouseAnchorY = mouseEvent.getY();
                 });
@@ -185,6 +186,7 @@ public class BallController {
         Bounds intersectBounds;
         for (BallModel bModel : bModelList) {;
             intersectBounds = Shape.intersect(TableBorderModel.tableBorderArea, getBallViewFromBallModel(bModel).getCircleFromSphere()).getBoundsInLocal();
+            //TODO fix infinite collision
             if ((intersectBounds.getWidth() != -1)&&(intersectBounds.getHeight() != -1)) {
                 double normalXComponent = (intersectBounds.getCenterX() - bModel.getPositionX().doubleValue());
                 double normalYComponent = (intersectBounds.getCenterY() - bModel.getPositionY().doubleValue());
@@ -228,7 +230,8 @@ public class BallController {
                     }
                     SoundController.BallsCollide();
                     isCollide=true;
-                    if ((ballA.equals(whiteBallModel) || ballB.equals(whiteBallModel)) && (ballA.equals(eightBallModel) || ballB.equals(eightBallModel))) {
+                    if (firstCollide.equals(eightBallModel)) {
+                        System.out.println("EightBall Touch");
                         GameController.foul = true;
                     }
                 }

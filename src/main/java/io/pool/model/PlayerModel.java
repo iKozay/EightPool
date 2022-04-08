@@ -13,7 +13,7 @@ public class PlayerModel {
      * 0 = Solid
      * 1 = Stripe
      */
-    private int ballType = 1;
+    private int ballType;
     private int selectedPoolCue;
     private int numberOfWins;
     private int numberOfLoss;
