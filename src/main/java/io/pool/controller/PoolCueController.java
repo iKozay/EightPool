@@ -19,13 +19,15 @@ public class PoolCueController {
     private static final Set<KeyCode> keysCurrentlyDown = new HashSet<>();
     public static boolean keyboardOnly = false;
     public static boolean cueHelperEnabled=true;
+    private GameController gameController;
 
     PoolCueView poolCueView;
     PoolCueModel poolCueModel;
     public static final int MAX_DISTANCE = 100;
     private boolean enablePoolCueControl = false;
 
-    public PoolCueController(PoolCueView poolCueView) {
+    public PoolCueController(PoolCueView poolCueView, GameController gameController) {
+        this.gameController = gameController;
         this.poolCueView = poolCueView;
         this.poolCueView.setRotationTransform(this);
         this.poolCueModel = new PoolCueModel();
@@ -37,7 +39,7 @@ public class PoolCueController {
             scene.setOnMouseMoved(event -> {
                 if (!keyboardOnly) {
                     if (enablePoolCueControl) {
-                        if (GameController.gameLoopTimer.isActive) {
+                        if (gameController.gameLoopTimer.isActive) {
                             double deltaX = event.getX() - BallController.whiteBallModel.getPositionX().doubleValue();
                             double deltaY = event.getY() - BallController.whiteBallModel.getPositionY().doubleValue();
                             if (deltaX != 0) {
@@ -52,7 +54,7 @@ public class PoolCueController {
 
     public void hit(Scene scene) {
         scene.setOnKeyPressed((keyEvent -> {
-            if (GameController.gameLoopTimer.isActive) {
+            if (gameController.gameLoopTimer.isActive) {
                 keysCurrentlyDown.add(keyEvent.getCode());
                 if (keyboardOnly) {
                     if (keysCurrentlyDown.contains(KeyCode.A) || keysCurrentlyDown.contains(KeyCode.D)) {
@@ -146,7 +148,7 @@ public class PoolCueController {
     }
 
     private void shoot(){
-        if (GameController.gameLoopTimer.isActive) {
+        if (gameController.gameLoopTimer.isActive) {
                 if (poolCueView.getCue().getLayoutX() != 0 && poolCueView.getCue().getLayoutY() != 0) {
                     poolCueView.setPreviousAngle(0);
                     BallController.whiteBallModel.setVelocityX(new BigDecimal(-poolCueView.getCue().getLayoutX() / 8));
@@ -156,7 +158,8 @@ public class PoolCueController {
                     poolCueView.getCue().setLayoutY(0);
                     disablePoolCueControl();
                     SoundController.BallHit();
-                    GameController.waitingForInput = false;
+                    gameController.waitingForInput = false;
+                    gameController.getBallController().makeUnDraggable();
                 }
         }
     }

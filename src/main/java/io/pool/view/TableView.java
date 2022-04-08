@@ -32,6 +32,7 @@ public class TableView {
     private final int centerHoleRadius = (int) (width/43.2);
     private final ImageView tableImageView;
     private Label player1Lbl,player2Lbl;
+    private Shape accessibleArea;
 
     //boolean selectionCircleClicked;
 
@@ -227,12 +228,19 @@ public class TableView {
         area.setVisible(false);
         //
 
+        accessibleArea = new Polyline(width/11.228, height/9+(2* BallModel.RADIUS), width/1.10719, height/9+(2* BallModel.RADIUS), width/1.069-(2* BallModel.RADIUS),height/5.9130,width/1.069-(2* BallModel.RADIUS), height/1.21864,width/1.10919,height/1.13145-(2* BallModel.RADIUS),width/11.175561, height/1.13145-(2* BallModel.RADIUS),width/16+(2* BallModel.RADIUS),height/1.21429,width/16+(2* BallModel.RADIUS), height/5.9130,width/11.228,height/9+(2* BallModel.RADIUS));
+        accessibleArea.setFill(Color.TRANSPARENT);
+        accessibleArea.setStroke(Color.TRANSPARENT);
+        //accessibleArea.setVisible(false);
+
+
         for (TableBorderModel tbm:TableBorderModel.tableBorder) {
             tbm.setVisible(false);
         }
 
         table.getChildren().addAll(TableBorderModel.tableBorderArea);
         table.getChildren().addAll(TableBorderModel.tableBorder);
+        table.getChildren().addAll(accessibleArea);
     }
 
     public Label getPlayer1Lbl() {
@@ -269,6 +277,10 @@ public class TableView {
 
     public ImageView getTableImageView() {
         return tableImageView;
+    }
+
+    public Shape getAccessibleArea() {
+        return accessibleArea;
     }
 }
 

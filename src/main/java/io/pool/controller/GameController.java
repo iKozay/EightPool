@@ -56,7 +56,7 @@ public class GameController {
         this.gameView = gView;
         tableController = new TableController(this.gameView.getTableView(),this);
         ballController = new BallController(this);
-        poolCueController = new PoolCueController(this.gameView.getCueView());
+        poolCueController = new PoolCueController(this.gameView.getCueView(), this);
         this.settingsController = settingsController;
 
 //        ballsPositionX = new ArrayList<>();
@@ -92,20 +92,7 @@ public class GameController {
                         if (!ballController.isMoving) { /**methods when all balls have stopped moving*/
                             waitingForInput = true;
                             if (!poolCueController.isEnablePoolCueControl()) {
-//                                if(!ballController.isDraggable()) {
-                                    gView.displayPoolCue(true);
-                                    poolCueController.poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue() + (BallModel.RADIUS));
-                                    poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (poolCueController.poolCueView.getCue().getImage().getHeight() / 2));
-                                    poolCueController.getRotate().setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
-                                    poolCueController.getRotate().setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
-                                    poolCueController.getRotate().setAngle(poolCueController.getCueView().getPreviousAngle());
-                                    if(settingsController.getCueHelper()==1) {
-                                        poolCueController.poolCueView.getPoolLine().setStartX(BallController.whiteBallModel.getPositionX().doubleValue());
-                                        poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
-                                    }else{
-                                        poolCueController.poolCueView.getPoolLine().setVisible(false);
-                                    }
-//                                }
+                                updatePoolCuePosition();
                                 turns();
                                 if (!BallConfigurationDB.hasBeenCalled) {
                                     BallConfigurationDB.updateLastPosition(playerModel.getBallType(), playerModel.getBallType(), gameModel.getPlayerTurn());
@@ -131,7 +118,7 @@ public class GameController {
      * Then starts the gameLoopTimer
      */
     public void startGame(int gameType) {
-        ballController.prepareGame(this.gameView);
+        ballController.prepareGame(this.gameView,this.gameView.getTableView());
         this.gameType = gameType;
         if(this.gameType==0){
             // SOLO
@@ -432,6 +419,26 @@ public class GameController {
 
     public void resetSimulation() {
         //TODO Call method from DBController to load BallConfiguration
+    }
+
+    public void updatePoolCuePosition() {
+        gameView.displayPoolCue(true);
+        poolCueController.poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue() + (BallModel.RADIUS));
+        poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (poolCueController.poolCueView.getCue().getImage().getHeight() / 2));
+        poolCueController.getRotate().setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
+        poolCueController.getRotate().setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
+        poolCueController.getRotate().setAngle(poolCueController.getCueView().getPreviousAngle());
+        if(settingsController.getCueHelper()==1) {
+            poolCueController.poolCueView.getPoolLine().setVisible(true);
+            poolCueController.poolCueView.getPoolLine().setStartX(BallController.whiteBallModel.getPositionX().doubleValue());
+            poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
+        }else{
+            poolCueController.poolCueView.getPoolLine().setVisible(false);
+        }
+    }
+
+    public void simulatePlay(AIModel bestOpponent) {
+        poolCueController.setPoolCue(bestOpponent.getPower(),bestOpponent.getRotation());
     }
 //    public ArrayList<Double> getBallsPositionX() {
 //        return ballsPositionX;

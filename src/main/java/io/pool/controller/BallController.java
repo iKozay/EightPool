@@ -6,8 +6,11 @@ import io.pool.model.PhysicsModule;
 import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
+import io.pool.view.TableView;
 import javafx.geometry.Bounds;
+import javafx.scene.Cursor;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 
 import java.math.BigDecimal;
@@ -59,7 +62,7 @@ public class BallController {
      *
      * @param root Pane where the balls will be added
      */
-    public void prepareGame(Pane root) {
+    public void prepareGame(Pane root, TableView tView) {
         BallModel bModel;
         BallView bView;
         for (int i = 1; i <= 16; i++) {
@@ -100,27 +103,49 @@ public class BallController {
                 /** Assigning new variables because it will show an error if we use the same variables
                  that are outside the lambda
                  */
-                BallModel finalBModel = bModel;
-                BallView finalBView = bView;
+                bView.getBall().setOnMouseEntered(e->{
+                    if(draggable) root.setCursor(Cursor.OPEN_HAND);
+                });
+                bView.getBall().setOnMouseExited(e->{
+                    if(draggable) root.setCursor(Cursor.DEFAULT);
+                });
                 bView.getBall().setOnMouseDragged(mouseEvent -> {
                     if (draggable) {
-                        // TODO take into consideration the position of the table pane
-                        BigDecimal newPositionX = new BigDecimal(mouseEvent.getSceneX() - mouseAnchorX);
-                        BigDecimal newPositionY = new BigDecimal(mouseEvent.getSceneY() - mouseAnchorY);
-                        if(TableBorderModel.tableBorderArea.getBoundsInLocal().contains(newPositionX.doubleValue(),newPositionY.doubleValue())){
-                            finalBModel.setPositionX(newPositionX);
-                            finalBModel.setPositionY(newPositionY);
-                            finalBView.getBall().setLayoutX(finalBModel.getPositionX().doubleValue());
-                            finalBView.getBall().setLayoutY(finalBModel.getPositionY().doubleValue());
-                        }else{
-                            finalBModel.setPositionX(new BigDecimal(400));
-                            finalBModel.setPositionY(new BigDecimal(400));
-                            finalBView.getBall().setLayoutX(finalBModel.getPositionX().doubleValue());
-                            finalBView.getBall().setLayoutY(finalBModel.getPositionY().doubleValue());
-
+                        root.setCursor(Cursor.CLOSED_HAND);
+                        gameController.getGameView().displayPoolCue(false);
+                        gameController.getPoolCueController().getCueView().getPoolLine().setVisible(false);
+                        double newPositionX = (mouseEvent.getSceneX() - mouseAnchorX);
+                        double newPositionY = (mouseEvent.getSceneY() - mouseAnchorY);
+                        Circle newBallPosition = new Circle(newPositionX,newPositionY,BallModel.RADIUS);
+                        Shape intersect = Shape.intersect(tView.getAccessibleArea(), newBallPosition);
+                        if(intersect.getBoundsInLocal().getWidth()==-1) {
+                            newPositionX=whiteBallView.getBall().getLayoutX();
+                            newPositionY=whiteBallView.getBall().getLayoutY();
                         }
+                        for (BallModel ballModel : bModelList) {
+                            if (!ballModel.equals(whiteBallModel)) {
+                                double normalXComponent = ballModel.getPositionX().doubleValue()-newPositionX;
+                                double normalYComponent = ballModel.getPositionY().doubleValue()-newPositionY;
+                                double distance = Math.sqrt(Math.pow(normalXComponent, 2) + Math.pow(normalYComponent, 2));
+                                if (distance < (2 * BallModel.RADIUS)) {
+                                    newPositionX=whiteBallView.getBall().getLayoutX();
+                                    newPositionY=whiteBallView.getBall().getLayoutY();
+                                }
+                            }
+                        }
+                        whiteBallView.getBall().setLayoutX(newPositionX);
+                        whiteBallView.getBall().setLayoutY(newPositionY);
                     }
                 });
+                bView.getBall().setOnMouseReleased(e->{
+                    if(draggable) {
+                        root.setCursor(Cursor.OPEN_HAND);
+                        whiteBallModel.setPositionX(new BigDecimal(whiteBallView.getBall().getLayoutX()));
+                        whiteBallModel.setPositionY(new BigDecimal(whiteBallView.getBall().getLayoutY()));
+                        gameController.updatePoolCuePosition();
+                    }
+                });
+
             } else {
                 stripeBViewList.add(bView);
             }
@@ -157,20 +182,23 @@ public class BallController {
      * Detects all the collisions and updates the ball position
      */
     public void detectCollision(TableController tableController) {
-        detectCollisionWithOtherBalls();
-        detectCollisionWithTable();
-        for (BallModel bModel : bModelList) {
-            if (!isMoving) {
-                isMoving = bModel.isMoving;
-            }
-            bModel.updatePosition();
-            BallController.updateBallViewPosition(bModel);
-            BallView ballView = getBallViewFromBallModel(bModel);
-            if (tableController.checkBallInHole(ballView)) {
-                gameController.whiteBallIn(ballView);
-                updateBallViewPosition(bModel);
-            }
+        if(!draggable) {
+            detectCollisionWithOtherBalls();
+            detectCollisionWithTable();
         }
+            for (BallModel bModel : bModelList) {
+                if (!isMoving) {
+                    isMoving = bModel.isMoving;
+                }
+                bModel.updatePosition();
+                if(!draggable) {
+                    BallView ballView = getBallViewFromBallModel(bModel);
+                    if (tableController.checkBallInHole(ballView)) {
+                        gameController.whiteBallIn(ballView);
+                    }
+                    updateBallViewPosition(bModel);
+                }
+            }
     }
 
     public static void updateBallViewPosition(BallModel bModel) {
@@ -187,7 +215,7 @@ public class BallController {
         for (BallModel bModel : bModelList) {;
             intersectBounds = Shape.intersect(TableBorderModel.tableBorderArea, getBallViewFromBallModel(bModel).getCircleFromSphere()).getBoundsInLocal();
             //TODO fix infinite collision
-            if ((intersectBounds.getWidth() != -1)&&(intersectBounds.getHeight() != -1)) {
+            if ((intersectBounds.getWidth() != -1)) {
                 double normalXComponent = (intersectBounds.getCenterX() - bModel.getPositionX().doubleValue());
                 double normalYComponent = (intersectBounds.getCenterY() - bModel.getPositionY().doubleValue());
                 double distance = Math.sqrt(Math.pow(normalXComponent, 2) + Math.pow(normalYComponent, 2));
@@ -196,7 +224,6 @@ public class BallController {
                 bModel.setPositionX(bModel.getPositionX().subtract(new BigDecimal(distanceX)));
                 bModel.setPositionY(bModel.getPositionY().subtract(new BigDecimal(distanceY)));
                 TableBorderModel.applyReflection(bModel, gameController.getGameView().getTableView());
-                updateBallViewPosition(bModel);
             }
         }
     }
