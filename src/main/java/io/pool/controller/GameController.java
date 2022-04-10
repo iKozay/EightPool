@@ -1,17 +1,18 @@
 package io.pool.controller;
 
+import io.pool.AI.AIModel;
 import io.pool.Database.BallConfigurationDB;
 import io.pool.model.BallModel;
-import io.pool.model.PhysicsModule;
 import io.pool.model.PlayerModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
 import io.pool.model.GameModel;
 
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
-public class GameController extends PhysicsModule {
+public class GameController {
     /** Instance of GameView that contains all the Ball,Table and Pool Cue Views*/
     private GameView gameView;
     /** Table Controller */
@@ -36,8 +37,6 @@ public class GameController extends PhysicsModule {
     private boolean scored = false;
     public static boolean waitingForInput=true;
     private int gameType;
-    private int p1Score;
-    private int p2Score;
 
 //    private ArrayList<BallModel> bModelIn = new ArrayList<>();
     private ArrayList<BallModel> bModelInEachTurn = new ArrayList<>();
@@ -60,6 +59,10 @@ public class GameController extends PhysicsModule {
         poolCueController = new PoolCueController(this.gameView.getCueView(), this);
         this.settingsController = settingsController;
 
+//        ballsPositionX = new ArrayList<>();
+//        ballsPositionY = new ArrayList<>();
+//        ballsSpeed = new ArrayList<>();
+
         /** Instantiate the gameLoopTimer and Override the tick Method */
         final GameController gameController=this;
         gameLoopTimer = new GameLoopTimer() {
@@ -75,14 +78,10 @@ public class GameController extends PhysicsModule {
                         tableController.turnView(gameController);
                         ballController.detectCollision(tableController);
                         if (gameView.getClickedBallNumber() > 0) {
-                            double xSpeed = Math.round(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityX().doubleValue()*100)/100.;
-                            double ySpeed = Math.round(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityY().doubleValue()*100)/100.;
-                            double xAcc = Math.round(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getAccelerationX().doubleValue()*100)/100.;
-                            double yAcc = Math.round(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getAccelerationY().doubleValue()*100)/100.;
-                            gameView.getxSpeedField().setText(String.valueOf(xSpeed));
-                            gameView.getySpeedField().setText(String.valueOf(ySpeed));
-                            gameView.getxAccelerationField().setText(String.valueOf(xAcc));
-                            gameView.getyAccelerationField().setText(String.valueOf(yAcc));
+                            gameView.getxPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getPositionX().doubleValue()));
+                            gameView.getyPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getPositionY().doubleValue()));
+                            gameView.getxSpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityX().doubleValue()));
+                            gameView.getySpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityY().doubleValue()));
                         }
                         if(gameType==0) {
                             winnerPlayerSolo();
@@ -103,12 +102,12 @@ public class GameController extends PhysicsModule {
                                 scored = false;
                             }
                         } else {
+                            firstPlay = false;
                             gView.displayPoolCue(false);
                             poolCueController.disablePoolCueControl();
                         }
                         ballInHole();
                         ballController.isMoving=false;
-
                 }
             }
         };
@@ -128,13 +127,6 @@ public class GameController extends PhysicsModule {
             p1.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
             p1.getBallNeededIn().remove(BallController.eightBallModel);
             p1.getBallNeededIn().remove(BallController.whiteBallModel);
-            p1.setScore(0);
-
-            p2 = new PlayerModel("NOT AVAILABLE",false);
-            p2.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
-            p2.getBallNeededIn().remove(BallController.eightBallModel);
-            p2.getBallNeededIn().remove(BallController.whiteBallModel);
-            p2.setScore(0);
         }else if(this.gameType==1) {
             // Instead get the selected player from the combobox
             p1 = new PlayerModel("ABC",false);
@@ -145,10 +137,8 @@ public class GameController extends PhysicsModule {
             p1.getBallNeededIn().remove(BallController.whiteBallModel);
             p2.getBallNeededIn().remove(BallController.eightBallModel);
             p2.getBallNeededIn().remove(BallController.whiteBallModel);
-            p1.setScore(0);
-            p2.setScore(0);
         }
-        currentPlayer = p1;
+        currentPlayer=p1;
 
         //ballController.testingBallController(this.gameView);
         gameLoopTimer.start();
@@ -172,14 +162,15 @@ public class GameController extends PhysicsModule {
 
     public void turns(){
         ballController.makeUnDraggable();
-        if(!currentPlayer.getBallNeededIn().contains(ballController.getFirstCollide())){
-            foul=true;
-        }
 
-        if(!ballController.isCollide){
-            foul=true;
+        if(!firstPlay) {
+            if (!ballController.isCollide) {
+                System.out.println("No collide");
+                foul = true;
+            }
         }
         checkFoul();
+
 
         if(gameType==0) {
             foul=false;
@@ -191,12 +182,12 @@ public class GameController extends PhysicsModule {
             if (!scored || foul) {
                 setCurrentPlayer();
                 ballController.isCollide=false;
+                //System.out.println("switch");
             }
         }
         System.out.println(currentPlayer.getBallType());
         foul=false;
         ballController.setFirstCollide(null);
-        firstPlay = false;
         bModelInEachTurn.clear();
         System.out.println(currentPlayer.getUsername() + "," + "your turn!");
         waitingForInput=true;
@@ -251,8 +242,10 @@ public class GameController extends PhysicsModule {
         currentPlayer.setTurn(true);
     }
     private PlayerModel getNextPlayer(){
-        if(currentPlayer.equals(p1)) return p2;
-        else return p1;
+        if(currentPlayer.equals(p1)){
+            return p2;
+        }
+        return p1;
     }
     public void whiteBallIn(BallView ballView){
         BallModel bModel = BallController.getBallModelFromBallView(ballView);
@@ -272,29 +265,20 @@ public class GameController extends PhysicsModule {
 
     public void eightBallInIllegal(){
         if(bModelInEachTurn.contains(BallController.eightBallModel)) {
-            if (!gameView.getPopupWindow().isShowing()){
-                getNextPlayer().setScore(getNextPlayer().getScore() + 1);
-            }
-            tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
-            gameView.getPopupMessage().setText(currentPlayer + " lose!");
-            gameView.getPopupWindow().show();
+            System.out.println(currentPlayer + " got the 8 ball in, "+currentPlayer+" lose!");
+            resetGame();
         }
     }
     public void eightBallInLegal(){
         if(bModelInEachTurn.contains(BallController.eightBallModel)) {
-            if (!gameView.getPopupWindow().isShowing()){
-                currentPlayer.setScore(currentPlayer.getScore() + 1);
-            }
-            tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
-            gameView.getPopupMessage().setText(currentPlayer + " win!");
-            gameView.getPopupWindow().show();
+            System.out.println(currentPlayer + " got the 8 ball in, "+currentPlayer+" win!");
+            resetGame();
         }
     }
     public void firstCollidePlay(){
         if(ballController.getFirstCollide() != null && setBallType) {
             if (currentPlayer.isTurn() && !(ballController.getFirstCollide().getBallType() == currentPlayer.getBallType())) {
                 foul = true;
-                System.out.println("Wrong ball");
             }
         }
 
@@ -305,25 +289,14 @@ public class GameController extends PhysicsModule {
             for (BallModel b : bModelInEachTurn) {
                 ballController.ballInHole(b, gameView);
                 scored = true;
-                if(gameType == 1 && p1.isTurn()) {
+                if(gameType == 1) {
                     if (p1.getBallNeededIn().contains(b)) {
                         p1.getBallNeededIn().remove(b);
-                        System.out.println("yes");
-                    } else {
-                        foul = true;
 
                     }
-                    if (gameType == 1 && p2.isTurn()) {
-                        if (p2.getBallNeededIn().contains(b)) {
-                            System.out.println("yes1");
-                            p2.getBallNeededIn().remove(b);
-                        } else {
-                            foul = true;
-
-
-                        }
+                    if (p2.getBallNeededIn().contains(b)) {
+                        p2.getBallNeededIn().remove(b);
                     }
-
                 }
             }
         }
@@ -453,12 +426,9 @@ public class GameController extends PhysicsModule {
         }
     }
 
-    /*
     public void simulatePlay(AIModel bestOpponent) {
         poolCueController.setPoolCue(bestOpponent.getPower(),bestOpponent.getRotation());
     }
-
-     */
 //    public ArrayList<Double> getBallsPositionX() {
 //        return ballsPositionX;
 //    }

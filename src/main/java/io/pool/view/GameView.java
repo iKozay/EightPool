@@ -11,33 +11,20 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.util.Duration;
-import com.jfoenix.controls.JFXSlider;
-import javafx.util.StringConverter;
-
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameView extends Pane {
-
-    private Stage popupWindow;
-    private Label popupMessage;
-    private Button backToMainMenuButton, keepPlayingButton;
-
     private ArrayList<StackPane> balls = new ArrayList<>();
     private  ArrayList<BallView> ballViews = new ArrayList<>();
     /** Instance of GameController that will control the Ball,Table and PoolCue Controllers */
@@ -52,26 +39,25 @@ public class GameView extends Pane {
     private AtomicBoolean principalBarIsVisible;
     private GridPane principalBar;
 
-    private Button menuButton, backButton, ballsButton, tableButton, cueButton, backTableButton, nextTableButton, backCueButton, nextCueButton;
+    private Button menuButton, backButton, ballsButton, tableButton, cueButton, backTableButton, nextTableButton;
 
     private VBox ballsSettingsPane;
 
     private FlowPane ballsPrimaryPane;
     private VBox tableThemesPane;
     private GridPane ballsDataPane;
-    private VBox cueThemePane;
 
-    private JFXSlider frictionSlider;
-    private TextField xAccelerationField;
-    private TextField yAccelerationField;
+    private Pane cueSettingsPane;
+
+    private TextField xPositionField;
+    private TextField yPositionField;
     private TextField xSpeedField;
     private TextField ySpeedField;
 
-    private ImageView menuIconImageView, leftArrowWhiteImageView, rightArrowWhiteImageView, tableLeftArrowImageView, tableRightArrowImageView, cueLeftArrowImageView, cueRightArrowImageView, leaveArrowImageView;
-    private ImageView tablePreviewImageView, cuePreviewImageView;
+    private ImageView menuIconImageView, leftArrowWhiteImageView, rightArrowWhiteImageView, leftArrowYellowImageView, rightArrowYellowImageView, leaveArrowImageView;
+    private ImageView tablePreviewImageView;
     private int clickedBallNumber = -1;
     private ArrayList<Circle> selectionCircles = new ArrayList<>();
-    private String[] colors = {"#1d6809", "#3677a1", "#248710", "#ba5050", " #02474b", "#d99e32", "#5e3b29", "#adeafa"};
 
     /**
      * Main Constructor of GameView
@@ -86,51 +72,6 @@ public class GameView extends Pane {
 
         this.getChildren().addAll(cueView.getCue(), cueView.getPoolLine(),cueView.getPath());
         gamePane = tableView.getGamePane();
-
-        ArrayList<String> backgroundColors = new ArrayList<>(Arrays.asList(colors));
-
-        // Making the popup window that will give the user the option to keep playing or stopping
-
-        popupWindow = new Stage();
-
-        popupWindow.initModality(Modality.APPLICATION_MODAL);
-
-        popupMessage = new Label("");
-        popupMessage.setTextFill(Color.RED);
-        popupMessage.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, TableView.width/55.));
-
-        backToMainMenuButton = new Button("Back to Main Menu");
-        backToMainMenuButton.setTextFill(Color.BLACK);
-        backToMainMenuButton.setFont(Font.font("Verdana", FontWeight.NORMAL, TableView.width/65.));
-        backToMainMenuButton.setOnAction(e -> {
-            MainMenuController.gotoMainMenu();
-            popupWindow.close();
-        });
-
-        keepPlayingButton = new Button("Keep playing");
-        keepPlayingButton.setTextFill(Color.BLACK);
-        keepPlayingButton.setFont(Font.font("Verdana", FontWeight.NORMAL, TableView.width/65.));
-        keepPlayingButton.setOnAction(e -> {
-//            gameController.startGame(0);
-        });
-
-        HBox choiceButtonsPane = new HBox();
-        choiceButtonsPane.setAlignment(Pos.CENTER);
-        choiceButtonsPane.setSpacing(25);
-
-        choiceButtonsPane.getChildren().addAll(backToMainMenuButton, keepPlayingButton);
-
-        VBox popupWindowPane = new VBox(25);
-        popupWindowPane.setAlignment(Pos.CENTER);
-        popupWindowPane.getChildren().addAll(popupMessage, choiceButtonsPane);
-
-        Scene scene1= new Scene(popupWindowPane, 400, 250);
-
-        popupWindow.setScene(scene1);
-        popupWindow.setOnCloseRequest(event -> {
-            MainMenuController.gotoMainMenu();
-            popupWindow.close();
-        });
 
         /** working on the right corner setting section **/
 
@@ -169,6 +110,19 @@ public class GameView extends Pane {
         ballsDataPane.setVgap(TableView.height/20.);
         // creating the components of the data Pane
 
+        Label positionLabel = new Label("Position ");
+        positionLabel.setTextFill(Color.WHITE);
+        positionLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
+
+
+        Label xPosLabel = new Label("X:");
+        xPosLabel.setTextFill(Color.WHITE);
+        xPosLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
+
+        Label yPosLabel = new Label("Y:");
+        yPosLabel.setTextFill(Color.WHITE);
+        yPosLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
+
         Label xSpeedLabel = new Label("X:");
         xSpeedLabel.setTextFill(Color.WHITE);
         xSpeedLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
@@ -177,9 +131,24 @@ public class GameView extends Pane {
         ySpeedLabel.setTextFill(Color.WHITE);
         ySpeedLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
 
+
         Label speedLabel = new Label("Speed ");
         speedLabel.setTextFill(Color.WHITE);
-        speedLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
+        speedLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
+
+        xPositionField = new TextField();
+        xPositionField.setEditable(false);
+        xPositionField.setAlignment(Pos.CENTER_LEFT);
+        xPositionField.setText("xxxx");
+        xPositionField.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
+        xPositionField.setMaxWidth(TableView.width/15.);
+
+        yPositionField = new TextField();
+        yPositionField.setEditable(false);
+        yPositionField.setAlignment(Pos.CENTER_LEFT);
+        yPositionField.setText("yyyy");
+        yPositionField.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
+        yPositionField.setMaxWidth(TableView.width/15.);
 
         xSpeedField = new TextField();
         xSpeedField.setEditable(false);
@@ -195,51 +164,21 @@ public class GameView extends Pane {
         ySpeedField.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
         ySpeedField.setMaxWidth(TableView.width/15.);
 
-        //
-        Label xAccelerationLabel = new Label("X:");
-        xAccelerationLabel.setTextFill(Color.WHITE);
-        xAccelerationLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
-
-        Label yAccelerationLabel = new Label("Y:");
-        yAccelerationLabel.setTextFill(Color.WHITE);
-        yAccelerationLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
-
-        Label accelerationLabel = new Label("Acceleration ");
-        accelerationLabel.setTextFill(Color.WHITE);
-        accelerationLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
-
-        xAccelerationField = new TextField();
-        xAccelerationField.setEditable(false);
-        xAccelerationField.setAlignment(Pos.CENTER_LEFT);
-        xAccelerationField.setText("xxxx");
-        xAccelerationField.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
-        xAccelerationField.setMaxWidth(TableView.width/15.);
-
-        yAccelerationField = new TextField();
-        yAccelerationField.setEditable(false);
-        yAccelerationField.setAlignment(Pos.CENTER_LEFT);
-        yAccelerationField.setText("yyyy");
-        yAccelerationField.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
-        yAccelerationField.setMaxWidth(TableView.width/15.);
+        //adding Position components
+        ballsDataPane.add(positionLabel, 0, 0);
+        ballsDataPane.add(xPosLabel, 1, 0);
+        ballsDataPane.add(yPosLabel, 3, 0);
+        ballsDataPane.add(xPositionField, 2, 0);
+        ballsDataPane.add(yPositionField, 4, 0);
 
         //adding Speed components
-        ballsDataPane.add(speedLabel, 0, 0);
-        ballsDataPane.add(xSpeedLabel, 1, 0);
-        ballsDataPane.add(ySpeedLabel, 3, 0);
-        ballsDataPane.add(xSpeedField, 2, 0);
-        ballsDataPane.add(ySpeedField, 4, 0);
+        ballsDataPane.add(speedLabel, 0, 1);
+        ballsDataPane.add(xSpeedLabel, 1, 1);
+        ballsDataPane.add(ySpeedLabel, 3, 1);
+        ballsDataPane.add(xSpeedField, 2, 1);
+        ballsDataPane.add(ySpeedField, 4, 1);
 
-        //adding Acceleration components
-        ballsDataPane.add(accelerationLabel, 0, 1);
-        ballsDataPane.add(xAccelerationLabel, 1, 1);
-        ballsDataPane.add(yAccelerationLabel, 3, 1);
-        ballsDataPane.add(xAccelerationField, 2, 1);
-        ballsDataPane.add(yAccelerationField, 4, 1);
-
-
-        /////////////////////////////////////////////////
         createImageViews();
-        /////////////////////////////////////////////////
 
         menuButton = new Button("");
         menuButton.setGraphic(menuIconImageView);
@@ -297,12 +236,6 @@ public class GameView extends Pane {
             cueButton.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
         });
 
-        cueButton.setOnAction(event -> {
-            cueThemePane.setVisible(true);
-            if (tableThemesPane.isVisible()) tableThemesPane.setVisible(false);
-            if (ballsPrimaryPane.isVisible()) ballsPrimaryPane.setVisible(false);
-        });
-
         backButton = new Button("Main Menu", leaveArrowImageView);
         backButton.setTextFill(Color.WHITE);
         backButton.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/72.));
@@ -351,25 +284,73 @@ public class GameView extends Pane {
 
         updateOnBallsClickedListener();
 
+        /**
+        ToggleGroup rbGroup = new ToggleGroup();
+
+        RadioButton defaultRb1 = new RadioButton();
+        RadioButton blueRb2 = new RadioButton();
+        RadioButton greenRb3 = new RadioButton();
+        RadioButton redRb4 = new RadioButton();
+        RadioButton turquoiseRb5 = new RadioButton();
+        RadioButton purpleRb6 = new RadioButton();
+        RadioButton brownRb7 = new RadioButton();
+        RadioButton glaceRb8 = new RadioButton();
+
+
+        defaultRb1.setToggleGroup(rbGroup);
+        blueRb2.setToggleGroup(rbGroup);
+        greenRb3.setToggleGroup(rbGroup);
+        redRb4.setToggleGroup(rbGroup);
+        turquoiseRb5.setToggleGroup(rbGroup);
+        purpleRb6.setToggleGroup(rbGroup);
+        brownRb7.setToggleGroup(rbGroup);
+        glaceRb8.setToggleGroup(rbGroup);
+
+        defaultRb1.setSelected(true);
+
+        Image defaultTableImage = new Image(new File("src/main/resources/tableImage/1.png").toURI().toURL().toExternalForm());
+        Image blueTableImage = new Image(new File("src/main/resources/tableImage/2.png").toURI().toURL().toExternalForm());
+        Image greenTableImage = new Image(new File("src/main/resources/tableImage/3.png").toURI().toURL().toExternalForm());
+        Image redTableImage = new Image(new File("src/main/resources/tableImage/4.png").toURI().toURL().toExternalForm());
+        Image turquoiseTableImage = new Image(new File("src/main/resources/tableImage/5.png").toURI().toURL().toExternalForm());
+        Image purpleTableImage = new Image(new File("src/main/resources/tableImage/6.png").toURI().toURL().toExternalForm());
+        Image brownTableImage = new Image(new File("src/main/resources/tableImage/7.png").toURI().toURL().toExternalForm());
+        Image glaceTableImage = new Image(new File("src/main/resources/tableImage/8.png").toURI().toURL().toExternalForm());
+
+        rbGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+
+            if (defaultRb1.isSelected()) tableView.getTableImageView().setImage(defaultTableImage);
+            else if (blueRb2.isSelected()) tableView.getTableImageView().setImage(blueTableImage);
+            else if (greenRb3.isSelected()) tableView.getTableImageView().setImage(greenTableImage);
+            else if (redRb4.isSelected()) tableView.getTableImageView().setImage(redTableImage);
+            else if (turquoiseRb5.isSelected()) tableView.getTableImageView().setImage(turquoiseTableImage);
+            else if (purpleRb6.isSelected()) tableView.getTableImageView().setImage(purpleTableImage);
+            else if (brownRb7.isSelected()) tableView.getTableImageView().setImage(brownTableImage);
+            else if (glaceRb8.isSelected()) tableView.getTableImageView().setImage(glaceTableImage);
+
+        });
+         */
+
         //working on table Theme section
         tableThemesPane = new VBox();
         tableThemesPane.setVisible(false);
         tableThemesPane.setAlignment(Pos.TOP_LEFT);
         tableThemesPane.setSpacing(40);
+        tableThemesPane.setPrefWidth(TableView.width/2.15);
         tableThemesPane.setMaxWidth(TableView.width/2.15);
         tableThemesPane.setPrefHeight(TableView.height/1.5);
         tableThemesPane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
+        tableThemesPane.setPadding(new Insets(20));
 
         int[] currentTableImageView = {1};
 
         
         Label tableThemeLabel = new Label("Choose a table theme:");
-        tableThemeLabel.setPadding(new Insets(20, 20, 0, 20));
         tableThemeLabel.setTextFill(Color.WHITE);
-        tableThemeLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/55.));
+        tableThemeLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
 
         backTableButton = new Button();
-        backTableButton.setGraphic(tableLeftArrowImageView);
+        backTableButton.setGraphic(leftArrowYellowImageView);
         backTableButton.setStyle("-fx-background-color: transparent");
         backTableButton.setContentDisplay(ContentDisplay.CENTER);
         backTableButton.setMaxWidth(TableView.width/36.);
@@ -378,7 +359,7 @@ public class GameView extends Pane {
         backTableButton.setPrefHeight(100);
 
         nextTableButton = new Button();
-        nextTableButton.setGraphic(tableRightArrowImageView);
+        nextTableButton.setGraphic(rightArrowYellowImageView);
         nextTableButton.setStyle("-fx-background-color: transparent");
         nextTableButton.setContentDisplay(ContentDisplay.CENTER);
         nextTableButton.setMaxWidth(TableView.width/36.);
@@ -388,174 +369,32 @@ public class GameView extends Pane {
 
         tablePreviewImageView = new ImageView();
         tablePreviewImageView.setImage(ResourcesLoader.tableImages.get(0));
-        tablePreviewImageView.setFitWidth(TableView.width/4.5);
+        tablePreviewImageView.setFitWidth(TableView.width/3.6);
         tablePreviewImageView.setPreserveRatio(true);
 
-        Rectangle applyTableDesignRec = new Rectangle();
-        applyTableDesignRec.setWidth(TableView.width/5.5);
-        applyTableDesignRec.setHeight(TableView.height/11.);
-        applyTableDesignRec.setStroke(Color.WHITE);
-        applyTableDesignRec.setStrokeWidth(3);
-        applyTableDesignRec.setArcWidth(20);
-        applyTableDesignRec.setArcHeight(20);
-        applyTableDesignRec.setFill(Color.valueOf("#3D4956"));
-
-        Button applyTableThemeButton = new Button("Apply Theme");
-        applyTableThemeButton.setTextFill(Color.WHITE);
-        applyTableThemeButton.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/58.));
-        applyTableThemeButton.setStyle("-fx-background-color: transparent");
-        applyTableThemeButton.setPrefWidth(TableView.width/4.5);
-        applyTableThemeButton.setMinHeight(TableView.height/9.);
-
-        applyTableThemeButton.setOnMouseEntered(event -> {
-            applyTableThemeButton.setTextFill(Color.LIGHTPINK);
-            applyTableThemeButton.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/52.));
-        });
-        applyTableThemeButton.setOnMouseExited(event -> {
-            applyTableThemeButton.setTextFill(Color.WHITE);
-            applyTableThemeButton.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/58.));
-        });
-
-        applyTableThemeButton.setOnAction(event -> {
+        tablePreviewImageView.setOnMouseClicked(event -> {
             tableView.getTableImageView().setImage(tablePreviewImageView.getImage());
-
-            getGamePane().setStyle("-fx-background-color: " + backgroundColors.get(currentTableImageView[0]-1));
         });
-
-        StackPane applyTablePane = new StackPane();
-        applyTablePane.getChildren().addAll(applyTableDesignRec, applyTableThemeButton);
-        applyTablePane.setStyle("-fx-background-color: transparent");
-
 
         backTableButton.setOnAction(event -> {
-            if (currentTableImageView[0] == 1) currentTableImageView[0] = 8;
+            if (currentTableImageView[0] == 1) currentTableImageView[0] = 7;
             else currentTableImageView[0]--;
-            tablePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentTableImageView[0]-1));
+            tablePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentTableImageView[0]));
         });
 
         nextTableButton.setOnAction(event -> {
-            if (currentTableImageView[0] == 8) currentTableImageView[0] = 1;
+            if (currentTableImageView[0] == 7) currentTableImageView[0] = 1;
             else currentTableImageView[0]++;
-            tablePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentTableImageView[0]-1));
+            tablePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentTableImageView[0]));
         });
 
-        GridPane tableSwitchPane = new GridPane();
-        tableSwitchPane.setPadding(new Insets(0,20,20,20));
+        HBox tableSwitchPane = new HBox();
         tableSwitchPane.setAlignment(Pos.CENTER);
-        tableSwitchPane.setHgap(40);
-        tableSwitchPane.setVgap(20);
-//        tableSwitchPane.getChildren().addAll(backTableButton, tablePreviewImageView, nextTableButton);
+        tableSwitchPane.setSpacing(40);
 
-        tableSwitchPane.add(backTableButton, 0, 1);
-        tableSwitchPane.add(tablePreviewImageView, 1, 1);
-        tableSwitchPane.add(nextTableButton, 2, 1);
-        tableSwitchPane.add(applyTablePane, 1, 2);
+        tableSwitchPane.getChildren().addAll(backTableButton, tablePreviewImageView, nextTableButton);
 
-        ///////////////////////////////////////////////////
-
-        AnchorPane frictionSettingsPane = new AnchorPane();
-        frictionSettingsPane.setPadding(new Insets(0, 0, 10, 0));
-        Label instructiveFrictionLabel = new Label("Choose table's friction:");
-        instructiveFrictionLabel.setTextFill(Color.WHITE);
-        instructiveFrictionLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
-
-        frictionSlider = new JFXSlider(25, 175, 100);
-        frictionSlider.setPrefWidth(TableView.width/2.15);
-        frictionSlider.setIndicatorPosition(JFXSlider.IndicatorPosition.LEFT);
-        frictionSlider.setBlockIncrement(25);
-        frictionSlider.setShowTickLabels(true);
-        frictionSlider.setShowTickMarks(true);
-        frictionSlider.setMajorTickUnit(25);
-        frictionSlider.setMinorTickCount(0);
-        frictionSlider.setSnapToTicks(true);
-        frictionSlider.setPadding(new Insets(20, 0, 0, 0));
-        frictionSlider.setLabelFormatter(new StringConverter<Double>() {
-            @Override
-            public String toString(Double object) {
-                return (object.intValue())+"%";
-            }
-
-            @Override
-            public Double fromString(String string) {
-                return Double.valueOf(string.substring(0,string.length()-1));
-            }
-        });
-        frictionSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            settingsController.setFrictionPercentage(newValue.doubleValue());
-        });
-
-        frictionSettingsPane.getChildren().addAll(instructiveFrictionLabel, frictionSlider);
-        AnchorPane.setTopAnchor(instructiveFrictionLabel, 0.);
-        AnchorPane.setLeftAnchor(instructiveFrictionLabel, 0.);
-        AnchorPane.setTopAnchor(frictionSlider, TableView.width/25.);
-        AnchorPane.setLeftAnchor(frictionSlider, 0.);
-
-        /////////////////////////////////////////////////////////////
-
-        //working on table Theme section
-        cueThemePane = new VBox();
-        cueThemePane.setVisible(false);
-        cueThemePane.setAlignment(Pos.TOP_LEFT);
-        cueThemePane.setSpacing(40);
-        cueThemePane.setPrefWidth(TableView.width/2.15);
-        cueThemePane.setMaxWidth(TableView.width/2.15);
-        cueThemePane.setPrefHeight(TableView.height/1.5);
-        cueThemePane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
-        cueThemePane.setPadding(new Insets(20));
-
-        int[] currentCueImageView = {1};
-
-        Label cueThemeLabel = new Label("Choose a cue theme:");
-        cueThemeLabel.setTextFill(Color.WHITE);
-        cueThemeLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
-
-        backCueButton = new Button();
-        backCueButton.setGraphic(cueLeftArrowImageView);
-        backCueButton.setStyle("-fx-background-color: transparent");
-        backCueButton.setContentDisplay(ContentDisplay.CENTER);
-        backCueButton.setMaxWidth(TableView.width/36.);
-        backCueButton.setMaxHeight(TableView.height/7.8);
-        backCueButton.setPrefWidth(100);
-        backCueButton.setPrefHeight(100);
-
-        nextCueButton = new Button();
-        nextCueButton.setGraphic(cueRightArrowImageView);
-        nextCueButton.setStyle("-fx-background-color: transparent");
-        nextCueButton.setContentDisplay(ContentDisplay.CENTER);
-        nextCueButton.setMaxWidth(TableView.width/36.);
-        nextCueButton.setMaxHeight(TableView.height/7.8);
-        nextCueButton.setPrefWidth(100);
-        nextCueButton.setPrefHeight(100);
-
-        cuePreviewImageView = new ImageView();
-        cuePreviewImageView.setImage(ResourcesLoader.tableImages.get(0));
-        cuePreviewImageView.setFitWidth(TableView.width/3.6);
-        cuePreviewImageView.setPreserveRatio(true);
-
-        cuePreviewImageView.setOnMouseClicked(event -> {
-//            tableView.getTableImageView().setImage(tablePreviewImageView.getImage());
-        });
-
-        backCueButton.setOnAction(event -> {
-            if (currentCueImageView[0] == 1) currentCueImageView[0] = 7;
-            else currentCueImageView[0]--;
-            cuePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentCueImageView[0]));
-        });
-
-        nextCueButton.setOnAction(event -> {
-            if (currentCueImageView[0] == 7) currentCueImageView[0] = 1;
-            else currentCueImageView[0]++;
-            cuePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentCueImageView[0]));
-        });
-
-        HBox cueSwitchPane = new HBox();
-        cueSwitchPane.setAlignment(Pos.CENTER);
-        cueSwitchPane.setSpacing(40);
-
-        cueSwitchPane.getChildren().addAll(backCueButton, cuePreviewImageView, nextCueButton);
-        cueThemePane.getChildren().add(cueSwitchPane);
-
-        tableThemesPane.getChildren().addAll(tableThemeLabel, tableSwitchPane, frictionSettingsPane);
+        tableThemesPane.getChildren().addAll(tableThemeLabel, tableSwitchPane);
 
         ballsSettingsPane.getChildren().addAll(ballsPrimaryPane, ballsDataPane);
 
@@ -563,7 +402,7 @@ public class GameView extends Pane {
         tableButtonSetListener();
 
 
-        gamePane.getChildren().addAll(principalBar, ballsSettingsPane, tableThemesPane, cueThemePane);
+        gamePane.getChildren().addAll(principalBar, ballsSettingsPane, tableThemesPane);
 
         gameController = new GameController(this, settingsController);
 
@@ -573,9 +412,6 @@ public class GameView extends Pane {
         AnchorPane.setRightAnchor(ballsSettingsPane,7.0);
         AnchorPane.setTopAnchor(tableThemesPane, TableView.height/5.5);
         AnchorPane.setRightAnchor(tableThemesPane, 7.0);
-        AnchorPane.setTopAnchor(cueThemePane, TableView.height/5.5);
-        AnchorPane.setRightAnchor(cueThemePane, 7.0);
-
     }
 
 
@@ -609,27 +445,16 @@ public class GameView extends Pane {
         rightArrowWhiteImageView.setFitWidth(TableView.width/36.);
         rightArrowWhiteImageView.setPreserveRatio(true);
 
-        tableLeftArrowImageView = new ImageView();
-        tableLeftArrowImageView.setImage(ResourcesLoader.iconImages.get(3));
-        tableLeftArrowImageView.setFitWidth(TableView.width/30.);
-        tableLeftArrowImageView.setPreserveRatio(true);
-
-        tableRightArrowImageView = new ImageView();
-        tableRightArrowImageView.setImage(ResourcesLoader.iconImages.get(4));
-        tableRightArrowImageView.setFitWidth(TableView.width/30.);
-        tableRightArrowImageView.setPreserveRatio(true);
+        leftArrowYellowImageView = new ImageView();
+        leftArrowYellowImageView.setImage(ResourcesLoader.iconImages.get(3));
+        leftArrowYellowImageView.setFitWidth(TableView.width/30.);
+        leftArrowYellowImageView.setPreserveRatio(true);
 
 
-        cueLeftArrowImageView = new ImageView();
-        cueLeftArrowImageView.setImage(ResourcesLoader.iconImages.get(3));
-        cueLeftArrowImageView.setFitWidth(TableView.width/30.);
-        cueLeftArrowImageView.setPreserveRatio(true);
-
-
-        cueLeftArrowImageView = new ImageView();
-        cueLeftArrowImageView.setImage(ResourcesLoader.iconImages.get(4));
-        cueLeftArrowImageView.setFitWidth(TableView.width/30.);
-        cueLeftArrowImageView.setPreserveRatio(true);
+        rightArrowYellowImageView = new ImageView();
+        rightArrowYellowImageView.setImage(ResourcesLoader.iconImages.get(4));
+        rightArrowYellowImageView.setFitWidth(TableView.width/30.);
+        rightArrowYellowImageView.setPreserveRatio(true);
 
         leaveArrowImageView = new ImageView();
         leaveArrowImageView.setImage(ResourcesLoader.iconImages.get(5));
@@ -641,7 +466,6 @@ public class GameView extends Pane {
         ballsButton.setOnAction(event -> {
             ballsPrimaryPane.setVisible(!ballsPrimaryPane.isVisible());
             if (tableThemesPane.isVisible()) tableThemesPane.setVisible(false);
-            if (cueThemePane.isVisible()) cueThemePane.setVisible(false);
             ballsDataPane.setVisible(false);
         });
 
@@ -662,7 +486,6 @@ public class GameView extends Pane {
 
             ballsDataPane.setVisible(false);
             if (ballsPrimaryPane.isVisible()) ballsPrimaryPane.setVisible(false);
-            if (cueThemePane.isVisible()) cueThemePane.setVisible(false);
             tableThemesPane.setVisible(!tableThemesPane.isVisible());
 
         });
@@ -761,12 +584,16 @@ public class GameView extends Pane {
         return tableThemesPane;
     }
 
-    public TextField getxAccelerationField() {
-        return xAccelerationField;
+    public Pane getCueSettingsPane() {
+        return cueSettingsPane;
     }
 
-    public TextField getyAccelerationField() {
-        return yAccelerationField;
+    public TextField getxPositionField() {
+        return xPositionField;
+    }
+
+    public TextField getyPositionField() {
+        return yPositionField;
     }
 
     public TextField getxSpeedField() {
@@ -775,12 +602,12 @@ public class GameView extends Pane {
 
     public TextField getySpeedField() {return ySpeedField;}
 
-    public void setxAccelerationField(TextField positionValueField) {
-        this.xAccelerationField = positionValueField;
+    public void setxPositionField(TextField positionValueField) {
+        this.xPositionField = positionValueField;
     }
 
-    public void setyAccelerationField(TextField yAccelerationField) {
-        this.yAccelerationField = yAccelerationField;
+    public void setyPositionField(TextField yPositionField) {
+        this.yPositionField = yPositionField;
     }
 
     public void setxSpeedField(TextField xSpeedField) {
@@ -813,11 +640,47 @@ public class GameView extends Pane {
         this.clickedBallNumber = clickedBallNumber;
     }
 
-    public Stage getPopupWindow() {
-        return popupWindow;
-    }
 
-    public Label getPopupMessage() {
-        return popupMessage;
-    }
+    //                /** creating animation */
+//
+//                Timeline animation1 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(0).fillProperty(), Color.SADDLEBROWN)),
+//                        new KeyFrame(Duration.seconds(1), new KeyValue(circles.get(0).fillProperty(), Color.SADDLEBROWN)),
+//                        new KeyFrame(Duration.seconds(2.5), new KeyValue(circles.get(0).fillProperty(), Color.YELLOW)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(0).fillProperty(), Color.GREEN))); // at the end of the animation the circle should reach the corners -> diameter = diagonale of rect
+//
+//
+//                Timeline animation2 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(1).fillProperty(), Color.BLACK)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(1).fillProperty(), Color.SKYBLUE)));
+//
+//                Timeline animation3 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(2).fillProperty(), Color.BLACK)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(2).fillProperty(), Color.GREEN)));
+//
+//                Timeline animation4 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(3).fillProperty(), Color.BLUE)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(3).fillProperty(), Color.RED)));
+//
+//                Timeline animation5 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(4).fillProperty(), Color.BLUE)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(4).fillProperty(), Color.RED)));
+//
+//                Timeline animation6 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(5).fillProperty(), Color.BLUE)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(5).fillProperty(), Color.RED)));
+//
+//                Timeline animation7 = new Timeline(
+//                        new KeyFrame(Duration.ZERO, new KeyValue(circles.get(6).fillProperty(), Color.BLUE)),
+//                        new KeyFrame(Duration.seconds(5), new KeyValue(circles.get(6).fillProperty(), Color.RED)));
+//
+//
+//                animation1.playFromStart();
+//                animation2.playFromStart();
+//                animation3.playFromStart();
+//                animation4.playFromStart();
+//                animation5.playFromStart();
+//                animation6.playFromStart();
+//                animation7.playFromStart();
+
 }
