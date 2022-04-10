@@ -33,7 +33,7 @@ javafx {
 }
 
 dependencies {
-
+    implementation 'com.jfoenix:jfoenix:9.0.10'
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     //compile group: 'org.xerial' , name: ' sqlite-jdbc' , version: '3.8.11.2'

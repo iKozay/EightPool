@@ -1,12 +1,9 @@
 package io.pool.eightpool;
 
 import io.pool.Database.BallConfigurationDB;
-import io.pool.Database.DBConnection;
 import io.pool.view.*;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.transform.Scale;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -38,6 +35,8 @@ public class game extends Application {
         MainMenuView mmv = new MainMenuView(stage);
 
         Scene scene = new Scene(mmv);
+        scene.getStylesheets().add("sliderDesign.css");
+
         System.out.println(Screen.getPrimary().getVisualBounds().getHeight());
 
         stage.setTitle("EightPool");
