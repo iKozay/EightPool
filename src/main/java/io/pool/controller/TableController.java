@@ -25,6 +25,7 @@ public class TableController {
         tableY = tableView.getFullTable().getLayoutY();
     }
 
+
     /**
      * Gets the Table View
      * @return the Table View

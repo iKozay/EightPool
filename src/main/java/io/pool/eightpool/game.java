@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+
 public class game extends Application {
     public final static int eightPoolTableX = 0;
     public final static int eightPoolTableY = 50;

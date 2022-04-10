@@ -93,6 +93,7 @@ public class TableView {
 
         anchorPane.getChildren().addAll( playersIcon, table);
 
+
         AnchorPane.setLeftAnchor(table, width/43.2);
         AnchorPane.setTopAnchor(playersIcon, 0.0);
         AnchorPane.setLeftAnchor(playersIcon, width/43.2);

@@ -44,6 +44,7 @@ public class TableBorderModel extends Line {
         tableBorder.add(this);
     }
 
+
     public static void applyReflection(BallModel bModel, TableView tView){
         TableBorderModel reflectionLine=null;
         Bounds intersect;
