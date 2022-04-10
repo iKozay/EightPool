@@ -43,4 +43,11 @@ public class AIModel {
     }
 
 
+    public double getPower() {
+        return 0.00;
+    }
+
+    public double getRotation() {
+        return 0.0;
+    }
 }

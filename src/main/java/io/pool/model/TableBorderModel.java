@@ -14,8 +14,6 @@ import javafx.scene.shape.Shape;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-import static io.pool.view.TableView.width;
-
 public class TableBorderModel extends Line {
     public static ArrayList<TableBorderModel> tableBorder = new ArrayList<>();
     private BigDecimal reflectionXFactor;

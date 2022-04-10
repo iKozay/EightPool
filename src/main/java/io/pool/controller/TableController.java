@@ -22,7 +22,7 @@ public class TableController {
         this.tableView = tableView;
         this.gameController = gameController;
         tableX = tableView.getFullTable().getLayoutX()+(TableView.width/43.2);
-        tableY = tableView.getFullTable().getLayoutY()+(TableView.width/16.);
+        tableY = tableView.getFullTable().getLayoutY();
     }
 
     /**

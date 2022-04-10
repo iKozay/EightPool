@@ -19,6 +19,7 @@ public class ResourcesLoader {
     public static final List<Image> poolCueImages = new ArrayList<>();
     public static final List<AudioClip> soundFiles = new ArrayList<>();
 
+
     public static void load(){
         try {
             loadBallImages();
@@ -65,7 +66,12 @@ public class ResourcesLoader {
         tableTextures.add(new Image(ResourcesLoader.class.getResource("/MainMenu/BlueTableTexture.jpg").toExternalForm()));
     }
     private static void loadPoolCues() throws MalformedURLException{
-        poolCueImages.add(new Image(ResourcesLoader.class.getResource("/cueImages/cue1.png").toExternalForm()));
+        for(int i=1;i<=6;i++){
+            poolCueImages.add(new Image(ResourcesLoader.class.getResource("/cueImages/cue" + i + ".png").toExternalForm()));
+
+            
+        }
+
     }
     private static void loadSoundFiles() throws IOException, UnsupportedAudioFileException {
         soundFiles.add(new AudioClip(ResourcesLoader.class.getResource("/SoundFiles/BallsCollide.wav").toExternalForm()));

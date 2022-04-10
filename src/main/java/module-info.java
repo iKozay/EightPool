@@ -5,7 +5,6 @@ module io.pool.eightpool {
     requires java.sql;
     requires java.desktop;
     requires javafx.media;
-    requires com.jfoenix;
 
 
     opens io.pool.controller to javafx.fxml;
