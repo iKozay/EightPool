@@ -68,6 +68,7 @@ public class ResourcesLoader {
         for(int i=1;i<=6;i++){
             poolCueImages.add(new Image(ResourcesLoader.class.getResource("/cueImages/cue" + i + ".png").toExternalForm()));
 
+            
         }
 
     }
