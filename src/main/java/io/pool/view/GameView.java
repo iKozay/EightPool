@@ -362,6 +362,7 @@ public class GameView extends Pane {
 
         int[] currentTableImageView = {1};
 
+        
         Label tableThemeLabel = new Label("Choose a table theme:");
         tableThemeLabel.setPadding(new Insets(20, 20, 0, 20));
         tableThemeLabel.setTextFill(Color.WHITE);
