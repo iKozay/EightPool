@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -389,6 +390,15 @@ public class GameView extends Pane {
         tablePreviewImageView.setFitWidth(TableView.width/4.5);
         tablePreviewImageView.setPreserveRatio(true);
 
+        Rectangle applyTableDesignRec = new Rectangle();
+        applyTableDesignRec.setWidth(TableView.width/5.5);
+        applyTableDesignRec.setHeight(TableView.height/11.);
+        applyTableDesignRec.setStroke(Color.WHITE);
+        applyTableDesignRec.setStrokeWidth(3);
+        applyTableDesignRec.setArcWidth(20);
+        applyTableDesignRec.setArcHeight(20);
+        applyTableDesignRec.setFill(Color.valueOf("#3D4956"));
+
         Button applyTableThemeButton = new Button("Apply Theme");
         applyTableThemeButton.setTextFill(Color.WHITE);
         applyTableThemeButton.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/58.));
@@ -407,24 +417,29 @@ public class GameView extends Pane {
 
         applyTableThemeButton.setOnAction(event -> {
             tableView.getTableImageView().setImage(tablePreviewImageView.getImage());
-            getGamePane().setStyle("-fx-background-color: " + backgroundColors.get(currentTableImageView[0]));
+
+            getGamePane().setStyle("-fx-background-color: " + backgroundColors.get(currentTableImageView[0]-1));
         });
+
+        StackPane applyTablePane = new StackPane();
+        applyTablePane.getChildren().addAll(applyTableDesignRec, applyTableThemeButton);
+        applyTablePane.setStyle("-fx-background-color: transparent");
 
 
         backTableButton.setOnAction(event -> {
-            if (currentTableImageView[0] == 1) currentTableImageView[0] = 7;
+            if (currentTableImageView[0] == 1) currentTableImageView[0] = 8;
             else currentTableImageView[0]--;
-            tablePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentTableImageView[0]));
+            tablePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentTableImageView[0]-1));
         });
 
         nextTableButton.setOnAction(event -> {
-            if (currentTableImageView[0] == 7) currentTableImageView[0] = 1;
+            if (currentTableImageView[0] == 8) currentTableImageView[0] = 1;
             else currentTableImageView[0]++;
-            tablePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentTableImageView[0]));
+            tablePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentTableImageView[0]-1));
         });
 
         GridPane tableSwitchPane = new GridPane();
-        tableSwitchPane.setPadding(new Insets(20));
+        tableSwitchPane.setPadding(new Insets(0,20,20,20));
         tableSwitchPane.setAlignment(Pos.CENTER);
         tableSwitchPane.setHgap(40);
         tableSwitchPane.setVgap(20);
@@ -433,7 +448,7 @@ public class GameView extends Pane {
         tableSwitchPane.add(backTableButton, 0, 1);
         tableSwitchPane.add(tablePreviewImageView, 1, 1);
         tableSwitchPane.add(nextTableButton, 2, 1);
-        tableSwitchPane.add(applyTableThemeButton, 1, 2);
+        tableSwitchPane.add(applyTablePane, 1, 2);
 
         ///////////////////////////////////////////////////
 
