@@ -24,7 +24,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-//import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXSlider;
 import javafx.util.StringConverter;
 
 
@@ -61,7 +61,7 @@ public class GameView extends Pane {
     private GridPane ballsDataPane;
     private VBox cueThemePane;
 
-    //private JFXSlider frictionSlider;
+    private JFXSlider frictionSlider;
     private TextField xAccelerationField;
     private TextField yAccelerationField;
     private TextField xSpeedField;
@@ -456,7 +456,7 @@ public class GameView extends Pane {
         Label instructiveFrictionLabel = new Label("Choose table's friction:");
         instructiveFrictionLabel.setTextFill(Color.WHITE);
         instructiveFrictionLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
-/*
+
         frictionSlider = new JFXSlider(25, 175, 100);
         frictionSlider.setPrefWidth(TableView.width/2.15);
         frictionSlider.setIndicatorPosition(JFXSlider.IndicatorPosition.LEFT);
@@ -487,7 +487,7 @@ public class GameView extends Pane {
         AnchorPane.setLeftAnchor(instructiveFrictionLabel, 0.);
         AnchorPane.setTopAnchor(frictionSlider, TableView.width/25.);
         AnchorPane.setLeftAnchor(frictionSlider, 0.);
-*/
+
         /////////////////////////////////////////////////////////////
 
         //working on table Theme section

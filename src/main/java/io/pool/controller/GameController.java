@@ -37,6 +37,8 @@ public class GameController {
     private boolean scored = false;
     public static boolean waitingForInput=true;
     private int gameType;
+    private int p1Score;
+    private int p2Score;
 
 //    private ArrayList<BallModel> bModelIn = new ArrayList<>();
     private ArrayList<BallModel> bModelInEachTurn = new ArrayList<>();
@@ -78,10 +80,14 @@ public class GameController {
                         tableController.turnView(gameController);
                         ballController.detectCollision(tableController);
                         if (gameView.getClickedBallNumber() > 0) {
-                            gameView.getxSpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getPositionX().doubleValue()));
-                            gameView.getySpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getPositionY().doubleValue()));
-                            gameView.getxAccelerationField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityX().doubleValue()));
-                            gameView.getyAccelerationField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityY().doubleValue()));
+                            double xSpeed = Math.round(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityX().doubleValue()*100)/100.;
+                            double ySpeed = Math.round(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityY().doubleValue()*100)/100.;
+                            double xAcc = Math.round(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getAccelerationX().doubleValue()*100)/100.;
+                            double yAcc = Math.round(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getAccelerationY().doubleValue()*100)/100.;
+                            gameView.getxSpeedField().setText(String.valueOf(xSpeed));
+                            gameView.getySpeedField().setText(String.valueOf(ySpeed));
+                            gameView.getxAccelerationField().setText(String.valueOf(xAcc));
+                            gameView.getyAccelerationField().setText(String.valueOf(yAcc));
                         }
                         if(gameType==0) {
                             winnerPlayerSolo();
@@ -127,6 +133,13 @@ public class GameController {
             p1.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
             p1.getBallNeededIn().remove(BallController.eightBallModel);
             p1.getBallNeededIn().remove(BallController.whiteBallModel);
+            p1.setScore(0);
+
+            p2 = new PlayerModel("NOT AVAILABLE",false);
+            p2.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
+            p2.getBallNeededIn().remove(BallController.eightBallModel);
+            p2.getBallNeededIn().remove(BallController.whiteBallModel);
+            p2.setScore(0);
         }else if(this.gameType==1) {
             // Instead get the selected player from the combobox
             p1 = new PlayerModel("ABC",false);
@@ -137,8 +150,10 @@ public class GameController {
             p1.getBallNeededIn().remove(BallController.whiteBallModel);
             p2.getBallNeededIn().remove(BallController.eightBallModel);
             p2.getBallNeededIn().remove(BallController.whiteBallModel);
+            p1.setScore(0);
+            p2.setScore(0);
         }
-        currentPlayer=p1;
+        currentPlayer = p1;
 
         //ballController.testingBallController(this.gameView);
         gameLoopTimer.start();
@@ -242,10 +257,8 @@ public class GameController {
         currentPlayer.setTurn(true);
     }
     private PlayerModel getNextPlayer(){
-        if(currentPlayer.equals(p1)){
-            return p2;
-        }
-        return p1;
+        if(currentPlayer.equals(p1)) return p2;
+        else return p1;
     }
     public void whiteBallIn(BallView ballView){
         BallModel bModel = BallController.getBallModelFromBallView(ballView);
@@ -264,16 +277,20 @@ public class GameController {
     }
 
     public void eightBallInIllegal(){
-        if(bModelInEachTurn.contains(BallController.eightBallModel)) {
-            System.out.println(currentPlayer + " got the 8 ball in, "+currentPlayer+" lose!");
-            resetGame();
+        if (!gameView.getPopupWindow().isShowing()){
+            getNextPlayer().setScore(getNextPlayer().getScore() + 1);
         }
+        tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
+        gameView.getPopupMessage().setText(currentPlayer + " lose!");
+        gameView.getPopupWindow().show();
     }
     public void eightBallInLegal(){
-        if(bModelInEachTurn.contains(BallController.eightBallModel)) {
-            System.out.println(currentPlayer + " got the 8 ball in, "+currentPlayer+" win!");
-            resetGame();
+        if (!gameView.getPopupWindow().isShowing()){
+            currentPlayer.setScore(currentPlayer.getScore() + 1);
         }
+        tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
+        gameView.getPopupMessage().setText(currentPlayer + " win!");
+        gameView.getPopupWindow().show();
     }
     public void firstCollidePlay(){
         if(ballController.getFirstCollide() != null && setBallType) {

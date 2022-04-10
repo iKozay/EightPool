@@ -39,6 +39,7 @@ public class game extends Application {
         MainMenuView mmv = new MainMenuView(stage);
 
         Scene scene = new Scene(mmv);
+        scene.getStylesheets().add("sliderDesign.css");
         System.out.println(Screen.getPrimary().getVisualBounds().getHeight());
 
         stage.setTitle("EightPool");
