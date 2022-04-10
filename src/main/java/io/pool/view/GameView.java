@@ -443,7 +443,6 @@ public class GameView extends Pane {
         tableSwitchPane.setAlignment(Pos.CENTER);
         tableSwitchPane.setHgap(40);
         tableSwitchPane.setVgap(20);
-//        tableSwitchPane.getChildren().addAll(backTableButton, tablePreviewImageView, nextTableButton);
 
         tableSwitchPane.add(backTableButton, 0, 1);
         tableSwitchPane.add(tablePreviewImageView, 1, 1);
@@ -507,6 +506,7 @@ public class GameView extends Pane {
         Label cueThemeLabel = new Label("Choose a cue theme:");
         cueThemeLabel.setTextFill(Color.WHITE);
         cueThemeLabel.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/60.));
+        cueThemeLabel.setPadding(new Insets(20, 20, 0, 20));
 
         backCueButton = new Button();
         backCueButton.setGraphic(cueLeftArrowImageView);
@@ -531,27 +531,62 @@ public class GameView extends Pane {
         cuePreviewImageView.setFitWidth(TableView.width/3.6);
         cuePreviewImageView.setPreserveRatio(true);
 
-        cuePreviewImageView.setOnMouseClicked(event -> {
-//            tableView.getTableImageView().setImage(tablePreviewImageView.getImage());
+        Rectangle applyCueDesignRec = new Rectangle();
+        applyCueDesignRec.setWidth(TableView.width/5.5);
+        applyCueDesignRec.setHeight(TableView.height/11.);
+        applyCueDesignRec.setStroke(Color.WHITE);
+        applyCueDesignRec.setStrokeWidth(3);
+        applyCueDesignRec.setArcWidth(20);
+        applyCueDesignRec.setArcHeight(20);
+        applyCueDesignRec.setFill(Color.valueOf("#3D4956"));
+
+        Button applyCueThemeButton = new Button("Apply Theme");
+        applyCueThemeButton.setTextFill(Color.WHITE);
+        applyCueThemeButton.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/58.));
+        applyCueThemeButton.setStyle("-fx-background-color: transparent");
+        applyCueThemeButton.setPrefWidth(TableView.width/4.5);
+        applyCueThemeButton.setMinHeight(TableView.height/9.);
+
+        applyCueThemeButton.setOnMouseEntered(event -> {
+            applyCueThemeButton.setTextFill(Color.LIGHTPINK);
+            applyCueThemeButton.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/52.));
+        });
+        applyCueThemeButton.setOnMouseExited(event -> {
+            applyCueThemeButton.setTextFill(Color.WHITE);
+            applyCueThemeButton.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/58.));
         });
 
+        applyCueThemeButton.setOnAction(event -> {
+            cueView.getCue().setImage(cuePreviewImageView.getImage());
+        });
+
+        StackPane applyCuePane = new StackPane();
+        applyCuePane.getChildren().addAll(applyCueDesignRec, applyCueThemeButton);
+        applyCuePane.setStyle("-fx-background-color: transparent");
+
         backCueButton.setOnAction(event -> {
-            if (currentCueImageView[0] == 1) currentCueImageView[0] = 7;
+            if (currentCueImageView[0] == 1) currentCueImageView[0] = 6;
             else currentCueImageView[0]--;
-            cuePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentCueImageView[0]));
+            cuePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentCueImageView[0]-1));
         });
 
         nextCueButton.setOnAction(event -> {
-            if (currentCueImageView[0] == 7) currentCueImageView[0] = 1;
+            if (currentCueImageView[0] == 6) currentCueImageView[0] = 1;
             else currentCueImageView[0]++;
-            cuePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentCueImageView[0]));
+            cuePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentCueImageView[0]-1));
         });
 
-        HBox cueSwitchPane = new HBox();
+        GridPane cueSwitchPane = new GridPane();
+        cueSwitchPane.setPadding(new Insets(0,20,20,20));
         cueSwitchPane.setAlignment(Pos.CENTER);
-        cueSwitchPane.setSpacing(40);
+        cueSwitchPane.setHgap(40);
+        cueSwitchPane.setVgap(20);
 
-        cueSwitchPane.getChildren().addAll(backCueButton, cuePreviewImageView, nextCueButton);
+        cueSwitchPane.add(backCueButton, 0, 1);
+        cueSwitchPane.add(cuePreviewImageView, 1, 1);
+        cueSwitchPane.add(nextCueButton, 2, 1);
+        cueSwitchPane.add(applyCuePane, 1, 2);
+
         cueThemePane.getChildren().add(cueSwitchPane);
 
         tableThemesPane.getChildren().addAll(tableThemeLabel, tableSwitchPane, frictionSettingsPane);
@@ -625,10 +660,10 @@ public class GameView extends Pane {
         cueLeftArrowImageView.setPreserveRatio(true);
 
 
-        cueLeftArrowImageView = new ImageView();
-        cueLeftArrowImageView.setImage(ResourcesLoader.iconImages.get(4));
-        cueLeftArrowImageView.setFitWidth(TableView.width/30.);
-        cueLeftArrowImageView.setPreserveRatio(true);
+        cueRightArrowImageView = new ImageView();
+        cueRightArrowImageView.setImage(ResourcesLoader.iconImages.get(4));
+        cueRightArrowImageView.setFitWidth(TableView.width/30.);
+        cueRightArrowImageView.setPreserveRatio(true);
 
         leaveArrowImageView = new ImageView();
         leaveArrowImageView.setImage(ResourcesLoader.iconImages.get(5));
