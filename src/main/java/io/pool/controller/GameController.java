@@ -78,10 +78,10 @@ public class GameController {
                         tableController.turnView(gameController);
                         ballController.detectCollision(tableController);
                         if (gameView.getClickedBallNumber() > 0) {
-                            gameView.getxPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getPositionX().doubleValue()));
-                            gameView.getyPositionField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getPositionY().doubleValue()));
-                            gameView.getxSpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityX().doubleValue()));
-                            gameView.getySpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityY().doubleValue()));
+                            gameView.getxSpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getPositionX().doubleValue()));
+                            gameView.getySpeedField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getPositionY().doubleValue()));
+                            gameView.getxAccelerationField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityX().doubleValue()));
+                            gameView.getyAccelerationField().setText(String.valueOf(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityY().doubleValue()));
                         }
                         if(gameType==0) {
                             winnerPlayerSolo();
