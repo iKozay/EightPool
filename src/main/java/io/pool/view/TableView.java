@@ -1,11 +1,13 @@
 package io.pool.view;
 
+import io.pool.controller.GameController;
 import io.pool.eightpool.ResourcesLoader;
 import io.pool.eightpool.game;
 import io.pool.model.BallModel;
 import io.pool.model.TableBorderModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,6 +17,7 @@ import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -25,12 +28,13 @@ public class TableView {
     private final ArrayList<Circle> holes = new ArrayList<>();
     public final static int width = (int) (game.eightPoolTableWidth/1.5); // the width of the pane
     public final static int height = (int) (game.eightPoolTableHeight/1.5); // the height of the pane
-    private final int cornerHoleRadius = (int)(width/36.);
+    private final int cornerHoleRadius = (int)(width/36);
     private final int centerHoleRadius = (int) (width/43.2);
     private final ImageView tableImageView;
     private Label player1Lbl,player2Lbl;
     private Shape accessibleArea;
-    private Label playersScore;
+
+    //boolean selectionCircleClicked;
 
     public TableView(Pane root) {
 
@@ -45,7 +49,7 @@ public class TableView {
         anchorPane.setMinHeight(game.eightPoolTableHeight);
 
         table = new Pane();
-//        table.setPadding(new Insets(width/43.2, 0, 0, 0));
+        table.setPadding(new Insets(width/43.2, 0, 0, 0));
         table.setPrefWidth(width);
         table.setPrefHeight(height);
         table.setLayoutX(layoutX);
@@ -69,54 +73,27 @@ public class TableView {
 
         GridPane playersIcon = new GridPane();
         playersIcon.setHgap(width/21.6);
-        playersIcon.setAlignment(Pos.TOP_LEFT);
+        playersIcon.setPadding(new Insets(0,0,width/21.6,0));
+        playersIcon.setAlignment(Pos.CENTER);
         playersIcon.setPrefWidth(width);
         playersIcon.setPrefHeight(height/9.);
         player1Lbl = new Label("player1");
-        player1Lbl.setPrefWidth((width/2.) - width/15.);
-        player1Lbl.setPrefHeight(height/9.);
-        player1Lbl.setStyle("-fx-background-color: #3D4956;");
+        player1Lbl.setPrefWidth((width/2.) - width/43.2);
+        player1Lbl.setStyle("-fx-background-color: #3D4956");
         player1Lbl.setTextFill(Color.WHITE);
         player1Lbl.setFont(Font.font("Verdana", FontWeight.BOLD, width/43.2));
         player2Lbl = new Label("player2");
-        player2Lbl.setPrefWidth(width/2. - width/15.);
-        player2Lbl.setPrefHeight(height/9.);
-        player2Lbl.setStyle("-fx-background-color: #3D4956; ");
+        player2Lbl.setPrefWidth(width/2. - width/43.2);
+        player2Lbl.setStyle("-fx-background-color: #3D4956");
         player2Lbl.setTextFill(Color.WHITE);
         player2Lbl.setFont(Font.font("Verdana", FontWeight.BOLD, width/43.2));
-
-        Label scoreLabel = new Label("Score");
-        scoreLabel.setTextFill(Color.WHITE);
-        scoreLabel.setFont(Font.font("Verdana", FontWeight.BOLD, width/45.));
-        scoreLabel.setAlignment(Pos.CENTER);
-
-        playersScore = new Label("0 : 0");
-        playersScore.setAlignment(Pos.CENTER);
-        playersScore.setStyle("-fx-background-color: transparent");
-        playersScore.setTextFill(Color.WHITE);
-        playersScore.setFont(Font.font("Verdana", FontWeight.BOLD, width/40.));
-        playersScore.setMinWidth(width/8.);
-        playersScore.setPrefHeight(height/9.);
-
-        VBox scoreBox = new VBox();
-        scoreBox.setPadding(new Insets(10));
-        scoreBox.setAlignment(Pos.CENTER);
-        scoreBox.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 25px;");
-
-        scoreBox.getChildren().addAll(scoreLabel, playersScore);
-
         playersIcon.add(player1Lbl, 0,0);
-        playersIcon.add(scoreBox, 1, 0);
-        playersIcon.add(player2Lbl, 2,0);
+        playersIcon.add(player2Lbl, 1,0);
 
-        HBox remainingBallsPane = new HBox();
-        remainingBallsPane.setSpacing(100);
-        remainingBallsPane.setAlignment(Pos.CENTER);
 
         anchorPane.getChildren().addAll( playersIcon, table);
 
         AnchorPane.setLeftAnchor(table, width/43.2);
-        AnchorPane.setTopAnchor(table, width/8.);//////
         AnchorPane.setTopAnchor(playersIcon, 0.0);
         AnchorPane.setLeftAnchor(playersIcon, width/43.2);
 
@@ -304,10 +281,6 @@ public class TableView {
 
     public Shape getAccessibleArea() {
         return accessibleArea;
-    }
-
-    public Label getPlayersScore() {
-        return playersScore;
     }
 }
 

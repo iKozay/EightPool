@@ -19,7 +19,6 @@ public class PlayerModel {
     private int numberOfLoss;
     private int averageNumberOfShotsPerGame;
     private boolean turn;
-    private int score;
 
 
     public PlayerModel(){
@@ -102,13 +101,5 @@ public class PlayerModel {
         if (o == null || getClass() != o.getClass()) return false;
         PlayerModel that = (PlayerModel) o;
         return username.equals(that.username);
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 }
