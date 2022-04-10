@@ -171,6 +171,7 @@ public class GameController {
         }
         checkFoul();
 
+
         if(gameType==0) {
             foul=false;
             return;
