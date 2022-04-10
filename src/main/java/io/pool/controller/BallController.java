@@ -328,7 +328,6 @@ public class BallController {
 
     public void allSolidBallsIn(BallModel bModel) {
         BallController.getSolidBModelList().remove(bModel);
-        //BallController.getSolidBViewList().remove(i);
         if (BallController.getSolidBModelList().isEmpty()) {
             System.out.println("All in for Solid");
             allInSolid = true;
@@ -337,7 +336,6 @@ public class BallController {
 
     public void allStripeBallsIn(BallModel bModel) {
         BallController.getStripeBModelList().remove(bModel);
-        //BallController.getStripeBViewList().remove(i);
         if (BallController.getStripeBModelList().isEmpty()) {
             System.out.println("All in for Stripe");
             allInStripe = true;

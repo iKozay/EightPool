@@ -102,6 +102,7 @@ public class GameController {
                                 scored = false;
                             }
                         } else {
+                            firstPlay = false;
                             gView.displayPoolCue(false);
                             poolCueController.disablePoolCueControl();
                         }
@@ -161,12 +162,12 @@ public class GameController {
 
     public void turns(){
         ballController.makeUnDraggable();
-        if(!currentPlayer.getBallNeededIn().contains(ballController.getFirstCollide())){
-            foul=true;
-        }
 
-        if(!ballController.isCollide){
-            foul=true;
+        if(!firstPlay) {
+            if (!ballController.isCollide) {
+                System.out.println("No collide");
+                foul = true;
+            }
         }
         checkFoul();
 
@@ -186,7 +187,6 @@ public class GameController {
         System.out.println(currentPlayer.getBallType());
         foul=false;
         ballController.setFirstCollide(null);
-        firstPlay = false;
         bModelInEachTurn.clear();
         System.out.println(currentPlayer.getUsername() + "," + "your turn!");
         waitingForInput=true;
@@ -278,7 +278,6 @@ public class GameController {
         if(ballController.getFirstCollide() != null && setBallType) {
             if (currentPlayer.isTurn() && !(ballController.getFirstCollide().getBallType() == currentPlayer.getBallType())) {
                 foul = true;
-                System.out.println("Wrong ball");
             }
         }
 
@@ -289,25 +288,14 @@ public class GameController {
             for (BallModel b : bModelInEachTurn) {
                 ballController.ballInHole(b, gameView);
                 scored = true;
-                if(gameType == 1 && p1.isTurn()) {
+                if(gameType == 1) {
                     if (p1.getBallNeededIn().contains(b)) {
                         p1.getBallNeededIn().remove(b);
-                        System.out.println("yes");
-                    } else {
-                        foul = true;
 
                     }
-                    if (gameType == 1 && p2.isTurn()) {
-                        if (p2.getBallNeededIn().contains(b)) {
-                            System.out.println("yes1");
-                            p2.getBallNeededIn().remove(b);
-                        } else {
-                            foul = true;
-
-
-                        }
+                    if (p2.getBallNeededIn().contains(b)) {
+                        p2.getBallNeededIn().remove(b);
                     }
-
                 }
             }
         }
