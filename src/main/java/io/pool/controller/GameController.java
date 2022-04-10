@@ -277,20 +277,24 @@ public class GameController {
     }
 
     public void eightBallInIllegal(){
-        if (!gameView.getPopupWindow().isShowing()){
-            getNextPlayer().setScore(getNextPlayer().getScore() + 1);
+        if(bModelInEachTurn.contains(BallController.eightBallModel)) {
+            if (!gameView.getPopupWindow().isShowing()){
+                getNextPlayer().setScore(getNextPlayer().getScore() + 1);
+            }
+            tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
+            gameView.getPopupMessage().setText(currentPlayer + " lose!");
+            gameView.getPopupWindow().show();
         }
-        tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
-        gameView.getPopupMessage().setText(currentPlayer + " lose!");
-        gameView.getPopupWindow().show();
     }
     public void eightBallInLegal(){
-        if (!gameView.getPopupWindow().isShowing()){
-            currentPlayer.setScore(currentPlayer.getScore() + 1);
+        if(bModelInEachTurn.contains(BallController.eightBallModel)) {
+            if (!gameView.getPopupWindow().isShowing()){
+                currentPlayer.setScore(currentPlayer.getScore() + 1);
+            }
+            tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
+            gameView.getPopupMessage().setText(currentPlayer + " win!");
+            gameView.getPopupWindow().show();
         }
-        tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
-        gameView.getPopupMessage().setText(currentPlayer + " win!");
-        gameView.getPopupWindow().show();
     }
     public void firstCollidePlay(){
         if(ballController.getFirstCollide() != null && setBallType) {
