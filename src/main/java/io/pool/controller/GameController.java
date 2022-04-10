@@ -126,6 +126,7 @@ public class GameController {
      */
     public void startGame(int gameType) {
         ballController.prepareGame(this.gameView,this.gameView.getTableView());
+        gameView.ballViewDataDebug();
         this.gameType = gameType;
         if(this.gameType==0){
             // SOLO
@@ -173,6 +174,7 @@ public class GameController {
         waitingForInput=false;
         firstPlay=true;
         setBallType=false;
+        gameView.clearBallViewDebug();
     }
 
     public void turns(){
@@ -434,8 +436,8 @@ public class GameController {
     public void updatePoolCuePosition() {
         gameView.displayPoolCue(true);
         poolCueController.poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue() + (BallModel.RADIUS));
-        poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (poolCueController.poolCueView.getCue().getImage().getHeight() / 2));
-        poolCueController.getRotate().setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
+        poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (poolCueController.poolCueView.getCue().getImage().getHeight() / 5.));
+        poolCueController.getRotate().setPivotX(BallController.whiteBallModel.getPositionX().doubleValue() );
         poolCueController.getRotate().setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
         poolCueController.getRotate().setAngle(poolCueController.getCueView().getPreviousAngle());
         if(settingsController.getCueHelper()==1) {

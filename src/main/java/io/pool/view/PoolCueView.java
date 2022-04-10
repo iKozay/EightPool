@@ -21,6 +21,7 @@ public class PoolCueView {
     private static ImageView cue;
     private Line poolLine;
     private Path path;
+    private double scale = 0.30;
 
 
     double previousAngle = 0;
@@ -28,8 +29,16 @@ public class PoolCueView {
     public PoolCueView() {
 
         cue = new ImageView(ResourcesLoader.poolCueImages.get(0));
+
+        cue.setFitWidth(TableView.width/2.);
+        cue.setPreserveRatio(true);
+
+//        cue.setScaleX(scale);
+//        cue.setScaleY(scale);
+
         cue.setX(0);
         cue.setY(0);
+
         poolLine = new Line();
         path = new Path();
         //poolCueView.getCue().getTransforms().add(rotate);
@@ -86,4 +95,10 @@ public class PoolCueView {
         path.getElements().addAll(pcc.getMoveTo(),pcc.getLineTo());
 
     }
+
+    public double getScale() {
+        return scale;
+    }
+
+
 }

@@ -111,7 +111,9 @@ public class GameView extends Pane {
         keepPlayingButton.setTextFill(Color.BLACK);
         keepPlayingButton.setFont(Font.font("Verdana", FontWeight.NORMAL, TableView.width/65.));
         keepPlayingButton.setOnAction(e -> {
-//            gameController.startGame(0);
+            popupWindow.close();
+            gameController.resetGame();
+            gameController.startGame(gameController.getGameType());
         });
 
         HBox choiceButtonsPane = new HBox();
@@ -322,34 +324,6 @@ public class GameView extends Pane {
         principalBar.add(tableButton, 2,0);
         principalBar.add(cueButton, 3,0);
         principalBar.add(backButton, 4,0);
-
-
-        for (int i=1;i<=16;i++) {
-            BallView bView;
-            bView = new BallView(ResourcesLoader.ballImages.get(i-1),BallModel.RADIUS + (TableView.width/150));
-
-            Circle selectionCircle = getCircleFromSphere(bView.getBall());
-            selectionCircle.setFill(Color.TRANSPARENT);
-            selectionCircle.setStroke(Color.WHITE);
-            selectionCircle.setStrokeWidth(2);
-            selectionCircle.setVisible(false);
-            bView.getBall().setOnMouseEntered(event -> {
-                selectionCircle.setVisible(true);
-                selectionCircle.setStroke(Color.WHITE);
-            });
-            bView.getBall().setOnMouseExited(event -> {
-                if (!selectionCircle.getStroke().equals(Color.GREENYELLOW)) selectionCircle.setVisible(false);
-            });
-            ballViews.add(bView);
-            selectionCircles.add(selectionCircle);
-            StackPane ball = new StackPane();
-            ball.getChildren().addAll(selectionCircle, bView.getBall());
-            balls.add(ball);
-            ballsPrimaryPane.getChildren().add(ball);
-
-        }
-
-        updateOnBallsClickedListener();
 
         //working on table Theme section
         tableThemesPane = new VBox();
@@ -608,6 +582,40 @@ public class GameView extends Pane {
         AnchorPane.setRightAnchor(tableThemesPane, 7.0);
         AnchorPane.setTopAnchor(cueThemePane, TableView.height/5.5);
         AnchorPane.setRightAnchor(cueThemePane, 7.0);
+
+    }
+
+    public void ballViewDataDebug() {
+
+        for (int i=1;i<=16;i++) {
+            BallView bView;
+            bView = new BallView(ResourcesLoader.ballImages.get(i-1),BallModel.RADIUS + (TableView.width/150));
+
+            Circle selectionCircle = getCircleFromSphere(bView.getBall());
+            selectionCircle.setFill(Color.TRANSPARENT);
+            selectionCircle.setStroke(Color.WHITE);
+            selectionCircle.setStrokeWidth(2);
+            selectionCircle.setVisible(false);
+            bView.getBall().setOnMouseEntered(event -> {
+                selectionCircle.setVisible(true);
+                selectionCircle.setStroke(Color.WHITE);
+            });
+            bView.getBall().setOnMouseExited(event -> {
+                if (!selectionCircle.getStroke().equals(Color.GREENYELLOW)) selectionCircle.setVisible(false);
+            });
+            ballViews.add(bView);
+            selectionCircles.add(selectionCircle);
+            StackPane ball = new StackPane();
+            ball.getChildren().addAll(selectionCircle, bView.getBall());
+            balls.add(ball);
+            ballsPrimaryPane.getChildren().add(ball);
+
+        }
+
+        updateOnBallsClickedListener();
+    }
+
+    public void clearBallViewDebug() {
 
     }
 

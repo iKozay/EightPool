@@ -320,6 +320,7 @@ public class BallController {
             ballViewArrayList().remove(bView1);
             gameView.getBallsPrimaryPane().getChildren().remove(gameView.getBalls().get(index));
             gameView.getBallViews().remove(index);
+            gameView.getBalls().remove(index);
             gameView.getSelectionCircles().remove(index);
             gameView.setClickedBallNumber(gameView.getClickedBallNumber() - 1);
             gameView.updateOnBallsClickedListener();
