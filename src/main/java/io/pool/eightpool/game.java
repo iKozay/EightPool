@@ -48,8 +48,6 @@ public class game extends Application {
         stage.setFullScreen(false);
         stage.setScene(scene);
         stage.show();
-        BallConfigurationDB.deleteAllData();
-
 
     }
 

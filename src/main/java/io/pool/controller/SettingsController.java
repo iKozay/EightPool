@@ -23,6 +23,7 @@ public class SettingsController {
         cueHelper = (int)SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[1]);
         frictionRatio = SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[2]);
         tableTheme = (int)SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[3]);
+        System.out.println(controlOption);
     }
 
     public int getControlOption() {
@@ -31,6 +32,7 @@ public class SettingsController {
 
     public void setControlOption(int controlOption) {
         this.controlOption = controlOption;
+        System.out.println(controlOption);
         if(this.controlOption==0){
             PoolCueController.keyboardOnly=false;
             PoolCueController.mouseOnly=true;

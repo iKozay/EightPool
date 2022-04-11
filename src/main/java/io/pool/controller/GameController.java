@@ -51,7 +51,6 @@ public class GameController {
      */
     public GameController(GameView gView, SettingsController settingsController) {
         /** Assign the GameView and Instantiate the Controllers */
-        playerModel = new PlayerModel();
         this.gameView = gView;
         tableController = new TableController(this.gameView.getTableView(),this);
         ballController = new BallController(this);
@@ -98,7 +97,7 @@ public class GameController {
                                 updatePoolCuePosition();
                                 turns();
                                 if (!BallConfigurationDB.hasBeenCalled) {
-                                    BallConfigurationDB.updateLastPosition(p1.getBallType(), p2.getBallType(), currentPlayer.getUsername());
+                                    BallConfigurationDB.updateLastPosition(gameType, currentPlayer.getUsername());
                                     BallConfigurationDB.hasBeenCalled = true;
                                 }
                                 poolCueController.enablePoolCueControl();
@@ -153,9 +152,9 @@ public class GameController {
             p2.setScore(0);
         }
 
-        BallConfigurationDB.instantiateLastLayoutDB(gameType, p1, p2);
 
         currentPlayer = p1;
+        BallConfigurationDB.instantiateLastLayoutDB(gameType, p1, p2, currentPlayer.getUsername());
 
         //ballController.testingBallController(this.gameView);
         gameLoopTimer.start();
@@ -245,6 +244,7 @@ public class GameController {
                     System.out.println(getNextPlayer().getUsername() + ": "+getNextPlayer().getBallType());
                 }
             }
+            BallConfigurationDB.assignBallType(this.gameType,p1.getBallType(),p2.getBallType());
         }
     }
     public void checkFoul(){
