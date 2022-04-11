@@ -278,16 +278,22 @@ public class BallController {
     private void detectCollisionWithTable() {
         Bounds intersectBounds;
         for (BallModel bModel : bModelList) {
-            intersectBounds = Shape.intersect(TableBorderModel.tableBorderArea, getBallViewFromBallModel(bModel).getCircleFromSphere()).getBoundsInLocal();
-            if ((intersectBounds.getWidth() != -1)) {
-                double normalXComponent = (intersectBounds.getCenterX() - bModel.getPositionX().doubleValue());
-                double normalYComponent = (intersectBounds.getCenterY() - bModel.getPositionY().doubleValue());
-                double distance = Math.sqrt(Math.pow(normalXComponent, 2) + Math.pow(normalYComponent, 2));
-                double distanceX = ((normalXComponent * (((BallModel.RADIUS * 1.05) - distance) / distance)));
-                double distanceY = ((normalYComponent * (((BallModel.RADIUS * 1.05) - distance) / (distance))));
-                bModel.setPositionX(bModel.getPositionX().subtract(new BigDecimal(distanceX)));
-                bModel.setPositionY(bModel.getPositionY().subtract(new BigDecimal(distanceY)));
-                TableBorderModel.applyReflection(bModel, gameController.getGameView().getTableView());
+            boolean fixedOverlap=false;
+            while(!fixedOverlap){
+                intersectBounds = Shape.intersect(TableBorderModel.tableBorderArea, getBallViewFromBallModel(bModel).getCircleFromSphere()).getBoundsInLocal();
+                if ((intersectBounds.getWidth() != -1)) {
+                    double normalXComponent = (intersectBounds.getCenterX() - bModel.getPositionX().doubleValue());
+                    double normalYComponent = (intersectBounds.getCenterY() - bModel.getPositionY().doubleValue());
+                    double distance = Math.sqrt(Math.pow(normalXComponent, 2) + Math.pow(normalYComponent, 2));
+                    double distanceX = ((normalXComponent * (((BallModel.RADIUS * 1.05) - distance) / distance)));
+                    double distanceY = ((normalYComponent * (((BallModel.RADIUS * 1.05) - distance) / (distance))));
+                    bModel.setPositionX(bModel.getPositionX().subtract(new BigDecimal(distanceX)));
+                    bModel.setPositionY(bModel.getPositionY().subtract(new BigDecimal(distanceY)));
+                    TableBorderModel.applyReflection(bModel, gameController.getGameView().getTableView());
+                    updateBallViewPosition(bModel);
+                }else{
+                    fixedOverlap=true;
+                }
             }
         }
     }

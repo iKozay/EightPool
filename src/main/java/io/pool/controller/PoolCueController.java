@@ -152,14 +152,8 @@ public class PoolCueController {
         if (gameController.gameLoopTimer.isActive) {
                 if (poolCueView.getCue().getLayoutX() != 0 && poolCueView.getCue().getLayoutY() != 0) {
                     poolCueView.setPreviousAngle(0);
-                    double newVelocityX = -poolCueView.getCue().getLayoutX() / 8;
-                    double newVelocityY = -poolCueView.getCue().getLayoutY() / 8;
-                    if(Math.abs(newVelocityX)>10){
-                        newVelocityX = 10*Math.signum(newVelocityX);
-                    }
-                    if(Math.abs(newVelocityY)>10){
-                        newVelocityY = 10*Math.signum(newVelocityY);
-                    }
+                    double newVelocityX = -poolCueView.getCue().getLayoutX() / 7;
+                    double newVelocityY = -poolCueView.getCue().getLayoutY() / 7;
                     BallController.whiteBallModel.setVelocityX(new BigDecimal(newVelocityX));
                     BallController.whiteBallModel.setVelocityY(new BigDecimal(newVelocityY));
                     BallController.whiteBallModel.setIsMoving();
