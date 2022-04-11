@@ -80,7 +80,7 @@ public class SettingsController {
                         PlayerModel selectedPlayer = PlayerModel.playersList.get(settingsView.getProfilesTable().getSelectionModel().getFocusedIndex());
                         String oldUsername = selectedPlayer.getUsername();
                         System.out.println(oldUsername+" --> "+settingsView.getNewPlayerTextField().getText());
-                        if(settingsView.getNewPlayerTextField().getText().equals(oldUsername)){
+                        if(settingsView.getNewPlayerTextField().getText().equalsIgnoreCase(oldUsername)){
                             settingsView.getMsgLabel().setText("New username can't be the same as old username!");
                         }else{
                             PlayerTableDB.renamePlayerTableDB(selectedPlayer,settingsView.getNewPlayerTextField().getText());
@@ -101,7 +101,7 @@ public class SettingsController {
             PlayerTableDB.removePlayerDB(PlayerModel.playersList.get(row));
             PlayerModel.playersList.remove(row);
         }else{
-            settingsView.getMsgLabel().setText("Can't delete last player.");
+            settingsView.getMsgLabel().setText("Can't delete last two player.");
         }
     }
 }

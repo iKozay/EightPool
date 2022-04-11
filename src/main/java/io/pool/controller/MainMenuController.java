@@ -6,6 +6,7 @@ import io.pool.model.PlayerModel;
 import io.pool.view.GameView;
 import io.pool.view.MainMenuView;
 import io.pool.view.SettingsView;
+import javafx.collections.FXCollections;
 import javafx.stage.Stage;
 
 public class MainMenuController {
@@ -54,9 +55,16 @@ public class MainMenuController {
             stage.getScene().setRoot(gameView);
             this.gameView.getGameController().getPoolCueController().handleRotateCue(stage.getScene());
             this.gameView.getGameController().getPoolCueController().hit(stage.getScene());
-            gameView.getGameController().startGame(1);
+            gameView.getGameController().startGame(1,(PlayerModel) mmv.getComboBoxP1().getSelectionModel().getSelectedItem(),(PlayerModel)mmv.getComboBoxP2().getSelectionModel().getSelectedItem());
         });
         mmv.getPvp1Btn().setOnAction(event -> {
+            mmv.getComboBoxP2().setDisable(true);
+            mmv.getPVPstartBtn().setDisable(true);
+            mmv.Player2List = FXCollections.observableArrayList();
+            mmv.getComboBoxP2().getItems().clear();
+            mmv.Player1List = FXCollections.observableArrayList(PlayerModel.playersList);
+            mmv.getComboBoxP1().setItems(mmv.Player1List);
+            mmv.getComboBoxP1().getSelectionModel().clearSelection();
             stage.getScene().setRoot(mmv.getPvpRootMenu());
         });
 
@@ -102,7 +110,7 @@ public class MainMenuController {
             stage.getScene().setRoot(gameView);
             this.gameView.getGameController().getPoolCueController().handleRotateCue(stage.getScene());
             this.gameView.getGameController().getPoolCueController().hit(stage.getScene());
-            gameView.getGameController().startGame(0);
+            gameView.getGameController().startGame(0,new PlayerModel("Practice",1,0,0,0),null);
 
             BallConfigurationDB.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test",false), new PlayerModel());
             gameModel.setGameType(1);

@@ -49,7 +49,7 @@ public class PlayerModel {
 
     public static boolean doesPlayerExists(String text) {
         for (PlayerModel player:playersList){
-            if(player.getUsername().equals(text)){
+            if(player.getUsername().equalsIgnoreCase(text)){
                 return true;
             }
         }

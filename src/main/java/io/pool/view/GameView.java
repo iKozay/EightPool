@@ -115,7 +115,7 @@ public class GameView extends Pane {
         keepPlayingButton.setOnAction(e -> {
             popupWindow.close();
             gameController.resetGame();
-            gameController.startGame(gameController.getGameType());
+            gameController.startGame(gameController.getGameType(),gameController.getP1(),gameController.getP2());
         });
 
         HBox choiceButtonsPane = new HBox();

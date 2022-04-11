@@ -124,13 +124,13 @@ public class GameController {
      * Calls prepareGame method in BallController to instantiate the BallModels and BallViews
      * Then starts the gameLoopTimer
      */
-    public void startGame(int gameType) {
+    public void startGame(int gameType, PlayerModel player1, PlayerModel player2) {
         ballController.prepareGame(this.gameView,this.gameView.getTableView());
         gameView.ballViewDataDebug();
         this.gameType = gameType;
         if(this.gameType==0){
             // SOLO
-            p1 = new PlayerModel("ABC",true);
+            p1 = player1;
             p1.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
             p1.getBallNeededIn().remove(BallController.eightBallModel);
             p1.getBallNeededIn().remove(BallController.whiteBallModel);
@@ -143,8 +143,8 @@ public class GameController {
             p2.setScore(0);
         }else if(this.gameType==1) {
             // Instead get the selected player from the combobox
-            p1 = new PlayerModel("ABC",false);
-            p2 = new PlayerModel("XYZ",true);
+            p1 = player1;
+            p2 = player2;
             p1.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
             p2.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
             p1.getBallNeededIn().remove(BallController.eightBallModel);

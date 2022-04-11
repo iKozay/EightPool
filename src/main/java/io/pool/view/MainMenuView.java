@@ -2,7 +2,12 @@ package io.pool.view;
 
 import io.pool.controller.MainMenuController;
 import io.pool.eightpool.ResourcesLoader;
+import io.pool.model.PlayerModel;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -60,6 +65,10 @@ public class MainMenuView extends Pane{
     private Text soloText;
     private ComboBox comboBoxP1;
     private ComboBox comboBoxP2;
+
+    public static ObservableList<PlayerModel> Player1List = FXCollections.observableArrayList();
+    public static ObservableList<PlayerModel> Player2List = FXCollections.observableArrayList();
+
 
     public MainMenuView(Stage stage) throws IOException {
         this.setStyle("-fx-background-color: White");
@@ -254,7 +263,23 @@ public class MainMenuView extends Pane{
         centerBox.setSpacing(30);
 
         // ComboBox Player 1
+
         comboBoxP1 = new ComboBox();
+        comboBoxP2 = new ComboBox();
+
+
+        Player1List = FXCollections.observableArrayList(PlayerModel.playersList);
+
+        comboBoxP1.setItems(Player1List);
+        comboBoxP1.setOnAction(e->{
+            comboBoxP2.setDisable(false);
+            PVPstartBtn.setDisable(true);
+            comboBoxP2.getItems().clear();
+            Player2List = FXCollections.observableArrayList(PlayerModel.playersList);
+            Player2List.remove(comboBoxP1.getSelectionModel().getSelectedItem());
+            comboBoxP2.setItems(Player2List);
+        });
+
         comboBoxP1.setPrefSize(300,50);
         DropShadow dp1 = new DropShadow();
         dp1.setColor(Color.RED);
@@ -274,7 +299,20 @@ public class MainMenuView extends Pane{
         bottomBox.setSpacing(30);
 
         // ComboBox Player 2
-        comboBoxP2 = new ComboBox();
+
+        Player2List = FXCollections.observableArrayList(PlayerModel.playersList);
+        Player2List.remove(0);
+
+
+        comboBoxP2.setOnAction(e->{
+            if(comboBoxP2.getSelectionModel().getSelectedIndex()!=-1) PVPstartBtn.setDisable(false);
+        });
+        comboBoxP2.setDisable(true);
+        PVPstartBtn.setDisable(true);
+
+        comboBoxP2.setItems(Player2List);
+        comboBoxP2.getSelectionModel().select(0);
+
         comboBoxP2.setPrefSize(300,50);
         DropShadow dp2 = new DropShadow();
         dp2.setColor(Color.BLUE);
