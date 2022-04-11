@@ -2,6 +2,7 @@ package io.pool.eightpool;
 
 import io.pool.Database.BallConfigurationDB;
 import io.pool.Database.DBConnection;
+import io.pool.Database.PlayerTableDB;
 import io.pool.view.*;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -33,6 +34,7 @@ public class game extends Application {
         System.out.println("Width: " + eightPoolTableWidth);
 
         ResourcesLoader.load();
+        PlayerTableDB.fetchAllPlayers();
         /**
          * Instantiates the Main Menu View and adds it the Scene
          */

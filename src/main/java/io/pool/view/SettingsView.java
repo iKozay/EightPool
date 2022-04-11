@@ -1,5 +1,6 @@
 package io.pool.view;
 
+import io.pool.Database.PlayerTableDB;
 import io.pool.controller.MainMenuController;
 import io.pool.controller.SettingsController;
 import io.pool.eightpool.game;
@@ -16,6 +17,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.StringConverter;
@@ -24,10 +26,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SettingsView extends BorderPane {
+    private TableView<PlayerModel> profilesTable;
+    private Label msgLabel;
+    private TextField newPlayerTextField;
+    private Slider option3;
+
+
     ObservableList<String> option1List = FXCollections.observableList(new ArrayList<String>(Arrays.asList("Mouse + Keyboard","Keyboard Only")));
     ObservableList<String> option2List = FXCollections.observableList(new ArrayList<String>(Arrays.asList("No","Yes")));
     private SettingsController settingsController;
-    private Slider option3;
 
     public SettingsView() {
         settingsController = new SettingsController(this);
@@ -104,7 +111,7 @@ public class SettingsView extends BorderPane {
         profileBox.setAlignment(Pos.CENTER);
         profileBox.setPadding(new Insets(0,0,0.02*game.eightPoolTableHeight,0));
         profileBox.setSpacing(0.01*game.eightPoolTableWidth);
-        TableView<PlayerModel> profilesTable = new TableView<>();
+        profilesTable = new TableView<>();
 
         TableColumn<PlayerModel, String> tc1 = new TableColumn();
         TableColumn<PlayerModel,Integer> tc2 = new TableColumn();
@@ -133,35 +140,52 @@ public class SettingsView extends BorderPane {
         profilesTable.setEditable(false);
         profilesTable.setPrefWidth(0.70*game.eightPoolTableWidth);
         profilesTable.setItems(PlayerModel.playersList);
+        profilesTable.getSelectionModel().select(PlayerModel.playersList.size()-1);
 
         VBox profileControlsBox = new VBox();
         profileControlsBox.setAlignment(Pos.CENTER);
         profileControlsBox.setSpacing(0.02*game.eightPoolTableHeight);
 
         VBox newPlayerBox = new VBox();
+
+        msgLabel = new Label("Message Here!");
+        msgLabel.setTextAlignment(TextAlignment.CENTER);
+        msgLabel.setTextFill(Color.RED);
+
         newPlayerBox.setAlignment(Pos.CENTER);
         newPlayerBox.setPadding(new Insets(0.05*game.eightPoolTableHeight,0,0.05*game.eightPoolTableHeight,0));
         Text newPlayerText = new Text("New Username: ");
-        TextField newPlayerTextField = new TextField();
+        newPlayerTextField = new TextField();
         newPlayerTextField.setPromptText("Enter Username");
+        HBox playerActions = new HBox();
         Button newPlayerButton = new Button("Add Player");
+        newPlayerButton.setOnAction(e->settingsController.setUsername(e,true));
         newPlayerButton.setTextAlignment(TextAlignment.CENTER);
         newPlayerButton.setPrefWidth(newPlayerBox.getMinWidth());
-        newPlayerBox.getChildren().addAll(newPlayerText,newPlayerTextField,newPlayerButton);
+
+        Button renamePlayerButton = new Button("Rename Selected Player");
+        renamePlayerButton.setOnAction(e->settingsController.setUsername(e,false));
+        renamePlayerButton.setTextAlignment(TextAlignment.CENTER);
+        renamePlayerButton.setPrefWidth(newPlayerBox.getMinWidth());
+
+        playerActions.getChildren().addAll(newPlayerButton,renamePlayerButton);
+
+        msgLabel.setPadding(new Insets(0.05*game.eightPoolTableHeight,0,0,0));
+
+        newPlayerBox.getChildren().addAll(newPlayerText,newPlayerTextField,playerActions,msgLabel);
 
         Separator sep2 = new Separator();
 
         Button deletePlayer = new Button("Delete Selected Player");
         deletePlayer.setTextAlignment(TextAlignment.CENTER);
-        Button renamePlayer = new Button("Rename Selected Player");
-        renamePlayer.setTextAlignment(TextAlignment.CENTER);
+        deletePlayer.setOnAction(e->settingsController.deletePlayer(e));
         Button backButton = new Button("Back to Main Menu");
         backButton.setTextAlignment(TextAlignment.CENTER);
         backButton.setOnAction(e->{
             MainMenuController.gotoMainMenu();
         });
 
-        profileControlsBox.getChildren().addAll(newPlayerBox,deletePlayer,renamePlayer,backButton);
+        profileControlsBox.getChildren().addAll(newPlayerBox,deletePlayer,backButton);
 
         profileBox.getChildren().addAll(profilesTable,profileControlsBox);
 
@@ -174,6 +198,18 @@ public class SettingsView extends BorderPane {
 
     public Slider getOption3() {
         return option3;
+    }
+
+    public TableView<PlayerModel> getProfilesTable() {
+        return profilesTable;
+    }
+
+    public Label getMsgLabel() {
+        return msgLabel;
+    }
+
+    public TextField getNewPlayerTextField() {
+        return newPlayerTextField;
     }
 
     public SettingsController getSettingsController() {

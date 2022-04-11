@@ -1,12 +1,13 @@
 package io.pool.model;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
 public class PlayerModel {
 
-    public static ObservableList<PlayerModel> playersList;
+    public static ObservableList<PlayerModel> playersList = FXCollections.observableArrayList();
     private ArrayList<BallModel> ballNeededIn;
     private String username;
     /**
@@ -14,10 +15,10 @@ public class PlayerModel {
      * 1 = Stripe
      */
     private int ballType;
-    private int selectedPoolCue;
-    private int numberOfWins;
-    private int numberOfLoss;
-    private int averageNumberOfShotsPerGame;
+    private int selectedPoolCue=1;
+    private int numberOfWins=0;
+    private int numberOfLoss=0;
+    private int averageNumberOfShotsPerGame=0;
     private boolean turn;
     private int score;
 
@@ -32,6 +33,7 @@ public class PlayerModel {
     }
 
     public PlayerModel(String username,int selectedPoolCue, int numberOfWins,int numberOfLoss, int averageNumberOfShotsPerGame){
+        // This is used to load players from the db
         this.username=username;
         this.selectedPoolCue=selectedPoolCue;
         this.numberOfWins=numberOfWins;
@@ -39,7 +41,20 @@ public class PlayerModel {
         this.averageNumberOfShotsPerGame=averageNumberOfShotsPerGame;
     }
 
+    public PlayerModel(String username) {
+        // this is used to create new players
+        this.username = username;
+        playersList.add(this);
+    }
 
+    public static boolean doesPlayerExists(String text) {
+        for (PlayerModel player:playersList){
+            if(player.getUsername().equals(text)){
+                return true;
+            }
+        }
+        return false;
+    }
 
 //getters and setters
 

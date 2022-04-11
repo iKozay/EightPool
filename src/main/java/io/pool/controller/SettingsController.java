@@ -1,9 +1,12 @@
 package io.pool.controller;
 
 
+import io.pool.Database.PlayerTableDB;
 import io.pool.Database.SettingsDB;
 import io.pool.model.PhysicsModule;
+import io.pool.model.PlayerModel;
 import io.pool.view.SettingsView;
+import javafx.event.ActionEvent;
 
 public class SettingsController {
 
@@ -59,4 +62,46 @@ public class SettingsController {
         SettingsDB.updateSettingsDB(SettingsDB.SettingsDBReadOptions[2],this.frictionRatio,false);
     }
 
+    public void setUsername(ActionEvent e, boolean newPlayer){
+        boolean hasSpaces = settingsView.getNewPlayerTextField().getText().contains(" ");
+        if(hasSpaces) {
+            settingsView.getMsgLabel().setText("Username can't have any spaces!");
+            return;
+        }else{
+            if(PlayerModel.doesPlayerExists(settingsView.getNewPlayerTextField().getText())&&newPlayer){
+                settingsView.getMsgLabel().setText("Username is already taken!");
+                return;
+            }else{
+                if(!settingsView.getNewPlayerTextField().getText().isEmpty()){
+                    if(newPlayer) {
+                        PlayerTableDB.createNewPlayerDB(new PlayerModel(settingsView.getNewPlayerTextField().getText()));
+                        settingsView.getProfilesTable().getSelectionModel().select(PlayerModel.playersList.size() - 1);
+                    }else{
+                        PlayerModel selectedPlayer = PlayerModel.playersList.get(settingsView.getProfilesTable().getSelectionModel().getFocusedIndex());
+                        String oldUsername = selectedPlayer.getUsername();
+                        System.out.println(oldUsername+" --> "+settingsView.getNewPlayerTextField().getText());
+                        if(settingsView.getNewPlayerTextField().getText().equals(oldUsername)){
+                            settingsView.getMsgLabel().setText("New username can't be the same as old username!");
+                        }else{
+                            PlayerTableDB.renamePlayerTableDB(selectedPlayer,settingsView.getNewPlayerTextField().getText());
+                            selectedPlayer.setUsername(settingsView.getNewPlayerTextField().getText());
+                            settingsView.getProfilesTable().refresh();
+                        }
+                    }
+                }else{
+                    settingsView.getMsgLabel().setText("Username can't be null!");
+                }
+            }
+        }
+    }
+
+    public void deletePlayer(ActionEvent e) {
+        if(PlayerModel.playersList.size()>1) {
+            int row = settingsView.getProfilesTable().getSelectionModel().getFocusedIndex();
+            PlayerTableDB.removePlayerDB(PlayerModel.playersList.get(row));
+            PlayerModel.playersList.remove(row);
+        }else{
+            settingsView.getMsgLabel().setText("Can't delete last player.");
+        }
+    }
 }

@@ -17,7 +17,7 @@ public class PlayerTableDB extends DBConnection{
         connect();
         PreparedStatement ps;
 
-        String sql = "INSERT INTO PlayerTable (Username,SelectedPoolCue, Win, Loss, AverageShots) VALUES (?) 1 0 0 0";
+        String sql = "INSERT INTO PlayerTable (Username,SelectedPoolCue, Win, Loss, AverageShots) VALUES (?,1,0,0,0)";
         try{
             ps = connection.prepareStatement(sql);
             ps.setString(1, player.getUsername());
@@ -48,7 +48,7 @@ public class PlayerTableDB extends DBConnection{
         PreparedStatement ps;
         ResultSet rs;
         try{
-            String sql = "SELECT " + property + " from PlayerTable WHERE name = ?";
+            String sql = "SELECT " + property + " from PlayerTable WHERE Username = ?";
             ps = connection.prepareStatement(sql);
             ps.setString(1, player.getUsername());
             rs = ps.executeQuery();
@@ -60,11 +60,26 @@ public class PlayerTableDB extends DBConnection{
         return null;
     }
 
+    public static void renamePlayerTableDB(PlayerModel player, String newUsername){
+        connect();
+        PreparedStatement ps;
+        try{
+            String sql = "UPDATE PlayerTable set (Username)=? WHERE Username = ?";
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, newUsername);
+            ps.setString(2, player.getUsername());
+            ps.execute();
+            System.out.println("PlayerTable updated!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void updatePlayerTableDB(PlayerModel player){
         connect();
         PreparedStatement ps;
         try{
-            String sql = "UPDATE PlayerTable set (Win)=?, (Loss)=?, (AverageShots)=? WHERE name = ?";
+            String sql = "UPDATE PlayerTable set (Win)=?, (Loss)=?, (AverageShots)=? WHERE Username = ?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, player.getNumberOfWins());
             ps.setInt(2, player.getNumberOfLoss());
