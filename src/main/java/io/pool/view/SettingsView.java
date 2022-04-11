@@ -27,6 +27,7 @@ public class SettingsView extends BorderPane {
     ObservableList<String> option1List = FXCollections.observableList(new ArrayList<String>(Arrays.asList("Mouse + Keyboard","Keyboard Only")));
     ObservableList<String> option2List = FXCollections.observableList(new ArrayList<String>(Arrays.asList("No","Yes")));
     private SettingsController settingsController;
+    private Slider option3;
 
     public SettingsView() {
         settingsController = new SettingsController(this);
@@ -55,7 +56,7 @@ public class SettingsView extends BorderPane {
         });
 
         Text option3Text = new Text("Friction Percentage: ");
-        Slider option3 = new Slider();
+        option3 = new Slider();
         option3.setMin(25);
         option3.setMax(175);
         option3.setValue(settingsController.getFrictionPercentage());
@@ -169,6 +170,10 @@ public class SettingsView extends BorderPane {
 
         main.getChildren().add(settings2Box);
 
+    }
+
+    public Slider getOption3() {
+        return option3;
     }
 
     public SettingsController getSettingsController() {

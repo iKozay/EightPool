@@ -54,6 +54,7 @@ public class SettingsController {
 
     public void setFrictionPercentage(double frictionPercentage) {
         this.frictionRatio = frictionPercentage/100.0;
+        settingsView.getOption3().setValue(getFrictionPercentage());
         PhysicsModule.FRICTION_RATIO=this.frictionRatio;
         SettingsDB.updateSettingsDB(SettingsDB.SettingsDBReadOptions[2],this.frictionRatio,false);
     }

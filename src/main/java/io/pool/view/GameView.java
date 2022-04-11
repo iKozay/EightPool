@@ -46,6 +46,7 @@ public class GameView extends Pane {
     private TableView tableView;
     /** Pool Cue that will be displayed to the user */
     private PoolCueView cueView;
+    private SettingsController settingsController;
 
     private AnchorPane gamePane;
 
@@ -77,6 +78,7 @@ public class GameView extends Pane {
      * Main Constructor of GameView
      */
     public GameView(SettingsController settingsController) {
+        this.settingsController = settingsController;
         /**
          * Instantiates the Views and GameController
          */
@@ -586,7 +588,7 @@ public class GameView extends Pane {
     }
 
     public void ballViewDataDebug() {
-
+        frictionSlider.setValue(settingsController.getFrictionPercentage());
         for (int i=1;i<=16;i++) {
             BallView bView;
             bView = new BallView(ResourcesLoader.ballImages.get(i-1),BallModel.RADIUS + (TableView.width/150));
