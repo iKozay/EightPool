@@ -427,7 +427,7 @@ public class BallController {
      *
      * @return the ArrayList that contains all the BallModels
      */
-    public ArrayList<BallModel> ballModelArrayList() {
+    public static ArrayList<BallModel> ballModelArrayList() {
         return bModelList;
     }
 

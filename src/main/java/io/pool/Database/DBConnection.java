@@ -8,7 +8,6 @@ public class DBConnection {
 
     protected static final String connectionString = "jdbc:sqlite:src/main/resources/DBFiles/EightBallDatabase.db";
     protected static Connection connection = null;
-    protected static BallController bc = new BallController();
 
     //Connection to database
     protected static void connect() {

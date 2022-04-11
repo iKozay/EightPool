@@ -32,7 +32,7 @@ public class SettingsView extends BorderPane {
     private Slider option3;
 
 
-    ObservableList<String> option1List = FXCollections.observableList(new ArrayList<String>(Arrays.asList("Mouse + Keyboard","Keyboard Only")));
+    ObservableList<String> option1List = FXCollections.observableList(new ArrayList<String>(Arrays.asList("Mouse Only","Mouse + Keyboard","Keyboard Only")));
     ObservableList<String> option2List = FXCollections.observableList(new ArrayList<String>(Arrays.asList("No","Yes")));
     private SettingsController settingsController;
 

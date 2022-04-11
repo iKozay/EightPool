@@ -33,8 +33,13 @@ public class SettingsController {
         this.controlOption = controlOption;
         if(this.controlOption==0){
             PoolCueController.keyboardOnly=false;
+            PoolCueController.mouseOnly=true;
+        }else if(this.controlOption==1){
+            PoolCueController.keyboardOnly=false;
+            PoolCueController.mouseOnly=false;
         }else{
             PoolCueController.keyboardOnly=true;
+            PoolCueController.mouseOnly=false;
         }
         SettingsDB.updateSettingsDB(SettingsDB.SettingsDBReadOptions[0],this.controlOption,true);
     }

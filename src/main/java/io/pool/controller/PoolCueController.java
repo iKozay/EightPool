@@ -8,6 +8,7 @@ import io.pool.view.PoolCueView;
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 
@@ -19,6 +20,7 @@ public class PoolCueController {
 
     private static final Set<KeyCode> keysCurrentlyDown = new HashSet<>();
     public static boolean keyboardOnly = false;
+    public static boolean mouseOnly = false;
     public static boolean cueHelperEnabled=true;
     private GameController gameController;
 
@@ -53,39 +55,82 @@ public class PoolCueController {
             });
     }
 
+    double mouseXLock;
+    double mouseYLock;
+    boolean isPressed=false;
+    double draggedX;
+    double draggedY;
+    double draggedTotal;
+
     public void hit(Scene scene) {
         scene.setOnKeyPressed((keyEvent -> {
-            if (gameController.gameLoopTimer.isActive) {
-                keysCurrentlyDown.add(keyEvent.getCode());
-                if (keyboardOnly) {
-                    if (keysCurrentlyDown.contains(KeyCode.A) || keysCurrentlyDown.contains(KeyCode.D)) {
-                        double newAngle = poolCueView.getPreviousAngle();
-                        if (keysCurrentlyDown.contains(KeyCode.A)) newAngle -= 2;
-                        if (keysCurrentlyDown.contains(KeyCode.D)) newAngle += 2;
-                        setRotation(newAngle);
-                    } else if (keysCurrentlyDown.contains(KeyCode.SHIFT)) {
-                        shoot();
+            if(!mouseOnly) {
+                if (gameController.gameLoopTimer.isActive) {
+                    keysCurrentlyDown.add(keyEvent.getCode());
+                    if (keyboardOnly) {
+                        if (keysCurrentlyDown.contains(KeyCode.A) || keysCurrentlyDown.contains(KeyCode.D)) {
+                            double newAngle = poolCueView.getPreviousAngle();
+                            if (keysCurrentlyDown.contains(KeyCode.A)) newAngle -= 2;
+                            if (keysCurrentlyDown.contains(KeyCode.D)) newAngle += 2;
+                            setRotation(newAngle);
+                        } else if (keysCurrentlyDown.contains(KeyCode.SHIFT)) {
+                            shoot();
+                        }
+                    }
+                    if (keysCurrentlyDown.contains(KeyCode.W) || keysCurrentlyDown.contains(KeyCode.S)) {
+                        double draggedTotal = Math.sqrt(Math.pow(poolCueView.getCue().getLayoutX(), 2) + Math.pow(poolCueView.getCue().getLayoutY(), 2));
+                        if (keysCurrentlyDown.contains(KeyCode.W)) draggedTotal -= 3;
+                        if (keysCurrentlyDown.contains(KeyCode.S)) draggedTotal += 3;
+                        if (draggedTotal < 0) draggedTotal = 0;
+                        if (draggedTotal > MAX_DISTANCE) draggedTotal = MAX_DISTANCE;
+                        setPower(draggedTotal);
                     }
                 }
-                if (keysCurrentlyDown.contains(KeyCode.W) || keysCurrentlyDown.contains(KeyCode.S)) {
-                    double draggedTotal = Math.sqrt(Math.pow(poolCueView.getCue().getLayoutX(), 2) + Math.pow(poolCueView.getCue().getLayoutY(), 2));
-                    if (keysCurrentlyDown.contains(KeyCode.W)) draggedTotal -= 3;
-                    if (keysCurrentlyDown.contains(KeyCode.S)) draggedTotal += 3;
-                    if (draggedTotal < 0) draggedTotal = 0;
-                    if (draggedTotal > MAX_DISTANCE) draggedTotal = MAX_DISTANCE;
-                    setPower(draggedTotal);
+            }else{
+                if (gameController.gameLoopTimer.isActive) {
+                    if(keyEvent.getCode().equals(KeyCode.CONTROL)){
+                        setPoolCue(0,gameController.getPoolCueController().poolCueView.getPreviousAngle());
+                    }
                 }
             }
         }));
         scene.setOnKeyReleased((keyEvent -> {
-            keysCurrentlyDown.remove(keyEvent.getCode());
+            if(!mouseOnly) keysCurrentlyDown.remove(keyEvent.getCode());
         }));
 
-            scene.setOnMouseReleased(event -> {
-                        if (!keyboardOnly) {
-                            shoot();
+        scene.setOnMouseReleased(event -> {
+                    if (!keyboardOnly) {
+                        shoot();
+                    }
+        });
+        scene.setOnMousePressed(event -> {
+            if(mouseOnly) {
+                if (enablePoolCueControl) {
+                    if (gameController.gameLoopTimer.isActive) {
+                        if (event.getButton() == MouseButton.PRIMARY) {
+                            mouseXLock = event.getX();
+                            mouseYLock = event.getY();
+                            isPressed = true;
                         }
-            });
+                    }
+                }
+            }
+        });
+        scene.setOnMouseDragged(event -> {
+            if(mouseOnly) {
+                if (enablePoolCueControl) {
+                    if (gameController.gameLoopTimer.isActive) {
+                        draggedX = Math.abs(event.getX() - mouseXLock);
+                        draggedY = Math.abs(event.getY() - mouseYLock);
+                        draggedTotal = Math.sqrt(Math.pow(draggedX, 2) + Math.pow(draggedY, 2));
+                        if (draggedTotal > MAX_DISTANCE) draggedTotal = MAX_DISTANCE;
+                        setPower(draggedTotal);
+                    }
+                }
+            }
+        });
+
+
 
     }
 
