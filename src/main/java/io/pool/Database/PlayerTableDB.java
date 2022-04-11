@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class PlayerTableDB extends DBConnection{
 
     /**used for readData method*/
-    public String[] PlayerTableDBReadOptions = {"ID", "Username", "SelectedPoolCue", "Win", "Loss", "AverageShots"};
+    public final static String[] PlayerTableDBReadOptions = {"ID", "Username", "SelectedPoolCue", "Win", "Loss", "AverageShots"};
 
     public static void createNewPlayerDB(PlayerModel player){
         connect();
@@ -58,6 +58,26 @@ public class PlayerTableDB extends DBConnection{
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void setPlayerTableDB(PlayerModel player, String property){
+        connect();
+        PreparedStatement ps;
+        int value=-1;
+        if(property.equals(PlayerTableDBReadOptions[2])) value = player.getSelectedPoolCue();
+        if(property.equals(PlayerTableDBReadOptions[3])) value = player.getNumberOfWins();
+        if(property.equals(PlayerTableDBReadOptions[4])) value = player.getNumberOfLoss();
+        if(property.equals(PlayerTableDBReadOptions[5])) value = player.getAverageNumberOfShotsPerGame();
+        try{
+            String sql = "UPDATE PlayerTable set(" + property + ")=? WHERE Username = ?";
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, value);
+            ps.setString(2, player.getUsername());
+            ps.execute();
+            System.out.println("PlayerTable updated!");
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
     public static void renamePlayerTableDB(PlayerModel player, String newUsername){

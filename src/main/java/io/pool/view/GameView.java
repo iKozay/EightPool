@@ -1,5 +1,6 @@
 package io.pool.view;
 
+import io.pool.Database.PlayerTableDB;
 import io.pool.controller.GameController;
 import io.pool.controller.MainMenuController;
 import io.pool.controller.SettingsController;
@@ -537,6 +538,8 @@ public class GameView extends Pane {
 
         applyCueThemeButton.setOnAction(event -> {
             cueView.getCue().setImage(cuePreviewImageView.getImage());
+            gameController.getCurrentPlayer().setSelectedPoolCue(ResourcesLoader.poolCueImages.indexOf(cueView.getCue().getImage())+1);
+            PlayerTableDB.setPlayerTableDB(gameController.getCurrentPlayer(),PlayerTableDB.PlayerTableDBReadOptions[2]);
             gameController.updatePoolCuePosition();
         });
 

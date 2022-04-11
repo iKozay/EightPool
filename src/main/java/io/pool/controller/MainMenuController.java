@@ -34,6 +34,7 @@ public class MainMenuController {
     }
     public void gotoSettings(){
         stage.getScene().setRoot(settingsView);
+        settingsView.getProfilesTable().refresh();
     }
 
     public void pvpAction(){

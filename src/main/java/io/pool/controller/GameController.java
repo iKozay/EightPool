@@ -3,6 +3,7 @@ package io.pool.controller;
 import io.pool.AI.AIController;
 import io.pool.AI.AIModel;
 import io.pool.Database.BallConfigurationDB;
+import io.pool.eightpool.ResourcesLoader;
 import io.pool.model.BallModel;
 import io.pool.model.PlayerModel;
 import io.pool.view.BallView;
@@ -155,6 +156,8 @@ public class GameController {
 
 
         currentPlayer = p1;
+        poolCueController.getCueView().getCue().setImage(ResourcesLoader.poolCueImages.get(currentPlayer.getSelectedPoolCue()-1));
+
         BallConfigurationDB.instantiateLastLayoutDB(gameType, p1, p2, currentPlayer.getUsername());
 
         //ballController.testingBallController(this.gameView);
@@ -207,6 +210,10 @@ public class GameController {
                 //System.out.println("switch");
             }
         }
+
+        //setting the pool cue on each turn
+        poolCueController.getCueView().getCue().setImage(ResourcesLoader.poolCueImages.get(currentPlayer.getSelectedPoolCue()-1));
+
         System.out.println(currentPlayer.getBallType());
         foul=false;
         ballController.setFirstCollide(null);
