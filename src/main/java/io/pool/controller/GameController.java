@@ -1,5 +1,6 @@
 package io.pool.controller;
 
+import io.pool.AI.AIController;
 import io.pool.AI.AIModel;
 import io.pool.Database.BallConfigurationDB;
 import io.pool.model.BallModel;
@@ -12,6 +13,7 @@ import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class GameController {
+    private AIController aiController;
     /** Instance of GameView that contains all the Ball,Table and Pool Cue Views*/
     private GameView gameView;
     /** Table Controller */
@@ -37,6 +39,7 @@ public class GameController {
     private int gameType;
     private int p1Score;
     private int p2Score;
+    private int counter = 0;
 
 //    private ArrayList<BallModel> bModelIn = new ArrayList<>();
     private ArrayList<BallModel> bModelInEachTurn = new ArrayList<>();
@@ -56,6 +59,7 @@ public class GameController {
         ballController = new BallController(this);
         poolCueController = new PoolCueController(this.gameView.getCueView(), this);
         this.settingsController = settingsController;
+        this.aiController = new AIController(this);
 
 //        ballsPositionX = new ArrayList<>();
 //        ballsPositionY = new ArrayList<>();
@@ -72,7 +76,7 @@ public class GameController {
                 if(secondsSinceLastFrame<1) {
                         /** Detect collisions */
                         firstCollidePlay();
-                        assignBallType();
+                        if(gameType!=0) assignBallType();
                         tableController.turnView(gameController);
                         ballController.detectCollision(tableController);
                         if(firstPlay) ballController.makeDraggable();
@@ -97,7 +101,7 @@ public class GameController {
                             if (!poolCueController.isEnablePoolCueControl()) {
                                 updatePoolCuePosition();
                                 if(!firstPlay) turns();
-                                if (!BallConfigurationDB.hasBeenCalled) {
+                                if (!BallConfigurationDB.hasBeenCalled&&!aiController.isAITraining()) {
                                     BallConfigurationDB.updateLastPosition(gameType, currentPlayer.getUsername());
                                     BallConfigurationDB.hasBeenCalled = true;
                                 }
@@ -210,12 +214,13 @@ public class GameController {
         bModelInEachTurn.clear();
         System.out.println(currentPlayer.getUsername() + "," + "your turn!");
         waitingForInput=true;
+        counter++;
 
     }
 
     public void assignBallType(){
 
-        if(!firstPlay && !setBallType){
+        if(counter > 0 && !setBallType){
             for(int i = 0;i<BallController.solidFull.size();i++){
                 if(bModelInEachTurn.contains(BallController.solidFull.get(i))){
                     currentPlayer.getBallNeededIn().removeAll(bModelInEachTurn);
@@ -441,7 +446,7 @@ public class GameController {
 //    }
 
     public void resetSimulation() {
-        //TODO Call method from DBController to load BallConfiguration
+        BallConfigurationDB.loadLastPosition(gameType);
     }
 
     public void updatePoolCuePosition() {

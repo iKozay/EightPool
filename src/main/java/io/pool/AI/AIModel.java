@@ -1,53 +1,24 @@
 package io.pool.AI;
-
-import java.util.Random;
+import io.pool.controller.PoolCueController;
 
 public class AIModel {
+    public final static int EASY_AI=10;
+    public final static int MEDIUM_AI=50;
+    public final static int HARD_AI=100;
 
-    /**
-     * We will put all the constants here as well as
-     * the randomiser for the shots.
-     *
-     */
-
-    private final int MAX_POWER = 100;
-    private final int MAX_ANGLE = 360;
-    private int score;
-    private final int reps = 100;
-    private double finalPower;
-    private double finalAngle;
-
+    private double power;
+    private double rotation;
 
     public AIModel() {
-////
-        play();
-
+        this.power = (Math.random() * PoolCueController.MAX_DISTANCE + 1);
+        this.rotation = (Math.random()*(2*Math.PI))-Math.PI;
     }
-
-
-    public void play() {
-
-        for (int i=0; i < reps; i++) {
-
-            Random rnd = new Random();
-
-            double testPower;
-            do {
-
-                testPower = rnd.nextDouble();
-            } while (testPower >= MAX_POWER);
-
-
-        }
-
-    }
-
 
     public double getPower() {
-        return 0.00;
+        return power;
     }
 
     public double getRotation() {
-        return 0.0;
+        return rotation;
     }
 }

@@ -4,6 +4,7 @@ import io.pool.controller.BallController;
 import io.pool.model.BallModel;
 import io.pool.model.PlayerModel;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -159,5 +160,31 @@ public class BallConfigurationDB extends DBConnection{
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void loadLastPosition(int gameType){
+        connect();
+        PreparedStatement ps;
+        ResultSet rs;
+
+        try{
+            for(BallModel e: BallController.ballModelArrayList()){
+                String sqlPos = "SELECT (x"+e.getNumber()+") from BallConfiguration WHERE layoutName = 'lastPosition' AND GameType=?";
+                ps = connection.prepareStatement(sqlPos);
+                ps.setInt(1, gameType);
+                rs = ps.executeQuery();
+                e.setPositionX(new BigDecimal(rs.getFloat(0)));
+
+                sqlPos = "SELECT (y"+e.getNumber()+") from BallConfiguration WHERE layoutName = 'lastPosition' AND GameType=?";
+                ps = connection.prepareStatement(sqlPos);
+                ps.setInt(1, gameType);
+                rs = ps.executeQuery();
+                e.setPositionY(new BigDecimal(rs.getFloat(0)));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
