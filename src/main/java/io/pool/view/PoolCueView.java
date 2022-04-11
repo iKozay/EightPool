@@ -33,9 +33,6 @@ public class PoolCueView {
         cue.setFitWidth(TableView.width/2.);
         cue.setPreserveRatio(true);
 
-//        cue.setScaleX(scale);
-//        cue.setScaleY(scale);
-
         cue.setX(0);
         cue.setY(0);
 

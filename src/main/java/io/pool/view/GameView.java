@@ -74,6 +74,7 @@ public class GameView extends Pane {
     private ArrayList<Circle> selectionCircles = new ArrayList<>();
     private String[] colors = {"#1d6809", "#3677a1", "#248710", "#ba5050", " #02474b", "#d99e32", "#5e3b29", "#adeafa"};
 
+    private int[] currentCueImageView;
     /**
      * Main Constructor of GameView
      */
@@ -480,7 +481,7 @@ public class GameView extends Pane {
         cueThemePane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
         cueThemePane.setPadding(new Insets(20));
 
-        int[] currentCueImageView = {1};
+        currentCueImageView = new int[]{1};
 
         Label cueThemeLabel = new Label("Choose a cue theme:");
         cueThemeLabel.setTextFill(Color.WHITE);
@@ -505,7 +506,7 @@ public class GameView extends Pane {
         nextCueButton.setPrefHeight(100);
 
         cuePreviewImageView = new ImageView();
-        cuePreviewImageView.setImage(ResourcesLoader.tableImages.get(0));
+        cuePreviewImageView.setImage(ResourcesLoader.poolCueImages.get(0));
         cuePreviewImageView.setFitWidth(TableView.width/3.6);
         cuePreviewImageView.setPreserveRatio(true);
 
@@ -536,6 +537,7 @@ public class GameView extends Pane {
 
         applyCueThemeButton.setOnAction(event -> {
             cueView.getCue().setImage(cuePreviewImageView.getImage());
+            gameController.updatePoolCuePosition();
         });
 
         StackPane applyCuePane = new StackPane();
@@ -545,13 +547,13 @@ public class GameView extends Pane {
         backCueButton.setOnAction(event -> {
             if (currentCueImageView[0] == 1) currentCueImageView[0] = 6;
             else currentCueImageView[0]--;
-            cuePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentCueImageView[0]-1));
+            cuePreviewImageView.setImage(ResourcesLoader.poolCueImages.get(currentCueImageView[0]-1));
         });
 
         nextCueButton.setOnAction(event -> {
             if (currentCueImageView[0] == 6) currentCueImageView[0] = 1;
             else currentCueImageView[0]++;
-            cuePreviewImageView.setImage(ResourcesLoader.tableImages.get(currentCueImageView[0]-1));
+            cuePreviewImageView.setImage(ResourcesLoader.poolCueImages.get(currentCueImageView[0]-1));
         });
 
         GridPane cueSwitchPane = new GridPane();
@@ -672,10 +674,10 @@ public class GameView extends Pane {
         cueLeftArrowImageView.setPreserveRatio(true);
 
 
-        cueLeftArrowImageView = new ImageView();
-        cueLeftArrowImageView.setImage(ResourcesLoader.iconImages.get(4));
-        cueLeftArrowImageView.setFitWidth(TableView.width/30.);
-        cueLeftArrowImageView.setPreserveRatio(true);
+        cueRightArrowImageView = new ImageView();
+        cueRightArrowImageView.setImage(ResourcesLoader.iconImages.get(4));
+        cueRightArrowImageView.setFitWidth(TableView.width/30.);
+        cueRightArrowImageView.setPreserveRatio(true);
 
         leaveArrowImageView = new ImageView();
         leaveArrowImageView.setImage(ResourcesLoader.iconImages.get(5));
@@ -865,5 +867,9 @@ public class GameView extends Pane {
 
     public Label getPopupMessage() {
         return popupMessage;
+    }
+
+    public int getCurrentCueNumber() {
+        return currentCueImageView[0];
     }
 }
