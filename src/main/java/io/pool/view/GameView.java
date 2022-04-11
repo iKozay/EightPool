@@ -115,7 +115,8 @@ public class GameView extends Pane {
         keepPlayingButton.setFont(Font.font("Verdana", FontWeight.NORMAL, TableView.width/65.));
         keepPlayingButton.setOnAction(e -> {
             popupWindow.close();
-            gameController.resetGame();
+            gameController.resetGame(true);
+            System.out.println(gameController.getP1().getScore()+" : "+gameController.getP2().getScore());
             gameController.startGame(gameController.getGameType(),gameController.getP1(),gameController.getP2());
         });
 
@@ -477,9 +478,8 @@ public class GameView extends Pane {
         cueThemePane.setSpacing(40);
         cueThemePane.setPrefWidth(TableView.width/2.15);
         cueThemePane.setMaxWidth(TableView.width/2.15);
-        cueThemePane.setPrefHeight(TableView.height/1.5);
+        cueThemePane.setPrefHeight(TableView.height/2.5);
         cueThemePane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
-        cueThemePane.setPadding(new Insets(20));
 
         currentCueImageView = new int[]{1};
 
@@ -507,7 +507,7 @@ public class GameView extends Pane {
 
         cuePreviewImageView = new ImageView();
         cuePreviewImageView.setImage(ResourcesLoader.poolCueImages.get(0));
-        cuePreviewImageView.setFitWidth(TableView.width/3.6);
+        cuePreviewImageView.setFitWidth(TableView.width/4.5);
         cuePreviewImageView.setPreserveRatio(true);
 
         Rectangle applyCueDesignRec = new Rectangle();

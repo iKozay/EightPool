@@ -25,11 +25,14 @@ public class PlayerModel {
 
     public PlayerModel(){
         this.username = null;
+        this.score = 0;
     }
 
     public PlayerModel(String username,boolean turn) {
         this.username = username;
         this.turn = turn;
+        this.score = 0;
+
     }
 
     public PlayerModel(String username,int selectedPoolCue, int numberOfWins,int numberOfLoss, int averageNumberOfShotsPerGame){
@@ -39,12 +42,14 @@ public class PlayerModel {
         this.numberOfWins=numberOfWins;
         this.numberOfLoss=numberOfLoss;
         this.averageNumberOfShotsPerGame=averageNumberOfShotsPerGame;
+        this.score = 0;
     }
 
     public PlayerModel(String username) {
         // this is used to create new players
         this.username = username;
         playersList.add(this);
+        this.score = 0;
     }
 
     public static boolean doesPlayerExists(String text) {

@@ -44,10 +44,6 @@ public class GameController {
 //    private ArrayList<BallModel> bModelIn = new ArrayList<>();
     private ArrayList<BallModel> bModelInEachTurn = new ArrayList<>();
 
-//    private ArrayList<Double> ballsPositionX;
-//    private ArrayList<Double> ballsPositionY;
-//    private ArrayList<Double> ballsSpeed;
-
     /**
      * Main Constructor of GameController
      * @param gView Instance of GameView
@@ -136,13 +132,13 @@ public class GameController {
             p1.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
             p1.getBallNeededIn().remove(BallController.eightBallModel);
             p1.getBallNeededIn().remove(BallController.whiteBallModel);
-            p1.setScore(0);
 
             p2 = new PlayerModel("NOT AVAILABLE",false);
             p2.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
             p2.getBallNeededIn().remove(BallController.eightBallModel);
             p2.getBallNeededIn().remove(BallController.whiteBallModel);
-            p2.setScore(0);
+
+            tableController.getTableView().getPlayersScore().setText("- : -");
         }else if(this.gameType==1) {
             // Instead get the selected player from the combobox
             p1 = player1;
@@ -155,8 +151,6 @@ public class GameController {
             p1.getBallNeededIn().remove(BallController.whiteBallModel);
             p2.getBallNeededIn().remove(BallController.eightBallModel);
             p2.getBallNeededIn().remove(BallController.whiteBallModel);
-            p1.setScore(0);
-            p2.setScore(0);
         }
 
 
@@ -170,7 +164,7 @@ public class GameController {
      * Destroys all the instances of BallModels and BallViews by calling
      * their respective method from BallController
      */
-    public void resetGame() {
+    public void resetGame(boolean keepScore) {
         //bModelIn.clear();
         bModelInEachTurn.clear();
         //gameLoopTimer.stop();
@@ -181,6 +175,11 @@ public class GameController {
         firstPlay=true;
         setBallType=false;
         gameView.clearBallViewDebug();
+        if(!keepScore){
+            p1.setScore(0);
+            p2.setScore(0);
+            tableController.getTableView().getPlayersScore().setText("0 : 0");
+        }
     }
 
     public void turns(){
@@ -286,24 +285,23 @@ public class GameController {
 
     }
 
-    public void eightBallInIllegal(){
+    public void eightBallInIllegal(int gameType){
         if(bModelInEachTurn.contains(BallController.eightBallModel)) {
             if (!gameView.getPopupWindow().isShowing()){
                 getNextPlayer().setScore(getNextPlayer().getScore() + 1);
             }
-            tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
             gameView.getPopupMessage().setText(currentPlayer + " lose!");
-            gameLoopTimer.stop();
+            if (!(gameType == 0)) tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
             gameView.getPopupWindow().show();
         }
     }
-    public void eightBallInLegal(){
+    public void eightBallInLegal(int gameType){
         if(bModelInEachTurn.contains(BallController.eightBallModel)) {
             if (!gameView.getPopupWindow().isShowing()){
                 currentPlayer.setScore(currentPlayer.getScore() + 1);
             }
-            tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
             gameView.getPopupMessage().setText(currentPlayer + " win!");
+            if (!(gameType == 0)) tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
             gameView.getPopupWindow().show();
         }
     }
@@ -341,9 +339,9 @@ public class GameController {
             currentPlayer.getBallNeededIn().add(BallController.eightBallModel);
         }
         if(BallController.getAllInSolid() && BallController.getAllInStripe()){
-            eightBallInLegal();
+            eightBallInLegal(0);
         }else{
-            eightBallInIllegal();
+            eightBallInIllegal(0);
         }
     }
     public void winnerPlayerPVP(){
@@ -354,9 +352,9 @@ public class GameController {
 //        System.out.println(currentPlayer+" : "+currentPlayer.getBallNeededIn());
 //        System.out.println(currentPlayer+" eight ball needed: "+currentPlayer.getBallNeededIn().contains(BallController.eightBallModel));
         if(currentPlayer.isTurn() && currentPlayer.getBallNeededIn().contains(BallController.eightBallModel)){
-            eightBallInLegal();
+            eightBallInLegal(1);
         }else{
-            eightBallInIllegal();
+            eightBallInIllegal(1);
         }
     }
 

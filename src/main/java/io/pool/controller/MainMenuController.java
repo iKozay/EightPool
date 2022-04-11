@@ -28,7 +28,7 @@ public class MainMenuController {
     public static void gotoMainMenu(){
         if(stage.getScene().getRoot().equals(gameView)) {
             gameView.getGameController().getPoolCueController().resetPoolCue();
-            gameView.getGameController().resetGame();
+            gameView.getGameController().resetGame(false);
         }
         stage.getScene().setRoot(mmv);
     }
