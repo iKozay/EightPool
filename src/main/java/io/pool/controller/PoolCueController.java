@@ -1,5 +1,6 @@
 package io.pool.controller;
 
+import io.pool.Database.BallConfigurationDB;
 import io.pool.model.PoolCueModel;
 import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
@@ -159,6 +160,7 @@ public class PoolCueController {
                     disablePoolCueControl();
                     SoundController.BallHit();
                     gameController.waitingForInput = false;
+                    BallConfigurationDB.hasBeenCalled=false;
                     gameController.getBallController().makeUnDraggable();
                 }
         }

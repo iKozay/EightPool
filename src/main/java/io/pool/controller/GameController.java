@@ -6,7 +6,6 @@ import io.pool.model.BallModel;
 import io.pool.model.PlayerModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
-import io.pool.model.GameModel;
 
 import java.math.BigDecimal;
 import java.sql.SQLOutput;
@@ -24,7 +23,6 @@ public class GameController {
     /** Animation Timer that helps to update the View every frame */
     public static GameLoopTimer gameLoopTimer;
     /** GameModel that helps keep track of game status*/
-    private GameModel gameModel;
     private PlayerModel playerModel;
     private SettingsController settingsController;
 
@@ -53,7 +51,6 @@ public class GameController {
      */
     public GameController(GameView gView, SettingsController settingsController) {
         /** Assign the GameView and Instantiate the Controllers */
-        gameModel = new GameModel();
         playerModel = new PlayerModel();
         this.gameView = gView;
         tableController = new TableController(this.gameView.getTableView(),this);
@@ -101,7 +98,7 @@ public class GameController {
                                 updatePoolCuePosition();
                                 turns();
                                 if (!BallConfigurationDB.hasBeenCalled) {
-                                    BallConfigurationDB.updateLastPosition(playerModel.getBallType(), playerModel.getBallType(), gameModel.getPlayerTurn());
+                                    BallConfigurationDB.updateLastPosition(p1.getBallType(), p2.getBallType(), currentPlayer.getUsername());
                                     BallConfigurationDB.hasBeenCalled = true;
                                 }
                                 poolCueController.enablePoolCueControl();
@@ -154,6 +151,9 @@ public class GameController {
             p1.setScore(0);
             p2.setScore(0);
         }
+
+        BallConfigurationDB.instantiateLastLayoutDB(gameType, p1, p2);
+
         currentPlayer = p1;
 
         //ballController.testingBallController(this.gameView);
@@ -195,7 +195,7 @@ public class GameController {
         }
 
         if(gameType==1) {
-            //winnerPlayerPVP();
+            winnerPlayerPVP();
             if (!scored || foul) {
                 setCurrentPlayer();
                 ballController.isCollide=false;
@@ -224,8 +224,8 @@ public class GameController {
                     getNextPlayer().setBallType(1);
                     setBallType = true;
                     scored=true;
-                    System.out.println(currentPlayer.getUsername() + ": solid");
-                    System.out.println(getNextPlayer().getUsername() + ": stripe");
+                    System.out.println(currentPlayer.getUsername() + ": "+currentPlayer.getBallType());
+                    System.out.println(getNextPlayer().getUsername() + ": "+getNextPlayer().getBallType());
                 }
             }
             for(int i = 0;i<BallController.stripFull.size();i++){
@@ -240,8 +240,8 @@ public class GameController {
                     setBallType = true;
                     scored=true;
 
-                    System.out.println(currentPlayer.getUsername() + ": stripe");
-                    System.out.println(getNextPlayer().getUsername() + ": solid");
+                    System.out.println(currentPlayer.getUsername() + ": "+currentPlayer.getBallType());
+                    System.out.println(getNextPlayer().getUsername() + ": "+getNextPlayer().getBallType());
                 }
             }
         }
@@ -260,7 +260,7 @@ public class GameController {
     }
     private PlayerModel getNextPlayer(){
         if(currentPlayer.equals(p1)) return p2;
-        else return p1;
+        return p1;
     }
     public void whiteBallIn(BallView ballView){
         BallModel bModel = BallController.getBallModelFromBallView(ballView);
@@ -328,6 +328,9 @@ public class GameController {
 
 
     public void winnerPlayerSolo(){
+        if(currentPlayer.getBallNeededIn().isEmpty()){
+            currentPlayer.getBallNeededIn().add(BallController.eightBallModel);
+        }
         if(BallController.getAllInSolid() && BallController.getAllInStripe()){
             eightBallInLegal();
         }else{

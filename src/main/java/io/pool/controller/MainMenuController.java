@@ -1,7 +1,6 @@
 package io.pool.controller;
 
 import io.pool.Database.BallConfigurationDB;
-import io.pool.model.GameModel;
 import io.pool.model.PlayerModel;
 import io.pool.view.GameView;
 import io.pool.view.MainMenuView;
@@ -103,7 +102,6 @@ public class MainMenuController {
 
     }
 
-    GameModel gameModel = new GameModel();
     public void solo1Action() {
         gameView = new GameView(settingsView.getSettingsController());
         mmv.getSolo1Btn().setOnMouseClicked(event -> {
@@ -111,9 +109,6 @@ public class MainMenuController {
             this.gameView.getGameController().getPoolCueController().handleRotateCue(stage.getScene());
             this.gameView.getGameController().getPoolCueController().hit(stage.getScene());
             gameView.getGameController().startGame(0,new PlayerModel("Practice",1,0,0,0),null);
-
-            BallConfigurationDB.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test",false), new PlayerModel());
-            gameModel.setGameType(1);
 //            DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test",false), new PlayerModel());
         });
 

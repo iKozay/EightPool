@@ -109,7 +109,7 @@ public class GameView extends Pane {
             popupWindow.close();
         });
 
-        keepPlayingButton = new Button("Keep playing");
+        keepPlayingButton = new Button("Play Again");
         keepPlayingButton.setTextFill(Color.BLACK);
         keepPlayingButton.setFont(Font.font("Verdana", FontWeight.NORMAL, TableView.width/65.));
         keepPlayingButton.setOnAction(e -> {

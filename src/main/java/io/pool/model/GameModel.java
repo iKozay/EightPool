@@ -1,5 +1,6 @@
 package io.pool.model;
 
+@Deprecated
 public class GameModel {
 
     /**There will be five game types
