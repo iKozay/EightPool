@@ -203,15 +203,13 @@ public class BallController {
                                 }
                             }
                         }
-                        whiteBallView.getBall().setLayoutX(newPositionX);
-                        whiteBallView.getBall().setLayoutY(newPositionY);
+                        whiteBallModel.setPositionX(new BigDecimal(newPositionX));
+                        whiteBallModel.setPositionY(new BigDecimal(newPositionY));
                     }
                 });
                 bView.getBall().setOnMouseReleased(e->{
                     if(draggable) {
                         root.setCursor(Cursor.OPEN_HAND);
-                        whiteBallModel.setPositionX(new BigDecimal(whiteBallView.getBall().getLayoutX()));
-                        whiteBallModel.setPositionY(new BigDecimal(whiteBallView.getBall().getLayoutY()));
                         gameController.updatePoolCuePosition();
                     }
                 });
@@ -267,8 +265,8 @@ public class BallController {
                     if (tableController.checkBallInHole(ballView)) {
                         gameController.whiteBallIn(ballView);
                     }
-                    updateBallViewPosition(bModel);
                 }
+                updateBallViewPosition(bModel);
             }
     }
 

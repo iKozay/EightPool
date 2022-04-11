@@ -165,9 +165,9 @@ public class GameController {
      * their respective method from BallController
      */
     public void resetGame(boolean keepScore) {
+        gameLoopTimer.stop();
         //bModelIn.clear();
         bModelInEachTurn.clear();
-        //gameLoopTimer.stop();
         ballController.destroyViews(this.gameView);
         ballController.destroyModels();
         foul=false;
