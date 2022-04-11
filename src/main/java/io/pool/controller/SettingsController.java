@@ -20,10 +20,10 @@ public class SettingsController {
     public SettingsController(SettingsView settingsView) {
         this.settingsView = settingsView;
         controlOption = (int)SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[0]);
+        setControlOption(controlOption);
         cueHelper = (int)SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[1]);
         frictionRatio = SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[2]);
         tableTheme = (int)SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[3]);
-        System.out.println(controlOption);
     }
 
     public int getControlOption() {

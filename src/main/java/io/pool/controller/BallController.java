@@ -89,7 +89,7 @@ public class BallController {
         ballXPositions.add(referenceX+4*(2*BallModel.RADIUS));
 
         //white-ball
-        ballXPositions.add(referenceX/2);
+        ballXPositions.add(gameController.getTableController().getTableView().getWhiteLine().getStartX()-BallModel.RADIUS+gameController.getTableController().getTableX());
 
         //////////////////////////////
 
@@ -187,6 +187,10 @@ public class BallController {
                             newPositionX=whiteBallView.getBall().getLayoutX();
                             newPositionY=whiteBallView.getBall().getLayoutY();
                         }
+                        if(gameController.isFirstPlay()&&(newPositionX>gameController.getTableController().getTableView().getWhiteLine().getStartX()-BallModel.RADIUS+gameController.getTableController().getTableX())){
+                            newPositionX=gameController.getTableController().getTableView().getWhiteLine().getStartX()-BallModel.RADIUS+gameController.getTableController().getTableX();
+                        }
+
                         for (BallModel ballModel : bModelList) {
                             if (!ballModel.equals(whiteBallModel)) {
                                 double normalXComponent = ballModel.getPositionX().doubleValue()-newPositionX;
@@ -240,6 +244,7 @@ public class BallController {
 
     public void makeUnDraggable() {
         draggable = false;
+        gameController.getGameView().setCursor(Cursor.DEFAULT);
     }
 
 
@@ -247,10 +252,10 @@ public class BallController {
      * Detects all the collisions and updates the ball position
      */
     public void detectCollision(TableController tableController) {
-        if(!draggable) {
+//        if(!draggable) {
             detectCollisionWithOtherBalls();
             detectCollisionWithTable();
-        }
+//        }
             for (BallModel bModel : bModelList) {
                 if (!isMoving) {
                     isMoving = bModel.isMoving;
@@ -327,6 +332,7 @@ public class BallController {
                     }
                     SoundController.BallsCollide();
                     isCollide=true;
+
                     if (firstCollide.equals(eightBallModel)) {
                         System.out.println("EightBall Touch");
                         gameController.setFoul(true);

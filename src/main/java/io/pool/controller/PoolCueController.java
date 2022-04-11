@@ -20,7 +20,7 @@ public class PoolCueController {
 
     private static final Set<KeyCode> keysCurrentlyDown = new HashSet<>();
     public static boolean keyboardOnly = false;
-    public static boolean mouseOnly = false;
+    public static boolean mouseOnly = true;
     public static boolean cueHelperEnabled=true;
     private GameController gameController;
 
@@ -196,6 +196,8 @@ public class PoolCueController {
     private void shoot(){
         if (gameController.gameLoopTimer.isActive) {
                 if (poolCueView.getCue().getLayoutX() != 0 && poolCueView.getCue().getLayoutY() != 0) {
+                    gameController.setFirstPlay(false);
+                    gameController.getBallController().makeUnDraggable();
                     poolCueView.setPreviousAngle(0);
                     double newVelocityX = -poolCueView.getCue().getLayoutX() / 7;
                     double newVelocityY = -poolCueView.getCue().getLayoutY() / 7;
@@ -208,7 +210,6 @@ public class PoolCueController {
                     SoundController.BallHit();
                     gameController.setWaitingForInput(false);
                     BallConfigurationDB.hasBeenCalled=false;
-                    gameController.getBallController().makeUnDraggable();
                 }
         }
     }

@@ -75,6 +75,7 @@ public class GameController {
                         assignBallType();
                         tableController.turnView(gameController);
                         ballController.detectCollision(tableController);
+                        if(firstPlay) ballController.makeDraggable();
                         if (gameView.getClickedBallNumber() > 0) {
                             double xSpeed = Math.round(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityX().doubleValue()*100)/100.;
                             double ySpeed = Math.round(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityY().doubleValue()*100)/100.;
@@ -95,7 +96,7 @@ public class GameController {
                             waitingForInput = true;
                             if (!poolCueController.isEnablePoolCueControl()) {
                                 updatePoolCuePosition();
-                                turns();
+                                if(!firstPlay) turns();
                                 if (!BallConfigurationDB.hasBeenCalled) {
                                     BallConfigurationDB.updateLastPosition(gameType, currentPlayer.getUsername());
                                     BallConfigurationDB.hasBeenCalled = true;
@@ -104,7 +105,6 @@ public class GameController {
                                 scored = false;
                             }
                         } else {
-                            firstPlay = false;
                             gView.displayPoolCue(false);
                             poolCueController.disablePoolCueControl();
                         }
@@ -121,6 +121,7 @@ public class GameController {
      * Then starts the gameLoopTimer
      */
     public void startGame(int gameType, PlayerModel player1, PlayerModel player2) {
+        gameLoopTimer.start();
         ballController.prepareGame(this.gameView,this.gameView.getTableView());
         gameView.clearBallViewDebug();
         gameView.ballViewDataDebug();
@@ -142,6 +143,8 @@ public class GameController {
             // Instead get the selected player from the combobox
             p1 = player1;
             p2 = player2;
+            p1.setTurn(true);
+            p2.setTurn(false);
             p1.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
             p2.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
             p1.getBallNeededIn().remove(BallController.eightBallModel);
@@ -157,7 +160,6 @@ public class GameController {
         BallConfigurationDB.instantiateLastLayoutDB(gameType, p1, p2, currentPlayer.getUsername());
 
         //ballController.testingBallController(this.gameView);
-        gameLoopTimer.start();
     }
     /**
      * Stops the gameLoopTimer
@@ -464,6 +466,10 @@ public class GameController {
 
     public void setWaitingForInput(boolean status) {
         waitingForInput=status;
+    }
+
+    public void setFirstPlay(boolean b) {
+        firstPlay=b;
     }
 //    public ArrayList<Double> getBallsPositionX() {
 //        return ballsPositionX;

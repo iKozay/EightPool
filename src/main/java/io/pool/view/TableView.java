@@ -31,6 +31,7 @@ public class TableView {
     private final int cornerHoleRadius = (int)(width/36);
     private final int centerHoleRadius = (int) (width/43.2);
     private final ImageView tableImageView;
+    private Line whiteLine;
     private Label player1Lbl,player2Lbl;
     private Shape accessibleArea;
     private Label playersScore;
@@ -62,7 +63,7 @@ public class TableView {
         tableImageView.setFitWidth(width);
         tableImageView.setFitHeight(height);
 
-        Line whiteLine = new Line();
+        whiteLine = new Line();
         whiteLine.setStartX((width/3.6));
         whiteLine.setStartY(height/8.934);
         whiteLine.setEndX((width/3.6));
@@ -313,6 +314,10 @@ public class TableView {
 
     public Label getPlayersScore() {
         return playersScore;
+    }
+
+    public Line getWhiteLine() {
+        return whiteLine;
     }
 }
 
