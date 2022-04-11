@@ -114,6 +114,7 @@ public class BallController {
                         root.setCursor(Cursor.CLOSED_HAND);
                         gameController.getGameView().displayPoolCue(false);
                         gameController.getPoolCueController().getCueView().getPoolLine().setVisible(false);
+                        gameController.getPoolCueController().setPoolCue(0,gameController.getPoolCueController().poolCueView.getPreviousAngle());
                         double newPositionX = (mouseEvent.getSceneX() - mouseAnchorX);
                         double newPositionY = (mouseEvent.getSceneY() - mouseAnchorY);
                         Circle newBallPosition = new Circle(newPositionX,newPositionY,BallModel.RADIUS);
