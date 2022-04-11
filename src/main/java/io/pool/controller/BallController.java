@@ -46,6 +46,8 @@ public class BallController {
     public boolean isMoving=false;
     public boolean isCollide=false;
     private BallModel firstCollide=null;
+    public static ArrayList<Double> ballXPositions = new ArrayList();
+    public static ArrayList<Double> ballYPositions = new ArrayList();
 
 
     double mouseAnchorX, mouseAnchorY;
@@ -54,7 +56,67 @@ public class BallController {
     }
 
     public BallController(GameController gameController) {
+
         this.gameController = gameController;
+        setBallPositions();
+    }
+
+    private void setBallPositions(){
+
+        /**
+         * Reference: https://billiardguides.com/how-to-rack-pool-balls/
+        */
+        double referenceX=2*gameController.getTableController().getTableView().getTableImageView().getFitWidth()/3+gameController.getTableController().getTableX();
+        double referenceY=gameController.getTableController().getTableView().getTableImageView().getFitHeight()/2+gameController.getTableController().getTableY();
+
+        ballXPositions.add(referenceX);
+        ballXPositions.add(referenceX+1*(2*BallModel.RADIUS));
+        ballXPositions.add(referenceX+2*(2*BallModel.RADIUS));
+        ballXPositions.add(referenceX+3*(2*BallModel.RADIUS));
+        ballXPositions.add(referenceX+3*(2*BallModel.RADIUS));
+        ballXPositions.add(referenceX+4*(2*BallModel.RADIUS));
+        ballXPositions.add(referenceX+4*(2*BallModel.RADIUS));
+
+        //eight-ball
+        ballXPositions.add(referenceX+2*(2*BallModel.RADIUS));
+
+        ballXPositions.add(referenceX+1*(2*BallModel.RADIUS));
+        ballXPositions.add(referenceX+2*(2*BallModel.RADIUS));
+        ballXPositions.add(referenceX+3*(2*BallModel.RADIUS));
+        ballXPositions.add(referenceX+3*(2*BallModel.RADIUS));
+        ballXPositions.add(referenceX+4*(2*BallModel.RADIUS));
+        ballXPositions.add(referenceX+4*(2*BallModel.RADIUS));
+        ballXPositions.add(referenceX+4*(2*BallModel.RADIUS));
+
+        //white-ball
+        ballXPositions.add(referenceX/2);
+
+        //////////////////////////////
+
+        ballYPositions.add(referenceY);
+        ballYPositions.add(referenceY+1*(BallModel.RADIUS));
+        ballYPositions.add(referenceY-2*(BallModel.RADIUS));
+        ballYPositions.add(referenceY-1*(BallModel.RADIUS));
+        ballYPositions.add(referenceY+3*(BallModel.RADIUS));
+        ballYPositions.add(referenceY+2*(BallModel.RADIUS));
+        ballYPositions.add(referenceY-4*(BallModel.RADIUS));
+
+        //eight-ball
+        ballYPositions.add(referenceY);
+
+        ballYPositions.add(referenceY-1*(BallModel.RADIUS));
+        ballYPositions.add(referenceY+2*(BallModel.RADIUS));
+        ballYPositions.add(referenceY+1*(BallModel.RADIUS));
+        ballYPositions.add(referenceY-3*(BallModel.RADIUS));
+        ballYPositions.add(referenceY);
+        ballYPositions.add(referenceY+4*(BallModel.RADIUS));
+        ballYPositions.add(referenceY-2*(BallModel.RADIUS));
+
+        //white-ball
+        ballYPositions.add(referenceY);
+
+
+
     }
 
     /**
@@ -80,8 +142,10 @@ public class BallController {
                     stripeBModelList.add(bModel);
                 }
             }
-            bModel.setPositionX(new BigDecimal(i * 3 * BallModel.RADIUS + 200));
-            bModel.setPositionY(new BigDecimal(300));
+
+            bModel.setPositionX(new BigDecimal(ballXPositions.get(i-1)));
+            bModel.setPositionY(new BigDecimal(ballYPositions.get(i-1)));
+
 
             bView = new BallView(ResourcesLoader.ballImages.get(i - 1), BallModel.RADIUS);
             if (i == 8) {
@@ -259,7 +323,7 @@ public class BallController {
                     isCollide=true;
                     if (firstCollide.equals(eightBallModel)) {
                         System.out.println("EightBall Touch");
-                        GameController.foul = true;
+                        gameController.setFoul(true);
                     }
                 }
             }

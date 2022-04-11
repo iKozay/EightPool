@@ -167,7 +167,7 @@ public class PoolCueController {
                     poolCueView.getCue().setLayoutY(0);
                     disablePoolCueControl();
                     SoundController.BallHit();
-                    gameController.waitingForInput = false;
+                    gameController.setWaitingForInput(false);
                     BallConfigurationDB.hasBeenCalled=false;
                     gameController.getBallController().makeUnDraggable();
                 }

@@ -83,4 +83,12 @@ public class TableController {
             tableView.getPlayer1Lbl().setStyle("-fx-background-color: #3D4956");
         }
     }
+
+    public double getTableX() {
+        return tableX;
+    }
+
+    public double getTableY() {
+        return tableY;
+    }
 }

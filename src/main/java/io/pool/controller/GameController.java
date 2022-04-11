@@ -21,7 +21,7 @@ public class GameController {
     /** Pool Cue Controller */
     private PoolCueController poolCueController;
     /** Animation Timer that helps to update the View every frame */
-    public static GameLoopTimer gameLoopTimer;
+    public GameLoopTimer gameLoopTimer;
     /** GameModel that helps keep track of game status*/
     private PlayerModel playerModel;
     private SettingsController settingsController;
@@ -30,10 +30,10 @@ public class GameController {
     private PlayerModel p1=null;
     private PlayerModel p2=null;
     private PlayerModel currentPlayer;
-    public static boolean foul=false;
+    private boolean foul=false;
     private boolean firstPlay=true,setBallType=false;
     private boolean scored = false;
-    public static boolean waitingForInput=true;
+    private boolean waitingForInput=true;
     private int gameType;
     private int p1Score;
     private int p2Score;
@@ -167,7 +167,7 @@ public class GameController {
     public void resetGame() {
         //bModelIn.clear();
         bModelInEachTurn.clear();
-        gameLoopTimer.stop();
+        //gameLoopTimer.stop();
         ballController.destroyViews(this.gameView);
         ballController.destroyModels();
         foul=false;
@@ -420,8 +420,12 @@ public class GameController {
         return scored;
     }
 
-    public static boolean isFoul() {
+    public boolean isFoul() {
         return foul;
+    }
+
+    public void setFoul(boolean foul) {
+        this.foul = foul;
     }
 
     public ArrayList<BallModel> getbModelInEachTurn() {
@@ -454,6 +458,10 @@ public class GameController {
 
     public void simulatePlay(AIModel bestOpponent) {
         poolCueController.setPoolCue(bestOpponent.getPower(),bestOpponent.getRotation());
+    }
+
+    public void setWaitingForInput(boolean status) {
+        waitingForInput=status;
     }
 //    public ArrayList<Double> getBallsPositionX() {
 //        return ballsPositionX;

@@ -63,12 +63,12 @@ public class TableView {
         tableImageView.setFitHeight(height);
 
         Line whiteLine = new Line();
-        whiteLine.setStartX(width-(width/3.6));
+        whiteLine.setStartX((width/3.6));
         whiteLine.setStartY(height/8.934);
-        whiteLine.setEndX(width-(width/3.6));
+        whiteLine.setEndX((width/3.6));
         whiteLine.setEndY(height-(height/8.4375));
         whiteLine.setStroke(Color.WHITE);
-        whiteLine.setStrokeWidth(3);
+        whiteLine.setStrokeWidth(1);
 
         table.getChildren().addAll(tableImageView, whiteLine);
 
