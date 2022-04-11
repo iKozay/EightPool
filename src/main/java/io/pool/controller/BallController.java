@@ -78,7 +78,8 @@ public class BallController {
         ballXPositions.add(referenceX+4*(2*BallModel.RADIUS));
 
         //eight-ball
-        ballXPositions.add(referenceX+2*(2*BallModel.RADIUS));
+//        ballXPositions.add(referenceX+2*(2*BallModel.RADIUS));
+        ballXPositions.add((double) TableView.width-60);
 
         ballXPositions.add(referenceX+1*(2*BallModel.RADIUS));
         ballXPositions.add(referenceX+2*(2*BallModel.RADIUS));
@@ -102,7 +103,7 @@ public class BallController {
         ballYPositions.add(referenceY-4*(BallModel.RADIUS));
 
         //eight-ball
-        ballYPositions.add(referenceY);
+        ballYPositions.add((double) TableView.height+34);
 
         ballYPositions.add(referenceY-1*(BallModel.RADIUS));
         ballYPositions.add(referenceY+2*(BallModel.RADIUS));
