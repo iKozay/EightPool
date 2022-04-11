@@ -14,6 +14,7 @@ public class SettingsController {
     private SettingsView settingsView;
     private int cueHelper;
     private double frictionRatio;
+    private int tableTheme;
 
 
     public SettingsController(SettingsView settingsView) {
@@ -21,6 +22,7 @@ public class SettingsController {
         controlOption = (int)SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[0]);
         cueHelper = (int)SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[1]);
         frictionRatio = SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[2]);
+        tableTheme = (int)SettingsDB.readSettingPreferencesDB(SettingsDB.SettingsDBReadOptions[3]);
     }
 
     public int getControlOption() {
@@ -108,5 +110,14 @@ public class SettingsController {
         int row = settingsView.getProfilesTable().getSelectionModel().getFocusedIndex();
         PlayerTableDB.removePlayerDB(PlayerModel.playersList.get(row));
         PlayerModel.playersList.remove(row);
+    }
+
+    public int getTableTheme() {
+        return tableTheme;
+    }
+
+    public void setTableTheme(int tableTheme) {
+        this.tableTheme = tableTheme;
+        SettingsDB.updateSettingsDB(SettingsDB.SettingsDBReadOptions[3],this.tableTheme,true);
     }
 }

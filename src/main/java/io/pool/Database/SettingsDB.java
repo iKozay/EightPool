@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class SettingsDB extends DBConnection{
 
     /**used for readData method*/
-    public static String[] SettingsDBReadOptions = {"ControlOption", "PoolCueHelper", "FrictionPercentage", "CurrentTableTheme"};
+    public static final String[] SettingsDBReadOptions = {"ControlOption", "PoolCueHelper", "FrictionPercentage", "CurrentTableTheme"};
 
     public static void createNewSavedSettings(String playerName){
         connect();

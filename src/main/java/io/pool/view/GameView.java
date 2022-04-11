@@ -336,7 +336,10 @@ public class GameView extends Pane {
         tableThemesPane.setPrefHeight(TableView.height/1.5);
         tableThemesPane.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15");
 
-        int[] currentTableImageView = {1};
+        int[] currentTableImageView = {settingsController.getTableTheme()};
+
+        tableView.getTableImageView().setImage(ResourcesLoader.tableImages.get(currentTableImageView[0]-1));
+        getGamePane().setStyle("-fx-background-color: " + backgroundColors.get(currentTableImageView[0]-1));
 
         Label tableThemeLabel = new Label("Choose a table theme:");
         tableThemeLabel.setPadding(new Insets(20, 20, 0, 20));
@@ -393,7 +396,7 @@ public class GameView extends Pane {
 
         applyTableThemeButton.setOnAction(event -> {
             tableView.getTableImageView().setImage(tablePreviewImageView.getImage());
-
+            settingsController.setTableTheme(ResourcesLoader.tableImages.indexOf(tableView.getTableImageView().getImage())+1);
             getGamePane().setStyle("-fx-background-color: " + backgroundColors.get(currentTableImageView[0]-1));
         });
 
