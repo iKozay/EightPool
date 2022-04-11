@@ -77,15 +77,24 @@ public class SettingsController {
                         PlayerTableDB.createNewPlayerDB(new PlayerModel(settingsView.getNewPlayerTextField().getText()));
                         settingsView.getProfilesTable().getSelectionModel().select(PlayerModel.playersList.size() - 1);
                     }else{
-                        PlayerModel selectedPlayer = PlayerModel.playersList.get(settingsView.getProfilesTable().getSelectionModel().getFocusedIndex());
-                        String oldUsername = selectedPlayer.getUsername();
-                        System.out.println(oldUsername+" --> "+settingsView.getNewPlayerTextField().getText());
-                        if(settingsView.getNewPlayerTextField().getText().equalsIgnoreCase(oldUsername)){
-                            settingsView.getMsgLabel().setText("New username can't be the same as old username!");
+                        int index = settingsView.getProfilesTable().getSelectionModel().getFocusedIndex();
+                        if(index!=-1) {
+                            PlayerModel selectedPlayer = PlayerModel.playersList.get(index);
+                            String oldUsername = selectedPlayer.getUsername();
+                            System.out.println(oldUsername + " --> " + settingsView.getNewPlayerTextField().getText());
+                            if (settingsView.getNewPlayerTextField().getText().equalsIgnoreCase(oldUsername)) {
+                                settingsView.getMsgLabel().setText("New username can't be the same as old username!");
+                            } else {
+                                PlayerTableDB.renamePlayerTableDB(selectedPlayer, settingsView.getNewPlayerTextField().getText());
+                                selectedPlayer.setUsername(settingsView.getNewPlayerTextField().getText());
+                                settingsView.getProfilesTable().refresh();
+                            }
                         }else{
-                            PlayerTableDB.renamePlayerTableDB(selectedPlayer,settingsView.getNewPlayerTextField().getText());
-                            selectedPlayer.setUsername(settingsView.getNewPlayerTextField().getText());
-                            settingsView.getProfilesTable().refresh();
+                            if(settingsView.getProfilesTable().getItems().size()==0){
+                                settingsView.getMsgLabel().setText("Database is empty!");
+                            }else {
+                                settingsView.getMsgLabel().setText("Select a player to rename.");
+                            }
                         }
                     }
                 }else{
@@ -96,12 +105,8 @@ public class SettingsController {
     }
 
     public void deletePlayer(ActionEvent e) {
-        if(PlayerModel.playersList.size()>1) {
-            int row = settingsView.getProfilesTable().getSelectionModel().getFocusedIndex();
-            PlayerTableDB.removePlayerDB(PlayerModel.playersList.get(row));
-            PlayerModel.playersList.remove(row);
-        }else{
-            settingsView.getMsgLabel().setText("Can't delete last two player.");
-        }
+        int row = settingsView.getProfilesTable().getSelectionModel().getFocusedIndex();
+        PlayerTableDB.removePlayerDB(PlayerModel.playersList.get(row));
+        PlayerModel.playersList.remove(row);
     }
 }

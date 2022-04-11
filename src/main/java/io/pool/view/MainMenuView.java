@@ -301,7 +301,6 @@ public class MainMenuView extends Pane{
         // ComboBox Player 2
 
         Player2List = FXCollections.observableArrayList(PlayerModel.playersList);
-        Player2List.remove(0);
 
 
         comboBoxP2.setOnAction(e->{
