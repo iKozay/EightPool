@@ -45,7 +45,7 @@ public class game extends Application {
         System.out.println(Screen.getPrimary().getVisualBounds().getHeight());
 
         stage.setTitle("EightPool");
-        stage.setFullScreen(true);
+        stage.setFullScreen(false);
         stage.setScene(scene);
         stage.show();
         BallConfigurationDB.deleteAllData();

@@ -123,6 +123,7 @@ public class GameController {
      */
     public void startGame(int gameType, PlayerModel player1, PlayerModel player2) {
         ballController.prepareGame(this.gameView,this.gameView.getTableView());
+        gameView.clearBallViewDebug();
         gameView.ballViewDataDebug();
         this.gameType = gameType;
         if(this.gameType==0){
@@ -285,6 +286,7 @@ public class GameController {
             }
             tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
             gameView.getPopupMessage().setText(currentPlayer + " lose!");
+            gameLoopTimer.stop();
             gameView.getPopupWindow().show();
         }
     }

@@ -623,7 +623,11 @@ public class GameView extends Pane {
     }
 
     public void clearBallViewDebug() {
-
+        ballViews.clear();
+        selectionCircles.clear();
+        balls.clear();
+        ballsPrimaryPane.getChildren().clear();
+        clickedBallNumber = -1;
     }
 
 
