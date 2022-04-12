@@ -45,7 +45,7 @@ public class TableController {
             double ySquared = Math.pow((ballView.getBall().getLayoutY() - tableY - hole.getCenterY()), 2);
             double centerToCenter = Math.sqrt(xSquared+ySquared);
             if(centerToCenter < hole.getRadius()) {
-                SoundController.BallInHole();
+                if(!BallController.getBallModelFromBallView(ballView).isInHole()) SoundController.BallInHole();
                 return true;
             }
         }

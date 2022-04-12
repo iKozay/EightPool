@@ -1,6 +1,8 @@
 package io.pool.AI;
 import io.pool.controller.PoolCueController;
 
+import java.util.Random;
+
 public class AIModel {
     public final static int EASY_AI=10;
     public final static int MEDIUM_AI=50;
@@ -10,8 +12,9 @@ public class AIModel {
     private double rotation;
 
     public AIModel() {
-        this.power = (Math.random() * PoolCueController.MAX_DISTANCE + 1);
-        this.rotation = (Math.random()*(2*Math.PI))-Math.PI;
+        Random rnd = new Random();
+        this.power = rnd.nextInt(PoolCueController.MAX_DISTANCE-30)+31;
+        this.rotation = rnd.nextInt(360)+1;
     }
 
     public double getPower() {
@@ -20,5 +23,13 @@ public class AIModel {
 
     public double getRotation() {
         return rotation;
+    }
+
+    @Override
+    public String toString() {
+        return "AIModel{" +
+                "power=" + power +
+                ", rotation=" + rotation +
+                '}';
     }
 }

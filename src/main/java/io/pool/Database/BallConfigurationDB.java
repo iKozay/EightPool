@@ -173,13 +173,13 @@ public class BallConfigurationDB extends DBConnection{
                 ps = connection.prepareStatement(sqlPos);
                 ps.setInt(1, gameType);
                 rs = ps.executeQuery();
-                e.setPositionX(new BigDecimal(rs.getFloat(0)));
+                e.setPositionX(new BigDecimal(rs.getFloat(1)));
 
                 sqlPos = "SELECT (y"+e.getNumber()+") from BallConfiguration WHERE layoutName = 'lastPosition' AND GameType=?";
                 ps = connection.prepareStatement(sqlPos);
                 ps.setInt(1, gameType);
                 rs = ps.executeQuery();
-                e.setPositionY(new BigDecimal(rs.getFloat(0)));
+                e.setPositionY(new BigDecimal(rs.getFloat(1)));
 
             }
 

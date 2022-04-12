@@ -7,6 +7,7 @@ public class BallModel extends PhysicsModule{
     /** The number of the ball */
     private int number;
     private int ballType;
+    private boolean inHole=false;
 
 
     /**
@@ -49,5 +50,13 @@ public class BallModel extends PhysicsModule{
     @Override
     public String toString() {
         return ""+number;
+    }
+
+    public boolean isInHole() {
+        return inHole;
+    }
+
+    public void setInHole(boolean inHole) {
+        this.inHole = inHole;
     }
 }
