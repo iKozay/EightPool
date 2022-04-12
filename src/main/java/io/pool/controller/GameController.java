@@ -179,6 +179,7 @@ public class GameController {
         setBallType=false;
         gameView.clearBallViewDebug();
         if(!keepScore){
+            //TODO Update score in DB
             p1.setScore(0);
             p2.setScore(0);
             tableController.getTableView().getPlayersScore().setText("0 : 0");

@@ -187,8 +187,6 @@ public class TableView {
     public void createLines(){
 
 
-
-        //TODO Review these reflection factors to verify their effectiveness
         new TableBorderModel("topLeftHoleA1",width/11.228,height/9,width/14.062,height/12.9,1);
         new TableBorderModel("topLeftHoleA2",width/16,height/5.9130,width/22.9299,height/7.15789,2);
         new TableBorderModel("bottomLeftHoleB1",width/16,height/1.21429,width/22.9299,height/1.16587,1);
@@ -214,7 +212,6 @@ public class TableView {
         //Setting the path
         Path area = TableBorderModel.tableBorderArea;
         //Left side
-        //TODO add ArcTo
         area.getElements().add(new MoveTo(width/22.9299,height/7.15789));
         area.getElements().add(new LineTo(width/16,height/5.9130));
         area.getElements().add(new LineTo(width/16, height/1.21429));
