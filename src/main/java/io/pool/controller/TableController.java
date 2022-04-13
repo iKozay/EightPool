@@ -45,25 +45,25 @@ public class TableController {
             double ySquared = Math.pow((ballView.getBall().getLayoutY() - tableY - hole.getCenterY()), 2);
             double centerToCenter = Math.sqrt(xSquared+ySquared);
             if(centerToCenter < hole.getRadius()) {
-                if(!BallController.getBallModelFromBallView(ballView).isInHole()) SoundController.BallInHole();
+                if(!gameController.getAiController().isAITraining()) SoundController.BallInHole();
                 return true;
             }
         }
-
         return false;
     }
+
     public void turnView(GameController gameController){
         if(gameController.getP1().isTurn()){
             tableView.getPlayer1Lbl().setStyle("-fx-background-color: green");
-            tableView.getPlayer1Lbl().setText(gameController.getP1().getUsername() + " " + gameController.getP1().getBallNeededIn());
+            tableView.getPlayer1Lbl().setText(gameController.getP1().getUsername());
             if(gameController.getGameType() == 1) {
                 tableView.getPlayer2Lbl().setStyle("-fx-background-color: #3D4956");
-                tableView.getPlayer2Lbl().setText(gameController.getP2().getUsername() + " " + gameController.getP2().getBallNeededIn());
+                tableView.getPlayer2Lbl().setText(gameController.getP2().getUsername());
             }
         }else{
             tableView.getPlayer2Lbl().setStyle("-fx-background-color: green");
-            tableView.getPlayer1Lbl().setText(gameController.getP1().getUsername() + " " + gameController.getP1().getBallNeededIn());
-            tableView.getPlayer2Lbl().setText(gameController.getP2().getUsername() + " " + gameController.getP2().getBallNeededIn());
+            tableView.getPlayer1Lbl().setText(gameController.getP1().getUsername());
+            tableView.getPlayer2Lbl().setText(gameController.getP2().getUsername());
             tableView.getPlayer1Lbl().setStyle("-fx-background-color: #3D4956");
 
         }
