@@ -6,9 +6,12 @@ import io.pool.Database.BallConfigurationDB;
 import io.pool.eightpool.ResourcesLoader;
 import io.pool.model.BallModel;
 import io.pool.model.PlayerModel;
+import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
-import io.pool.view.TableView;
+import javafx.geometry.Bounds;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 
 import java.math.BigDecimal;
 import java.sql.SQLOutput;
@@ -70,7 +73,7 @@ public class GameController {
                 /** The time between each frame should be less than 1 second
                  * Any value bigger than 1 second is incorrect
                  * */
-                if(secondsSinceLastFrame<1) {
+                //if(secondsSinceLastFrame<1) {
                         /** Detect collisions */
                         firstCollidePlay();
                         if(gameType!=0) assignBallType();
@@ -112,7 +115,7 @@ public class GameController {
                         }
                         ballInHole();
                         if(!aiController.isAITraining()) ballController.isMoving=false;
-                }
+                //}
             }
         };
 
@@ -225,33 +228,7 @@ public class GameController {
         }
         if(this.gameType>1){
             if(p2.isTurn()){
-                boolean isMoving = true;
-                while(isMoving) {
-                    boolean foundMovement = false;
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    for(BallModel b:BallController.bModelList){
-                        if(b.isMoving){
-                            isMoving=true;
-                            foundMovement=true;
-                        }
-                    }
-                    if(!foundMovement) isMoving=false;
-                }
-//if after the shot the ball does not hit any ball of its color, it shoots again and ignores the previous shot
-//Shot towards the most dense area
-//
-//
-//
-//
-                int difficulty = aiController.getDifficulty();
-                aiController = new AIController(this);
-                aiController.setAIPLayer(p2);
-                aiController.setDifficulty(difficulty);
-                aiController.start();
+                //aiController.train();
             }
         }
 
@@ -375,7 +352,7 @@ public class GameController {
     public void firstCollidePlay(){
         if(ballController.getFirstCollide() != null && setBallType) {
             if (currentPlayer.isTurn() && !(ballController.getFirstCollide().getBallType() == currentPlayer.getBallType())) {
-                System.out.println("Opposite type");
+                //System.out.println("Opposite type");
                 foul = true;
             }
         }
@@ -389,10 +366,9 @@ public class GameController {
                 b.setVelocityY(BigDecimal.ZERO);
                 if(!aiController.isAITraining()) {
                     ballController.ballInHole(b, gameView);
-                    if (gameType == 1) {
+                    if (gameType > 0) {
                         if (p1.getBallNeededIn().contains(b)) {
                             p1.getBallNeededIn().remove(b);
-
                         }
                         if (p2.getBallNeededIn().contains(b)) {
                             p2.getBallNeededIn().remove(b);
@@ -536,6 +512,39 @@ public class GameController {
         ballController.isCollide=false;
     }
 
+    public void simulatePlay(AIModel bestOpponent) {
+        accelerateSimulation();
+    }
+
+    private void accelerateSimulation(){
+        boolean collisionHappened = checkForCollisions();
+        while(!collisionHappened){
+            for (BallModel bModel : ballController.bModelList){
+                if(bModel.isMoving) bModel.updatePosition();
+            }
+            collisionHappened=checkForCollisions();
+        }
+    }
+
+    private boolean checkForCollisions(){
+        for (int i = 0; i < BallController.bModelList.size(); i++) {
+            for (int j = i + 1; j < BallController.bModelList.size(); j++) {
+                BallModel ballA = BallController.bModelList.get(i);
+                BallModel ballB = BallController.bModelList.get(j);
+                if(ballA.handleMomentum(ballB)) return true;
+                }
+        }
+        for (BallModel bModel : BallController.bModelList) {
+            if (!bModel.isInHole()) {
+                Circle ballShadow = new Circle(bModel.getPositionX().doubleValue(), bModel.getPositionY().doubleValue(), BallModel.RADIUS);
+                Bounds intersectBounds = Shape.intersect(TableBorderModel.tableBorderArea, ballShadow).getBoundsInLocal();
+                if ((intersectBounds.getWidth() != -1)) return true;
+            }
+        }
+
+        return false;
+    }
+
     public AIController getAiController() {
         return aiController;
     }
@@ -556,9 +565,7 @@ public class GameController {
         }
     }
 
-    public void simulatePlay(AIModel bestOpponent) {
-        poolCueController.setPoolCue(bestOpponent.getPower(),(bestOpponent.getRotation()));
-    }
+
 
     public void setWaitingForInput(boolean status) {
         waitingForInput=status;

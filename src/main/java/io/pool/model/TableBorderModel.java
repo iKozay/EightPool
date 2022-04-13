@@ -47,13 +47,14 @@ public class TableBorderModel extends Line {
     }
 
 
-    public static void applyReflection(BallModel bModel, TableView tView){
+    public static void applyReflection(BallModel bModel, boolean aiTraining){
         TableBorderModel reflectionLine=null;
         Bounds intersect;
-        BallView bView = BallController.getBallViewFromBallModel(bModel);
+        //BallView bView = BallController.getBallViewFromBallModel(bModel);
         double area=-1;
         for(TableBorderModel line : tableBorder) {
-            intersect = Shape.intersect(bView.getCircleFromSphere(),line).getBoundsInLocal();
+            Circle ballShadow = new Circle(bModel.getPositionX().doubleValue(), bModel.getPositionY().doubleValue(), BallModel.RADIUS);
+            intersect = Shape.intersect(ballShadow,line).getBoundsInLocal();
             if(intersect.getWidth()!=-1){
                 double newarea = intersect.getWidth()*intersect.getHeight();
                 if(newarea>area){
@@ -66,6 +67,7 @@ public class TableBorderModel extends Line {
             bModel.setVelocityX(bModel.getVelocityX().multiply(reflectionLine.getReflectionXFactor()));
             bModel.setVelocityY(bModel.getVelocityY().multiply(reflectionLine.getReflectionYFactor()));
             SoundController.BallBounce();
+            //if(!aiTraining) SoundController.BallBounce();
         } else {
             Point2D line = new Point2D(reflectionLine.getEndX()- reflectionLine.getStartX(),reflectionLine.getEndY()- reflectionLine.getStartY());
             Point2D vec = new Point2D(bModel.getVelocityX().doubleValue(),bModel.getVelocityY().doubleValue());

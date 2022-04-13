@@ -208,6 +208,7 @@ public class PoolCueController {
                     poolCueView.getCue().setLayoutY(0);
                     disablePoolCueControl();
                     SoundController.BallHit();
+                    //if(!gameController.getAiController().isAITraining())SoundController.BallHit();
                     gameController.setWaitingForInput(false);
                     BallConfigurationDB.hasBeenCalled=false;
                 }

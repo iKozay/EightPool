@@ -61,6 +61,7 @@ public class BallController {
         setBallPositions();
     }
 
+
     private void setBallPositions() {
 
         /**
@@ -269,6 +270,7 @@ public class BallController {
                 }
             }
             updateBallViewPosition(bModel);
+            //if(!gameController.getAiController().isAITraining())updateBallViewPosition(bModel);
         }
     }
 
@@ -292,6 +294,7 @@ public class BallController {
                     intersectBounds = Shape.intersect(TableBorderModel.tableBorderArea, ballShadow).getBoundsInLocal();
                     if ((intersectBounds.getWidth() != -1)) {
                         overlapHappened = true;
+                        if (overlapHappened) TableBorderModel.applyReflection(bModel, gameController.getAiController().isAITraining());
                         double normalXComponent = (intersectBounds.getCenterX() - bModel.getPositionX().doubleValue());
                         double normalYComponent = (intersectBounds.getCenterY() - bModel.getPositionY().doubleValue());
                         double distance = Math.sqrt(Math.pow(normalXComponent, 2) + Math.pow(normalYComponent, 2));
@@ -303,8 +306,6 @@ public class BallController {
                         fixedOverlap = true;
                     }
                 }
-                if (overlapHappened)
-                    TableBorderModel.applyReflection(bModel, gameController.getGameView().getTableView());
             }
         }
     }
@@ -338,11 +339,13 @@ public class BallController {
                             }
                         }
                         SoundController.BallsCollide();
+                        //if(!gameController.getAiController().isAITraining()) SoundController.BallsCollide();
                         isCollide = true;
-
-                        if (firstCollide.equals(eightBallModel)) {
-                            System.out.println("EightBall Touch");
-                            gameController.setFoul(true);
+                        if (firstCollide != null) {
+                            if (firstCollide.equals(eightBallModel)) {
+                                System.out.println("EightBall Touch");
+                                gameController.setFoul(true);
+                            }
                         }
                     }
                 }
