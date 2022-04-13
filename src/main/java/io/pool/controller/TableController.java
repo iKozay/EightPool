@@ -12,6 +12,7 @@ public class TableController {
     /** tableX and tableY */
     private double tableX;
     private double tableY;
+    private boolean isBallGotInHole = false;
 
 
     /**
@@ -53,6 +54,13 @@ public class TableController {
     }
 
     public void turnView(GameController gameController){
+//        if (isBallGotInHole) {
+//            tableView.assignBallsInTableView(1, gameController.getP1().getBallNeededIn());
+//            tableView.assignBallsInTableView(2, gameController.getP2().getBallNeededIn());
+//            isBallGotInHole = false;
+//            gameController.setFirstBallInHole(false);
+//        }
+
         if(gameController.getP1().isTurn()){
             tableView.getPlayer1Lbl().setStyle("-fx-background-color: green");
             tableView.getPlayer1Lbl().setText(gameController.getP1().getUsername());
@@ -91,4 +99,13 @@ public class TableController {
     public double getTableY() {
         return tableY;
     }
+
+    public void setBallGotInHole(boolean ballGotInHole) {
+        isBallGotInHole = ballGotInHole;
+    }
+
+    public boolean getBallGotInHole() {
+        return isBallGotInHole;
+    }
+
 }

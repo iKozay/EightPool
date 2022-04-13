@@ -226,28 +226,7 @@ public class GameController {
         }
         if(this.gameType>1){
             if(p2.isTurn()){
-//                boolean isMoving = true;
-//                while(isMoving) {
-//                    boolean foundMovement = false;
-//                    try {
-//                        Thread.sleep(100);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                    for(BallModel b:BallController.bModelList){
-//                        if(b.isMoving){
-//                            isMoving=true;
-//                            foundMovement=true;
-//                        }
-//                    }
-//                    if(!foundMovement) isMoving=false;
-//                }
-//
-//                int difficulty = aiController.getDifficulty();
-//                aiController = new AIController(this);
-//                aiController.setAIPLayer(p2);
-//                aiController.setDifficulty(difficulty);
-                aiController.train();
+                //aiController.train();
             }
         }
 
@@ -299,6 +278,15 @@ public class GameController {
                         System.out.println(currentPlayer.getUsername() + ": " + currentPlayer.getBallType());
                         System.out.println(getNextPlayer().getUsername() + ": " + getNextPlayer().getBallType());
                     }
+                    currentPlayer.getBallNeededIn().removeAll(bModelInEachTurn);
+                    currentPlayer.getBallNeededIn().removeAll(BallController.solidBModelList);
+                    currentPlayer.setBallType(1);
+                    getNextPlayer().setBallType(0);
+                    setBallType = true;
+                    scored=true;
+                    tableController.setBallGotInHole(true);
+                    System.out.println(currentPlayer.getUsername() + ": "+currentPlayer.getBallType());
+                    System.out.println(getNextPlayer().getUsername() + ": "+getNextPlayer().getBallType());
                 }
             }
             if(!aiController.isAITraining()) BallConfigurationDB.assignBallType(this.gameType,p1.getBallType(),p2.getBallType());
@@ -337,21 +325,25 @@ public class GameController {
 
     public void eightBallInIllegal(int gameType){
         if(bModelInEachTurn.contains(BallController.eightBallModel)) {
-            if (!gameView.getPopupWindow().isShowing()){
+            if (!gameView.getPopupWindow().isShowing() && gameType != 0){
                 getNextPlayer().setScore(getNextPlayer().getScore() + 1);
             }
+            if (gameType != 0) {
+                tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
+            }
             gameView.getPopupMessage().setText(currentPlayer + " lose!");
-            if (!(gameType == 0)) tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
             gameView.getPopupWindow().show();
         }
     }
     public void eightBallInLegal(int gameType){
         if(bModelInEachTurn.contains(BallController.eightBallModel)) {
-            if (!gameView.getPopupWindow().isShowing()){
-                currentPlayer.setScore(currentPlayer.getScore() + 1);
+            if (!gameView.getPopupWindow().isShowing() && gameType != 0){
+                getNextPlayer().setScore(getNextPlayer().getScore() + 1);
+            }
+            if (gameType != 0) {
+                tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
             }
             gameView.getPopupMessage().setText(currentPlayer + " win!");
-            if (!(gameType == 0)) tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
             gameView.getPopupWindow().show();
         }
     }
@@ -380,8 +372,16 @@ public class GameController {
                             p2.getBallNeededIn().remove(b);
                         }
                     }
+                    tableController.setBallGotInHole(true);
+
                 }
             }
+            if (tableController.getBallGotInHole()) {
+                getTableController().getTableView().assignBallsInTableView(1, getGameView().getGameController().getP1().getBallNeededIn());
+                getTableController().getTableView().assignBallsInTableView(2, getGameView().getGameController().getP2().getBallNeededIn());
+                tableController.setBallGotInHole(false);
+            }
+
         }
     }
 

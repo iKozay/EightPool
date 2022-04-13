@@ -1,5 +1,6 @@
 package io.pool.view;
 
+import io.pool.controller.BallController;
 import io.pool.controller.GameController;
 import io.pool.eightpool.ResourcesLoader;
 import io.pool.eightpool.game;
@@ -7,6 +8,7 @@ import io.pool.model.BallModel;
 import io.pool.model.TableBorderModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -19,6 +21,7 @@ import javafx.scene.text.FontWeight;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 
 
 public class TableView {
@@ -26,6 +29,8 @@ public class TableView {
     private final AnchorPane anchorPane;
     private final Pane table; // all components of the table
     private final ArrayList<Circle> holes = new ArrayList<>();
+//    private final ArrayList<StackPane> remainingBallsStackPane1 = new ArrayList<>();
+//    private final ArrayList<StackPane> remainingBallsStackPane2 = new ArrayList<>();
     public final static int width = (int) (game.eightPoolTableWidth/1.5); // the width of the pane
     public final static int height = (int) (game.eightPoolTableHeight/1.5); // the height of the pane
     private final int cornerHoleRadius = (int)(width/36);
@@ -35,7 +40,8 @@ public class TableView {
     private Label player1Lbl,player2Lbl;
     private Shape accessibleArea;
     private Label playersScore;
-
+    private HBox firstPlayerRemainingBalls;
+    private HBox secondPlayerRemainingBalls;
 
     //boolean selectionCircleClicked;
 
@@ -74,7 +80,8 @@ public class TableView {
         table.getChildren().addAll(tableImageView, whiteLine);
 
         GridPane playersIcon = new GridPane();
-        playersIcon.setHgap(width/21.6);
+        playersIcon.setHgap(width/21.65);
+        playersIcon.setVgap(-3);
         playersIcon.setAlignment(Pos.TOP_LEFT);
         playersIcon.setPrefWidth(width);
         playersIcon.setPrefHeight(height/9.);
@@ -111,9 +118,43 @@ public class TableView {
 
         scoreBox.getChildren().addAll(scoreLabel, playersScore);
 
+        firstPlayerRemainingBalls = new HBox();
+        firstPlayerRemainingBalls.setPrefWidth(width/2.6);
+        firstPlayerRemainingBalls.setMinWidth(width/2.6);
+        firstPlayerRemainingBalls.setPrefHeight(height/15.);
+        firstPlayerRemainingBalls.setMinHeight(height/15.);
+        firstPlayerRemainingBalls.setSpacing(width/43.2);
+        firstPlayerRemainingBalls.setAlignment(Pos.CENTER);
+        firstPlayerRemainingBalls.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15px;");
+
+        for (int i = 0; i < 7; i++) {
+            StackPane remainingBall = new StackPane();
+            remainingBall.getChildren().add(createNeededCircles());
+//            remainingBallsStackPane1.add(remainingBall);
+            firstPlayerRemainingBalls.getChildren().add(remainingBall);
+        }
+
+        secondPlayerRemainingBalls = new HBox();
+        secondPlayerRemainingBalls.setPrefWidth(width/2.6);
+        secondPlayerRemainingBalls.setMinWidth(width/2.6);
+        secondPlayerRemainingBalls.setPrefHeight(height/15.);
+        secondPlayerRemainingBalls.setMinHeight(height/15.);
+        secondPlayerRemainingBalls.setSpacing(width/43.2);
+        secondPlayerRemainingBalls.setAlignment(Pos.CENTER);
+        secondPlayerRemainingBalls.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15px;");
+
+        for (int i = 0; i < 7; i++) {
+            StackPane remainingBall = new StackPane();
+            remainingBall.getChildren().add(createNeededCircles());
+//            remainingBallsStackPane2.add(remainingBall);
+            secondPlayerRemainingBalls.getChildren().add(remainingBall);
+        }
+
         playersIcon.add(player1Lbl, 0,0);
         playersIcon.add(scoreBox, 1, 0);
         playersIcon.add(player2Lbl, 2,0);
+        playersIcon.add(firstPlayerRemainingBalls, 0, 1);
+        playersIcon.add(secondPlayerRemainingBalls, 2, 1);
 
         HBox remainingBallsPane = new HBox();
         remainingBallsPane.setSpacing(100);
@@ -267,6 +308,66 @@ public class TableView {
         table.getChildren().addAll(TableBorderModel.tableBorderArea);
         table.getChildren().addAll(TableBorderModel.tableBorder);
         table.getChildren().addAll(accessibleArea);
+    }
+
+    public void assignBallsInTableView(int paneNumber, ArrayList<BallModel> ballModels) {
+        int neededEmptyPlaces = 7 - ballModels.size();
+        if (paneNumber == 1) {
+            firstPlayerRemainingBalls.getChildren().clear();
+            for (int i = 0; i < ballModels.size(); i++) {
+                BallView bView = new BallView(ResourcesLoader.ballImages.get(ballModels.get(i).getNumber() - 1), BallModel.RADIUS);
+                StackPane remainingBall = new StackPane();
+                remainingBall.getChildren().addAll(createNeededCircles(), bView.getBall());
+                firstPlayerRemainingBalls.getChildren().add(remainingBall);
+            }
+            if (neededEmptyPlaces != 0) {
+                for (int i = 0; i < neededEmptyPlaces; i++) {
+                    StackPane remainingBall = new StackPane();
+                    remainingBall.getChildren().addAll(createNeededCircles());
+                    firstPlayerRemainingBalls.getChildren().add(remainingBall);
+                }
+            }
+        } else {
+            secondPlayerRemainingBalls.getChildren().clear();
+            for (int i = 0; i < ballModels.size(); i++) {
+                BallView bView = new BallView(ResourcesLoader.ballImages.get(ballModels.get(i).getNumber() - 1), BallModel.RADIUS);
+                StackPane remainingBall = new StackPane();
+                remainingBall.getChildren().addAll(createNeededCircles(), bView.getBall());
+                secondPlayerRemainingBalls.getChildren().add(remainingBall);
+            }
+            if (neededEmptyPlaces != 0) {
+                for (int i = 0; i < neededEmptyPlaces; i++) {
+                    StackPane remainingBall = new StackPane();
+                    remainingBall.getChildren().addAll(createNeededCircles());
+                    secondPlayerRemainingBalls.getChildren().add(remainingBall);
+                }
+            }
+        }
+    }
+/*
+    public void updateBallsInTableView(int paneNumber, BallModel inBallModel) {
+
+        int index = inBallModel.getNumber() - 1;
+        BallView bView = new BallView(ResourcesLoader.ballImages.get(index), BallModel.RADIUS);
+        if (index > 7) index-=7;
+        if (paneNumber == 1) {
+            firstPlayerRemainingBalls.getChildren().remove(remainingBallsStackPane1.get(index));
+            remainingBallsStackPane1.get(index).getChildren().remove(bView.getBall());
+//            firstPlayerRemainingBalls.getChildren().add(remainingBallsStackPane1.get(index));
+        } else {
+            secondPlayerRemainingBalls.getChildren().remove(remainingBallsStackPane2.get(index));
+            remainingBallsStackPane2.get(index).getChildren().remove(bView.getBall());
+//            secondPlayerRemainingBalls.getChildren().add(remainingBallsStackPane2.get(index));
+        }
+    }
+*/
+    public Circle createNeededCircles() {
+        Circle ballPlace = new Circle();
+        ballPlace.setRadius(BallModel.RADIUS);
+        ballPlace.setFill(Color.valueOf("#191e24"));
+        ballPlace.setStroke(Color.valueOf("#667d99"));
+        ballPlace.setStrokeWidth(2);
+        return ballPlace;
     }
 
     public Label getPlayer1Lbl() {

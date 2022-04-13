@@ -460,9 +460,7 @@ public class GameView extends Pane {
                 return Double.valueOf(string.substring(0,string.length()-1));
             }
         });
-        frictionSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            settingsController.setFrictionPercentage(newValue.doubleValue());
-        });
+        frictionSlider.valueProperty().addListener((observable, oldValue, newValue) -> settingsController.setFrictionPercentage(newValue.doubleValue()));
 
         frictionSettingsPane.getChildren().addAll(instructiveFrictionLabel, frictionSlider);
         AnchorPane.setTopAnchor(instructiveFrictionLabel, 0.);
@@ -776,45 +774,10 @@ public class GameView extends Pane {
         return gamePane;
     }
 
-    public AtomicBoolean getPrincipalBarIsVisible() {
-        return principalBarIsVisible;
-    }
-
-    public GridPane getPrincipalBar() {
-        return principalBar;
-    }
-
-    public Button getMenuButton() {
-        return menuButton;
-    }
-
-    public Button getBackButton() {
-        return backButton;
-    }
-
-    public Button getBallsButton() {
-        return ballsButton;
-    }
-
-    public Button getTableButton() {
-        return tableButton;
-    }
-
-    public Button getCueButton() {
-        return cueButton;
-    }
-
-    public VBox getBallsSettingsPane() {
-        return ballsSettingsPane;
-    }
-
     public FlowPane getBallsPrimaryPane() {
         return ballsPrimaryPane;
     }
 
-    public VBox getTableThemesPane() {
-        return tableThemesPane;
-    }
 
     public TextField getxAccelerationField() {
         return xAccelerationField;
@@ -829,19 +792,6 @@ public class GameView extends Pane {
     }
 
     public TextField getySpeedField() {return ySpeedField;}
-
-    public void setxAccelerationField(TextField positionValueField) {
-        this.xAccelerationField = positionValueField;
-    }
-
-    public void setyAccelerationField(TextField yAccelerationField) {
-        this.yAccelerationField = yAccelerationField;
-    }
-
-    public void setxSpeedField(TextField xSpeedField) {
-        this.xSpeedField = xSpeedField;
-    }
-
 
 
     public Circle getCircleFromSphere(Sphere ball) {
@@ -874,9 +824,5 @@ public class GameView extends Pane {
 
     public Label getPopupMessage() {
         return popupMessage;
-    }
-
-    public int getCurrentCueNumber() {
-        return currentCueImageView[0];
     }
 }
