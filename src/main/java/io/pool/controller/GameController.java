@@ -319,6 +319,7 @@ public class GameController {
             bModel.setVelocityX(new BigDecimal(0.1));
             bModel.setVelocityY(new BigDecimal(0.1));
             System.out.println("whiteBall");
+            bModel.setInHole(false);
         }else{
             if(!bModelInEachTurn.contains(bModel)) bModelInEachTurn.add(bModel);
         }

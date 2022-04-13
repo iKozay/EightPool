@@ -262,13 +262,13 @@ public class BallController {
                 isMoving = bModel.isMoving;
             }
             bModel.updatePosition();
-            if (!draggable) {
+//            if (!draggable) {
                 BallView ballView = getBallViewFromBallModel(bModel);
                 if (tableController.checkBallInHole(ballView)) {
                     bModel.setInHole(true);
                     gameController.whiteBallIn(ballView);
                 }
-            }
+//            }
             updateBallViewPosition(bModel);
             //if(!gameController.getAiController().isAITraining())updateBallViewPosition(bModel);
         }
