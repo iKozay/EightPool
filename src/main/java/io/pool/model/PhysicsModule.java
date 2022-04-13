@@ -287,9 +287,25 @@ public class PhysicsModule {
         }
         return false;
     }
+    public double distanceFrom(PhysicsModule module) {
+        double distance;
+        double x2, y2, x1, y1;
+        /**
+         * Assigns the x and y variables depending on the object
+         */
+        x2 = module.getPositionX().doubleValue();
+        y2 = module.getPositionY().doubleValue();
+        x1 = getPositionX().doubleValue();
+        y1 = getPositionY().doubleValue();
 
-    public double distanceFrom(PhysicsModule pm2){
-        return 0.0;
+        /**
+         * Finds distance
+         */
+        double a = Math.pow(x2 - x1,2);
+        double b = Math.pow(y2 - y1,2);
+
+        distance = Math.sqrt(a+b);
+        return distance;
     }
 
     /**

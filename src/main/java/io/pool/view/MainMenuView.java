@@ -272,12 +272,16 @@ public class MainMenuView extends Pane{
 
         comboBoxP1.setItems(Player1List);
         comboBoxP1.setOnAction(e->{
-            comboBoxP2.setDisable(false);
-            PVPstartBtn.setDisable(true);
-            comboBoxP2.getItems().clear();
-            Player2List = FXCollections.observableArrayList(PlayerModel.playersList);
-            Player2List.remove(comboBoxP1.getSelectionModel().getSelectedItem());
-            comboBoxP2.setItems(Player2List);
+            if(mainMenuController.isPVP()) {
+                comboBoxP2.setDisable(false);
+                PVPstartBtn.setDisable(true);
+                comboBoxP2.getItems().clear();
+                Player2List = FXCollections.observableArrayList(PlayerModel.playersList);
+                Player2List.remove(comboBoxP1.getSelectionModel().getSelectedItem());
+                comboBoxP2.setItems(Player2List);
+            }else{
+                PVPstartBtn.setDisable(false);
+            }
         });
 
         comboBoxP1.setPrefSize(300,50);

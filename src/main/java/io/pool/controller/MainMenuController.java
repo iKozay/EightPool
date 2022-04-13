@@ -14,6 +14,7 @@ public class MainMenuController {
     private static Stage stage;
     private SettingsView settingsView;
     private static GameView gameView;
+    private boolean isPVP;
 
     public MainMenuController(MainMenuView mmv,Stage stage) {
         this.mmv = mmv;
@@ -55,9 +56,14 @@ public class MainMenuController {
             stage.getScene().setRoot(gameView);
             this.gameView.getGameController().getPoolCueController().handleRotateCue(stage.getScene());
             this.gameView.getGameController().getPoolCueController().hit(stage.getScene());
-            gameView.getGameController().startGame(1,(PlayerModel) mmv.getComboBoxP1().getSelectionModel().getSelectedItem(),(PlayerModel)mmv.getComboBoxP2().getSelectionModel().getSelectedItem());
+            if(isPVP) {
+                gameView.getGameController().startGame(1, (PlayerModel) mmv.getComboBoxP1().getSelectionModel().getSelectedItem(), (PlayerModel) mmv.getComboBoxP2().getSelectionModel().getSelectedItem());
+            }else{
+                gameView.getGameController().startGame(gameView.getGameController().getGameType(), (PlayerModel) mmv.getComboBoxP1().getSelectionModel().getSelectedItem(), null);
+            }
         });
         mmv.getPvp1Btn().setOnAction(event -> {
+            isPVP=true;
             mmv.getComboBoxP2().setDisable(true);
             mmv.getPVPstartBtn().setDisable(true);
             mmv.Player2List = FXCollections.observableArrayList();
@@ -100,7 +106,23 @@ public class MainMenuController {
                 mmv.getButtonGroup().getChildren().get(finalI1).setStyle("-fx-background-color: rgba(255,255,255,.3)");
             });
         }
-
+        for(int i = 0;i<3;i++) {
+            int finalI = i;
+            mmv.getButtonGroup().getChildren().get(i).setOnMouseClicked(e -> {
+                isPVP=false;
+                mmv.getComboBoxP2().setDisable(true);
+                mmv.getPVPstartBtn().setDisable(true);
+                //mmv.Player2List = FXCollections.observableArrayList();
+                mmv.getComboBoxP2().getItems().clear();
+                gameView.getGameController().setGameType(finalI+2);
+                mmv.getComboBoxP2().setItems(FXCollections.observableArrayList("AI"));
+                mmv.getComboBoxP2().getSelectionModel().select(0);
+                mmv.Player1List = FXCollections.observableArrayList(PlayerModel.playersList);
+                mmv.getComboBoxP1().setItems(mmv.Player1List);
+                mmv.getComboBoxP1().getSelectionModel().clearSelection();
+                stage.getScene().setRoot(mmv.getPvpRootMenu());
+            });
+        }
     }
 
     public void solo1Action() {
@@ -133,7 +155,9 @@ public class MainMenuController {
     }
 
 
-
+    public boolean isPVP() {
+        return isPVP;
+    }
 
     public void setSettingsView(SettingsView settingsView) {
         this.settingsView = settingsView;

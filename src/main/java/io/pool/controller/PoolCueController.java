@@ -155,7 +155,7 @@ public class PoolCueController {
                 if (intersect.getBoundsInLocal().getWidth() != -1) {
                     poolCueView.getPoolLine().setEndX(intersect.getBoundsInLocal().getCenterX() - intersect.getBoundsInLocal().getWidth() / 2);
                     poolCueView.getPoolLine().setEndY(intersect.getBoundsInLocal().getCenterY() - intersect.getBoundsInLocal().getHeight() / 2);
-                    poolCueView.getPoolLine().toFront();
+                    //poolCueView.getPoolLine().toFront();
                 }
             }
 
@@ -173,7 +173,7 @@ public class PoolCueController {
                         poolCueView.getPoolLine().setEndX(intersect.getBoundsInLocal().getCenterX());
                         poolCueView.getPoolLine().setEndY(intersect.getBoundsInLocal().getCenterY());
                     }
-                    poolCueView.getPoolLine().toFront();
+                    //poolCueView.getPoolLine().toFront();
                 }
             }
         }
@@ -182,7 +182,7 @@ public class PoolCueController {
     private void setRotation(double rotation){
         poolCueView.setPreviousAngle(rotation);
         rotate.setAngle(rotation);
-        poolCueDirectionLine();
+        if(!gameController.getAiController().isAITraining()) poolCueDirectionLine();
         double draggedTotal = Math.sqrt(Math.pow(poolCueView.getCue().getLayoutX(), 2) + Math.pow(poolCueView.getCue().getLayoutY(), 2));
         poolCueView.getCue().setLayoutX(draggedTotal * Math.cos(Math.toRadians(poolCueView.getPreviousAngle())));
         poolCueView.getCue().setLayoutY(draggedTotal * Math.sin(Math.toRadians(poolCueView.getPreviousAngle())));
