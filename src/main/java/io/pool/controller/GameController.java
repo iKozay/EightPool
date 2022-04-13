@@ -163,6 +163,7 @@ public class GameController {
             p2.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
             p2.getBallNeededIn().remove(BallController.eightBallModel);
             p2.getBallNeededIn().remove(BallController.whiteBallModel);
+            tableController.getTableView().createRemainingBallSection();
         }
 
 
@@ -195,6 +196,7 @@ public class GameController {
             p2.setScore(0);
             tableController.getTableView().getPlayersScore().setText("0 : 0");
         }
+        tableController.getTableView().removeRemainingBallsSection();
     }
 
     public void turns(){
