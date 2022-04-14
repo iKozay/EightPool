@@ -56,7 +56,7 @@ public class GameController {
         /** Assign the GameView and Instantiate the Controllers */
         this.gameView = gView;
         tableController = new TableController(this.gameView.getTableView(),this);
-        ballController = new BallController(this);
+        ballController = new BallController(this,tableController.getTableView().getHoles());
         poolCueController = new PoolCueController(this.gameView.getCueView(), this);
         this.settingsController = settingsController;
         this.aiController = new AIController(this);
@@ -78,7 +78,7 @@ public class GameController {
                         firstCollidePlay();
                         if(gameType!=0) assignBallType();
                         tableController.turnView(gameController);
-                        ballController.detectCollision(tableController);
+                        ballController.detectCollision(null,null);
                         if(firstPlay) ballController.makeDraggable();
                         if (gameView.getClickedBallNumber() > 0 && !aiController.isAITraining()) {
                             double xSpeed = Math.round(BallController.bModelList.get(gameView.getClickedBallNumber() - 1).getVelocityX().doubleValue()*100)/100.;

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 public class BallController {
 
+    private ArrayList<Circle> holeList;
     private GameController gameController;
     /**
      * ArrayList that contains all the BallViews
@@ -55,9 +56,13 @@ public class BallController {
     public BallController() {
     }
 
-    public BallController(GameController gameController) {
-
+    public BallController(GameController gameController, ArrayList<Circle> holeList) {
         this.gameController = gameController;
+        if(holeList==null){
+            this.holeList = gameController.getTableController().getTableView().getHoles();
+        } else{
+            this.holeList=holeList;
+        }
         setBallPositions();
     }
 
@@ -251,16 +256,19 @@ public class BallController {
     /**
      * Detects all the collisions and updates the ball position
      */
-    public void detectCollision(TableController tableController) {
-        detectCollisionWithOtherBalls();
-        detectCollisionWithTable();
+    public void detectCollision(ArrayList<BallModel> bModelList,ArrayList<Circle> holeList) {
+        if(bModelList==null) bModelList=BallController.bModelList;
+        if(holeList==null) holeList=this.holeList;
+
+        detectCollisionWithOtherBalls(bModelList);
+        detectCollisionWithTable(bModelList);
         for (BallModel bModel : bModelList) {
             if (!isMoving) {
                 isMoving = bModel.isMoving;
             }
             bModel.updatePosition();
                 BallView ballView = getBallViewFromBallModel(bModel);
-                if (tableController.checkBallInHole(ballView)) {
+                if (checkBallInHole(bModel,holeList)) {
                     bModel.setInHole(true);
                     gameController.whiteBallIn(ballView);
                 }
@@ -274,10 +282,24 @@ public class BallController {
         bView.getBall().setLayoutY(bModel.getPositionY().doubleValue());
     }
 
+    private boolean checkBallInHole(BallModel ballModel,ArrayList<Circle> holes) {
+        if(holes==null) holes = this.holeList;
+        for(Circle hole:holes) {
+            double xSquared = Math.pow((ballModel.getPositionX().doubleValue() - TableController.tableX - hole.getCenterX()), 2);
+            double ySquared = Math.pow((ballModel.getPositionY().doubleValue() - TableController.tableY - hole.getCenterY()), 2);
+            double centerToCenter = Math.sqrt(xSquared+ySquared);
+            if(centerToCenter < hole.getRadius()) {
+                if(!gameController.getAiController().isAITraining()) SoundController.BallInHole();
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Detects any collision between a ball and the table
      */
-    private void detectCollisionWithTable() {
+    private void detectCollisionWithTable(ArrayList<BallModel> bModelList) {
         Bounds intersectBounds;
         for (BallModel bModel : bModelList) {
             if (!bModel.isInHole()) {
@@ -307,7 +329,7 @@ public class BallController {
     /**
      * Detects all the collisions between the balls
      */
-    private void detectCollisionWithOtherBalls() {
+    private void detectCollisionWithOtherBalls(ArrayList<BallModel> bModelList) {
         BallModel ballA, ballB;
         /**
          * Suppose we have the following list: [1,2,3,4]
