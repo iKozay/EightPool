@@ -35,23 +35,6 @@ public class TableController {
         return tableView;
     }
 
-//    /**
-//     * Checks if the BallView is inside the hole
-//     * @param ballView the BallView
-//     * @return <code>true</code> if the ball is inside the hole. <code>false</code> otherwise
-//     */
-//    public boolean checkBallInHole(BallView ballView) {
-//        for(Circle hole:tableView.getHoles()) {
-//            double xSquared = Math.pow((ballView.getBall().getLayoutX() - tableX - hole.getCenterX()), 2);
-//            double ySquared = Math.pow((ballView.getBall().getLayoutY() - tableY - hole.getCenterY()), 2);
-//            double centerToCenter = Math.sqrt(xSquared+ySquared);
-//            if(centerToCenter < hole.getRadius()) {
-//                if(!gameController.getAiController().isAITraining()) SoundController.BallInHole();
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
 
     public void turnView(GameController gameController){
 //        if (isBallGotInHole) {

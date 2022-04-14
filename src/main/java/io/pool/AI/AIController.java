@@ -90,8 +90,8 @@ public class AIController {
         public AITrainer(GameController gameController, ArrayList<BallModel> ballNeededIn) {
             this.ballNeededIn = ballNeededIn;
             this.gameController = gameController;
-            this.ballController = new BallController();
             this.bModelList = (ArrayList<BallModel>) BallController.bModelList.clone();
+            this.ballController = new BallController();
             for (BallModel b : this.bModelList) {
                 if (b.getNumber() == 16) whiteBallModel = b;
                 if (b.getNumber() == 8) eightBallModel = b;

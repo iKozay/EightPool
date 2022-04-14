@@ -281,9 +281,12 @@ public class BallController {
         bView.getBall().setLayoutX(bModel.getPositionX().doubleValue());
         bView.getBall().setLayoutY(bModel.getPositionY().doubleValue());
     }
-
+     /**
+     * Checks if the BallView is inside the hole
+     * @param ballModel the ballmodel
+     * @return <code>true</code> if the ball is inside the hole. <code>false</code> otherwise
+     */
     private boolean checkBallInHole(BallModel ballModel,ArrayList<Circle> holes) {
-        if(holes==null) holes = this.holeList;
         for(Circle hole:holes) {
             double xSquared = Math.pow((ballModel.getPositionX().doubleValue() - TableController.tableX - hole.getCenterX()), 2);
             double ySquared = Math.pow((ballModel.getPositionY().doubleValue() - TableController.tableY - hole.getCenterY()), 2);
@@ -303,7 +306,7 @@ public class BallController {
         Bounds intersectBounds;
         for (BallModel bModel : bModelList) {
             if (!bModel.isInHole()) {
-                boolean overlapHappened = false;
+                boolean overlapHappened;
                 boolean fixedOverlap = false;
                 while (!fixedOverlap) {
                     Circle ballShadow = new Circle(bModel.getPositionX().doubleValue(), bModel.getPositionY().doubleValue(), BallModel.RADIUS);
