@@ -18,15 +18,14 @@ public class AIModel {
     private double rotation;
     private static AIController aiController;
 
-    public AIModel(int direction) {
+    public AIModel(BallModel targetedBall) {
         Random rnd = new Random();
-        if(direction==-1) {
+        if(targetedBall==null) {
             this.power = rnd.nextInt(PoolCueController.MAX_DISTANCE-30)+31;
             this.rotation = rnd.nextInt(360) + 1;
         }else{
-            BallModel selectedBall = aiController.getAIPLayer().getBallNeededIn().get(direction);
-            double x = selectedBall.getPositionX().doubleValue()-BallController.whiteBallModel.getPositionX().doubleValue();
-            double y = selectedBall.getPositionY().doubleValue()-BallController.whiteBallModel.getPositionY().doubleValue();
+            double x = targetedBall.getPositionX().doubleValue()-BallController.whiteBallModel.getPositionX().doubleValue();
+            double y = targetedBall.getPositionY().doubleValue()-BallController.whiteBallModel.getPositionY().doubleValue();
             double distance = Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
             double distanceReference = TableView.getTableWidth()*(2/3)*(1/3);
             int variation=0;
@@ -44,7 +43,7 @@ public class AIModel {
                 variation = rnd.nextInt(6)+1;
                 this.rotation+=(177+variation);
             }
-            System.out.println("Ball# "+selectedBall.getNumber()+" | Power: "+this.power+" | Rotation "+this.rotation);
+            System.out.println("Ball# "+targetedBall.getNumber()+" | Power: "+this.power+" | Rotation "+this.rotation);
         }
     }
 

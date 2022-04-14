@@ -252,25 +252,19 @@ public class BallController {
      * Detects all the collisions and updates the ball position
      */
     public void detectCollision(TableController tableController) {
-        // TODO disable screen update
-//        if(!draggable) {
         detectCollisionWithOtherBalls();
         detectCollisionWithTable();
-//        }
         for (BallModel bModel : bModelList) {
             if (!isMoving) {
                 isMoving = bModel.isMoving;
             }
             bModel.updatePosition();
-//            if (!draggable) {
                 BallView ballView = getBallViewFromBallModel(bModel);
                 if (tableController.checkBallInHole(ballView)) {
                     bModel.setInHole(true);
                     gameController.whiteBallIn(ballView);
                 }
-//            }
-            updateBallViewPosition(bModel);
-            //if(!gameController.getAiController().isAITraining())updateBallViewPosition(bModel);
+            if(!gameController.getAiController().isAITraining())updateBallViewPosition(bModel);
         }
     }
 
@@ -338,8 +332,8 @@ public class BallController {
                                 firstCollide = ballA;
                             }
                         }
-                        SoundController.BallsCollide();
-                        //if(!gameController.getAiController().isAITraining()) SoundController.BallsCollide();
+                        //SoundController.BallsCollide();
+                        if(!gameController.getAiController().isAITraining()) SoundController.BallsCollide();
                         isCollide = true;
                         if (firstCollide != null) {
                             if (firstCollide.equals(eightBallModel)) {

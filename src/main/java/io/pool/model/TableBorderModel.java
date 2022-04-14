@@ -66,8 +66,7 @@ public class TableBorderModel extends Line {
         if (reflectionLine.type == 0) {
             bModel.setVelocityX(bModel.getVelocityX().multiply(reflectionLine.getReflectionXFactor()));
             bModel.setVelocityY(bModel.getVelocityY().multiply(reflectionLine.getReflectionYFactor()));
-            SoundController.BallBounce();
-            //if(!aiTraining) SoundController.BallBounce();
+            if(!aiTraining) SoundController.BallBounce();
         } else {
             Point2D line = new Point2D(reflectionLine.getEndX()- reflectionLine.getStartX(),reflectionLine.getEndY()- reflectionLine.getStartY());
             Point2D vec = new Point2D(bModel.getVelocityX().doubleValue(),bModel.getVelocityY().doubleValue());

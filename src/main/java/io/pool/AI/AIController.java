@@ -9,6 +9,7 @@ import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.*;
 
 public class AIController {
 
@@ -16,6 +17,9 @@ public class AIController {
     private int difficulty;
     private PlayerModel AIPLayer;
     private boolean AITraining = false;
+    private ExecutorService executor;
+    private ArrayList<Future<AIModel>> aiList = new ArrayList<>();
+    private AIModel bestAI;
 
     public AIController(GameController gameController) {
         this.gameController = gameController;
@@ -24,17 +28,35 @@ public class AIController {
 
     public void train() {
         AITraining = true;
-        AIModel bestAI = new AIModel(-1);
-        double bestEvaluation = -1;
+        aiList.clear();
+        executor = Executors.newFixedThreadPool(10);
         for (int i = 0; i < difficulty; i++) {
-
+            aiList.add(executor.submit(new AITrainer(gameController,AIPLayer.getBallNeededIn())));
         }
+        double currentEvaluation = -1, bestEvaluation=-1;
+        for(Future<AIModel> currentAI:aiList){
+            try {
+                currentEvaluation = currentAI.get().getEvaluation();
+                if(currentEvaluation>bestEvaluation){
+                    bestEvaluation=currentEvaluation;
+                    bestAI=currentAI.get();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        executor.shutdown();
+        while (!executor.isTerminated()) {   }
         AITraining = false;
         System.out.println("Finished Training");
         System.out.println(bestAI + " --> " + bestEvaluation);
-        gameController.simulatePlay(bestAI);
     }
 
+    public AIModel getBestAI() {
+        return bestAI;
+    }
 
     public int getDifficulty() {
         return difficulty;
@@ -55,113 +77,115 @@ public class AIController {
     public boolean isAITraining() {
         return AITraining;
     }
-}
 
-class AITrainer extends Thread {
-    private GameController gameController;
-    private AIModel aiModel;
-    private BallController ballController;
-    private ArrayList<BallModel> bModelList;
-    private BallModel whiteBallModel = null;
-    private BallModel eightBallModel = null;
-    private PlayerModel AIPlayer;
+    class AITrainer implements Callable<AIModel> {
+        private GameController gameController;
+        private BallController ballController;
+        private ArrayList<BallModel> bModelList;
+        private BallModel whiteBallModel = null;
+        private BallModel eightBallModel = null;
+        private ArrayList<Circle> Holes;
+        private ArrayList<BallModel> ballNeededIn;
 
-    public AITrainer(GameController gameController, PlayerModel aiPlayer) {
-        super();
-        this.AIPlayer = aiPlayer;
-        this.gameController = gameController;
-        this.ballController = new BallController();
-        this.bModelList = (ArrayList<BallModel>) BallController.bModelList.clone();
-        for (BallModel b : this.bModelList) {
-            if (b.getNumber() == 16) whiteBallModel = b;
-            if (b.getNumber() == 8) eightBallModel = b;
-        }
-    }
-
-    @Override
-    public void run() {
-        aiModel = new AIModel(new Random().nextInt(AIPlayer.getBallNeededIn().size()));
-        gameController.simulatePlay(aiModel);
-        aiModel.setEvaluation(evaluate());
-        gameController.resetSimulation();
-
-    }
-
-    private double evaluate() {
-        double evaluation = 0;
-
-        BallModel ballA, ballB;
-        for (var i = 0; i < this.bModelList.size(); i++) {
-            for (var j = i + 1; j < this.bModelList.size(); j++) {
-                ballA = this.bModelList.get(i);
-                ballB = this.bModelList.get(j);
-                if (ballA.equals(whiteBallModel) || ballB.equals(whiteBallModel)) {
-                    continue;
-                }
-                evaluation += ballA.distanceFrom(ballB);
+        public AITrainer(GameController gameController, ArrayList<BallModel> ballNeededIn) {
+            this.ballNeededIn = ballNeededIn;
+            this.gameController = gameController;
+            this.ballController = new BallController();
+            this.bModelList = (ArrayList<BallModel>) BallController.bModelList.clone();
+            for (BallModel b : this.bModelList) {
+                if (b.getNumber() == 16) whiteBallModel = b;
+                if (b.getNumber() == 8) eightBallModel = b;
             }
         }
 
-        evaluation = evaluation / 1000;
-
-
-        simulateOutcome();
-
-        int validBalls = 0;
-
-        for (BallModel bModel : this.bModelList) {
-            if (bModel.isInHole() && AIPlayer.getBallNeededIn().contains(bModel)) validBalls++;
-        }
-        System.out.println("Valid Balls: " + validBalls);
-
-        if (gameController.getbModelInEachTurn().contains(eightBallModel)) {
-            if (!AIPlayer.getBallNeededIn().contains(eightBallModel)) {
-                evaluation -= 100000000;
-            } else {
-                evaluation += 100000000;
-            }
+        @Override
+        public AIModel call() throws Exception {
+            BallModel targetedBall = AIPLayer.getBallNeededIn().get(new Random().nextInt(AIPLayer.getBallNeededIn().size()));
+            AIModel aiModel = new AIModel(targetedBall);
+            gameController.simulatePlay(aiModel);
+            aiModel.setEvaluation(evaluate());
+            return aiModel;
         }
 
+        private double evaluate() {
+            double evaluation = 0;
 
-        evaluation += 20000 * validBalls;
-
-
-        // Change to ballcontroller
-        if (gameController.isScored()) {
-            if (!gameController.isFoul()) {
-                evaluation += 10000;
-            } else {
-                evaluation -= 10000;
-            }
-        }
-
-        if (gameController.isFoul()) {
-            evaluation = evaluation - 30000;
-        }
-        System.out.println("Current Evaluation: " + evaluation);
-
-        return evaluation;
-    }
-
-    private void simulateOutcome() {
-        boolean isMoving = true;
-        while (isMoving) {
-
-            //ballController.detectCollision(gameController.getTableController());
-
-            boolean foundMovement = false;
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            for (BallModel b : BallController.bModelList) {
-                if (b.isMoving) {
-                    isMoving = true;
-                    foundMovement = true;
+            BallModel ballA, ballB;
+            for (var i = 0; i < this.bModelList.size(); i++) {
+                for (var j = i + 1; j < this.bModelList.size(); j++) {
+                    ballA = this.bModelList.get(i);
+                    ballB = this.bModelList.get(j);
+                    if (ballA.equals(whiteBallModel) || ballB.equals(whiteBallModel)) {
+                        continue;
+                    }
+                    evaluation += ballA.distanceFrom(ballB);
                 }
             }
-            if (!foundMovement) isMoving = false;
+
+            evaluation = evaluation / 1000;
+
+
+            simulateOutcome();
+
+            int validBalls = 0;
+
+            for (BallModel bModel : this.bModelList) {
+                if (bModel.isInHole() && ballNeededIn.contains(bModel)) validBalls++;
+            }
+            System.out.println("Valid Balls: " + validBalls);
+
+            if (gameController.getbModelInEachTurn().contains(eightBallModel)) {
+                if (!ballNeededIn.contains(eightBallModel)) {
+                    evaluation -= 100000000;
+                } else {
+                    evaluation += 100000000;
+                }
+            }
+
+
+            evaluation += 20000 * validBalls;
+
+
+            // Change to ballcontroller
+            if (gameController.isScored()) {
+                if (!gameController.isFoul()) {
+                    evaluation += 10000;
+                } else {
+                    evaluation -= 10000;
+                }
+            }
+
+            if (gameController.isFoul()) {
+                evaluation = evaluation - 30000;
+            }
+            System.out.println("Current Evaluation: " + evaluation);
+
+            return evaluation;
+        }
+
+        private void simulateOutcome() {
+            boolean isMoving = true;
+            while (isMoving) {
+
+                //ballController.detectCollision(gameController.getTableController());
+
+                boolean foundMovement = false;
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                for (BallModel b : BallController.bModelList) {
+                    if (b.isMoving) {
+                        isMoving = true;
+                        foundMovement = true;
+                    }
+                }
+                if (!foundMovement) isMoving = false;
+            }
         }
     }
+
+
+
 }
