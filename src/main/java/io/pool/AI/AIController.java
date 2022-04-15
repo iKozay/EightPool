@@ -2,7 +2,6 @@ package io.pool.AI;
 
 import io.pool.controller.BallController;
 import io.pool.controller.GameController;
-import io.pool.controller.TableController;
 import io.pool.model.BallModel;
 import io.pool.model.PlayerModel;
 import javafx.scene.shape.Circle;
@@ -134,7 +133,7 @@ public class AIController {
             }
             System.out.println("Valid Balls: " + validBalls);
 
-            if (gameController.getbModelInEachTurn().contains(eightBallModel)) {
+            if (ballController.getBModelInEachTurn().contains(eightBallModel)) {
                 if (!ballNeededIn.contains(eightBallModel)) {
                     evaluation -= 100000000;
                 } else {
@@ -147,15 +146,15 @@ public class AIController {
 
 
             // Change to ballcontroller
-            if (gameController.isScored()) {
-                if (!gameController.isFoul()) {
+            if (ballController.isScored()) {
+                if (!ballController.isFoul()) {
                     evaluation += 10000;
                 } else {
                     evaluation -= 10000;
                 }
             }
 
-            if (gameController.isFoul()) {
+            if (ballController.isFoul()) {
                 evaluation = evaluation - 30000;
             }
             System.out.println("Current Evaluation: " + evaluation);
