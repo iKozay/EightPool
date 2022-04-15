@@ -88,7 +88,7 @@ public class GameView extends Pane {
         cueView = new PoolCueView();
         displayPoolCue(false);
 
-        this.getChildren().addAll(cueView.getCue(), cueView.getPoolLine(),cueView.getPath());
+        this.getChildren().addAll(cueView.getCue(), cueView.getPoolLine(),cueView.getPath(), cueView.getBallCollisionCircle());
         gamePane = tableView.getGamePane();
 
         ArrayList<String> backgroundColors = new ArrayList<>(Arrays.asList(colors));

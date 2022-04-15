@@ -1,6 +1,7 @@
 package io.pool.controller;
 
 import io.pool.Database.BallConfigurationDB;
+import io.pool.model.BallModel;
 import io.pool.model.PoolCueModel;
 import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
@@ -9,6 +10,7 @@ import io.pool.view.PoolCueView;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 
@@ -130,9 +132,6 @@ public class PoolCueController {
                 }
             }
         });
-
-
-
     }
 
     public void resetPoolCue() {
@@ -147,16 +146,22 @@ public class PoolCueController {
         if(cueHelperEnabled) {
             moveTo.setX(BallController.whiteBallView.getBall().getLayoutX());
             moveTo.setY(BallController.whiteBallView.getBall().getLayoutY());
-            lineTo.setX(poolCueView.getCue().getX() - 1000);
-            lineTo.setY(poolCueView.getCue().getY());
+            lineTo.setX(BallController.whiteBallView.getBall().getLayoutX() - 1000);
+            lineTo.setY(BallController.whiteBallView.getBall().getLayoutY());
+
+
 
             // TABLE BORDER
             for (TableBorderModel tbm : TableBorderModel.tableBorder) {
                 Shape intersect = Shape.intersect(poolCueView.getPath(), tbm);
                 if (intersect.getBoundsInLocal().getWidth() != -1) {
+                    poolCueView.getBallCollisionCircle().setVisible(true);
+                    poolCueView.getBallCollisionCircle().setLayoutX(intersect.getBoundsInLocal().getCenterX());
+                    poolCueView.getBallCollisionCircle().setLayoutY(intersect.getBoundsInLocal().getCenterY());
                     poolCueView.getPoolLine().setEndX(intersect.getBoundsInLocal().getCenterX() - intersect.getBoundsInLocal().getWidth() / 2);
                     poolCueView.getPoolLine().setEndY(intersect.getBoundsInLocal().getCenterY() - intersect.getBoundsInLocal().getHeight() / 2);
-                    //poolCueView.getPoolLine().toFront();
+                }else{
+                    poolCueView.getBallCollisionCircle().setVisible(false);
                 }
             }
 
@@ -173,6 +178,11 @@ public class PoolCueController {
                     if (newDistance < currentDistance) {
                         poolCueView.getPoolLine().setEndX(intersect.getBoundsInLocal().getCenterX());
                         poolCueView.getPoolLine().setEndY(intersect.getBoundsInLocal().getCenterY());
+                        poolCueView.getBallCollisionCircle().setVisible(true);
+                        poolCueView.getBallCollisionCircle().setLayoutX(intersect.getBoundsInLocal().getCenterX());
+                        poolCueView.getBallCollisionCircle().setLayoutY(intersect.getBoundsInLocal().getCenterY());
+                    }else{
+                        poolCueView.getBallCollisionCircle().setVisible(false);
                     }
                     //poolCueView.getPoolLine().toFront();
                 }
@@ -221,6 +231,7 @@ public class PoolCueController {
         setPower(power);
         shoot();
     }
+
 
     public void enablePoolCueControl() {
         enablePoolCueControl = true;
