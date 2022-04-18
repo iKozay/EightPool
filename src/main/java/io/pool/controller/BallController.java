@@ -200,6 +200,7 @@ public class BallController {
                         gameController.getGameView().displayPoolCue(false);
                         gameController.getPoolCueController().getCueView().getPoolLine().setVisible(false);
                         gameController.getPoolCueController().setPoolCue(0, gameController.getPoolCueController().poolCueView.getPreviousAngle());
+                        gameController.getPoolCueController().disablePoolCueControl();
                         double newPositionX = (mouseEvent.getSceneX() - mouseAnchorX);
                         double newPositionY = (mouseEvent.getSceneY() - mouseAnchorY);
                         Circle newBallPosition = new Circle(newPositionX, newPositionY, BallModel.RADIUS);
@@ -225,12 +226,14 @@ public class BallController {
                         }
                         whiteBallModel.setPositionX(new BigDecimal(newPositionX));
                         whiteBallModel.setPositionY(new BigDecimal(newPositionY));
+
                     }
                 });
                 bView.getBall().setOnMouseReleased(e -> {
                     if (draggable) {
                         root.setCursor(Cursor.OPEN_HAND);
                         gameController.updatePoolCuePosition();
+                        gameController.getPoolCueController().enablePoolCueControl();
                     }
                 });
 

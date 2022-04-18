@@ -30,18 +30,23 @@ public class PoolCueView {
         cue.setX(0);
         cue.setY(0);
 
-        poolLine = new Line();
         path = new Path();
         path.setFill(Color.TRANSPARENT);
-        path.setStroke(Color.GREEN);
+        path.setStroke(Color.WHITE);
         path.setStrokeWidth(BallModel.RADIUS*2);
+        path.setStyle("-fx-opacity: 0.5;");
+
+        poolLine = new Line();
         poolLine.setStroke(Color.WHITE);
         poolLine.setStrokeWidth(1);
         poolLine.setFill(Color.WHITE);
+
         ballCollisionCircle = new Circle();
         ballCollisionCircle.setRadius(BallModel.RADIUS);
         ballCollisionCircle.setStroke(Color.WHITE);
         ballCollisionCircle.setFill(Color.TRANSPARENT);
+
+
     }
 
 
