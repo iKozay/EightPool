@@ -5,6 +5,9 @@ import io.pool.controller.GameController;
 import io.pool.model.BallModel;
 import io.pool.model.PlayerModel;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -100,11 +103,38 @@ public class AIController {
 
         @Override
         public AIModel call() throws Exception {
-            BallModel targetedBall = AIPLayer.getBallNeededIn().get(new Random().nextInt(AIPLayer.getBallNeededIn().size()));
+            BallModel targetedBall = targetABall();
             AIModel aiModel = new AIModel(targetedBall);
             simulateShot(aiModel);
             aiModel.setEvaluation(evaluate());
             return aiModel;
+        }
+
+        private BallModel targetABall(){
+            boolean obstacle = false;
+            BallModel target = AIPLayer.getBallNeededIn().get(new Random().nextInt(AIPLayer.getBallNeededIn().size()));
+            Path path = new Path();
+            path.setStrokeWidth(4*BallModel.RADIUS);
+            MoveTo moveTo = new MoveTo();
+            LineTo lineTo = new LineTo();
+
+            moveTo.setX(whiteBallModel.getPositionX().doubleValue());
+            moveTo.setY(whiteBallModel.getPositionY().doubleValue());
+
+            lineTo.setX(target.getPositionX().doubleValue());
+            lineTo.setY(target.getPositionY().doubleValue());
+
+            if(ballNeededIn.size()>2){
+                for(BallModel ballModel : bModelList){
+                    if(path.contains(ballModel.getPositionX().doubleValue(),ballModel.getPositionY().doubleValue())){
+                        obstacle=true;
+                        break;
+                    }
+                }
+            }
+
+            if(!obstacle) return target;
+            return targetABall();
         }
 
         private void simulateShot(AIModel aiModel) {
