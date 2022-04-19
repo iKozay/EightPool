@@ -216,7 +216,7 @@ public class PoolCueController {
     private void shoot(){
         if (gameController.gameLoopTimer.isActive) {
                 if (poolCueView.getCue().getLayoutX() != 0 && poolCueView.getCue().getLayoutY() != 0) {
-                    gameController.getBallController().setFirstPlay(false);
+                    gameController.setFirstPlay(false);
                     gameController.getBallController().makeUnDraggable();
                     poolCueView.setPreviousAngle(0);
                     double newVelocityX = -poolCueView.getCue().getLayoutX() / 7;
@@ -229,7 +229,7 @@ public class PoolCueController {
                     disablePoolCueControl();
                     SoundController.BallHit();
                     //if(!gameController.getAiController().isAITraining())SoundController.BallHit();
-                    gameController.getBallController().setWaitingForInput(false);
+                    gameController.setWaitingForInput(false);
                     BallConfigurationDB.hasBeenCalled=false;
                 }
         }

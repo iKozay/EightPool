@@ -59,4 +59,12 @@ public class BallModel extends PhysicsModule{
     public void setInHole(boolean inHole) {
         this.inHole = inHole;
     }
+
+    @Override
+    public BallModel clone() {
+        BallModel bModel = new BallModel(this.number);
+        bModel.setPositionX(this.getPositionX());
+        bModel.setPositionY(this.getPositionY());
+        return bModel;
+    }
 }

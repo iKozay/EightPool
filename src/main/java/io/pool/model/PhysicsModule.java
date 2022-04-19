@@ -111,9 +111,9 @@ public class PhysicsModule {
             setPositionY(getPositionY().add(getVelocityY()));
             /** Add rotation animation */
             //BigDecimal vectorLength = (getVelocityX().pow(2).add(getVelocityY().pow(2))).sqrt(MathContext.DECIMAL32);
-            Rotate rx = new Rotate(-getAccelerationX().doubleValue(),0,0,0,Rotate.Y_AXIS);
-            Rotate ry = new Rotate(-getAccelerationY().doubleValue(), 0, 0,0,Rotate.X_AXIS);
-            BallController.getBallViewFromBallModel((BallModel)this).getBall().getTransforms().addAll(rx,ry);
+            //Rotate rx = new Rotate(-getAccelerationX().doubleValue(),0,0,0,Rotate.Y_AXIS);
+            //Rotate ry = new Rotate(-getAccelerationY().doubleValue(), 0, 0,0,Rotate.X_AXIS);
+            //BallController.getBallViewFromBallModel((BallModel)this).getBall().getTransforms().addAll(rx,ry);
         }
     }
 
