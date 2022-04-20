@@ -56,7 +56,6 @@ public class TableController {
             tableView.getPlayer1Lbl().setText(gameController.getP1().getUsername());
             tableView.getPlayer2Lbl().setText(gameController.getP2().getUsername());
             tableView.getPlayer1Lbl().setStyle("-fx-background-color: #3D4956");
-
         }
     }
 //    public void turnsColor(){

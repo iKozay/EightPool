@@ -310,19 +310,19 @@ public class BallController {
         Bounds intersectBounds;
         for (BallModel bModel : bModelList) {
             if (!bModel.isInHole()) {
-                boolean overlapHappened;
+                boolean overlapHappened=false;
                 boolean fixedOverlap = false;
                 while (!fixedOverlap) {
                     Circle ballShadow = new Circle(bModel.getPositionX().doubleValue(), bModel.getPositionY().doubleValue(), BallModel.RADIUS);
                     intersectBounds = Shape.intersect(TableBorderModel.tableBorderArea, ballShadow).getBoundsInLocal();
                     if ((intersectBounds.getWidth() != -1)) {
+                        if (!overlapHappened) TableBorderModel.applyReflection(bModel, gameController.getAiController().isAITraining());
                         overlapHappened = true;
-                        if (overlapHappened) TableBorderModel.applyReflection(bModel, gameController.getAiController().isAITraining());
                         double normalXComponent = (intersectBounds.getCenterX() - bModel.getPositionX().doubleValue());
                         double normalYComponent = (intersectBounds.getCenterY() - bModel.getPositionY().doubleValue());
                         double distance = Math.sqrt(Math.pow(normalXComponent, 2) + Math.pow(normalYComponent, 2));
-                        double distanceX = ((normalXComponent * (((BallModel.RADIUS * 1.05) - distance) / distance)));
-                        double distanceY = ((normalYComponent * (((BallModel.RADIUS * 1.05) - distance) / (distance))));
+                        double distanceX = ((normalXComponent * (((BallModel.RADIUS*1.01) - distance) / distance)));
+                        double distanceY = ((normalYComponent * (((BallModel.RADIUS*1.01) - distance) / (distance))));
                         bModel.setPositionX(bModel.getPositionX().subtract(new BigDecimal(distanceX)));
                         bModel.setPositionY(bModel.getPositionY().subtract(new BigDecimal(distanceY)));
                     } else {
@@ -337,7 +337,11 @@ public class BallController {
      * Detects all the collisions between the balls
      */
     private void detectCollisionWithOtherBalls(ArrayList<BallModel> bModelList) {
-        BallModel ballA, ballB;
+        BallModel ballA, ballB, whiteBallModel=null, eightBallModel=null;
+        for(BallModel b:bModelList){
+            if(b.getNumber()==8) eightBallModel=b;
+            if(b.getNumber()==16) whiteBallModel=b;
+        }
         /**
          * Suppose we have the following list: [1,2,3,4]
          * We want to check just the following collisions:
@@ -365,7 +369,7 @@ public class BallController {
                         if(!gameController.getAiController().isAITraining()) SoundController.BallsCollide();
                         isCollide = true;
                         if (firstCollide != null) {
-                            if (firstCollide.equals(eightBallModel)) {
+                            if (firstCollide.equals(eightBallModel)&&!gameController.getCurrentPlayer().getBallNeededIn().contains(eightBallModel)) {
                                 System.out.println("EightBall Touch");
                                 foul = true;
                             }

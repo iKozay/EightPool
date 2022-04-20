@@ -26,7 +26,6 @@ public class AIController {
 
     public AIController(GameController gameController) {
         this.gameController = gameController;
-        AIModel.setAiController(this);
     }
 
     public void train() {
@@ -37,13 +36,18 @@ public class AIController {
         for (int i = 0; i < difficulty; i++) {
             aiList.add(executor.submit(new AITrainer(gameController,AIPLayer.getBallNeededIn())));
         }
-        double currentEvaluation = -1, bestEvaluation=-1;
+        double currentEvaluation, bestEvaluation=Integer.MAX_VALUE;
         for(Future<AIModel> currentAI:aiList){
             try {
-                currentEvaluation = currentAI.get().getEvaluation();
-                if(currentEvaluation>bestEvaluation){
-                    bestEvaluation=currentEvaluation;
-                    bestAI=currentAI.get();
+                if(bestEvaluation==Integer.MAX_VALUE){
+                    bestEvaluation = currentAI.get().getEvaluation();
+                    bestAI = currentAI.get();
+                }else {
+                    currentEvaluation = currentAI.get().getEvaluation();
+                    if (currentEvaluation > bestEvaluation) {
+                        bestEvaluation = currentEvaluation;
+                        bestAI = currentAI.get();
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -110,6 +114,7 @@ public class AIController {
             return aiModel;
         }
 
+        private int counter=0;
         private BallModel targetABall(){
             boolean obstacle = false;
             BallModel target = AIPLayer.getBallNeededIn().get(new Random().nextInt(AIPLayer.getBallNeededIn().size()));
@@ -124,7 +129,7 @@ public class AIController {
             lineTo.setX(target.getPositionX().doubleValue());
             lineTo.setY(target.getPositionY().doubleValue());
 
-            if(ballNeededIn.size()>2){
+            if(counter<ballNeededIn.size()){
                 for(BallModel ballModel : bModelList){
                     if(path.contains(ballModel.getPositionX().doubleValue(),ballModel.getPositionY().doubleValue())){
                         obstacle=true;
@@ -134,6 +139,7 @@ public class AIController {
             }
 
             if(!obstacle) return target;
+            counter++;
             return targetABall();
         }
 
@@ -160,19 +166,19 @@ public class AIController {
         private double evaluate() {
             double evaluation = 0;
 
-//            BallModel ballA, ballB;
-//            for (var i = 0; i < this.bModelList.size(); i++) {
-//                for (var j = i + 1; j < this.bModelList.size(); j++) {
-//                    ballA = this.bModelList.get(i);
-//                    ballB = this.bModelList.get(j);
-//                    if (ballA.equals(whiteBallModel) || ballB.equals(whiteBallModel)) {
-//                        continue;
-//                    }
-//                    evaluation += ballA.distanceFrom(ballB);
-//                }
-//            }
-//
-//            evaluation = evaluation / 5800;
+            BallModel ballA, ballB;
+            for (var i = 0; i < this.bModelList.size(); i++) {
+                for (var j = i + 1; j < this.bModelList.size(); j++) {
+                    ballA = this.bModelList.get(i);
+                    ballB = this.bModelList.get(j);
+                    if (ballA.equals(whiteBallModel) || ballB.equals(whiteBallModel)) {
+                        continue;
+                    }
+                    evaluation += ballA.distanceFrom(ballB);
+                }
+            }
+
+            evaluation = evaluation / 7000;
 
 
             int validBalls = 0;

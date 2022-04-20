@@ -28,7 +28,7 @@ public class TableBorderModel extends Line {
      * 2    3   4
      */
     private int type;
-    public static Path tableBorderArea = new Path();
+    public static Shape tableBorderArea = new Path();
 
     public TableBorderModel(String description, double startX, double startY, double endX, double endY, double xFactor, double yFactor) {
         super(startX,startY,endX,endY);
@@ -50,48 +50,51 @@ public class TableBorderModel extends Line {
     public static void applyReflection(BallModel bModel, boolean aiTraining){
         TableBorderModel reflectionLine=null;
         Bounds intersect;
-        //BallView bView = BallController.getBallViewFromBallModel(bModel);
-        double area=-1;
+        double area=Integer.MAX_VALUE;
         for(TableBorderModel line : tableBorder) {
             Circle ballShadow = new Circle(bModel.getPositionX().doubleValue(), bModel.getPositionY().doubleValue(), BallModel.RADIUS);
             intersect = Shape.intersect(ballShadow,line).getBoundsInLocal();
             if(intersect.getWidth()!=-1){
-                double newarea = intersect.getWidth()*intersect.getHeight();
-                if(newarea>area){
+                double newarea = intersect.getWidth() * intersect.getHeight();
+                if(area==Integer.MAX_VALUE){
                     area=newarea;
                     reflectionLine=line;
+                }else {
+                    if (newarea > area) {
+                        area = newarea;
+                        reflectionLine = line;
+                    }
                 }
             }
         }
-        if (reflectionLine.type == 0) {
-            bModel.setVelocityX(bModel.getVelocityX().multiply(reflectionLine.getReflectionXFactor()));
-            bModel.setVelocityY(bModel.getVelocityY().multiply(reflectionLine.getReflectionYFactor()));
-            if(!aiTraining) SoundController.BallBounce();
-        } else {
-            Point2D line = new Point2D(reflectionLine.getEndX()- reflectionLine.getStartX(),reflectionLine.getEndY()- reflectionLine.getStartY());
-            Point2D vec = new Point2D(bModel.getVelocityX().doubleValue(),bModel.getVelocityY().doubleValue());
-            double angleBetween = line.angle(vec);
-            double angle = Math.atan2(bModel.getVelocityY().doubleValue(),bModel.getVelocityX().doubleValue());
+        if (reflectionLine != null) {
+            if (reflectionLine.type == 0) {
+                bModel.setVelocityX(bModel.getVelocityX().multiply(reflectionLine.getReflectionXFactor()));
+                bModel.setVelocityY(bModel.getVelocityY().multiply(reflectionLine.getReflectionYFactor()));
+                if (!aiTraining) SoundController.BallBounce();
+            } else {
+                Point2D line = new Point2D(reflectionLine.getEndX() - reflectionLine.getStartX(), reflectionLine.getEndY() - reflectionLine.getStartY());
+                Point2D vec = new Point2D(bModel.getVelocityX().doubleValue(), bModel.getVelocityY().doubleValue());
+                double angleBetween = line.angle(vec);
+                double angle = Math.atan2(bModel.getVelocityY().doubleValue(), bModel.getVelocityX().doubleValue());
 
 
-            if(angleBetween<90){
-                if(reflectionLine.type==1) angle-=90;
-                if(reflectionLine.type==2) angle+=90;
-            }else if(angleBetween>90){
-                if(reflectionLine.type==1) angle+=90;
-                if(reflectionLine.type==2) angle-=90;
-            }else{
-                bModel.setVelocityX(bModel.getVelocityX().multiply(new BigDecimal(-0.9)));
-                bModel.setVelocityY(bModel.getVelocityY().multiply(new BigDecimal(-0.9)));
-                return;
+                if (angleBetween < 90) {
+                    if (reflectionLine.type == 1) angle -= 90;
+                    if (reflectionLine.type == 2) angle += 90;
+                } else if (angleBetween > 90) {
+                    if (reflectionLine.type == 1) angle += 90;
+                    if (reflectionLine.type == 2) angle -= 90;
+                } else {
+                    bModel.setVelocityX(bModel.getVelocityX().multiply(new BigDecimal(-0.9)));
+                    bModel.setVelocityY(bModel.getVelocityY().multiply(new BigDecimal(-0.9)));
+                    return;
+                }
+
+                double velocityMag = Math.sqrt(Math.pow((bModel.getVelocityX().doubleValue()), 2) + Math.pow((bModel.getVelocityY().doubleValue()), 2)) * 0.9;
+                bModel.setVelocityX(new BigDecimal(velocityMag * Math.cos(angle)));
+                bModel.setVelocityY(new BigDecimal(velocityMag * Math.sin(angle)));
             }
-
-            //System.out.println(bModel+" : "+angleBetween+" --> "+angle);
-            //Circle hole = tView.getHoles().get(reflectionLine.type - 1);
-            //double angle = Math.atan2(((tView.getFullTable().getLayoutY() + hole.getCenterY()) - bModel.getPositionY().doubleValue()), ((tView.getFullTable().getLayoutX() + (TableView.width / 43.2) + hole.getCenterX()) - bModel.getPositionX().doubleValue()));
-            double velocityMag = Math.sqrt(Math.pow((bModel.getVelocityX().doubleValue()), 2) + Math.pow((bModel.getVelocityY().doubleValue()), 2)) * 0.9;
-            bModel.setVelocityX(new BigDecimal(velocityMag * Math.cos(angle)));
-            bModel.setVelocityY(new BigDecimal(velocityMag * Math.sin(angle)));
         }
     }
 

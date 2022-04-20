@@ -9,14 +9,13 @@ import javafx.geometry.Point2D;
 import java.util.Random;
 
 public class AIModel {
-    public final static int EASY_AI=5;
-    public final static int MEDIUM_AI=10;
-    public final static int HARD_AI=50;
+    public final static int EASY_AI=3;
+    public final static int MEDIUM_AI=5;
+    public final static int HARD_AI=15;
 
     private double evaluation=0;
     private double power;
     private double rotation;
-    private static AIController aiController;
 
     public AIModel(BallModel targetedBall) {
         Random rnd = new Random();
@@ -52,10 +51,6 @@ public class AIModel {
 
     public double getRotation() {
         return rotation;
-    }
-
-    public static void setAiController(AIController aiController) {
-        AIModel.aiController = aiController;
     }
 
     public double getEvaluation() {

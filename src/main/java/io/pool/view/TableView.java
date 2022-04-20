@@ -8,6 +8,7 @@ import io.pool.model.BallModel;
 import io.pool.model.TableBorderModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Screen;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -170,7 +172,7 @@ public class TableView {
         root.getChildren().add(anchorPane); // adding the table to the main pain of the project.
 
         createHoles();
-        createLines();
+        createLines(root);
 
     }
     public void createHoles(){
@@ -225,7 +227,7 @@ public class TableView {
         table.getChildren().addAll(holes);
 
     }
-    public void createLines(){
+    public void createLines(Pane root){
 
 
         new TableBorderModel("topLeftHoleA1",width/11.228,height/9,width/14.062,height/12.9,1);
@@ -251,48 +253,61 @@ public class TableView {
 
 
         //Setting the path
-        Path area = TableBorderModel.tableBorderArea;
+        Path playableArea = new Path();
         //Left side
-        area.getElements().add(new MoveTo(width/22.9299,height/7.15789));
-        area.getElements().add(new LineTo(width/16,height/5.9130));
-        area.getElements().add(new LineTo(width/16, height/1.21429));
-        area.getElements().add(new LineTo(width/22.9299,height/1.16587));
-        area.getElements().add(new MoveTo(width/14.221220,height/1.089777));
+        playableArea.getElements().add(new MoveTo(width/22.9299,height/7.15789));
+        playableArea.getElements().add(new LineTo(width/16,height/5.9130));
+        playableArea.getElements().add(new LineTo(width/16, height/1.21429));
+        playableArea.getElements().add(new LineTo(width/22.9299,height/1.16587));
+        playableArea.getElements().add(new ArcTo(cornerHoleRadius,cornerHoleRadius,0,width/14.221220,height/1.089777,true,false));
 
         //Bottom side
-        area.getElements().add(new LineTo(width/11.175561,height/1.13145));
-        area.getElements().add(new LineTo(width/2.165, height/1.13145));
-        area.getElements().add(new LineTo(width/2.128,height/1.09149));
+        playableArea.getElements().add(new LineTo(width/11.175561,height/1.13145));
+        playableArea.getElements().add(new LineTo(width/2.165, height/1.13145));
+        playableArea.getElements().add(new LineTo(width/2.128,height/1.09149));
 
-        area.getElements().add(new MoveTo(width/1.935,height/1.09149));
+        playableArea.getElements().add(new ArcTo(centerHoleRadius,cornerHoleRadius,0,width/1.935,height/1.09149,true,false));
 
-        area.getElements().add(new LineTo(width/1.9048,height/1.13145));
-        area.getElements().add(new LineTo(width/1.10919, height/1.13145));
-        area.getElements().add(new LineTo(width/1.087,height/1.09149));
 
-        area.getElements().add(new MoveTo(width/1.047,height/1.16638));
+        playableArea.getElements().add(new LineTo(width/1.9048,height/1.13145));
+        playableArea.getElements().add(new LineTo(width/1.10919, height/1.13145));
+        playableArea.getElements().add(new LineTo(width/1.087,height/1.09149));
+
+        playableArea.getElements().add(new ArcTo(cornerHoleRadius,cornerHoleRadius,0,width/1.047,height/1.16638,true,false));
+
 
         //Right side
 
-        area.getElements().add(new LineTo(width/1.047,height/1.16638));
-        area.getElements().add(new LineTo(width/1.069,height/1.21864));
-        area.getElements().add(new LineTo(width/1.069, height/5.9130));
-        area.getElements().add(new LineTo(width/1.047,height/7.15789));
-        area.getElements().add(new MoveTo(width/1.084,height/13.302));
+        playableArea.getElements().add(new LineTo(width/1.047,height/1.16638));
+        playableArea.getElements().add(new LineTo(width/1.069,height/1.21864));
+        playableArea.getElements().add(new LineTo(width/1.069, height/5.9130));
+        playableArea.getElements().add(new LineTo(width/1.047,height/7.15789));
+        playableArea.getElements().add(new ArcTo(cornerHoleRadius,cornerHoleRadius,0,width/1.084,height/13.302,true,false));
+
 
         //Top Side
 
-        area.getElements().add(new LineTo(width/1.10719,height/9));
-        area.getElements().add(new LineTo(width/1.9115, height/9));
-        area.getElements().add(new LineTo(width/1.931,height/13.302));
+        playableArea.getElements().add(new LineTo(width/1.10719,height/9));
+        playableArea.getElements().add(new LineTo(width/1.9115, height/9));
+        playableArea.getElements().add(new LineTo(width/1.931,height/13.302));
 
-        area.getElements().add(new MoveTo(width/2.130,height/13.302));
+        playableArea.getElements().add(new ArcTo(centerHoleRadius,cornerHoleRadius,0,width/2.130,height/13.302,true,false));
 
-        area.getElements().add(new LineTo(width/2.16,height/9));
-        area.getElements().add(new LineTo(width/11.228, height/9));
-        area.getElements().add(new LineTo(width/14.062,height/12.9));
 
-        area.setVisible(false);
+        playableArea.getElements().add(new LineTo(width/2.16,height/9));
+        playableArea.getElements().add(new LineTo(width/11.228, height/9));
+        playableArea.getElements().add(new LineTo(width/14.062,height/12.9));
+        playableArea.getElements().add(new ArcTo(cornerHoleRadius,cornerHoleRadius,0,width/22.9299,height/7.15789,true,false));
+
+
+        playableArea.setLayoutX(table.getLayoutX()+(width/43.2));
+        playableArea.setLayoutY(table.getLayoutY()+(width/16.));
+        playableArea.setFill(Color.TRANSPARENT);
+
+        Rectangle screen = new Rectangle(Screen.getPrimary().getVisualBounds().getWidth(),Screen.getPrimary().getVisualBounds().getHeight());
+        TableBorderModel.tableBorderArea = Shape.subtract(screen,playableArea);
+        TableBorderModel.tableBorderArea.setVisible(false);
+
         //
 
         accessibleArea = new Polyline(width/11.228, height/9+(2* BallModel.RADIUS), width/1.10719, height/9+(2* BallModel.RADIUS), width/1.069-(2* BallModel.RADIUS),height/5.9130,width/1.069-(2* BallModel.RADIUS), height/1.21864,width/1.10919,height/1.13145-(2* BallModel.RADIUS),width/11.175561, height/1.13145-(2* BallModel.RADIUS),width/16+(2* BallModel.RADIUS),height/1.21429,width/16+(2* BallModel.RADIUS), height/5.9130,width/11.228,height/9+(2* BallModel.RADIUS));
@@ -305,7 +320,7 @@ public class TableView {
             tbm.setVisible(false);
         }
 
-        table.getChildren().addAll(TableBorderModel.tableBorderArea);
+        root.getChildren().addAll(TableBorderModel.tableBorderArea);
         table.getChildren().addAll(TableBorderModel.tableBorder);
         table.getChildren().addAll(accessibleArea);
     }
