@@ -219,8 +219,8 @@ public class PoolCueController {
                     gameController.setFirstPlay(false);
                     gameController.getBallController().makeUnDraggable();
                     poolCueView.setPreviousAngle(0);
-                    double newVelocityX = -poolCueView.getCue().getLayoutX() / 7;
-                    double newVelocityY = -poolCueView.getCue().getLayoutY() / 7;
+                    double newVelocityX = -poolCueView.getCue().getLayoutX() / 5;
+                    double newVelocityY = -poolCueView.getCue().getLayoutY() / 5;
                     BallController.whiteBallModel.setVelocityX(new BigDecimal(newVelocityX));
                     BallController.whiteBallModel.setVelocityY(new BigDecimal(newVelocityY));
                     BallController.whiteBallModel.setIsMoving();

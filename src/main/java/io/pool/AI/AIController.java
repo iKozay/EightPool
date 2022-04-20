@@ -146,8 +146,8 @@ public class AIController {
         private void simulateShot(AIModel aiModel) {
             double newVelocityX = aiModel.getPower() * Math.cos(Math.toRadians(aiModel.getRotation()));
             double newVelocityY = aiModel.getPower() * Math.sin(Math.toRadians(aiModel.getRotation()));
-            whiteBallModel.setVelocityX(new BigDecimal(-newVelocityX/7));
-            whiteBallModel.setVelocityY(new BigDecimal(-newVelocityY/7));
+            whiteBallModel.setVelocityX(new BigDecimal(-newVelocityX/5));
+            whiteBallModel.setVelocityY(new BigDecimal(-newVelocityY/5));
             ballController.isMoving=true;
             simulateOutcome();
         }
@@ -167,18 +167,18 @@ public class AIController {
             double evaluation = 0;
 
             BallModel ballA, ballB;
-            for (var i = 0; i < this.bModelList.size(); i++) {
-                for (var j = i + 1; j < this.bModelList.size(); j++) {
-                    ballA = this.bModelList.get(i);
-                    ballB = this.bModelList.get(j);
-                    if (ballA.equals(whiteBallModel) || ballB.equals(whiteBallModel)) {
-                        continue;
-                    }
+            for (var i = 0; i < this.ballNeededIn.size(); i++) {
+                for (var j = i + 1; j < this.ballNeededIn.size(); j++) {
+                    ballA = this.ballNeededIn.get(i);
+                    ballB = this.ballNeededIn.get(j);
+//                    if (ballA.equals(whiteBallModel) || ballB.equals(whiteBallModel)) {
+//                        continue;
+//                    }
                     evaluation += ballA.distanceFrom(ballB);
                 }
             }
 
-            evaluation = evaluation / 7000;
+            evaluation = evaluation / 5000;
 
 
             int validBalls = 0;
