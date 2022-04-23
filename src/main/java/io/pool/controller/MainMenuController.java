@@ -40,15 +40,15 @@ public class MainMenuController {
 
     public void pvpAction(){
         mmv.getPvp1Btn().setOnMouseExited(event -> {
-            if(mmv.getChildren().contains(mmv.getPvp1Btn())){
-                mmv.getChildren().remove(mmv.getPvp1Btn());
+            if(mmv.getSecondRowPane().getChildren().contains(mmv.getPvp1Btn())){
+                mmv.getSecondRowPane().getChildren().remove(mmv.getPvp1Btn());
                 mmv.getPvpText().setText("P\n  v\n    P");
             }
         });
 
         mmv.getP2().hoverProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue){
-                mmv.getChildren().add(mmv.getPvp1Btn());
+                mmv.getSecondRowPane().getChildren().add(mmv.getPvp1Btn());
                 mmv.getPvpText().setText("PLAY");
             }
         });
@@ -80,15 +80,15 @@ public class MainMenuController {
 
     public void pvAIAction(){
         mmv.getButtonGroup().setOnMouseExited(event -> {
-            if(mmv.getChildren().contains(mmv.getButtonGroup())){
-                mmv.getChildren().remove(mmv.getButtonGroup());
+            if(mmv.getSecondRowPane().getChildren().contains(mmv.getButtonGroup())){
+                mmv.getSecondRowPane().getChildren().remove(mmv.getButtonGroup());
                 mmv.getVersusAIText().setText("CHALLENGE\n    THE AI");
             }
         });
 
         mmv.getP3().hoverProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue){
-                mmv.getChildren().add(mmv.getButtonGroup());
+                mmv.getSecondRowPane().getChildren().add(mmv.getButtonGroup());
                 mmv.getVersusAIText().setText("");
             }
         });
@@ -136,8 +136,8 @@ public class MainMenuController {
         });
 
         mmv.getSolo1Btn().setOnMouseExited(event -> {
-            if(mmv.getChildren().contains(mmv.getSolo1Btn())){
-                mmv.getChildren().remove(mmv.getSolo1Btn());
+            if(mmv.getSecondRowPane().getChildren().contains(mmv.getSolo1Btn())){
+                mmv.getSecondRowPane().getChildren().remove(mmv.getSolo1Btn());
                 //mmv.getSoloText().setScaleX(0.75);
                 //mmv.getSoloText().setScaleY(0.75);
                 mmv.getSoloText().setText("SOLO");
@@ -149,7 +149,7 @@ public class MainMenuController {
                 //mmv.getSoloText().setScaleX(1.25);
                 //mmv.getSoloText().setScaleY(1.25);
                 mmv.getSoloText().setText("PLAY");
-                mmv.getChildren().add(mmv.getSolo1Btn());
+                mmv.getSecondRowPane().getChildren().add(mmv.getSolo1Btn());
             }
         });
     }

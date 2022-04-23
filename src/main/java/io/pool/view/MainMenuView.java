@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-public class MainMenuView extends Pane{
+public class MainMenuView extends GridPane{
 
     private Button backBtn;
     private Button PVPstartBtn;
@@ -65,6 +65,7 @@ public class MainMenuView extends Pane{
     private Text soloText;
     private ComboBox comboBoxP1;
     private ComboBox comboBoxP2;
+    private Pane secondRowPane;
 
     public static ObservableList<PlayerModel> Player1List = FXCollections.observableArrayList();
     public static ObservableList<PlayerModel> Player2List = FXCollections.observableArrayList();
@@ -72,70 +73,23 @@ public class MainMenuView extends Pane{
 
     public MainMenuView(Stage stage) throws IOException {
         this.setStyle("-fx-background-color: White");
+        this.getColumnConstraints().add(new ColumnConstraints());
+        this.prefHeight(this.getScreenHeight());
+        this.prefWidth(this.getScreenWidth());
+
+        RowConstraints secondRow = new RowConstraints();
+        this.getRowConstraints().add(new RowConstraints());
+        this.getRowConstraints().add(secondRow);
+        secondRow.setPrefHeight(0.95*this.getScreenHeight());
+
         //Adding texture
         //Green
-        p1 = new Polygon();
-        this.getChildren().add(p1);
-        p1.getPoints().addAll(0.0, 0.0,
-                this.getScreenWidth()/3, 0.0,
-                this.getScreenWidth()/4, this.getScreenHeight(),
-                0.0, this.getScreenHeight());
-
-        ImagePattern tableTexturePattern;
-        tableTexturePattern = new ImagePattern(ResourcesLoader.tableTextures.get(0));
-        p1.setFill(tableTexturePattern);
-        //Red
-        p2 = new Polygon();
-        this.getChildren().add(p2);
-        p2.getPoints().addAll(this.getScreenWidth()/3, 0.0,
-                this.getScreenWidth()*2/3, 0.0,
-                this.getScreenWidth()*7/12, this.getScreenHeight(),
-                this.getScreenWidth()/4, this.getScreenHeight());
-
-        ImagePattern RedtableTexturePattern;
-        RedtableTexturePattern = new ImagePattern(ResourcesLoader.tableTextures.get(1));
-        p2.setFill(RedtableTexturePattern);
-
-        //Blue
-        p3 = new Polygon();
-        this.getChildren().add(p3);
-        p3.getPoints().addAll(this.getScreenWidth()*2/3, 0.0,
-                this.getScreenWidth(), 0.0,
-                this.getScreenWidth(), this.getScreenHeight(),
-                this.getScreenWidth()*7/12, this.getScreenHeight());
-
-        ImagePattern BluetableTexturePattern;
-        BluetableTexturePattern = new ImagePattern(ResourcesLoader.tableTextures.get(2));
-        p3.setFill(BluetableTexturePattern);
-
-        //adding text
-        Font font = new Font(this.getScreenWidth()*0.05);
-        soloText = new Text();
-        soloText.setText("SOLO");
-        soloText.setFont(font);
-        this.getChildren().add(soloText);
-        soloText.setLayoutX(this.getScreenWidth()*0.08);
-        soloText.setLayoutY(this.getScreenHeight()*0.45);
-
-        pvpText = new Text();
-        pvpText.setText("P\n  v\n    P");
-        pvpText.setFont(font);
-        this.getChildren().add(pvpText);
-        pvpText.setLayoutX(this.getScreenWidth()*0.42);
-        pvpText.setLayoutY(this.getScreenHeight()*0.35);
-
-        versusAIText = new Text();
-        versusAIText.setText("CHALLENGE\n    THE AI");
-        versusAIText.setFont(font);
-        this.getChildren().add(versusAIText);
-        versusAIText.setLayoutX(this.getScreenWidth()*0.68);
-        versusAIText.setLayoutY(this.getScreenHeight()*0.4);
 
         //Menu Bar
         menuBar = new MenuBar();
         menuBar.setMinWidth(screenWidth);
         menuBar.setMinHeight(10);
-        menuBar.setStyle("-fx-background-color: transparent");
+        //menuBar.setStyle("-fx-background-color: transparent");
 
         //Menu File
         menuFile = new Menu("File");
@@ -158,6 +112,72 @@ public class MainMenuView extends Pane{
         //Menu Help
         menuHelp = new Menu("About");
         menuBar.getMenus().addAll(menuFile,menuEdit,menuHelp);
+        this.getChildren().add(menuBar);
+        this.setRowIndex(menuBar, 0);
+
+        secondRowPane = new Pane();
+        this.getChildren().add(secondRowPane);
+        this.setRowIndex(secondRowPane, 1);
+
+
+        p1 = new Polygon();
+        secondRowPane.getChildren().add(p1);
+        p1.getPoints().addAll(0.0, 0.0,
+                this.getScreenWidth()/3, 0.0,
+                this.getScreenWidth()/4, this.getScreenHeight(),
+                0.0, this.getScreenHeight());
+
+        ImagePattern tableTexturePattern;
+        tableTexturePattern = new ImagePattern(ResourcesLoader.tableTextures.get(0));
+        p1.setFill(tableTexturePattern);
+        //Red
+        p2 = new Polygon();
+        secondRowPane.getChildren().add(p2);
+        p2.getPoints().addAll(this.getScreenWidth()/3, 0.0,
+                this.getScreenWidth()*2/3, 0.0,
+                this.getScreenWidth()*7/12, this.getScreenHeight(),
+                this.getScreenWidth()/4, this.getScreenHeight());
+
+        ImagePattern RedtableTexturePattern;
+        RedtableTexturePattern = new ImagePattern(ResourcesLoader.tableTextures.get(1));
+        p2.setFill(RedtableTexturePattern);
+
+        //Blue
+        p3 = new Polygon();
+        secondRowPane.getChildren().add(p3);
+        p3.getPoints().addAll(this.getScreenWidth()*2/3, 0.0,
+                this.getScreenWidth(), 0.0,
+                this.getScreenWidth(), this.getScreenHeight(),
+                this.getScreenWidth()*7/12, this.getScreenHeight());
+
+        ImagePattern BluetableTexturePattern;
+        BluetableTexturePattern = new ImagePattern(ResourcesLoader.tableTextures.get(2));
+        p3.setFill(BluetableTexturePattern);
+
+        //adding text
+        Font font = new Font(this.getScreenWidth()*0.05);
+        soloText = new Text();
+        soloText.setText("SOLO");
+        soloText.setFont(font);
+        secondRowPane.getChildren().add(soloText);
+        soloText.setLayoutX(this.getScreenWidth()*0.08);
+        soloText.setLayoutY(this.getScreenHeight()*0.45);
+
+        pvpText = new Text();
+        pvpText.setText("P\n  v\n    P");
+        pvpText.setFont(font);
+        secondRowPane.getChildren().add(pvpText);
+        pvpText.setLayoutX(this.getScreenWidth()*0.42);
+        pvpText.setLayoutY(this.getScreenHeight()*0.35);
+
+        versusAIText = new Text();
+        versusAIText.setText("CHALLENGE\n    THE AI");
+        versusAIText.setFont(font);
+        secondRowPane.getChildren().add(versusAIText);
+        versusAIText.setLayoutX(this.getScreenWidth()*0.68);
+        versusAIText.setLayoutY(this.getScreenHeight()*0.4);
+
+
 
         //Polygon Test
         p3Sub = new Polygon();
@@ -331,8 +351,8 @@ public class MainMenuView extends Pane{
         pvpRootMenu.setTop(topBox);
         pvpRootMenu.setCenter(centerBox);
         pvpRootMenu.setBottom(bottomBox);
-        menuBar.toFront();
-        this.getChildren().add(menuBar);
+//        menuBar.toFront();
+//        this.getChildren().add(menuBar);
 
     }
 
@@ -558,5 +578,13 @@ public class MainMenuView extends Pane{
 
     public MainMenuController getMainMenuController() {
         return this.mainMenuController;
+    }
+
+    public Pane getSecondRowPane() {
+        return secondRowPane;
+    }
+
+    public void setSecondRowPane(Pane secondRowPane) {
+        this.secondRowPane = secondRowPane;
     }
 }
