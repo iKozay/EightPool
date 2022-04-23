@@ -43,14 +43,13 @@ public class TableController {
 //            isBallGotInHole = false;
 //            gameController.setFirstBallInHole(false);
 //        }
-        if(gameController.getGameType()==0) tableView.getPlayer2Lbl().setText(gameController.getP2().getUsername());
+        //if(gameController.getGameType()==0) tableView.getPlayer2Lbl().setText(gameController.getP2().getUsername());
+
         if(gameController.getP1().isTurn()){
             tableView.getPlayer1Lbl().setStyle("-fx-background-color: green");
             tableView.getPlayer1Lbl().setText(gameController.getP1().getUsername());
-            if(gameController.getGameType() > 0) {
-                tableView.getPlayer2Lbl().setStyle("-fx-background-color: #3D4956");
-                tableView.getPlayer2Lbl().setText(gameController.getP2().getUsername());
-            }
+            tableView.getPlayer2Lbl().setStyle("-fx-background-color: #3D4956");
+            tableView.getPlayer2Lbl().setText(gameController.getP2().getUsername());
         }else{
             tableView.getPlayer2Lbl().setStyle("-fx-background-color: green");
             tableView.getPlayer1Lbl().setText(gameController.getP1().getUsername());

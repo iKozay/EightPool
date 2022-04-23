@@ -4,7 +4,6 @@ import io.pool.controller.BallController;
 import io.pool.controller.GameController;
 import io.pool.model.BallModel;
 import io.pool.model.PlayerModel;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -28,18 +27,43 @@ public class AIController {
         this.gameController = gameController;
     }
 
+    private double now;
     public void train() {
-        double now = System.currentTimeMillis();
+        int currentDifficulty = difficulty;
+        // Counter effect the pigeon-hole problem only applicable for Easy and Medium
+        if(difficulty!=AIModel.HARD_AI) {
+            if (currentDifficulty >= AIPLayer.getBallNeededIn().size()) {
+                if(AIPLayer.getBallNeededIn().size()>1){
+                    currentDifficulty = AIPLayer.getBallNeededIn().size()-1;
+                }else{
+                    currentDifficulty=1;
+                }
+            }
+        }
+
+        now = System.currentTimeMillis();
         AITraining = true;
         aiList.clear();
-        executor = Executors.newFixedThreadPool(difficulty);
-        for (int i = 0; i < difficulty; i++) {
-            aiList.add(executor.submit(new AITrainer(gameController,AIPLayer.getBallNeededIn())));
+        executor = Executors.newFixedThreadPool(currentDifficulty);
+        for (int i = 0; i < currentDifficulty; i++) {
+            aiList.add(executor.submit(new AITrainer(i,gameController,AIPLayer.getBallNeededIn())));
         }
-        double currentEvaluation, bestEvaluation=Integer.MAX_VALUE;
+        executor.shutdown();
+    }
+
+    public boolean readyToPlay(){
+        if(executor.isTerminated()){
+            if(isAITraining()) retrieveBestAI();
+            return true;
+        }
+        return false;
+    }
+
+    private void retrieveBestAI(){
+        double currentEvaluation, bestEvaluation=Integer.MIN_VALUE;
         for(Future<AIModel> currentAI:aiList){
             try {
-                if(bestEvaluation==Integer.MAX_VALUE){
+                if(bestEvaluation==Integer.MIN_VALUE){
                     bestEvaluation = currentAI.get().getEvaluation();
                     bestAI = currentAI.get();
                 }else {
@@ -55,11 +79,10 @@ public class AIController {
                 e.printStackTrace();
             }
         }
-        executor.shutdown();
-        while (!executor.isTerminated()) {   }
         AITraining = false;
         System.out.println("Finished Training in "+(System.currentTimeMillis()-now)/1000+" seconds.");
         System.out.println(bestAI + " --> " + bestEvaluation);
+
     }
 
     public AIModel getBestAI() {
@@ -92,8 +115,10 @@ public class AIController {
         private BallModel whiteBallModel = null;
         private BallModel eightBallModel = null;
         private ArrayList<BallModel> ballNeededIn;
+        private int instanceID =-1;
 
-        public AITrainer(GameController gameController, ArrayList<BallModel> ballNeededIn) {
+        public AITrainer(int id,GameController gameController, ArrayList<BallModel> ballNeededIn) {
+            this.instanceID=id;
             this.ballNeededIn = ballNeededIn;
             for (BallModel bModel : BallController.bModelList){
                 bModelList.add(bModel.clone());
@@ -116,31 +141,38 @@ public class AIController {
 
         private int counter=0;
         private BallModel targetABall(){
-            boolean obstacle = false;
-            BallModel target = AIPLayer.getBallNeededIn().get(new Random().nextInt(AIPLayer.getBallNeededIn().size()));
-            Path path = new Path();
-            path.setStrokeWidth(4*BallModel.RADIUS);
-            MoveTo moveTo = new MoveTo();
-            LineTo lineTo = new LineTo();
+            if(difficulty==AIModel.HARD_AI) {
+                // go over every ball if Hard Difficulty
+                counter=instanceID;
+                while(counter>=AIPLayer.getBallNeededIn().size()) counter-=AIPLayer.getBallNeededIn().size();
+                BallModel target = AIPLayer.getBallNeededIn().get(counter);
+                return target;
+            }else{
+                boolean obstacle = false;
+                BallModel target = AIPLayer.getBallNeededIn().get(new Random().nextInt(AIPLayer.getBallNeededIn().size()));
+                Path path = new Path();
+                path.setStrokeWidth(4 * BallModel.RADIUS);
+                MoveTo moveTo = new MoveTo();
+                LineTo lineTo = new LineTo();
 
-            moveTo.setX(whiteBallModel.getPositionX().doubleValue());
-            moveTo.setY(whiteBallModel.getPositionY().doubleValue());
+                moveTo.setX(whiteBallModel.getPositionX().doubleValue());
+                moveTo.setY(whiteBallModel.getPositionY().doubleValue());
 
-            lineTo.setX(target.getPositionX().doubleValue());
-            lineTo.setY(target.getPositionY().doubleValue());
+                lineTo.setX(target.getPositionX().doubleValue());
+                lineTo.setY(target.getPositionY().doubleValue());
 
-            if(counter<ballNeededIn.size()){
-                for(BallModel ballModel : bModelList){
-                    if(path.contains(ballModel.getPositionX().doubleValue(),ballModel.getPositionY().doubleValue())){
-                        obstacle=true;
-                        break;
+                if (counter < ballNeededIn.size()) {
+                    for (BallModel ballModel : bModelList) {
+                        if (path.contains(ballModel.getPositionX().doubleValue(), ballModel.getPositionY().doubleValue())) {
+                            obstacle = true;
+                            break;
+                        }
                     }
                 }
+                if (!obstacle) return target;
+                counter++;
+                return targetABall();
             }
-
-            if(!obstacle) return target;
-            counter++;
-            return targetABall();
         }
 
         private void simulateShot(AIModel aiModel) {
@@ -164,21 +196,18 @@ public class AIController {
         }
 
         private double evaluate() {
-            double evaluation = 0;
+            int evaluation = 0;
 
-            BallModel ballA, ballB;
-            for (var i = 0; i < this.ballNeededIn.size(); i++) {
-                for (var j = i + 1; j < this.ballNeededIn.size(); j++) {
-                    ballA = this.ballNeededIn.get(i);
-                    ballB = this.ballNeededIn.get(j);
-//                    if (ballA.equals(whiteBallModel) || ballB.equals(whiteBallModel)) {
-//                        continue;
-//                    }
-                    evaluation += ballA.distanceFrom(ballB);
-                }
-            }
-
-            evaluation = evaluation / 5000;
+//            BallModel ballA, ballB;
+//            for (var i = 0; i < this.ballNeededIn.size(); i++) {
+//                for (var j = i + 1; j < this.ballNeededIn.size(); j++) {
+//                    ballA = this.ballNeededIn.get(i);
+//                    ballB = this.ballNeededIn.get(j);
+//                    evaluation += ballA.distanceFrom(ballB);
+//                }
+//            }
+//
+//            evaluation = evaluation / 5800;
 
 
             int validBalls = 0;
@@ -206,7 +235,7 @@ public class AIController {
                 }
             }
             if (ballController.isFoul()) {
-                evaluation = evaluation - 3000;
+                evaluation -= 10000;
             }
             return evaluation;
         }

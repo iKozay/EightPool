@@ -64,6 +64,6 @@ public class AIModel {
         return "AIModel{" +
                 "power=" + power +
                 ", rotation=" + rotation +
-                '}';
+                ", evaluation=" + evaluation +'}';
     }
 }
