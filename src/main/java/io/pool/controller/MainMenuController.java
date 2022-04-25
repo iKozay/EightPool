@@ -111,7 +111,6 @@ public class MainMenuController {
             mmv.getButtonGroup().getChildren().get(i).setOnMouseClicked(e -> {
                 isPVP=false;
                 mmv.getComboBoxP2().setDisable(true);
-                mmv.getPVPstartBtn().setDisable(true);
                 //mmv.Player2List = FXCollections.observableArrayList();
                 mmv.getComboBoxP2().getItems().clear();
                 gameView.getGameController().setGameType(finalI+2);
@@ -121,6 +120,8 @@ public class MainMenuController {
                 mmv.getComboBoxP1().setItems(mmv.Player1List);
                 mmv.getComboBoxP1().getSelectionModel().clearSelection();
                 stage.getScene().setRoot(mmv.getPvpRootMenu());
+                mmv.getPVPstartBtn().setDisable(true);
+
             });
         }
     }

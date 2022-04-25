@@ -141,7 +141,7 @@ public class AIController {
 
         private int counter=0;
         private BallModel targetABall(){
-            if(difficulty==AIModel.HARD_AI) {
+            if(difficulty==AIModel.HARD_AI&&ballNeededIn.size()>7) {
                 // go over every ball if Hard Difficulty
                 counter=instanceID;
                 while(counter>=AIPLayer.getBallNeededIn().size()) counter-=AIPLayer.getBallNeededIn().size();
@@ -198,17 +198,6 @@ public class AIController {
         private double evaluate() {
             int evaluation = 0;
 
-//            BallModel ballA, ballB;
-//            for (var i = 0; i < this.ballNeededIn.size(); i++) {
-//                for (var j = i + 1; j < this.ballNeededIn.size(); j++) {
-//                    ballA = this.ballNeededIn.get(i);
-//                    ballB = this.ballNeededIn.get(j);
-//                    evaluation += ballA.distanceFrom(ballB);
-//                }
-//            }
-//
-//            evaluation = evaluation / 5800;
-
 
             int validBalls = 0;
 
@@ -227,6 +216,8 @@ public class AIController {
 
             evaluation += 2000 * validBalls;
 
+            //Make strict foul policy
+
             if (ballController.isScored()) {
                 if (!ballController.isFoul()) {
                     evaluation += 10000;
@@ -235,7 +226,7 @@ public class AIController {
                 }
             }
             if (ballController.isFoul()) {
-                evaluation -= 10000;
+                evaluation -= 20000;
             }
             return evaluation;
         }

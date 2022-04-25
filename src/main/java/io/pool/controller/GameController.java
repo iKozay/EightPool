@@ -6,6 +6,7 @@ import io.pool.Database.BallConfigurationDB;
 import io.pool.Database.PlayerTableDB;
 import io.pool.eightpool.ResourcesLoader;
 import io.pool.model.BallModel;
+import io.pool.model.PhysicsModule;
 import io.pool.model.PlayerModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
@@ -195,6 +196,7 @@ public class GameController {
         ballController.destroyViews(this.gameView);
         ballController.destroyModels();
         ballController.setFoul(false);
+        ballController.setFirstCollide(null);
         BallController.setAllInSolid(false);
         BallController.setAllInStripe(false);
         waitingForInput = false;
@@ -351,12 +353,19 @@ public class GameController {
         BallModel bModel = BallController.getBallModelFromBallView(ballView);
         if (bModel.getNumber() == 16) {
             ballController.setFoul(true);
-            bModel.setPositionX(new BigDecimal(tableController.getTableView().getFullTable().getWidth() / 2));
-            bModel.setPositionY(new BigDecimal(tableController.getTableView().getFullTable().getHeight() / 2));
-            bModel.setVelocityX(new BigDecimal(0.1));
-            bModel.setVelocityY(new BigDecimal(0.1));
-            //System.out.println("whiteBall");
-            bModel.setInHole(false);
+            if(!ballController.isMoving) {
+                bModel.setPositionX(new BigDecimal(BallController.ballXPositions.get(15)));
+                bModel.setPositionY(new BigDecimal(BallController.ballYPositions.get(15)));
+                bModel.setVelocityX(new BigDecimal(0.1));
+                bModel.setVelocityY(new BigDecimal(0.1));
+                BallController.whiteBallView.getBall().setVisible(true);
+                bModel.setInHole(false);
+                //System.out.println("whiteBall");
+            }else{
+                BallController.whiteBallView.getBall().setVisible(false);
+                bModel.setVelocityX(PhysicsModule.ZERO);
+                bModel.setVelocityY(PhysicsModule.ZERO);
+            }
         } else {
             if (!bModelInEachTurn.contains(bModel)) bModelInEachTurn.add(bModel);
         }
