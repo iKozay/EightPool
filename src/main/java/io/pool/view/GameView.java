@@ -117,7 +117,7 @@ public class GameView extends Pane {
         keepPlayingButton.setOnAction(e -> {
             popupWindow.close();
             gameController.resetGame(true);
-            System.out.println(gameController.getP1().getScore()+" : "+gameController.getP2().getScore());
+            System.out.println(gameController.getP1Score()+" : "+gameController.getP2Score());
             gameController.startGame(gameController.getGameType(),gameController.getP1(),gameController.getP2());
         });
 

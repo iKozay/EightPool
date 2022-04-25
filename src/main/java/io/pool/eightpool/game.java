@@ -41,7 +41,8 @@ public class game extends Application {
         System.out.println(Screen.getPrimary().getVisualBounds().getHeight());
 
         stage.setTitle("EightPool");
-        stage.setFullScreen(false);
+        stage.setMinWidth(Screen.getPrimary().getVisualBounds().getWidth());
+        stage.setMinHeight(Screen.getPrimary().getVisualBounds().getHeight());
         stage.setScene(scene);
         stage.show();
 

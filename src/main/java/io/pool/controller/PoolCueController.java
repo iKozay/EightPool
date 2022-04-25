@@ -231,6 +231,7 @@ public class PoolCueController {
                     //if(!gameController.getAiController().isAITraining())SoundController.BallHit();
                     gameController.setWaitingForInput(false);
                     BallConfigurationDB.hasBeenCalled=false;
+                    gameController.playerShot();
                 }
         }
     }

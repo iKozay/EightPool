@@ -3,6 +3,7 @@ package io.pool.controller;
 import io.pool.AI.AIController;
 import io.pool.AI.AIModel;
 import io.pool.Database.BallConfigurationDB;
+import io.pool.Database.PlayerTableDB;
 import io.pool.eightpool.ResourcesLoader;
 import io.pool.model.BallModel;
 import io.pool.model.PlayerModel;
@@ -45,6 +46,8 @@ public class GameController {
     private int gameType;
     private int p1Score=0;
     private int p2Score=0;
+    private int p1Shots=0;
+    private int p2Shots=0;
 
     private boolean firstPlay = true;
     private ArrayList<BallModel> bModelInEachTurn = new ArrayList<>();
@@ -142,11 +145,10 @@ public class GameController {
 
         if (this.gameType == 0) {
             // SOLO
-            p2 = new PlayerModel("NOT AVAILABLE", false);
-            p2.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
-            p2.getBallNeededIn().remove(BallController.eightBallModel);
-            p2.getBallNeededIn().remove(BallController.whiteBallModel);
-
+            p2 = PlayerModel.notAvailablePlayer;
+//            p2.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
+//            p2.getBallNeededIn().remove(BallController.eightBallModel);
+//            p2.getBallNeededIn().remove(BallController.whiteBallModel);
             tableController.getTableView().getPlayersScore().setText("- : -");
         } else {
             // Instead get the selected player from the combobox
@@ -200,16 +202,51 @@ public class GameController {
         setBallType = false;
         counter=0;
         gameView.clearBallViewDebug();
+        updatePlayerStats();
+        p1Shots=0;
+        p2Shots=0;
+
         if (!keepScore) {
             //TODO Update score in DB
-            p1.setScore(0);
-            p2.setScore(0);
             p1Score=0;
             p2Score=0;
             tableController.getTableView().getPlayersScore().setText("0 : 0");
         }
         tableController.setBallGotInHole(false);
         tableController.getTableView().removeRemainingBallsSection();
+    }
+
+    private void updatePlayerStats() {
+        if(!gameLoopTimer.isActive()) {
+            int totalMatches, totalShots;
+            if (currentPlayer.equals(p1)) {
+                totalMatches = p1.getNumberOfWins() + p1.getNumberOfLoss();
+                totalShots = p1.getAverageNumberOfShotsPerGame() * totalMatches + p1Shots;
+                totalMatches++;
+                p1.setNumberOfWins(p1.getNumberOfWins() + 1);
+                p1.setAverageNumberOfShotsPerGame(totalShots / totalMatches);
+
+                totalMatches = p2.getNumberOfWins() + p2.getNumberOfLoss();
+                totalShots = p2.getAverageNumberOfShotsPerGame() * totalMatches + p2Shots;
+                totalMatches++;
+                p2.setNumberOfLoss(p1.getNumberOfLoss() + 1);
+                p2.setAverageNumberOfShotsPerGame(totalShots / totalMatches);
+            }else{
+                totalMatches = p2.getNumberOfWins() + p2.getNumberOfLoss();
+                totalShots = p2.getAverageNumberOfShotsPerGame() * totalMatches + p2Shots;
+                totalMatches++;
+                p2.setNumberOfWins(p2.getNumberOfWins() + 1);
+                p2.setAverageNumberOfShotsPerGame(totalShots / totalMatches);
+
+                totalMatches = p1.getNumberOfWins() + p1.getNumberOfLoss();
+                totalShots = p1.getAverageNumberOfShotsPerGame() * totalMatches + p1Shots;
+                totalMatches++;
+                p1.setNumberOfLoss(p1.getNumberOfLoss() + 1);
+                p1.setAverageNumberOfShotsPerGame(totalShots / totalMatches);
+            }
+            PlayerTableDB.updatePlayerTableDB(p1);
+            PlayerTableDB.updatePlayerTableDB(p2);
+        }
     }
 
     public void turns() {
@@ -331,12 +368,10 @@ public class GameController {
             if (!gameView.getPopupWindow().isShowing() && gameType != 0) {
                 if(currentPlayer.equals(p1)) p2Score++;
                 if(currentPlayer.equals(p2)) p1Score++;
-                p1.setScore(p1Score);
-                p2.setScore(p2Score);
 //                currentPlayer.setScore(currentPlayer.getScore() + 1);
             }
             if (gameType != 0) {
-                tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
+                tableController.getTableView().getPlayersScore().setText(p1Score + " : " + p2Score);
             }
             gameView.getPopupMessage().setText(currentPlayer + " lose!");
             gameView.getPopupWindow().show();
@@ -351,15 +386,13 @@ public class GameController {
             if (!gameView.getPopupWindow().isShowing() && gameType != 0) {
                 if(currentPlayer.equals(p1)) p1Score++;
                 if(currentPlayer.equals(p2)) p2Score++;
-                p1.setScore(p1Score);
-                p2.setScore(p2Score);
 //                System.out.println("Score: "+p1Score+" : "+p2Score);
 //                System.out.println("New Score: "+(currentPlayer.getScore() + 1));
 //                currentPlayer.setScore(currentPlayer.getScore() + 1);
 //                System.out.println("Score: "+currentPlayer.getScore());
             }
             if (gameType != 0) {
-                tableController.getTableView().getPlayersScore().setText(p1.getScore() + " : " + p2.getScore());
+                tableController.getTableView().getPlayersScore().setText(p1Score + " : " + p2Score);
             }
             gameView.getPopupMessage().setText(currentPlayer + " win!");
             gameView.getPopupWindow().show();
@@ -494,6 +527,21 @@ public class GameController {
         this.p2 = p2;
     }
 
+    public int getP1Score() {
+        return p1Score;
+    }
+
+    public void setP1Score(int p1Score) {
+        this.p1Score = p1Score;
+    }
+
+    public int getP2Score() {
+        return p2Score;
+    }
+
+    public void setP2Score(int p2Score) {
+        this.p2Score = p2Score;
+    }
 
     public int getGameType() {
         return gameType;
@@ -540,12 +588,8 @@ public class GameController {
     public void setWaitingForInput(boolean b) {
         waitingForInput = b;
     }
-
-//    public ArrayList<Double> getBallsPositionX() {
-//        return ballsPositionX;
-//    }
-//
-//    public ArrayList<Double> getBallsPositionY() {
-//        return ballsPositionY;
-//    }
+    public void playerShot(){
+        if(currentPlayer.equals(p1)) p1Shots++;
+        if(currentPlayer.equals(p2)) p2Shots++;
+    }
 }

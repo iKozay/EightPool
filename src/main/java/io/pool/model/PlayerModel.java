@@ -20,36 +20,25 @@ public class PlayerModel {
     private int numberOfLoss=0;
     private int averageNumberOfShotsPerGame=0;
     private boolean turn;
-    private int score;
+    public static final PlayerModel notAvailablePlayer = new PlayerModel();
 
-
-    public PlayerModel(){
-        this.username = null;
-        this.score = 0;
+    public PlayerModel() {
+        this.username="NOT AVAILABLE";
     }
 
-    public PlayerModel(String username,boolean turn) {
-        this.username = username;
-        this.turn = turn;
-        this.score = 0;
-
-    }
-
-    public PlayerModel(String username,int selectedPoolCue, int numberOfWins,int numberOfLoss, int averageNumberOfShotsPerGame){
+    public PlayerModel(String username, int selectedPoolCue, int numberOfWins, int numberOfLoss, int averageNumberOfShotsPerGame){
         // This is used to load players from the db
         this.username=username;
         this.selectedPoolCue=selectedPoolCue;
         this.numberOfWins=numberOfWins;
         this.numberOfLoss=numberOfLoss;
         this.averageNumberOfShotsPerGame=averageNumberOfShotsPerGame;
-        this.score = 0;
     }
 
     public PlayerModel(String username) {
         // this is used to create new players
         this.username = username;
         playersList.add(this);
-        this.score = 0;
     }
 
     public static boolean doesPlayerExists(String text) {
@@ -122,14 +111,5 @@ public class PlayerModel {
         if (o == null || getClass() != o.getClass()) return false;
         PlayerModel that = (PlayerModel) o;
         return username.equals(that.username);
-    }
-
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 }

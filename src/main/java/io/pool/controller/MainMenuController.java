@@ -48,7 +48,7 @@ public class MainMenuController {
 
         mmv.getP2().hoverProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue){
-                mmv.getSecondRowPane().getChildren().add(mmv.getPvp1Btn());
+                if(!mmv.getSecondRowPane().getChildren().contains(mmv.getPvp1Btn())) mmv.getSecondRowPane().getChildren().add(mmv.getPvp1Btn());
                 mmv.getPvpText().setText("PLAY");
             }
         });
@@ -88,7 +88,7 @@ public class MainMenuController {
 
         mmv.getP3().hoverProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue){
-                mmv.getSecondRowPane().getChildren().add(mmv.getButtonGroup());
+                if(!mmv.getSecondRowPane().getChildren().contains(mmv.getButtonGroup()))mmv.getSecondRowPane().getChildren().add(mmv.getButtonGroup());
                 mmv.getVersusAIText().setText("");
             }
         });
@@ -149,7 +149,7 @@ public class MainMenuController {
                 //mmv.getSoloText().setScaleX(1.25);
                 //mmv.getSoloText().setScaleY(1.25);
                 mmv.getSoloText().setText("PLAY");
-                mmv.getSecondRowPane().getChildren().add(mmv.getSolo1Btn());
+                if(!mmv.getSecondRowPane().getChildren().contains(mmv.getSolo1Btn()))mmv.getSecondRowPane().getChildren().add(mmv.getSolo1Btn());
             }
         });
     }

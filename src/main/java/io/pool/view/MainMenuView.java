@@ -4,8 +4,6 @@ import io.pool.controller.MainMenuController;
 import io.pool.eightpool.ResourcesLoader;
 import io.pool.model.PlayerModel;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -15,20 +13,16 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 
 public class MainMenuView extends GridPane{
@@ -77,10 +71,8 @@ public class MainMenuView extends GridPane{
         this.prefHeight(this.getScreenHeight());
         this.prefWidth(this.getScreenWidth());
 
-        RowConstraints secondRow = new RowConstraints();
         this.getRowConstraints().add(new RowConstraints());
-        this.getRowConstraints().add(secondRow);
-        secondRow.setPrefHeight(0.95*this.getScreenHeight());
+        this.getRowConstraints().add(new RowConstraints());
 
         //Adding texture
         //Green
@@ -88,7 +80,7 @@ public class MainMenuView extends GridPane{
         //Menu Bar
         menuBar = new MenuBar();
         menuBar.setMinWidth(screenWidth);
-        menuBar.setMinHeight(10);
+        menuBar.setMinHeight(screenHeight*0.035);
         //menuBar.setStyle("-fx-background-color: transparent");
 
         //Menu File
@@ -118,7 +110,6 @@ public class MainMenuView extends GridPane{
         secondRowPane = new Pane();
         this.getChildren().add(secondRowPane);
         this.setRowIndex(secondRowPane, 1);
-
 
         p1 = new Polygon();
         secondRowPane.getChildren().add(p1);
