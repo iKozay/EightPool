@@ -201,7 +201,7 @@ public class GameController {
         ballController.isCollide=false;
         BallController.setAllInSolid(false);
         BallController.setAllInStripe(false);
-        waitingForInput = false;
+        waitingForInput = true;
         firstPlay = true;
         setBallType = false;
         counter=0;

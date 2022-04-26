@@ -270,11 +270,13 @@ public class BallController {
             if (!isMoving) {
                 isMoving = bModel.isMoving;
             }
-            bModel.updatePosition();
-                BallView ballView = getBallViewFromBallModel(bModel);
+                bModel.updatePosition();
                 if (checkBallInHole(bModel)) {
                     bModel.setInHole(true);
-                    if(!gameController.getAiController().isAITraining())gameController.whiteBallIn(ballView);
+                    if(!gameController.getAiController().isAITraining()){
+                        BallView ballView = getBallViewFromBallModel(bModel);
+                        gameController.whiteBallIn(ballView);
+                    }
                 }
             if(!gameController.getAiController().isAITraining())updateBallViewPosition(bModel);
         }

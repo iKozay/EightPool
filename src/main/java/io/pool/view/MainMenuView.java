@@ -63,7 +63,7 @@ public class MainMenuView extends GridPane{
 
     public static ObservableList<PlayerModel> Player1List = FXCollections.observableArrayList();
     public static ObservableList<PlayerModel> Player2List = FXCollections.observableArrayList();
-    public final static ObservableList<String> aiList = FXCollections.observableArrayList("Easy AI","Medium AI","Hard AI");
+    public final static ObservableList<PlayerModel> aiList = FXCollections.observableArrayList(new PlayerModel("Easy AI", 1, 0, 0, 0),new PlayerModel("Medium AI", 1, 0, 0, 0),new PlayerModel("Hard AI", 1, 0, 0, 0));
 
 
     public MainMenuView(Stage stage) throws IOException {
@@ -286,15 +286,14 @@ public class MainMenuView extends GridPane{
         Player1List = FXCollections.observableArrayList(PlayerModel.playersList);
 
         comboBoxP1.setItems(Player1List);
-        comboBoxP1.setOnAction(e->{
-            if(mainMenuController.isPVP()) {
-                comboBoxP2.setDisable(false);
-                PVPstartBtn.setDisable(true);
+        comboBoxP1.setOnAction(e-> {
+            if (comboBoxP2.getSelectionModel().getSelectedIndex() == -1){
                 comboBoxP2.getItems().clear();
                 Player2List = FXCollections.observableArrayList(PlayerModel.playersList);
                 Player2List.remove(comboBoxP1.getSelectionModel().getSelectedItem());
                 comboBoxP2.setItems(Player2List);
-            }else{
+            }
+            if(comboBoxP1.getSelectionModel().getSelectedIndex()!=-1 && comboBoxP2.getSelectionModel().getSelectedIndex()!=-1){
                 PVPstartBtn.setDisable(false);
             }
         });
@@ -321,20 +320,23 @@ public class MainMenuView extends GridPane{
 
         Player2List = FXCollections.observableArrayList(PlayerModel.playersList);
 
-
+        comboBoxP2.setItems(Player2List);
         comboBoxP2.setOnAction(e->{
-            if(comboBoxP2.getSelectionModel().getSelectedIndex()!=-1&& mainMenuController.isPVP()){
-                PVPstartBtn.setDisable(false);
-            }else if(!mainMenuController.isPVP()){
+            if (comboBoxP1.getSelectionModel().getSelectedIndex() == -1) {
+                comboBoxP1.getItems().clear();
+                Player1List = FXCollections.observableArrayList(PlayerModel.playersList);
+                Player1List.remove(comboBoxP2.getSelectionModel().getSelectedItem());
+                comboBoxP1.setItems(Player1List);
+            }
+            if(comboBoxP2.getSelectionModel().getSelectedIndex()!=-1&&comboBoxP1.getSelectionModel().getSelectedIndex()!=-1) PVPstartBtn.setDisable(false);
+            if(MainMenuController.getGameView().getGameController().getGameType()>1) {
                 int i = comboBoxP2.getSelectionModel().getSelectedIndex();
-                MainMenuController.getGameView().getGameController().setGameType(i+2);
+                MainMenuController.getGameView().getGameController().setGameType(i + 2);
             }
         });
-        comboBoxP2.setDisable(false);
         PVPstartBtn.setDisable(true);
 
         comboBoxP2.setItems(Player2List);
-        comboBoxP2.getSelectionModel().select(0);
 
         comboBoxP2.setPrefSize(300,50);
         DropShadow dp2 = new DropShadow();

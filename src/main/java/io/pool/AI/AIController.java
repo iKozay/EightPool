@@ -52,9 +52,11 @@ public class AIController {
     }
 
     public boolean readyToPlay(){
-        if(executor.isTerminated()){
-            if(isAITraining()) retrieveBestAI();
-            return true;
+        if(executor!=null) {
+            if (executor.isTerminated()) {
+                if (isAITraining()) retrieveBestAI();
+                if (!isAITraining()) return true;
+            }
         }
         return false;
     }
