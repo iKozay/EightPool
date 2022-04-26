@@ -80,11 +80,11 @@ public class TableBorderModel extends Line {
 
 
                 if (angleBetween < 90) {
-                    if (reflectionLine.type == 1) angle -= 90;
-                    if (reflectionLine.type == 2) angle += 90;
+                    if (reflectionLine.type == 1) angle -= 2*(90-angleBetween);
+                    if (reflectionLine.type == 2) angle += 2*(90-angleBetween);
                 } else if (angleBetween > 90) {
-                    if (reflectionLine.type == 1) angle += 90;
-                    if (reflectionLine.type == 2) angle -= 90;
+                    if (reflectionLine.type == 1) angle += 2*(90-(angleBetween-90));
+                    if (reflectionLine.type == 2) angle -= 2*(90-(angleBetween-90));
                 } else {
                     bModel.setVelocityX(bModel.getVelocityX().multiply(new BigDecimal(-0.9)));
                     bModel.setVelocityY(bModel.getVelocityY().multiply(new BigDecimal(-0.9)));

@@ -296,7 +296,7 @@ public class BallController {
             double ySquared = Math.pow((ballModel.getPositionY().doubleValue() - TableController.tableY - hole.getCenterY()), 2);
             double centerToCenter = Math.sqrt(xSquared+ySquared);
             if(centerToCenter < hole.getRadius()) {
-                if(!gameController.getAiController().isAITraining()) SoundController.BallInHole();
+                if(!gameController.getAiController().isAITraining()&&!ballModel.isInHole()) SoundController.BallInHole();
                 return true;
             }
         }

@@ -5,6 +5,7 @@ import io.pool.model.PlayerModel;
 import io.pool.view.GameView;
 import io.pool.view.MainMenuView;
 import io.pool.view.SettingsView;
+import io.pool.view.aboutView;
 import javafx.collections.FXCollections;
 import javafx.stage.Stage;
 
@@ -12,6 +13,7 @@ public class MainMenuController {
 
     private static MainMenuView mmv;
     private static Stage stage;
+    private aboutView aboutView;
     private SettingsView settingsView;
     private static GameView gameView;
     private boolean isPVP;
@@ -20,6 +22,7 @@ public class MainMenuController {
         this.mmv = mmv;
         this.stage = stage;
         this.settingsView = new SettingsView();
+        this.aboutView = new aboutView();
         mmv.setController(this);
         solo1Action();
         pvAIAction();
@@ -37,6 +40,10 @@ public class MainMenuController {
         stage.getScene().setRoot(settingsView);
         settingsView.getProfilesTable().refresh();
     }
+    public void gotoHelp() {
+        stage.getScene().setRoot(this.aboutView);
+    }
+
 
     public void pvpAction(){
         mmv.getPvp1Btn().setOnMouseExited(event -> {
@@ -110,15 +117,15 @@ public class MainMenuController {
             int finalI = i;
             mmv.getButtonGroup().getChildren().get(i).setOnMouseClicked(e -> {
                 isPVP=false;
-                mmv.getComboBoxP2().setDisable(true);
+                //mmv.getComboBoxP2().setDisable(true);
                 //mmv.Player2List = FXCollections.observableArrayList();
-                mmv.getComboBoxP2().getItems().clear();
+//                mmv.getComboBoxP2().getItems().clear();
                 gameView.getGameController().setGameType(finalI+2);
-                mmv.getComboBoxP2().setItems(FXCollections.observableArrayList("AI"));
-                mmv.getComboBoxP2().getSelectionModel().select(0);
                 mmv.Player1List = FXCollections.observableArrayList(PlayerModel.playersList);
                 mmv.getComboBoxP1().setItems(mmv.Player1List);
                 mmv.getComboBoxP1().getSelectionModel().clearSelection();
+                mmv.getComboBoxP2().setItems(MainMenuView.aiList);
+                mmv.getComboBoxP2().getSelectionModel().select(finalI);
                 stage.getScene().setRoot(mmv.getPvpRootMenu());
                 mmv.getPVPstartBtn().setDisable(true);
 
@@ -155,6 +162,9 @@ public class MainMenuController {
         });
     }
 
+    public static GameView getGameView() {
+        return gameView;
+    }
 
     public boolean isPVP() {
         return isPVP;
@@ -163,4 +173,5 @@ public class MainMenuController {
     public void setSettingsView(SettingsView settingsView) {
         this.settingsView = settingsView;
     }
+
 }

@@ -87,6 +87,7 @@ public class GameController {
                 if (gameType != 0) assignBallType();
                 if(gameType>1&&p2.isTurn()){
                     if(aiController.readyToPlay()&&waitingForInput){
+                        p2.setUsername(p2.getUsername().replace(" (Thinking...)",""));
                         poolCueController.setPoolCue(aiController.getBestAI().getPower(), aiController.getBestAI().getRotation());
                     }
                 }
@@ -197,6 +198,7 @@ public class GameController {
         ballController.destroyModels();
         ballController.setFoul(false);
         ballController.setFirstCollide(null);
+        ballController.isCollide=false;
         BallController.setAllInSolid(false);
         BallController.setAllInStripe(false);
         waitingForInput = false;
@@ -256,7 +258,7 @@ public class GameController {
 
         if (!firstPlay) {
             if (!ballController.isCollide) {
-                //System.out.println("No collide");
+                System.out.println("No collide");
                 ballController.setFoul(true);
             }
         }
@@ -287,6 +289,7 @@ public class GameController {
         counter++;
         if(gameType>1){
             if(p2.isTurn()){
+                p2.setUsername(p2.getUsername()+" (Thinking...)");
                 aiController.train();
             }
         }
@@ -352,6 +355,7 @@ public class GameController {
     public void whiteBallIn(BallView ballView) {
         BallModel bModel = BallController.getBallModelFromBallView(ballView);
         if (bModel.getNumber() == 16) {
+            System.out.println("WhiteBall In");
             ballController.setFoul(true);
             if(!ballController.isMoving) {
                 bModel.setPositionX(new BigDecimal(BallController.ballXPositions.get(15)));
@@ -415,6 +419,7 @@ public class GameController {
         if (ballController.getFirstCollide() != null && setBallType) {
             if (currentPlayer.isTurn() && !(ballController.getFirstCollide().getBallType() == currentPlayer.getBallType())) {
                 ballController.setFoul(true);
+                System.out.println("Incorrect type");
             }
         }
     }

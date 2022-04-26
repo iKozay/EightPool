@@ -27,7 +27,6 @@ public class PoolCueController {
     private GameController gameController;
 
     PoolCueView poolCueView;
-    PoolCueModel poolCueModel;
     public static final int MAX_DISTANCE = 100;
     private boolean enablePoolCueControl = false;
 
@@ -35,8 +34,6 @@ public class PoolCueController {
         this.gameController = gameController;
         this.poolCueView = poolCueView;
         this.poolCueView.setRotationTransform(this);
-        this.poolCueModel = new PoolCueModel();
-
     }
 
     Rotate rotate = new Rotate();

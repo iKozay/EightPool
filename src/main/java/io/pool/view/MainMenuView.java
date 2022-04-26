@@ -63,6 +63,7 @@ public class MainMenuView extends GridPane{
 
     public static ObservableList<PlayerModel> Player1List = FXCollections.observableArrayList();
     public static ObservableList<PlayerModel> Player2List = FXCollections.observableArrayList();
+    public final static ObservableList<String> aiList = FXCollections.observableArrayList("Easy AI","Medium AI","Hard AI");
 
 
     public MainMenuView(Stage stage) throws IOException {
@@ -94,15 +95,18 @@ public class MainMenuView extends GridPane{
 
         //Menu Edit
         menuEdit = new Menu("Edit");
-        //MenuEdit Items
-        menuItem3 = new MenuItem("Game Settings");
-        menuItem3.setOnAction(e->{
+        menuItem2 = new MenuItem("Game Settings");
+        menuItem2.setOnAction(e->{
             mainMenuController.gotoSettings();
         });
-        menuItem4 = new MenuItem("Profiles");
-        menuEdit.getItems().addAll(menuItem3,menuItem4);
+        menuEdit.getItems().add(menuItem2);
         //Menu Help
         menuHelp = new Menu("About");
+        menuItem3 = new MenuItem("Info");
+        menuItem3.setOnAction(e->{
+            mainMenuController.gotoHelp();
+        });
+        menuHelp.getItems().add(menuItem3);
         menuBar.getMenus().addAll(menuFile,menuEdit,menuHelp);
         this.getChildren().add(menuBar);
         this.setRowIndex(menuBar, 0);
@@ -319,9 +323,14 @@ public class MainMenuView extends GridPane{
 
 
         comboBoxP2.setOnAction(e->{
-            if(comboBoxP2.getSelectionModel().getSelectedIndex()!=-1) PVPstartBtn.setDisable(false);
+            if(comboBoxP2.getSelectionModel().getSelectedIndex()!=-1&& mainMenuController.isPVP()){
+                PVPstartBtn.setDisable(false);
+            }else if(!mainMenuController.isPVP()){
+                int i = comboBoxP2.getSelectionModel().getSelectedIndex();
+                MainMenuController.getGameView().getGameController().setGameType(i+2);
+            }
         });
-        comboBoxP2.setDisable(true);
+        comboBoxP2.setDisable(false);
         PVPstartBtn.setDisable(true);
 
         comboBoxP2.setItems(Player2List);
