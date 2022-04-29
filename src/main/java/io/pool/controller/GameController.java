@@ -583,10 +583,12 @@ public class GameController {
             poolCueController.getRotate().setAngle(poolCueController.getCueView().getPreviousAngle());
             if (settingsController.getCueHelper() == 1) {
                 poolCueController.poolCueView.getPoolLine().setVisible(true);
+                poolCueController.poolCueView.getBallCollisionCircle().setVisible(true);
                 poolCueController.poolCueView.getPoolLine().setStartX(BallController.whiteBallModel.getPositionX().doubleValue());
                 poolCueController.poolCueView.getPoolLine().setStartY(BallController.whiteBallModel.getPositionY().doubleValue());
             } else {
                 poolCueController.poolCueView.getPoolLine().setVisible(false);
+                poolCueController.poolCueView.getBallCollisionCircle().setVisible(false);
             }
         }
     }

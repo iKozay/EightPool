@@ -2,7 +2,6 @@ package io.pool.controller;
 
 import io.pool.Database.BallConfigurationDB;
 import io.pool.model.BallModel;
-import io.pool.model.PoolCueModel;
 import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
 import io.pool.view.PoolCueView;
@@ -17,6 +16,7 @@ import javafx.scene.transform.Rotate;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PoolCueController {
 
@@ -63,6 +63,7 @@ public class PoolCueController {
     double draggedTotal;
 
     public void hit(Scene scene) {
+        AtomicBoolean resetMouseLock= new AtomicBoolean(false);
         scene.setOnKeyPressed((keyEvent -> {
             if(!mouseOnly) {
                 if (gameController.gameLoopTimer.isActive) {
@@ -89,6 +90,7 @@ public class PoolCueController {
             }else{
                 if (gameController.gameLoopTimer.isActive) {
                     if(keyEvent.getCode().equals(KeyCode.CONTROL)){
+                        if(!resetMouseLock.get()) resetMouseLock.set(true);
                         setPoolCue(0,gameController.getPoolCueController().poolCueView.getPreviousAngle());
                     }
                 }
@@ -120,11 +122,17 @@ public class PoolCueController {
             if(mouseOnly) {
                 if (enablePoolCueControl) {
                     if (gameController.gameLoopTimer.isActive) {
-                        draggedX = Math.abs(event.getX() - mouseXLock);
-                        draggedY = Math.abs(event.getY() - mouseYLock);
-                        draggedTotal = Math.sqrt(Math.pow(draggedX, 2) + Math.pow(draggedY, 2));
-                        if (draggedTotal > MAX_DISTANCE) draggedTotal = MAX_DISTANCE;
-                        setPower(draggedTotal);
+                        if(resetMouseLock.get()){
+                            mouseXLock=event.getX();
+                            mouseYLock=event.getY();
+                            resetMouseLock.set(false);
+                        }else {
+                            draggedX = Math.abs(event.getX() - mouseXLock);
+                            draggedY = Math.abs(event.getY() - mouseYLock);
+                            draggedTotal = Math.sqrt(Math.pow(draggedX, 2) + Math.pow(draggedY, 2));
+                            if (draggedTotal > MAX_DISTANCE) draggedTotal = MAX_DISTANCE;
+                            setPower(draggedTotal);
+                        }
                     }
                 }
             }
@@ -148,16 +156,13 @@ public class PoolCueController {
             lineTo.setY(BallController.whiteBallView.getBall().getLayoutY());
             poolCueView.getPath().getElements().addAll(moveTo, lineTo);
 
-
             // TABLE BORDER
             for (TableBorderModel tbm : TableBorderModel.tableBorder) {
                 Shape intersect = Shape.intersect(poolCueView.getPath(), tbm);
                 if (intersect.getBoundsInLocal().getWidth() != -1) {
-                    poolCueView.getBallCollisionCircle().setLayoutX(intersect.getBoundsInLocal().getCenterX()+BallModel.RADIUS*Math.cos(Math.toRadians(poolCueView.getPreviousAngle())));
-                    poolCueView.getBallCollisionCircle().setLayoutY(intersect.getBoundsInLocal().getCenterY()+BallModel.RADIUS*Math.sin(Math.toRadians(poolCueView.getPreviousAngle())));
-                    poolCueView.getPoolLine().setEndX(poolCueView.getBallCollisionCircle().getLayoutX()+BallModel.RADIUS*Math.cos(Math.toRadians(poolCueView.getPreviousAngle())));
-                    poolCueView.getPoolLine().setEndY(poolCueView.getBallCollisionCircle().getLayoutY()+BallModel.RADIUS*Math.sin(Math.toRadians(poolCueView.getPreviousAngle())));
-                    //TODO line does not work when it is going into a hole
+                    double newDistance = Math.hypot((intersect.getBoundsInLocal().getCenterX()-poolCueView.getPoolLine().getStartX()), (intersect.getBoundsInLocal().getCenterY()-poolCueView.getPoolLine().getStartY()));
+                    poolCueView.getPoolLine().setEndX(poolCueView.getPoolLine().getStartX()-newDistance+BallModel.RADIUS);
+                    poolCueView.getPoolLine().setEndY(poolCueView.getPoolLine().getStartY());
                 }
             }
 
@@ -169,30 +174,18 @@ public class PoolCueController {
                 }
                 Shape intersect = Shape.intersect(poolCueView.getPath(), bView.getCircleFromSphere());
                 if (intersect.getBoundsInLocal().getWidth() != -1) {
-                    double currentDistance = Math.hypot((poolCueView.getPoolLine().getStartX() - poolCueView.getPoolLine().getEndX()), (poolCueView.getPoolLine().getStartY() - poolCueView.getPoolLine().getEndY()));
-                    double newDistance = Math.hypot((poolCueView.getPoolLine().getStartX() - intersect.getBoundsInLocal().getCenterX()), (poolCueView.getPoolLine().getStartY() - intersect.getBoundsInLocal().getCenterY()));
+                    double currentDistance = Math.hypot(poolCueView.getPoolLine().getEndX()-poolCueView.getPoolLine().getStartX(),poolCueView.getPoolLine().getEndY()-poolCueView.getPoolLine().getStartY());
+                    double newDistance = Math.hypot((intersect.getBoundsInLocal().getCenterX()-poolCueView.getPoolLine().getStartX()), (intersect.getBoundsInLocal().getCenterY()-poolCueView.getPoolLine().getStartY()));
                     if (newDistance < currentDistance) {
-                        poolCueView.getBallCollisionCircle().setLayoutX(bView.getBall().getLayoutX()-BallModel.RADIUS*2*Math.cos(Math.toRadians(poolCueView.getPreviousAngle())));//
-                        poolCueView.getBallCollisionCircle().setLayoutY(bView.getBall().getLayoutY()-BallModel.RADIUS*2*Math.sin(Math.toRadians(poolCueView.getPreviousAngle())));//
-
-                        Point2D circleCenter = new Point2D(poolCueView.getBallCollisionCircle().getLayoutX(), poolCueView.getBallCollisionCircle().getLayoutY());
-                        Point2D whiteBallCenter = new Point2D(BallController.whiteBallModel.getPositionX().doubleValue(), BallController.whiteBallModel.getPositionY().doubleValue());
-                        double angle = circleCenter.angle(whiteBallCenter);//
-                        double distance = whiteBallCenter.distance(circleCenter);
-                        double distanceY = distance*Math.sin(Math.toRadians(angle));
-                        double distanceX = distance*Math.cos(Math.toRadians(angle));
-
-
-                        poolCueView.getBallCollisionCircle().setLayoutX(bView.getBall().getLayoutX()+BallModel.RADIUS*2*Math.cos(Math.toRadians(poolCueView.getPreviousAngle())+distanceX));//
-                        poolCueView.getBallCollisionCircle().setLayoutY(bView.getBall().getLayoutY()+BallModel.RADIUS*2*Math.sin(Math.toRadians(poolCueView.getPreviousAngle())+distanceY));//
-
-                        poolCueView.getPoolLine().setEndX(poolCueView.getBallCollisionCircle().getLayoutX()+BallModel.RADIUS*Math.cos(Math.toRadians(poolCueView.getPreviousAngle())));
-                        poolCueView.getPoolLine().setEndY(poolCueView.getBallCollisionCircle().getLayoutY()+BallModel.RADIUS*Math.sin(Math.toRadians(poolCueView.getPreviousAngle())));
+                        poolCueView.getPoolLine().setEndX(poolCueView.getPoolLine().getStartX()-newDistance+2*BallModel.RADIUS);
+                        poolCueView.getPoolLine().setEndY(poolCueView.getPoolLine().getStartY());
                     }
-                    poolCueView.getPoolLine().toFront();
-                    poolCueView.getBallCollisionCircle().toFront();
                 }
             }
+            poolCueView.getPoolLine().toFront();
+            poolCueView.getBallCollisionCircle().toFront();
+            poolCueView.getBallCollisionCircle().setCenterX(poolCueView.getPoolLine().getEndX());
+            poolCueView.getBallCollisionCircle().setCenterY(poolCueView.getPoolLine().getEndY());
         }
     }
 
@@ -224,6 +217,8 @@ public class PoolCueController {
                     poolCueView.getCue().setLayoutX(0);
                     poolCueView.getCue().setLayoutY(0);
                     disablePoolCueControl();
+                    poolCueView.getPoolLine().setVisible(false);
+                    poolCueView.getBallCollisionCircle().setVisible(false);
                     SoundController.BallHit();
                     //if(!gameController.getAiController().isAITraining())SoundController.BallHit();
                     gameController.setWaitingForInput(false);

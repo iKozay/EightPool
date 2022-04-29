@@ -186,7 +186,6 @@ public class BallController {
                     if (draggable) {
                         root.setCursor(Cursor.CLOSED_HAND);
                         gameController.getGameView().displayPoolCue(false);
-                        gameController.getPoolCueController().getCueView().getPoolLine().setVisible(false);
                         gameController.getPoolCueController().setPoolCue(0, gameController.getPoolCueController().poolCueView.getPreviousAngle());
                         gameController.getPoolCueController().disablePoolCueControl();
                         double newPositionX = (mouseEvent.getSceneX() - mouseAnchorX);

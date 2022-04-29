@@ -3,6 +3,7 @@ package io.pool.view;
 import io.pool.controller.PoolCueController;
 import io.pool.eightpool.ResourcesLoader;
 import io.pool.model.BallModel;
+import javafx.geometry.Bounds;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -32,9 +33,9 @@ public class PoolCueView {
 
         path = new Path();
         path.setFill(Color.TRANSPARENT);
-        path.setStroke(Color.WHITE);
+        path.setStroke(Color.TRANSPARENT);
         path.setStrokeWidth(BallModel.RADIUS*2);
-        path.setStyle("-fx-opacity: 0.5;");
+        //path.setStyle("-fx-opacity: 0.5;");
 
         poolLine = new Line();
         poolLine.setStroke(Color.WHITE);
@@ -45,7 +46,6 @@ public class PoolCueView {
         ballCollisionCircle.setRadius(BallModel.RADIUS);
         ballCollisionCircle.setStroke(Color.WHITE);
         ballCollisionCircle.setFill(Color.TRANSPARENT);
-
 
     }
 
@@ -77,6 +77,8 @@ public class PoolCueView {
         cue.getTransforms().add(pcc.getRotate());
         path.getTransforms().add(pcc.getRotate());
         path.getElements().addAll(pcc.getMoveTo(),pcc.getLineTo());
-
+        ballCollisionCircle.getTransforms().add(pcc.getRotate());
+        poolLine.getTransforms().add(pcc.getRotate());
     }
+
 }
