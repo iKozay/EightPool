@@ -22,7 +22,7 @@ public class BallView {
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseMap(img);
         material.setSpecularColor(Color.WHITE);
-        material.setSpecularPower(200);
+        material.setSpecularPower(1000);
         ball.setMaterial(material);
         ballCircle = new Circle(ball.getRadius());
     }
