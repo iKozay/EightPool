@@ -43,7 +43,7 @@ public class GameController {
 
     private PlayerModel p1 = null;
     private PlayerModel p2 = null;
-    public PlayerModel currentPlayer;
+    public PlayerModel currentPlayer=null;
     private int gameType;
     private int p1Score=0;
     private int p2Score=0;
@@ -153,7 +153,6 @@ public class GameController {
         p1.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
         p1.getBallNeededIn().remove(BallController.eightBallModel);
         p1.getBallNeededIn().remove(BallController.whiteBallModel);
-        p1.setTurn(true);
 
         if (this.gameType == 0) {
             // SOLO
@@ -179,8 +178,14 @@ public class GameController {
             tableController.getTableView().createRemainingBallSection();
         }
 
+        if((gameType==0)||(gameType>1)){
+            currentPlayer = p1;
+        }else{
+            if(currentPlayer==null) currentPlayer=p1;
+        }
+        currentPlayer.setTurn(true);
+        getNextPlayer().setTurn(false);
 
-        currentPlayer = p1;
         poolCueController.getCueView().getCue().setImage(ResourcesLoader.poolCueImages.get(currentPlayer.getSelectedPoolCue() - 1));
 
         BallConfigurationDB.instantiateLastLayoutDB(gameType, p1, p2, currentPlayer.getUsername());
@@ -219,6 +224,7 @@ public class GameController {
             p1Score=0;
             p2Score=0;
             tableController.getTableView().getPlayersScore().setText("0 : 0");
+            currentPlayer=null;
         }
         tableController.getTableView().removeRemainingBallsSection();
     }
@@ -395,6 +401,7 @@ public class GameController {
             p1.setTurn(false);
             p2.setTurn(false);
             gameLoopTimer.stop();
+            setCurrentPlayer();
         }
     }
 
@@ -430,14 +437,18 @@ public class GameController {
     }
 
     public void ballInHole() {
+        boolean gotTypeIn=false;
         if (!bModelInEachTurn.isEmpty()) {
             for (BallModel b : bModelInEachTurn) {
+                if(currentPlayer.getBallNeededIn().contains(b)&&!gotTypeIn){
+                    gotTypeIn=true;
+                }
                 ballController.setScored(true);
                 b.setVelocityX(BigDecimal.ZERO);
                 b.setVelocityY(BigDecimal.ZERO);
                 if (!aiController.isAITraining()) {
                     ballController.ballInHole(b, gameView);
-                    if (gameType > 0) {
+                        if (gameType > 0) {
                         if (p1.getBallNeededIn().contains(b)) {
                             p1.getBallNeededIn().remove(b);
                         }
@@ -453,10 +464,10 @@ public class GameController {
                     }
                 }
             }
+            if(!gotTypeIn) ballController.setFoul(true);
             if (ballController.isScored()&&setBallType) {
                 tableController.getTableView().assignBallsInTableView(1, p1.getBallNeededIn());
                 tableController.getTableView().assignBallsInTableView(2, p2.getBallNeededIn());
-                //tableController.setBallGotInHole(false);
             }
 
         }

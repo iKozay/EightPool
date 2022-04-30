@@ -113,8 +113,8 @@ public class PoolCueController {
                 if (enablePoolCueControl) {
                     if (gameController.gameLoopTimer.isActive) {
                         double deltaY = event.getDeltaY();
-                        if(deltaY<0) draggedTotal--;
-                        if(deltaY>0) draggedTotal++;
+                        if(deltaY<0) draggedTotal+=3;
+                        if(deltaY>0) draggedTotal-=3;
                         if (draggedTotal > MAX_DISTANCE) draggedTotal = MAX_DISTANCE;
                         if (draggedTotal < 0) draggedTotal = 0;
                         setPower(draggedTotal);
