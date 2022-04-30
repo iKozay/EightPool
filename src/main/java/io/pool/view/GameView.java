@@ -727,6 +727,7 @@ public class GameView extends Pane {
             ballsPrimaryPane.setVisible(false);
             ballsDataPane.setVisible(false);
             tableThemesPane.setVisible(false);
+            cueThemePane.setVisible(false);
 
             if (principalBarIsVisible.get()) {
                 Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(1), new KeyValue(principalBar.translateXProperty(), (TableView.width/2.4), Interpolator.EASE_IN)));

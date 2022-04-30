@@ -359,23 +359,6 @@ public class TableView {
             }
         }
     }
-/*
-    public void updateBallsInTableView(int paneNumber, BallModel inBallModel) {
-
-        int index = inBallModel.getNumber() - 1;
-        BallView bView = new BallView(ResourcesLoader.ballImages.get(index), BallModel.RADIUS);
-        if (index > 7) index-=7;
-        if (paneNumber == 1) {
-            firstPlayerRemainingBalls.getChildren().remove(remainingBallsStackPane1.get(index));
-            remainingBallsStackPane1.get(index).getChildren().remove(bView.getBall());
-//            firstPlayerRemainingBalls.getChildren().add(remainingBallsStackPane1.get(index));
-        } else {
-            secondPlayerRemainingBalls.getChildren().remove(remainingBallsStackPane2.get(index));
-            remainingBallsStackPane2.get(index).getChildren().remove(bView.getBall());
-//            secondPlayerRemainingBalls.getChildren().add(remainingBallsStackPane2.get(index));
-        }
-    }
-*/
     public Circle createNeededCircles() {
         Circle ballPlace = new Circle();
         ballPlace.setRadius(BallModel.RADIUS);
