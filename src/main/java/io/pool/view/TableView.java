@@ -45,7 +45,6 @@ public class TableView {
     private HBox firstPlayerRemainingBalls;
     private HBox secondPlayerRemainingBalls;
 
-    //boolean selectionCircleClicked;
 
     public TableView(Pane root) {
 
@@ -287,22 +286,23 @@ public class TableView {
 
         //Top Side
 
-        playableArea.getElements().add(new LineTo(width/1.10719,height/9));
-        playableArea.getElements().add(new LineTo(width/1.9115, height/9));
-        playableArea.getElements().add(new LineTo(width/1.931,height/13.302));
+        playableArea.getElements().add(new LineTo(width/1.10719,height/9.01));
+        playableArea.getElements().add(new LineTo(width/1.9115, height/9.01));
+        playableArea.getElements().add(new LineTo(width/1.931,height/13.312));
 
-        playableArea.getElements().add(new ArcTo(centerHoleRadius,cornerHoleRadius,0,width/2.130,height/13.302,true,false));
+        playableArea.getElements().add(new ArcTo(centerHoleRadius,cornerHoleRadius,0,width/2.130,height/13.312,true,false));
 
 
-        playableArea.getElements().add(new LineTo(width/2.16,height/9));
-        playableArea.getElements().add(new LineTo(width/11.228, height/9));
-        playableArea.getElements().add(new LineTo(width/14.062,height/12.9));
+        playableArea.getElements().add(new LineTo(width/2.16,height/9.01));
+        playableArea.getElements().add(new LineTo(width/11.228, height/9.01));
+        playableArea.getElements().add(new LineTo(width/14.062,height/12.91));
         playableArea.getElements().add(new ArcTo(cornerHoleRadius,cornerHoleRadius,0,width/22.9299,height/7.15789,true,false));
 
 
         playableArea.setLayoutX(table.getLayoutX()+(width/43.2));
         playableArea.setLayoutY(table.getLayoutY()+(width/16.));
-        playableArea.setFill(Color.TRANSPARENT);
+        playableArea.setFill(Color.BLUE);
+        root.getChildren().add(playableArea);
 
         Rectangle screen = new Rectangle(Screen.getPrimary().getVisualBounds().getWidth(),Screen.getPrimary().getVisualBounds().getHeight());
         TableBorderModel.tableBorderArea = Shape.subtract(screen,playableArea);

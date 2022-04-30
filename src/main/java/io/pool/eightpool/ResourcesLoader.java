@@ -68,8 +68,6 @@ public class ResourcesLoader {
     private static void loadPoolCues() throws MalformedURLException{
         for(int i=1;i<=6;i++){
             poolCueImages.add(new Image(ResourcesLoader.class.getResource("/cueImages/cue" + i + ".png").toExternalForm()));
-
-            
         }
 
     }
@@ -78,5 +76,7 @@ public class ResourcesLoader {
         soundFiles.add(new AudioClip(ResourcesLoader.class.getResource("/SoundFiles/Hole.wav").toExternalForm()));
         soundFiles.add(new AudioClip(ResourcesLoader.class.getResource("/SoundFiles/Side.wav").toExternalForm()));
         soundFiles.add(new AudioClip(ResourcesLoader.class.getResource("/SoundFiles/Strike.wav").toExternalForm()));
+        soundFiles.add(new AudioClip(ResourcesLoader.class.getResource("/SoundFiles/Turn.mp3").toExternalForm()));
+        soundFiles.add(new AudioClip(ResourcesLoader.class.getResource("/SoundFiles/Foul.mp3").toExternalForm()));
     }
 }

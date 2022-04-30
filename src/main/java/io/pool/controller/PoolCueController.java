@@ -7,9 +7,11 @@ import io.pool.view.BallView;
 import io.pool.view.PoolCueView;
 
 import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 
@@ -55,15 +57,15 @@ public class PoolCueController {
             });
     }
 
-    double mouseXLock;
-    double mouseYLock;
-    boolean isPressed=false;
-    double draggedX;
-    double draggedY;
+//    double mouseXLock;
+//    double mouseYLock;
+//    boolean isPressed=false;
+//    double draggedX;
+//    double draggedY;
     double draggedTotal;
 
     public void hit(Scene scene) {
-        AtomicBoolean resetMouseLock= new AtomicBoolean(false);
+        //AtomicBoolean resetMouseLock= new AtomicBoolean(false);
         scene.setOnKeyPressed((keyEvent -> {
             if(!mouseOnly) {
                 if (gameController.gameLoopTimer.isActive) {
@@ -87,56 +89,58 @@ public class PoolCueController {
                         setPower(draggedTotal);
                     }
                 }
-            }else{
-                if (gameController.gameLoopTimer.isActive) {
-                    if(keyEvent.getCode().equals(KeyCode.CONTROL)){
-                        if(!resetMouseLock.get()) resetMouseLock.set(true);
-                        setPoolCue(0,gameController.getPoolCueController().poolCueView.getPreviousAngle());
-                    }
-                }
             }
+//            }else{
+//                if (gameController.gameLoopTimer.isActive) {
+//                    if(keyEvent.getCode().equals(KeyCode.CONTROL)){
+//                        if(!resetMouseLock.get()) resetMouseLock.set(true);
+//                        setPoolCue(0,gameController.getPoolCueController().poolCueView.getPreviousAngle());
+//                    }
+//                }
+//            }
         }));
         scene.setOnKeyReleased((keyEvent -> {
             if(!mouseOnly) keysCurrentlyDown.remove(keyEvent.getCode());
         }));
 
-        scene.setOnMouseReleased(event -> {
+        scene.setOnMouseClicked(event -> {
                     if (!keyboardOnly) {
                         shoot();
                     }
         });
-        scene.setOnMousePressed(event -> {
+        scene.setOnScroll(event -> {
             if(mouseOnly) {
                 if (enablePoolCueControl) {
                     if (gameController.gameLoopTimer.isActive) {
-                        if (event.getButton() == MouseButton.PRIMARY) {
-                            mouseXLock = event.getX();
-                            mouseYLock = event.getY();
-                            isPressed = true;
-                        }
+                        double deltaY = event.getDeltaY();
+                        if(deltaY<0) draggedTotal--;
+                        if(deltaY>0) draggedTotal++;
+                        if (draggedTotal > MAX_DISTANCE) draggedTotal = MAX_DISTANCE;
+                        if (draggedTotal < 0) draggedTotal = 0;
+                        setPower(draggedTotal);
                     }
                 }
             }
         });
-        scene.setOnMouseDragged(event -> {
-            if(mouseOnly) {
-                if (enablePoolCueControl) {
-                    if (gameController.gameLoopTimer.isActive) {
-                        if(resetMouseLock.get()){
-                            mouseXLock=event.getX();
-                            mouseYLock=event.getY();
-                            resetMouseLock.set(false);
-                        }else {
-                            draggedX = Math.abs(event.getX() - mouseXLock);
-                            draggedY = Math.abs(event.getY() - mouseYLock);
-                            draggedTotal = Math.sqrt(Math.pow(draggedX, 2) + Math.pow(draggedY, 2));
-                            if (draggedTotal > MAX_DISTANCE) draggedTotal = MAX_DISTANCE;
-                            setPower(draggedTotal);
-                        }
-                    }
-                }
-            }
-        });
+//        scene.setOnMouseDragged(event -> {
+//            if(mouseOnly) {
+//                if (enablePoolCueControl) {
+//                    if (gameController.gameLoopTimer.isActive) {
+//                        if(resetMouseLock.get()){
+//                            mouseXLock=event.getX();
+//                            mouseYLock=event.getY();
+//                            resetMouseLock.set(false);
+//                        }else {
+//                            draggedX = Math.abs(event.getX() - mouseXLock);
+//                            draggedY = Math.abs(event.getY() - mouseYLock);
+//                            draggedTotal = Math.sqrt(Math.pow(draggedX, 2) + Math.pow(draggedY, 2));
+//
+//
+//                        }
+//                    }
+//                }
+//            }
+//        });
     }
 
     public void resetPoolCue() {
@@ -146,6 +150,7 @@ public class PoolCueController {
 
     MoveTo moveTo = new MoveTo();
     LineTo lineTo = new LineTo();
+    boolean wrongType = false;
 
     public void poolCueDirectionLine() {
         if(cueHelperEnabled) {
@@ -160,6 +165,7 @@ public class PoolCueController {
             for (TableBorderModel tbm : TableBorderModel.tableBorder) {
                 Shape intersect = Shape.intersect(poolCueView.getPath(), tbm);
                 if (intersect.getBoundsInLocal().getWidth() != -1) {
+                    wrongType=false;
                     double newDistance = Math.hypot((intersect.getBoundsInLocal().getCenterX()-poolCueView.getPoolLine().getStartX()), (intersect.getBoundsInLocal().getCenterY()-poolCueView.getPoolLine().getStartY()));
                     poolCueView.getPoolLine().setEndX(poolCueView.getPoolLine().getStartX()-newDistance+BallModel.RADIUS);
                     poolCueView.getPoolLine().setEndY(poolCueView.getPoolLine().getStartY());
@@ -177,15 +183,25 @@ public class PoolCueController {
                     double currentDistance = Math.hypot(poolCueView.getPoolLine().getEndX()-poolCueView.getPoolLine().getStartX(),poolCueView.getPoolLine().getEndY()-poolCueView.getPoolLine().getStartY());
                     double newDistance = Math.hypot((intersect.getBoundsInLocal().getCenterX()-poolCueView.getPoolLine().getStartX()), (intersect.getBoundsInLocal().getCenterY()-poolCueView.getPoolLine().getStartY()));
                     if (newDistance < currentDistance) {
+                        wrongType=!gameController.getCurrentPlayer().getBallNeededIn().contains(BallController.getBallModelFromBallView(bView));
                         poolCueView.getPoolLine().setEndX(poolCueView.getPoolLine().getStartX()-newDistance+2*BallModel.RADIUS);
                         poolCueView.getPoolLine().setEndY(poolCueView.getPoolLine().getStartY());
                     }
                 }
             }
-            poolCueView.getPoolLine().toFront();
             poolCueView.getBallCollisionCircle().toFront();
+            poolCueView.getPoolLine().toFront();
             poolCueView.getBallCollisionCircle().setCenterX(poolCueView.getPoolLine().getEndX());
             poolCueView.getBallCollisionCircle().setCenterY(poolCueView.getPoolLine().getEndY());
+            if(wrongType){
+                poolCueView.getBallCollisionCircle().setStroke(Color.ORANGERED);
+                poolCueView.getBallCollisionCircle().setFill(new Color(1,0,0,0.3));
+                poolCueView.getPoolLine().setStroke(Color.ORANGERED);
+            }else{
+                poolCueView.getBallCollisionCircle().setStroke(Color.WHITE);
+                poolCueView.getBallCollisionCircle().setFill(Color.TRANSPARENT);
+                poolCueView.getPoolLine().setStroke(Color.WHITE);
+            }
         }
     }
 
@@ -209,6 +225,7 @@ public class PoolCueController {
                     gameController.setFirstPlay(false);
                     gameController.getBallController().makeUnDraggable();
                     poolCueView.setPreviousAngle(0);
+                    wrongType=false;
                     double newVelocityX = -poolCueView.getCue().getLayoutX() / 5;
                     double newVelocityY = -poolCueView.getCue().getLayoutY() / 5;
                     BallController.whiteBallModel.setVelocityX(new BigDecimal(newVelocityX));
@@ -216,6 +233,7 @@ public class PoolCueController {
                     BallController.whiteBallModel.setIsMoving();
                     poolCueView.getCue().setLayoutX(0);
                     poolCueView.getCue().setLayoutY(0);
+                    draggedTotal=0;
                     disablePoolCueControl();
                     poolCueView.getPoolLine().setVisible(false);
                     poolCueView.getBallCollisionCircle().setVisible(false);
@@ -230,6 +248,7 @@ public class PoolCueController {
 
     public void setPoolCue(double power, double rotation){
         setRotation(rotation);
+        draggedTotal=0;
         setPower(power);
         shoot();
     }

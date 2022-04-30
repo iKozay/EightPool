@@ -118,7 +118,7 @@ public class GameView extends Pane {
             popupWindow.close();
             gameController.resetGame(true);
             System.out.println(gameController.getP1Score()+" : "+gameController.getP2Score());
-            gameController.startGame(gameController.getGameType(),gameController.getP1(),gameController.getP2());
+            gameController.startGame(gameController.getP1(),gameController.getP2());
         });
 
         HBox choiceButtonsPane = new HBox();

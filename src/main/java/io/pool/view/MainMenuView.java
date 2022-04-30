@@ -63,7 +63,6 @@ public class MainMenuView extends GridPane{
 
     public static ObservableList<PlayerModel> Player1List = FXCollections.observableArrayList();
     public static ObservableList<PlayerModel> Player2List = FXCollections.observableArrayList();
-    public final static ObservableList<PlayerModel> aiList = FXCollections.observableArrayList(new PlayerModel("Easy AI", 1, 0, 0, 0),new PlayerModel("Medium AI", 1, 0, 0, 0),new PlayerModel("Hard AI", 1, 0, 0, 0));
 
 
     public MainMenuView(Stage stage) throws IOException {
@@ -331,7 +330,6 @@ public class MainMenuView extends GridPane{
             if(comboBoxP2.getSelectionModel().getSelectedIndex()!=-1&&comboBoxP1.getSelectionModel().getSelectedIndex()!=-1) PVPstartBtn.setDisable(false);
             if(MainMenuController.getGameView().getGameController().getGameType()>1) {
                 int i = comboBoxP2.getSelectionModel().getSelectedIndex();
-                MainMenuController.getGameView().getGameController().setGameType(i + 2);
             }
         });
         PVPstartBtn.setDisable(true);

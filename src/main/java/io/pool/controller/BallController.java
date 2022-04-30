@@ -9,11 +9,14 @@ import io.pool.model.TableBorderModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
 import io.pool.view.TableView;
+import javafx.animation.ScaleTransition;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -248,7 +251,28 @@ public class BallController {
     }
 
     public void makeDraggable() {
-        draggable = true;
+        if(!draggable) {
+            draggable = true;
+            // White ball draggable animation
+            Circle whiteballShadow = new Circle(whiteBallModel.getPositionX().doubleValue(), whiteBallModel.getPositionY().doubleValue(), BallModel.RADIUS*1.01);
+            whiteballShadow.setFill(new Color(1, 1, 1, 0.75));
+            whiteballShadow.setStroke(Color.TRANSPARENT);
+            gameController.getGameView().getChildren().add(whiteballShadow);
+            whiteBallView.getBall().toFront();
+            ScaleTransition scale = new ScaleTransition();
+            scale.setByX(0.5);
+            scale.setByY(0.5);
+            scale.setDuration(Duration.seconds(0.25));
+            scale.setCycleCount(4);
+            scale.setAutoReverse(true);
+            scale.setNode(whiteballShadow);
+            scale.play();
+            if(!gameController.getAiController().isAITraining())SoundController.Foul();
+            scale.setOnFinished(e -> {
+                gameController.getGameView().getChildren().remove(whiteballShadow);
+            });
+
+        }
     }
 
     public void makeUnDraggable() {
@@ -461,13 +485,15 @@ public class BallController {
     /**
      * RULES FOR THE AI SIM
      */
-    public void checkFoul(BallModel whiteball){
-        if(!gameController.isFirstPlay()) {
+    public void checkFoul(BallModel whiteball) {
+        if (!gameController.isFirstPlay()) {
             if (!isCollide) {
-                foul=true;
+                foul = true;
             }
         }
-        if(whiteball.isInHole()) foul=true;
+        if (whiteball.isInHole()){
+            foul = true;
+        }
         gameController.firstCollidePlay();
 
     }

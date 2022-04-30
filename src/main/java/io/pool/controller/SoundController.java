@@ -15,4 +15,6 @@ public class SoundController {
     public static void BallHit(){
         ResourcesLoader.soundFiles.get(3).play();
     }
+    public static void SwitchTurn() {ResourcesLoader.soundFiles.get(4).play();}
+    public static void Foul() {ResourcesLoader.soundFiles.get(5).play();}
 }

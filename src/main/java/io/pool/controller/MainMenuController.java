@@ -24,8 +24,14 @@ public class MainMenuController {
         this.aboutView = new aboutView();
         mmv.setController(this);
         solo1Action();
-        pvAIAction();
         pvpAction();
+        pvAIAction();
+        mmv.getPVPstartBtn().setOnAction(e->{
+            stage.getScene().setRoot(gameView);
+            this.gameView.getGameController().getPoolCueController().handleRotateCue(stage.getScene());
+            this.gameView.getGameController().getPoolCueController().hit(stage.getScene());
+            gameView.getGameController().startGame((PlayerModel) mmv.getComboBoxP1().getSelectionModel().getSelectedItem(), (PlayerModel) mmv.getComboBoxP2().getSelectionModel().getSelectedItem());
+        });
     }
 
     public static void gotoMainMenu(){
@@ -58,14 +64,8 @@ public class MainMenuController {
                 mmv.getPvpText().setText("PLAY");
             }
         });
-        mmv.getPVPstartBtn().setOnAction(e->{
-            stage.getScene().setRoot(gameView);
-            this.gameView.getGameController().getPoolCueController().handleRotateCue(stage.getScene());
-            this.gameView.getGameController().getPoolCueController().hit(stage.getScene());
-                gameView.getGameController().startGame(gameView.getGameController().getGameType(), (PlayerModel) mmv.getComboBoxP1().getSelectionModel().getSelectedItem(), (PlayerModel) mmv.getComboBoxP2().getSelectionModel().getSelectedItem());
-        });
+
         mmv.getPvp1Btn().setOnAction(event -> {
-            gameView.getGameController().setGameType(1);
             mmv.Player2List = FXCollections.observableArrayList();
             mmv.Player1List = FXCollections.observableArrayList(PlayerModel.playersList);
             mmv.getComboBoxP1().setItems(mmv.Player1List);
@@ -111,11 +111,10 @@ public class MainMenuController {
         for(int i = 0;i<3;i++) {
             int finalI = i;
             mmv.getButtonGroup().getChildren().get(i).setOnMouseClicked(e -> {
-                gameView.getGameController().setGameType(finalI+2);
                 mmv.Player1List = FXCollections.observableArrayList(PlayerModel.playersList);
                 mmv.getComboBoxP1().setItems(mmv.Player1List);
                 mmv.getComboBoxP1().getSelectionModel().clearSelection();
-                mmv.getComboBoxP2().setItems(MainMenuView.aiList);
+                mmv.getComboBoxP2().setItems(PlayerModel.aiList);
                 mmv.getComboBoxP2().getSelectionModel().select(finalI);
                 stage.getScene().setRoot(mmv.getPvpRootMenu());
                 mmv.getPVPstartBtn().setDisable(true);
@@ -129,7 +128,7 @@ public class MainMenuController {
             stage.getScene().setRoot(gameView);
             this.gameView.getGameController().getPoolCueController().handleRotateCue(stage.getScene());
             this.gameView.getGameController().getPoolCueController().hit(stage.getScene());
-            gameView.getGameController().startGame(0,new PlayerModel("Practice",1,0,0,0),null);
+            gameView.getGameController().startGame(new PlayerModel("Practice",1,0,0,0),null);
 //            DBConnection.instantiateLastLayoutDB(gameModel.getGameType(), new PlayerModel("Test",false), new PlayerModel());
         });
 

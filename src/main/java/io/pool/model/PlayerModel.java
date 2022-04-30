@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class PlayerModel {
 
     public static ObservableList<PlayerModel> playersList = FXCollections.observableArrayList();
+    public final static ObservableList<PlayerModel> aiList = FXCollections.observableArrayList(new PlayerModel("Easy AI", 1, 0, 0, 0),new PlayerModel("Medium AI", 1, 0, 0, 0),new PlayerModel("Hard AI", 1, 0, 0, 0));
     private ArrayList<BallModel> ballNeededIn;
     private String username;
     /**

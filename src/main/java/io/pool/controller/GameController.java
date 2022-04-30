@@ -133,12 +133,22 @@ public class GameController {
      * Calls prepareGame method in BallController to instantiate the BallModels and BallViews
      * Then starts the gameLoopTimer
      */
-    public void startGame(int gameType, PlayerModel player1, PlayerModel player2) {
+    public void startGame(PlayerModel player1, PlayerModel player2) {
+        if(player2==null){
+            gameType=0;
+        }else{
+            if(PlayerModel.playersList.contains(player2)){
+                gameType=1;
+            }else{
+                if(PlayerModel.aiList.contains(player2)){
+                    gameType = 2+PlayerModel.aiList.indexOf(player2);
+                }
+            }
+        }
         gameLoopTimer.start();
         ballController.prepareGame(this.gameView, this.gameView.getTableView());
         gameView.clearBallViewDebug();
         gameView.ballViewDataDebug();
-        this.gameType = gameType;
         p1 = player1;
         p1.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
         p1.getBallNeededIn().remove(BallController.eightBallModel);
@@ -153,21 +163,14 @@ public class GameController {
 //            p2.getBallNeededIn().remove(BallController.whiteBallModel);
             tableController.getTableView().getPlayersScore().setText("- : -");
         } else {
-            // Instead get the selected player from the combobox
-            if (this.gameType == 1) {
-                p2 = player2;
-            } else if (this.gameType == 2) {
-                p2 = new PlayerModel("Easy AI", 1, 0, 0, 0);
+            p2 = player2;
+            if(gameType>1) aiController.setAIPLayer(p2);
+            if (this.gameType == 2) {
                 aiController.setDifficulty(AIModel.EASY_AI);
-                aiController.setAIPLayer(p2);
             } else if (this.gameType == 3) {
-                p2 = new PlayerModel("Medium AI", 1, 0, 0, 0);
                 aiController.setDifficulty(AIModel.MEDIUM_AI);
-                aiController.setAIPLayer(p2);
             } else if (this.gameType == 4) {
-                p2 = new PlayerModel("Hard AI", 1, 0, 0, 0);
                 aiController.setDifficulty(AIModel.HARD_AI);
-                aiController.setAIPLayer(p2);
             }
             p2.setTurn(false);
             p2.setBallNeededIn((ArrayList<BallModel>) BallController.bModelList.clone());
@@ -191,14 +194,16 @@ public class GameController {
      * their respective method from BallController
      */
     public void resetGame(boolean keepScore) {
-        //gameLoopTimer.stop();
+        gameLoopTimer.stop();
         //bModelIn.clear();
         bModelInEachTurn.clear();
         ballController.destroyViews(this.gameView);
         ballController.destroyModels();
         ballController.setFoul(false);
+        ballController.setScored(false);
         ballController.setFirstCollide(null);
         ballController.isCollide=false;
+        ballController.makeUnDraggable();
         BallController.setAllInSolid(false);
         BallController.setAllInStripe(false);
         waitingForInput = true;
@@ -211,12 +216,10 @@ public class GameController {
         p2Shots=0;
 
         if (!keepScore) {
-            //TODO Update score in DB
             p1Score=0;
             p2Score=0;
             tableController.getTableView().getPlayersScore().setText("0 : 0");
         }
-        tableController.setBallGotInHole(false);
         tableController.getTableView().removeRemainingBallsSection();
     }
 
@@ -233,7 +236,7 @@ public class GameController {
                 totalMatches = p2.getNumberOfWins() + p2.getNumberOfLoss();
                 totalShots = p2.getAverageNumberOfShotsPerGame() * totalMatches + p2Shots;
                 totalMatches++;
-                p2.setNumberOfLoss(p1.getNumberOfLoss() + 1);
+                p2.setNumberOfLoss(p2.getNumberOfLoss() + 1);
                 p2.setAverageNumberOfShotsPerGame(totalShots / totalMatches);
             }else{
                 totalMatches = p2.getNumberOfWins() + p2.getNumberOfLoss();
@@ -270,11 +273,9 @@ public class GameController {
             return;
         }
 
-        //System.out.println("Scored: " + ballController.isScored());
         if (!ballController.isScored() || ballController.isFoul()) {
             setCurrentPlayer();
-            ballController.setCollide(false);
-            //System.out.println("switch");
+            SoundController.SwitchTurn();
         }
 
 
@@ -282,7 +283,9 @@ public class GameController {
         poolCueController.getCueView().getCue().setImage(ResourcesLoader.poolCueImages.get(currentPlayer.getSelectedPoolCue() - 1));
         //System.out.println(currentPlayer.getBallType());
         ballController.setFoul(false);
+        ballController.setScored(false);
         ballController.setFirstCollide(null);
+        ballController.setCollide(false);
         bModelInEachTurn.clear();
         System.out.println(currentPlayer.getUsername() + "," + "your turn!");
         waitingForInput = true;
@@ -342,6 +345,7 @@ public class GameController {
     }
 
     private void setCurrentPlayer() {
+
         currentPlayer.setTurn(false);
         currentPlayer = getNextPlayer();
         currentPlayer.setTurn(true);
@@ -418,6 +422,7 @@ public class GameController {
     public void firstCollidePlay() {
         if (ballController.getFirstCollide() != null && setBallType) {
             if (currentPlayer.isTurn() && !(ballController.getFirstCollide().getBallType() == currentPlayer.getBallType())) {
+                if(!aiController.isAITraining()&&!ballController.isFoul()) SoundController.Foul();
                 ballController.setFoul(true);
                 System.out.println("Incorrect type");
             }
@@ -446,13 +451,12 @@ public class GameController {
                             p2.getBallNeededIn().add(BallController.eightBallModel);
                         }
                     }
-                    tableController.setBallGotInHole(true);
                 }
             }
-            if (tableController.getBallGotInHole()&&setBallType) {
+            if (ballController.isScored()&&setBallType) {
                 tableController.getTableView().assignBallsInTableView(1, p1.getBallNeededIn());
                 tableController.getTableView().assignBallsInTableView(2, p2.getBallNeededIn());
-                tableController.setBallGotInHole(false);
+                //tableController.setBallGotInHole(false);
             }
 
         }
@@ -461,6 +465,7 @@ public class GameController {
     public void checkFoul() {
         if (ballController.isFoul()) {
             System.out.println("Foul");
+            ballController.makeUnDraggable();
             ballController.makeDraggable();
         }
     }
@@ -576,8 +581,13 @@ public class GameController {
         }
         gameView.displayPoolCue(show);
         if(poolCueController.poolCueView.getCue().isVisible()) {
-            poolCueController.poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue() + (BallModel.RADIUS));
-            poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (poolCueController.poolCueView.getCue().getImage().getHeight() / 5.));
+            if(!ResourcesLoader.poolCueImages.get(5).equals(poolCueController.poolCueView.getCue().getImage())) {
+                poolCueController.poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue() + (BallModel.RADIUS));
+                poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue() - (BallModel.RADIUS * 0.55));
+            }else{
+                poolCueController.poolCueView.getCue().setX(BallController.whiteBallModel.getPositionX().doubleValue()+ (BallModel.RADIUS));
+                poolCueController.poolCueView.getCue().setY(BallController.whiteBallModel.getPositionY().doubleValue()-(4.15*BallModel.RADIUS));
+            }
             poolCueController.getRotate().setPivotX(BallController.whiteBallModel.getPositionX().doubleValue());
             poolCueController.getRotate().setPivotY(BallController.whiteBallModel.getPositionY().doubleValue());
             poolCueController.getRotate().setAngle(poolCueController.getCueView().getPreviousAngle());

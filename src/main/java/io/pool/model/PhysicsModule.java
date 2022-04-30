@@ -119,31 +119,6 @@ public class PhysicsModule {
 
     /**
      * Applies friction to the ball
-     *
-     * <br><br>
-     * Assign the new acceleration using the ratio:
-     * <p>
-     * Let R be the ratio between V<sub>x</sub> and V<sub>y</sub>. R = V<sub>x</sub> / V<sub>y</sub>
-     * <br>
-     * That same ratio has to apply for the acceleration. R = a<sub>x</sub> / a<sub>y</sub>
-     * <br>
-     * The following relation can be drawn using the Pythagorean theorem: a<sup>2</sup> = (a<sub>x</sub>)<sup>2</sup> + (a<sub>y</sub>)<sup>2</sup>
-     * <br>
-     * With some algebraic manipulations, we can find the new values of a<sub>x</sub> and a<sub>y</sub>:
-     * <br>
-     * a<sup>2</sup> = (a<sub>x</sub>)<sup>2</sup> + (a<sub>y</sub>)<sup>2</sup>
-     * <br>
-     * a<sup>2</sup> = (R*a<sub>y</sub>)<sup>2</sup> + (a<sub>y</sub>)<sup>2</sup>
-     * <br>
-     * a<sup>2</sup> = (R+1) * (a<sub>y</sub>)<sup>2</sup>
-     * <br>
-     * a<sup>2</sup> / (R+1) =  (a<sub>y</sub>)<sup>2</sup>
-     * <br>
-     * a<sub>y</sub> = sqrt [a<sup>2</sup> / (R+1)]
-     * <br>
-     * a<sub>x</sub> = R * a<sub>y</sub>
-     * </p>
-     *
      * @param frictionCoefficient Friction coefficient depending on the situation
      */
     private void applyFriction(double frictionCoefficient) {
@@ -220,13 +195,12 @@ public class PhysicsModule {
             /**
              * Push-Pull Balls apart
              */
-            distanceX = distanceX/2;
-            distanceY = distanceY/2;
+            distanceX = distanceX / 2;
+            distanceY = distanceY / 2;
             pm1.setPositionX(pm1.getPositionX().subtract(new BigDecimal(distanceX)));
             pm1.setPositionY(pm1.getPositionY().subtract(new BigDecimal(distanceY)));
             pm2.setPositionX(pm2.getPositionX().add(new BigDecimal(distanceX)));
             pm2.setPositionY(pm2.getPositionY().add(new BigDecimal(distanceY)));
-
             //BallController.updateBallViewPosition((BallModel) pm1);
             //BallController.updateBallViewPosition((BallModel) pm2);
 
