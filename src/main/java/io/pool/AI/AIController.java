@@ -193,6 +193,11 @@ public class AIController {
                 ballController.detectCollision(bModelList);
                 isMoving = ballController.isMoving;
             }
+            for(BallModel b : bModelList){
+                if(b.isInHole()&&!ballController.isGotTypeIn()){
+                    ballController.setGotTypeIn(true);
+                }
+            }
             ballController.checkFoul(whiteBallModel);
             ballController.checkScored(bModelList);
         }

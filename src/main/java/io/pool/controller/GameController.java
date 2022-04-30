@@ -272,6 +272,7 @@ public class GameController {
             }
         }
         firstCollidePlay();
+        if(!ballController.gotTypeIn) ballController.setFoul(true);
         checkFoul();
 
         if (gameType == 0) {
@@ -289,6 +290,7 @@ public class GameController {
         poolCueController.getCueView().getCue().setImage(ResourcesLoader.poolCueImages.get(currentPlayer.getSelectedPoolCue() - 1));
         //System.out.println(currentPlayer.getBallType());
         ballController.setFoul(false);
+        ballController.gotTypeIn=false;
         ballController.setScored(false);
         ballController.setFirstCollide(null);
         ballController.setCollide(false);
@@ -437,11 +439,10 @@ public class GameController {
     }
 
     public void ballInHole() {
-        boolean gotTypeIn=false;
         if (!bModelInEachTurn.isEmpty()) {
             for (BallModel b : bModelInEachTurn) {
-                if(currentPlayer.getBallNeededIn().contains(b)&&!gotTypeIn){
-                    gotTypeIn=true;
+                if(currentPlayer.getBallNeededIn().contains(b)&&!ballController.gotTypeIn){
+                    ballController.gotTypeIn=true;
                 }
                 ballController.setScored(true);
                 b.setVelocityX(BigDecimal.ZERO);
@@ -464,7 +465,6 @@ public class GameController {
                     }
                 }
             }
-            if(!gotTypeIn) ballController.setFoul(true);
             if (ballController.isScored()&&setBallType) {
                 tableController.getTableView().assignBallsInTableView(1, p1.getBallNeededIn());
                 tableController.getTableView().assignBallsInTableView(2, p2.getBallNeededIn());

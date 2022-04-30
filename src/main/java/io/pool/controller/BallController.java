@@ -53,6 +53,7 @@ public class BallController {
     public boolean isCollide = false;
     private boolean foul = false;
     private boolean scored = false;
+    boolean gotTypeIn=false;
     private BallModel firstCollide = null;
 
 
@@ -495,7 +496,7 @@ public class BallController {
             foul = true;
         }
         gameController.firstCollidePlay();
-
+        if(!gotTypeIn) foul=true;
     }
     public void checkScored(ArrayList<BallModel> bModelList){
         for(BallModel bModel : bModelList){
@@ -594,6 +595,14 @@ public class BallController {
             }
         }
         return null;
+    }
+
+    public boolean isGotTypeIn() {
+        return gotTypeIn;
+    }
+
+    public void setGotTypeIn(boolean gotTypeIn) {
+        this.gotTypeIn = gotTypeIn;
     }
 
     public boolean isFoul() {
