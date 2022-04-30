@@ -61,7 +61,7 @@ public class TableView {
 
         table = new Pane();
         table.setPrefWidth(width);
-        table.setPrefHeight(height);
+        table.setMinHeight(game.eightPoolTableHeight);
         table.setLayoutX(layoutX);
         table.setLayoutY(layoutY);
 
@@ -300,9 +300,9 @@ public class TableView {
         playableArea.getElements().add(new ArcTo(cornerHoleRadius,cornerHoleRadius,0,width/22.9299,height/7.15789,true,false));
 
 
-        playableArea.setLayoutX(table.getLayoutX()+(width/43.2));
+        playableArea.setLayoutX((width/43.2));
         playableArea.setLayoutY(table.getLayoutY()+(width/16.));
-        playableArea.setFill(Color.TRANSPARENT);
+        playableArea.setFill(Color.RED);
 
         Rectangle screen = new Rectangle(Screen.getPrimary().getVisualBounds().getWidth(),Screen.getPrimary().getVisualBounds().getHeight());
         TableBorderModel.tableBorderArea = Shape.subtract(screen,playableArea);
