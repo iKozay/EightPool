@@ -45,6 +45,7 @@ public class TableView {
     private HBox firstPlayerRemainingBalls;
     private HBox secondPlayerRemainingBalls;
 
+    //boolean selectionCircleClicked;
 
     public TableView(Pane root) {
 
@@ -60,7 +61,7 @@ public class TableView {
 
         table = new Pane();
         table.setPrefWidth(width);
-        table.setPrefHeight(height);
+        table.setMinHeight(game.eightPoolTableHeight);
         table.setLayoutX(layoutX);
         table.setLayoutY(layoutY);
 
@@ -286,23 +287,22 @@ public class TableView {
 
         //Top Side
 
-        playableArea.getElements().add(new LineTo(width/1.10719,height/9.01));
-        playableArea.getElements().add(new LineTo(width/1.9115, height/9.01));
-        playableArea.getElements().add(new LineTo(width/1.931,height/13.312));
+        playableArea.getElements().add(new LineTo(width/1.10719,height/9));
+        playableArea.getElements().add(new LineTo(width/1.9115, height/9));
+        playableArea.getElements().add(new LineTo(width/1.931,height/13.302));
 
-        playableArea.getElements().add(new ArcTo(centerHoleRadius,cornerHoleRadius,0,width/2.130,height/13.312,true,false));
+        playableArea.getElements().add(new ArcTo(centerHoleRadius,cornerHoleRadius,0,width/2.130,height/13.302,true,false));
 
 
-        playableArea.getElements().add(new LineTo(width/2.16,height/9.01));
-        playableArea.getElements().add(new LineTo(width/11.228, height/9.01));
-        playableArea.getElements().add(new LineTo(width/14.062,height/12.91));
+        playableArea.getElements().add(new LineTo(width/2.16,height/9));
+        playableArea.getElements().add(new LineTo(width/11.228, height/9));
+        playableArea.getElements().add(new LineTo(width/14.062,height/12.9));
         playableArea.getElements().add(new ArcTo(cornerHoleRadius,cornerHoleRadius,0,width/22.9299,height/7.15789,true,false));
 
 
         playableArea.setLayoutX(table.getLayoutX()+(width/43.2));
         playableArea.setLayoutY(table.getLayoutY()+(width/16.));
-        playableArea.setFill(Color.BLUE);
-        root.getChildren().add(playableArea);
+        playableArea.setFill(Color.TRANSPARENT);
 
         Rectangle screen = new Rectangle(Screen.getPrimary().getVisualBounds().getWidth(),Screen.getPrimary().getVisualBounds().getHeight());
         TableBorderModel.tableBorderArea = Shape.subtract(screen,playableArea);
@@ -359,23 +359,6 @@ public class TableView {
             }
         }
     }
-/*
-    public void updateBallsInTableView(int paneNumber, BallModel inBallModel) {
-
-        int index = inBallModel.getNumber() - 1;
-        BallView bView = new BallView(ResourcesLoader.ballImages.get(index), BallModel.RADIUS);
-        if (index > 7) index-=7;
-        if (paneNumber == 1) {
-            firstPlayerRemainingBalls.getChildren().remove(remainingBallsStackPane1.get(index));
-            remainingBallsStackPane1.get(index).getChildren().remove(bView.getBall());
-//            firstPlayerRemainingBalls.getChildren().add(remainingBallsStackPane1.get(index));
-        } else {
-            secondPlayerRemainingBalls.getChildren().remove(remainingBallsStackPane2.get(index));
-            remainingBallsStackPane2.get(index).getChildren().remove(bView.getBall());
-//            secondPlayerRemainingBalls.getChildren().add(remainingBallsStackPane2.get(index));
-        }
-    }
-*/
     public Circle createNeededCircles() {
         Circle ballPlace = new Circle();
         ballPlace.setRadius(BallModel.RADIUS);

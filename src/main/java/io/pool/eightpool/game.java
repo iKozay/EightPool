@@ -13,8 +13,8 @@ import java.io.IOException;
 public class game extends Application {
     public final static int eightPoolTableWidth = (int) Screen.getPrimary().getVisualBounds().getWidth();
     public final static int eightPoolTableHeight = (int) Screen.getPrimary().getVisualBounds().getHeight();
-    public final static double eightPoolTableX = 0;
-    public final static double eightPoolTableY = 0.073529*eightPoolTableHeight;
+    public final static int eightPoolTableX = 0;
+    public final static double eightPoolTableY = eightPoolTableHeight/13.6;
 
     @Override
     public void start(Stage stage) throws IOException {
