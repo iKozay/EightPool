@@ -1,8 +1,5 @@
 package io.pool.view;
 
-import io.pool.controller.BallController;
-import io.pool.controller.GameController;
-import io.pool.controller.PoolCueController;
 import io.pool.controller.SettingsController;
 import io.pool.eightpool.ResourcesLoader;
 import io.pool.eightpool.game;
@@ -10,9 +7,6 @@ import io.pool.model.BallModel;
 import io.pool.model.TableBorderModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,9 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 
 
 public class TableView {
@@ -33,8 +25,6 @@ public class TableView {
     private final AnchorPane anchorPane;
     private final Pane table; // all components of the table
     private final ArrayList<Circle> holes = new ArrayList<>();
-//    private final ArrayList<StackPane> remainingBallsStackPane1 = new ArrayList<>();
-//    private final ArrayList<StackPane> remainingBallsStackPane2 = new ArrayList<>();
     public final static int width = (int) (game.eightPoolTableWidth/1.5); // the width of the pane
     public final static int height = (int) (game.eightPoolTableHeight/1.5); // the height of the pane
     private final int cornerHoleRadius = (int)(width/36);
@@ -49,12 +39,11 @@ public class TableView {
     private GridPane playersIcon;
     private int controlOption;
 
+    private Label foulNotificationLabel;
     private Label label1;
     private Label howToPlayLabel;
     private Label label3;
     private VBox informativePane;
-
-    //boolean selectionCircleClicked;
 
     public TableView(Pane root, SettingsController settingsController) {
 
@@ -114,16 +103,14 @@ public class TableView {
         label3.setFont(Font.font("Verdana", FontWeight.NORMAL, TableView.width/50.));
 
         smallVisualEffect();
-        informativePane.setOnMouseClicked(event -> {
-            smallVisualEffect();
-        });
+        informativePane.setOnMouseClicked(event -> smallVisualEffect());
 
         informativePane.getChildren().addAll(label1, howToPlayLabel, label3);
 
         playersIcon = new GridPane();
         playersIcon.setHgap(width/28.65);
         playersIcon.setVgap(-3);
-        playersIcon.setAlignment(Pos.TOP_LEFT);
+        playersIcon.setAlignment(Pos.CENTER);
         playersIcon.setPrefWidth(width);
         playersIcon.setPrefHeight(height/9.);
         player1Lbl = new Label("player1");
@@ -153,7 +140,7 @@ public class TableView {
         playersScore.setPrefHeight(height/9.);
 
         VBox scoreBox = new VBox();
-        scoreBox.setPadding(new Insets(10));
+        scoreBox.setPadding(new Insets(6));
         scoreBox.setAlignment(Pos.CENTER);
         scoreBox.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 25px;");
 
@@ -169,12 +156,6 @@ public class TableView {
         firstPlayerRemainingBalls.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15px;");
         firstPlayerRemainingBalls.setVisible(false);
 
-//        for (int i = 0; i < 7; i++) {
-//            StackPane remainingBall = new StackPane();
-//            remainingBall.getChildren().add(createNeededCircles());
-//            firstPlayerRemainingBalls.getChildren().add(remainingBall);
-//        }
-
         secondPlayerRemainingBalls = new HBox();
         secondPlayerRemainingBalls.setPrefWidth(width/2.6);
         secondPlayerRemainingBalls.setMinWidth(width/2.6);
@@ -185,11 +166,13 @@ public class TableView {
         secondPlayerRemainingBalls.setStyle("-fx-background-color: #3D4956; -fx-background-radius: 15px;");
         secondPlayerRemainingBalls.setVisible(false);
 
-        //        for (int i = 0; i < 7; i++) {
-//            StackPane remainingBall = new StackPane();
-//            remainingBall.getChildren().add(createNeededCircles());
-//            secondPlayerRemainingBalls.getChildren().add(remainingBall);
-//        }
+        foulNotificationLabel = new Label("FOUL!");
+        foulNotificationLabel.setFont(Font.font("Goudy Stout", FontWeight.EXTRA_BOLD, TableView.width/60.));
+        foulNotificationLabel.setTextFill(Color.ORANGERED);
+        foulNotificationLabel.setPadding(new Insets(6));
+        foulNotificationLabel.setStyle("-fx-background-color: bisque; -fx-background-radius: 15");
+        foulNotificationLabel.setAlignment(Pos.CENTER);
+        foulNotificationLabel.setVisible(false);
 
         playersIcon.add(player1Lbl, 0,0);
         playersIcon.add(scoreBox, 1, 0);
@@ -201,17 +184,18 @@ public class TableView {
         remainingBallsPane.setSpacing(100);
         remainingBallsPane.setAlignment(Pos.CENTER);
 
-        anchorPane.getChildren().addAll( playersIcon, table, informativePane);
+        anchorPane.getChildren().addAll(table);
 
         AnchorPane.setLeftAnchor(table, width/43.2);
         AnchorPane.setTopAnchor(table, width/8.);//////
-        AnchorPane.setTopAnchor(playersIcon, 0.0);
-        AnchorPane.setLeftAnchor(playersIcon, width/43.2);
-        AnchorPane.setBottomAnchor(informativePane, width/10.);
-        AnchorPane.setLeftAnchor(informativePane, width/43.2);
 
+        playersIcon.setLayoutX(width/43.2);
+        informativePane.setLayoutX(width/43.2);
+        informativePane.setLayoutY(game.eightPoolTableHeight - width/8.);
+        foulNotificationLabel.setLayoutX(width/2.13);
+        foulNotificationLabel.setLayoutY(width/12.);
 
-        root.getChildren().add(anchorPane); // adding the table to the main pain of the project.
+        root.getChildren().addAll(anchorPane, playersIcon, informativePane, foulNotificationLabel); // adding the table to the main pain of the project.
 
         createHoles();
         createLines(root);
@@ -243,7 +227,7 @@ public class TableView {
         Circle upLeftCorner = new Circle();
         upLeftCorner.setRadius(cornerHoleRadius);
         upLeftCorner.setCenterX(width/22.5);
-        upLeftCorner.setCenterY(height/11);
+        upLeftCorner.setCenterY(height/11.);
         holes.add(upLeftCorner);
 
         //Hole 2
@@ -256,7 +240,7 @@ public class TableView {
         //Hole 3
         Circle downCenterCorner = new Circle();
         downCenterCorner.setRadius(centerHoleRadius);
-        downCenterCorner.setCenterX((width/2)/1.014);
+        downCenterCorner.setCenterX((width/2.)/1.014);
         downCenterCorner.setCenterY((height)/1.08);
         holes.add(downCenterCorner);
 
@@ -271,13 +255,13 @@ public class TableView {
         Circle upRightCorner = new Circle();
         upRightCorner.setRadius(cornerHoleRadius);
         upRightCorner.setCenterX(width/1.05675);
-        upRightCorner.setCenterY(height/11);
+        upRightCorner.setCenterY(height/11.);
         holes.add(upRightCorner);
 
         //Hole 6
         Circle upCenterCorner = new Circle();
         upCenterCorner.setRadius(centerHoleRadius);
-        upCenterCorner.setCenterX((width/2)/1.014);
+        upCenterCorner.setCenterX((width/2.)/1.014);
         upCenterCorner.setCenterY(height/14.268);
         holes.add(upCenterCorner);
 
@@ -293,25 +277,25 @@ public class TableView {
     public void createLines(Pane root){
 
 
-        new TableBorderModel("topLeftHoleA1",width/11.228,height/9,width/14.062,height/12.9,1);
-        new TableBorderModel("topLeftHoleA2",width/16,height/5.9130,width/22.9299,height/7.15789,2);
-        new TableBorderModel("bottomLeftHoleB1",width/16,height/1.21429,width/22.9299,height/1.16587,1);
+        new TableBorderModel("topLeftHoleA1",width/11.228,height/9.,width/14.062,height/12.9,1);
+        new TableBorderModel("topLeftHoleA2",width/16.,height/5.9130,width/22.9299,height/7.15789,2);
+        new TableBorderModel("bottomLeftHoleB1",width/16.,height/1.21429,width/22.9299,height/1.16587,1);
         new TableBorderModel("bottomLeftHoleB2",width/11.175561,height/1.13145,width/14.221220,height/1.089777,2);
         new TableBorderModel("bottomMiddleHoleC1",width/2.165,height/1.13145,width/2.128,height/1.09149,1);
         new TableBorderModel("bottomMiddleHoleC2",width/1.9048,height/1.13145,width/1.935,height/1.09149,2);
         new TableBorderModel("bottomRightHoleD1",width/1.10919,height/1.13145,width/1.087,height/1.09149,1);
         new TableBorderModel("bottomRightHoleD2",width/1.069,height/1.21864,width/1.047,height/1.16638,2);
         new TableBorderModel("topRightHoleE1",width/1.069,height/5.9130,width/1.047,height/7.15789,1);
-        new TableBorderModel("topRightHoleE2",width/1.10719,height/9,width/1.084,height/13.302,2);
-        new TableBorderModel("topMiddleHoleF1",width/1.9115,height/9,width/1.931,height/13.302,1);
-        new TableBorderModel("topMiddleHoleF2",width/2.16,height/9,width/2.130,height/13.302,2);
+        new TableBorderModel("topRightHoleE2",width/1.10719,height/9.,width/1.084,height/13.302,2);
+        new TableBorderModel("topMiddleHoleF1",width/1.9115,height/9.,width/1.931,height/13.302,1);
+        new TableBorderModel("topMiddleHoleF2",width/2.16,height/9.,width/2.130,height/13.302,2);
 
 
-        new TableBorderModel("upLeftLine",width/11.228, height/9, width/2.16, height/9,0.9,-0.9);
-        new TableBorderModel("upRightLine",width/1.9115, height/9, width/1.10719, height/9,0.9,-0.9);
+        new TableBorderModel("upLeftLine",width/11.228, height/9., width/2.16, height/9.,0.9,-0.9);
+        new TableBorderModel("upRightLine",width/1.9115, height/9., width/1.10719, height/9.,0.9,-0.9);
         new TableBorderModel("downLeftLine",width/11.175561, height/1.13145, width/2.165, height/1.13145,0.9,-0.9);
         new TableBorderModel("downRightLine",width/1.9048, height/1.13145, width/1.10919, height/1.13145,0.9,-0.9);
-        new TableBorderModel("centerLeftLine",width/16, height/5.9130, width/16, height/1.21429,-0.9,0.9);
+        new TableBorderModel("centerLeftLine",width/16., height/5.9130, width/16., height/1.21429,-0.9,0.9);
         new TableBorderModel("centerRightLine",width/1.069, height/5.9130, width/1.069, height/1.21864,-0.9,0.9);
 
 
@@ -319,8 +303,8 @@ public class TableView {
         Path playableArea = new Path();
         //Left side
         playableArea.getElements().add(new MoveTo(width/22.9299,height/7.15789));
-        playableArea.getElements().add(new LineTo(width/16,height/5.9130));
-        playableArea.getElements().add(new LineTo(width/16, height/1.21429));
+        playableArea.getElements().add(new LineTo(width/16.,height/5.9130));
+        playableArea.getElements().add(new LineTo(width/16., height/1.21429));
         playableArea.getElements().add(new LineTo(width/22.9299,height/1.16587));
         playableArea.getElements().add(new ArcTo(cornerHoleRadius,cornerHoleRadius,0,width/14.221220,height/1.089777,true,false));
 
@@ -373,11 +357,9 @@ public class TableView {
 
         //
 
-        accessibleArea = new Polyline(width/11.228, height/9+(2* BallModel.RADIUS), width/1.10719, height/9+(2* BallModel.RADIUS), width/1.069-(2* BallModel.RADIUS),height/5.9130,width/1.069-(2* BallModel.RADIUS), height/1.21864,width/1.10919,height/1.13145-(2* BallModel.RADIUS),width/11.175561, height/1.13145-(2* BallModel.RADIUS),width/16+(2* BallModel.RADIUS),height/1.21429,width/16+(2* BallModel.RADIUS), height/5.9130,width/11.228,height/9+(2* BallModel.RADIUS));
+        accessibleArea = new Polyline(width/11.228, height/9.+(2* BallModel.RADIUS), width/1.10719, height/9.+(2* BallModel.RADIUS), width/1.069-(2* BallModel.RADIUS),height/5.9130,width/1.069-(2* BallModel.RADIUS), height/1.21864,width/1.10919,height/1.13145-(2* BallModel.RADIUS),width/11.175561, height/1.13145-(2* BallModel.RADIUS),width/16.+(2* BallModel.RADIUS),height/1.21429,width/16.+(2* BallModel.RADIUS), height/5.9130,width/11.228,height/9.+(2* BallModel.RADIUS));
         accessibleArea.setFill(Color.TRANSPARENT);
         accessibleArea.setStroke(Color.TRANSPARENT);
-        //accessibleArea.setVisible(false);
-
 
         for (TableBorderModel tbm:TableBorderModel.tableBorder) {
             tbm.setVisible(false);
@@ -392,8 +374,8 @@ public class TableView {
         int neededEmptyPlaces = 7 - ballModels.size();
         if (paneNumber == 1) {
             firstPlayerRemainingBalls.getChildren().clear();
-            for (int i = 0; i < ballModels.size(); i++) {
-                BallView bView = new BallView(ResourcesLoader.ballImages.get(ballModels.get(i).getNumber() - 1), BallModel.RADIUS);
+            for (BallModel ballModel : ballModels) {
+                BallView bView = new BallView(ResourcesLoader.ballImages.get(ballModel.getNumber() - 1), BallModel.RADIUS);
                 StackPane remainingBall = new StackPane();
                 remainingBall.getChildren().addAll(createNeededCircles(), bView.getBall());
                 firstPlayerRemainingBalls.getChildren().add(remainingBall);
@@ -407,8 +389,8 @@ public class TableView {
             }
         } else {
             secondPlayerRemainingBalls.getChildren().clear();
-            for (int i = 0; i < ballModels.size(); i++) {
-                BallView bView = new BallView(ResourcesLoader.ballImages.get(ballModels.get(i).getNumber() - 1), BallModel.RADIUS);
+            for (BallModel ballModel : ballModels) {
+                BallView bView = new BallView(ResourcesLoader.ballImages.get(ballModel.getNumber() - 1), BallModel.RADIUS);
                 StackPane remainingBall = new StackPane();
                 remainingBall.getChildren().addAll(createNeededCircles(), bView.getBall());
                 secondPlayerRemainingBalls.getChildren().add(remainingBall);
@@ -435,16 +417,8 @@ public class TableView {
         return player1Lbl;
     }
 
-    public void setPlayer1Lbl(Label player1Lbl) {
-        this.player1Lbl = player1Lbl;
-    }
-
     public Label getPlayer2Lbl() {
         return player2Lbl;
-    }
-
-    public void setPlayer2Lbl(Label player2Lbl) {
-        this.player2Lbl = player2Lbl;
     }
 
     public Pane getFullTable() {
@@ -504,8 +478,16 @@ public class TableView {
 
     }
 
+    public VBox getInformativePane() {
+        return informativePane;
+    }
+
     public void setControlOption(int controlOption) {
         this.controlOption = controlOption;
+    }
+
+    public Label getFoulNotificationLabel() {
+        return foulNotificationLabel;
     }
 }
 

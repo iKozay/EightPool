@@ -10,6 +10,11 @@ import io.pool.model.PhysicsModule;
 import io.pool.model.PlayerModel;
 import io.pool.view.BallView;
 import io.pool.view.GameView;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -79,6 +84,13 @@ public class GameController {
         gameLoopTimer = new GameLoopTimer() {
             @Override
             public void tick(float secondsSinceLastFrame) {
+
+                if (ballController.isFoul()) {
+                    gameView.getTableView().getFoulNotificationLabel().setVisible(true);
+                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), new KeyValue(gameView.getTableView().getFoulNotificationLabel().visibleProperty(), false, Interpolator.EASE_BOTH)));
+                    timeline.play();
+                }
+
                 /** The time between each frame should be less than 1 second
                  * Any value bigger than 1 second is incorrect
                  * */

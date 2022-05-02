@@ -5,6 +5,7 @@ import io.pool.controller.GameController;
 import io.pool.controller.MainMenuController;
 import io.pool.controller.SettingsController;
 import io.pool.eightpool.ResourcesLoader;
+import io.pool.eightpool.game;
 import io.pool.model.BallModel;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -84,9 +85,10 @@ public class GameView extends Pane {
         /**
          * Instantiates the Views and GameController
          */
+
         tableView = new TableView(this, this.settingsController);
         cueView = new PoolCueView();
-        displayPoolCue(false);
+        cueView.getCue().setVisible(false);
 
         this.getChildren().addAll(cueView.getCue(), cueView.getPoolLine(),cueView.getPath(), cueView.getBallCollisionCircle());
         gamePane = tableView.getGamePane();
@@ -319,9 +321,7 @@ public class GameView extends Pane {
         backButton.setStyle("-fx-background-color: red; -fx-background-radius: 0 15 15 0");
         backButton.setPrefWidth(TableView.width/6.);
         backButton.setMaxHeight(TableView.height/7.5);
-        backButton.setOnAction(e->{
-            MainMenuController.gotoMainMenu();
-        });
+        backButton.setOnAction(e-> MainMenuController.gotoMainMenu());
         backButton.setOnMouseEntered(event -> backButton.setStyle("-fx-background-color: pink; -fx-background-radius: 0 15 15 0"));
         backButton.setOnMouseExited(event -> backButton.setStyle("-fx-background-color: red; -fx-background-radius: 0 15 15 0"));
 
@@ -450,15 +450,15 @@ public class GameView extends Pane {
         frictionSlider.setMinorTickCount(0);
         frictionSlider.setSnapToTicks(true);
         frictionSlider.setPadding(new Insets(20, 0, 0, 0));
-        frictionSlider.setLabelFormatter(new StringConverter<Double>() {
+        frictionSlider.setLabelFormatter(new StringConverter<>() {
             @Override
             public String toString(Double object) {
-                return (object.intValue())+"%";
+                return (object.intValue()) + "%";
             }
 
             @Override
             public Double fromString(String string) {
-                return Double.valueOf(string.substring(0,string.length()-1));
+                return Double.valueOf(string.substring(0, string.length() - 1));
             }
         });
         frictionSlider.valueProperty().addListener((observable, oldValue, newValue) -> settingsController.setFrictionPercentage(newValue.doubleValue()));
@@ -579,18 +579,34 @@ public class GameView extends Pane {
         tableButtonSetListener();
 
 
-        gamePane.getChildren().addAll(principalBar, ballsSettingsPane, tableThemesPane, cueThemePane);
+        this.getChildren().addAll(principalBar, ballsSettingsPane, tableThemesPane, cueThemePane);
 
         gameController = new GameController(this, settingsController);
 
-        AnchorPane.setTopAnchor(principalBar, TableView.height/35.0);
-        AnchorPane.setRightAnchor(principalBar, 7.);
-        AnchorPane.setTopAnchor(ballsSettingsPane, TableView.height/5.5);
-        AnchorPane.setRightAnchor(ballsSettingsPane,7.0);
-        AnchorPane.setTopAnchor(tableThemesPane, TableView.height/5.5);
-        AnchorPane.setRightAnchor(tableThemesPane, 7.0);
-        AnchorPane.setTopAnchor(cueThemePane, TableView.height/5.5);
-        AnchorPane.setRightAnchor(cueThemePane, 7.0);
+        principalBar.setLayoutX(TableView.width*1.031);
+        principalBar.setLayoutY(TableView.height/35.0);
+        ballsSettingsPane.setLayoutX(TableView.width*1.031);
+        ballsSettingsPane.setLayoutY(TableView.height/5.5);
+        tableThemesPane.setLayoutX(TableView.width*1.031);
+        tableThemesPane.setLayoutY(TableView.height/5.5);
+        cueThemePane.setLayoutX(TableView.width*1.031);
+        cueThemePane.setLayoutY(TableView.height/5.5);
+
+        principalBar.toFront();
+        ballsSettingsPane.toFront();
+        tableThemesPane.toFront();
+        cueThemePane.toFront();
+        tableView.getInformativePane().toFront();
+
+
+//        AnchorPane.setTopAnchor(principalBar, TableView.height/35.0);
+//        AnchorPane.setRightAnchor(principalBar, 7.);
+//        AnchorPane.setTopAnchor(ballsSettingsPane, TableView.height/5.5);
+//        AnchorPane.setRightAnchor(ballsSettingsPane,7.0);
+//        AnchorPane.setTopAnchor(tableThemesPane, TableView.height/5.5);
+//        AnchorPane.setRightAnchor(tableThemesPane, 7.0);
+//        AnchorPane.setTopAnchor(cueThemePane, TableView.height/5.5);
+//        AnchorPane.setRightAnchor(cueThemePane, 7.0);
 
     }
 
@@ -766,11 +782,15 @@ public class GameView extends Pane {
     public PoolCueView getCueView() {
         return cueView;
     }
+
     public void displayPoolCue(boolean visibility){
-        this.cueView.getCue().toFront();
         this.cueView.getCue().setVisible(visibility);
-        //this.cueView.getPoolLine().setVisible(visibility);
-        //this.cueView.getBallCollisionCircle().setVisible(visibility);
+        this.cueView.getCue().toFront();
+        principalBar.toFront();
+        ballsSettingsPane.toFront();
+        tableThemesPane.toFront();
+        cueThemePane.toFront();
+        tableView.getInformativePane().toFront();
     }
 
     public AnchorPane getGamePane() {
