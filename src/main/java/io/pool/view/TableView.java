@@ -44,6 +44,7 @@ public class TableView {
     private Label playersScore;
     private HBox firstPlayerRemainingBalls;
     private HBox secondPlayerRemainingBalls;
+    private GridPane playersIcon;
 
     //boolean selectionCircleClicked;
 
@@ -81,8 +82,8 @@ public class TableView {
 
         table.getChildren().addAll(tableImageView, whiteLine);
 
-        GridPane playersIcon = new GridPane();
-        playersIcon.setHgap(width/21.65);
+        playersIcon = new GridPane();
+        playersIcon.setHgap(width/28.65);
         playersIcon.setVgap(-3);
         playersIcon.setAlignment(Pos.TOP_LEFT);
         playersIcon.setPrefWidth(width);
