@@ -31,15 +31,15 @@ public class AIController {
     public void train() {
         int currentDifficulty = difficulty;
         // Counter effect the pigeon-hole problem only applicable for Easy and Medium
-        if(difficulty!=AIModel.HARD_AI) {
-            if (currentDifficulty >= AIPLayer.getBallNeededIn().size()) {
-                if(AIPLayer.getBallNeededIn().size()>1){
-                    currentDifficulty = AIPLayer.getBallNeededIn().size()-1;
-                }else{
-                    currentDifficulty=1;
-                }
-            }
-        }
+//        if(difficulty!=AIModel.HARD_AI) {
+//            if (currentDifficulty >= AIPLayer.getBallNeededIn().size()) {
+//                if(AIPLayer.getBallNeededIn().size()>1){
+//                    currentDifficulty = AIPLayer.getBallNeededIn().size()-1;
+//                }else{
+//                    currentDifficulty=1;
+//                }
+//            }
+//        }
 
         now = System.currentTimeMillis();
         AITraining = true;
@@ -193,8 +193,8 @@ public class AIController {
                 ballController.detectCollision(bModelList);
                 isMoving = ballController.isMoving;
             }
-            for(BallModel b : bModelList){
-                if(b.isInHole()&&!ballController.isGotTypeIn()){
+            for(BallModel b : ballNeededIn){
+                if(b.isInHole()){
                     ballController.setGotTypeIn(true);
                 }
             }
@@ -212,9 +212,7 @@ public class AIController {
                 if (bModel.isInHole() && ballNeededIn.contains(bModel)) validBalls++;
             }
             if (eightBallModel.isInHole()) {
-                if (!ballNeededIn.contains(eightBallModel)) {
-                    evaluation -= 100000000;
-                } else {
+                if (ballNeededIn.contains(eightBallModel)) {
                     evaluation += 100000000;
                 }
             }
@@ -228,13 +226,11 @@ public class AIController {
             if (ballController.isScored()) {
                 if (!ballController.isFoul()) {
                     evaluation += 10000;
-                } else {
-                    evaluation -= 10000;
                 }
             }
-            if (ballController.isFoul()) {
-                evaluation -= 20000;
-            }
+//            if (ballController.isFoul()) {
+//                evaluation -= 20000;
+//            }
             return evaluation;
         }
     }

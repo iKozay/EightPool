@@ -396,7 +396,6 @@ public class BallController {
                         isCollide = true;
                         if (firstCollide != null) {
                             if (firstCollide.equals(eightBallModel)&&!gameController.getCurrentPlayer().getBallNeededIn().contains(eightBallModel)) {
-                                System.out.println("EightBall Touch");
                                 foul = true;
                             }
                         }

@@ -350,16 +350,16 @@ public class TableView {
 
         //Top Side
 
-        playableArea.getElements().add(new LineTo(width/1.10719,height/9));
-        playableArea.getElements().add(new LineTo(width/1.9115, height/9));
-        playableArea.getElements().add(new LineTo(width/1.931,height/13.302));
+        playableArea.getElements().add(new LineTo(width/1.10719,height/9.2));
+        playableArea.getElements().add(new LineTo(width/1.9115, height/9.2));
+        playableArea.getElements().add(new LineTo(width/1.931,height/13.502));
 
         playableArea.getElements().add(new ArcTo(centerHoleRadius,cornerHoleRadius,0,width/2.130,height/13.302,true,false));
 
 
-        playableArea.getElements().add(new LineTo(width/2.16,height/9));
-        playableArea.getElements().add(new LineTo(width/11.228, height/9));
-        playableArea.getElements().add(new LineTo(width/14.062,height/12.9));
+        playableArea.getElements().add(new LineTo(width/2.16,height/9.2));
+        playableArea.getElements().add(new LineTo(width/11.228, height/9.2));
+        playableArea.getElements().add(new LineTo(width/14.062,height/13.1));
         playableArea.getElements().add(new ArcTo(cornerHoleRadius,cornerHoleRadius,0,width/22.9299,height/7.15789,true,false));
 
 

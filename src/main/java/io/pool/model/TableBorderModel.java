@@ -77,14 +77,14 @@ public class TableBorderModel extends Line {
                 Point2D vec = new Point2D(bModel.getVelocityX().doubleValue(), bModel.getVelocityY().doubleValue());
                 double angleBetween = line.angle(vec);
                 double angle = Math.atan2(bModel.getVelocityY().doubleValue(), bModel.getVelocityX().doubleValue());
-
+                angle = Math.toDegrees(angle);
 
                 if (angleBetween < 90) {
-                    if (reflectionLine.type == 1) angle -= 2*(90-angleBetween);
-                    if (reflectionLine.type == 2) angle += 2*(90-angleBetween);
+                    if (reflectionLine.type == 1) angle -= 180-(2*angleBetween);
+                    if (reflectionLine.type == 2) angle += 180-(2*angleBetween);
                 } else if (angleBetween > 90) {
-                    if (reflectionLine.type == 1) angle += 2*(90-(angleBetween-90));
-                    if (reflectionLine.type == 2) angle -= 2*(90-(angleBetween-90));
+                    if (reflectionLine.type == 1) angle += angleBetween-(180-angleBetween);
+                    if (reflectionLine.type == 2) angle -= angleBetween-(180-angleBetween);
                 } else {
                     bModel.setVelocityX(bModel.getVelocityX().multiply(new BigDecimal(-0.9)));
                     bModel.setVelocityY(bModel.getVelocityY().multiply(new BigDecimal(-0.9)));
@@ -92,8 +92,8 @@ public class TableBorderModel extends Line {
                 }
 
                 double velocityMag = Math.sqrt(Math.pow((bModel.getVelocityX().doubleValue()), 2) + Math.pow((bModel.getVelocityY().doubleValue()), 2)) * 0.9;
-                bModel.setVelocityX(new BigDecimal(velocityMag * Math.cos(angle)));
-                bModel.setVelocityY(new BigDecimal(velocityMag * Math.sin(angle)));
+                bModel.setVelocityX(new BigDecimal(velocityMag * Math.cos(Math.toRadians(angle))));
+                bModel.setVelocityY(new BigDecimal(velocityMag * Math.sin(Math.toRadians(angle))));
             }
         }
     }

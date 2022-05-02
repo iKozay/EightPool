@@ -370,7 +370,6 @@ public class GameController {
     public void whiteBallIn(BallView ballView) {
         BallModel bModel = BallController.getBallModelFromBallView(ballView);
         if (bModel.getNumber() == 16) {
-            System.out.println("WhiteBall In");
             ballController.setFoul(true);
             if(!ballController.isMoving) {
                 bModel.setPositionX(new BigDecimal(BallController.ballXPositions.get(15)));
@@ -379,7 +378,6 @@ public class GameController {
                 bModel.setVelocityY(new BigDecimal(0.1));
                 BallController.whiteBallView.getBall().setVisible(true);
                 bModel.setInHole(false);
-                //System.out.println("whiteBall");
             }else{
                 BallController.whiteBallView.getBall().setVisible(false);
                 bModel.setVelocityX(PhysicsModule.ZERO);
@@ -396,7 +394,6 @@ public class GameController {
             if (!gameView.getPopupWindow().isShowing() && gameType != 0) {
                 if(currentPlayer.equals(p1)) p2Score++;
                 if(currentPlayer.equals(p2)) p1Score++;
-//                currentPlayer.setScore(currentPlayer.getScore() + 1);
             }
             if (gameType != 0) {
                 tableController.getTableView().getPlayersScore().setText(p1Score + " : " + p2Score);
@@ -415,10 +412,6 @@ public class GameController {
             if (!gameView.getPopupWindow().isShowing() && gameType != 0) {
                 if(currentPlayer.equals(p1)) p1Score++;
                 if(currentPlayer.equals(p2)) p2Score++;
-//                System.out.println("Score: "+p1Score+" : "+p2Score);
-//                System.out.println("New Score: "+(currentPlayer.getScore() + 1));
-//                currentPlayer.setScore(currentPlayer.getScore() + 1);
-//                System.out.println("Score: "+currentPlayer.getScore());
             }
             if (gameType != 0) {
                 tableController.getTableView().getPlayersScore().setText(p1Score + " : " + p2Score);
@@ -436,7 +429,6 @@ public class GameController {
             if (currentPlayer.isTurn() && !(ballController.getFirstCollide().getBallType() == currentPlayer.getBallType())) {
                 if(!aiController.isAITraining()&&!ballController.isFoul()) SoundController.Foul();
                 ballController.setFoul(true);
-                System.out.println("Incorrect type");
             }
         }
     }
@@ -444,7 +436,7 @@ public class GameController {
     public void ballInHole() {
         if (!bModelInEachTurn.isEmpty()) {
             for (BallModel b : bModelInEachTurn) {
-                if(currentPlayer.getBallNeededIn().contains(b)&&!ballController.gotTypeIn){
+                if(currentPlayer.getBallNeededIn().contains(b)){
                     ballController.gotTypeIn=true;
                 }
                 ballController.setScored(true);
@@ -485,9 +477,6 @@ public class GameController {
     }
 
     public void winnerPlayer() {
-//        if (currentPlayer.getBallNeededIn().isEmpty()) {
-//            currentPlayer.getBallNeededIn().add(BallController.eightBallModel);
-//        }
         boolean typeIn=false;
         if(gameType==0){
             typeIn=BallController.getAllInSolid() && BallController.getAllInStripe();

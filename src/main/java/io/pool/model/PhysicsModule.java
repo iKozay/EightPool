@@ -185,13 +185,13 @@ public class PhysicsModule {
         double distance = Math.sqrt(Math.pow(normalXComponent,2)+Math.pow(normalYComponent,2));
         unitNormalX = normalXComponent / distance;
         unitNormalY = normalYComponent / distance;
-        if (distance < (2 * BallModel.RADIUS)) {
+        if (distance < (2 * BallModel.RADIUS*1.05)) {
 
             /**
              * Find the minimum distance X and Y to prevent overlapping
              */
-            double distanceX = normalXComponent * ((2 * BallModel.RADIUS - distance) / (distance));
-            double distanceY = normalYComponent * ((2 * BallModel.RADIUS - distance) / (distance));
+            double distanceX = normalXComponent * ((2 * BallModel.RADIUS*1.05 - distance) / (distance));
+            double distanceY = normalYComponent * ((2 * BallModel.RADIUS*1.05 - distance) / (distance));
             /**
              * Push-Pull Balls apart
              */
@@ -201,8 +201,6 @@ public class PhysicsModule {
             pm1.setPositionY(pm1.getPositionY().subtract(new BigDecimal(distanceY)));
             pm2.setPositionX(pm2.getPositionX().add(new BigDecimal(distanceX)));
             pm2.setPositionY(pm2.getPositionY().add(new BigDecimal(distanceY)));
-            //BallController.updateBallViewPosition((BallModel) pm1);
-            //BallController.updateBallViewPosition((BallModel) pm2);
 
             unitTangentX = -unitNormalY;
             unitTangentY = unitNormalX;
