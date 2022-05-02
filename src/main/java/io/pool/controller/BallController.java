@@ -495,7 +495,6 @@ public class BallController {
             foul = true;
         }
         gameController.firstCollidePlay();
-        if(!gotTypeIn) foul=true;
     }
     public void checkScored(ArrayList<BallModel> bModelList){
         for(BallModel bModel : bModelList){

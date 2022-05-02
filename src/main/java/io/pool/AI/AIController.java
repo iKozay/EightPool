@@ -198,13 +198,18 @@ public class AIController {
                     ballController.setGotTypeIn(true);
                 }
             }
+
+            boolean gotBallIn=false;
+            for(BallModel b:bModelList){
+                if(b.isInHole()) gotBallIn=true;
+            }
             ballController.checkFoul(whiteBallModel);
+            if(!ballController.isGotTypeIn()&&gotBallIn) ballController.setFoul(true);
             ballController.checkScored(bModelList);
         }
 
         private double evaluate() {
             int evaluation = 0;
-
 
             int validBalls = 0;
 
@@ -221,16 +226,11 @@ public class AIController {
 
             evaluation += 2000 * validBalls;
 
-            //Make strict foul policy
-
             if (ballController.isScored()) {
                 if (!ballController.isFoul()) {
                     evaluation += 10000;
                 }
             }
-//            if (ballController.isFoul()) {
-//                evaluation -= 20000;
-//            }
             return evaluation;
         }
     }

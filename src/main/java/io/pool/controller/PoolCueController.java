@@ -57,11 +57,6 @@ public class PoolCueController {
             });
     }
 
-//    double mouseXLock;
-//    double mouseYLock;
-//    boolean isPressed=false;
-//    double draggedX;
-//    double draggedY;
     double draggedTotal;
 
     public void hit(Scene scene) {
@@ -82,8 +77,8 @@ public class PoolCueController {
                     }
                     if (keysCurrentlyDown.contains(KeyCode.W) || keysCurrentlyDown.contains(KeyCode.S)) {
                         double draggedTotal = Math.sqrt(Math.pow(poolCueView.getCue().getLayoutX(), 2) + Math.pow(poolCueView.getCue().getLayoutY(), 2));
-                        if (keysCurrentlyDown.contains(KeyCode.W)) draggedTotal -= 3;
-                        if (keysCurrentlyDown.contains(KeyCode.S)) draggedTotal += 3;
+                        if (keysCurrentlyDown.contains(KeyCode.W)) draggedTotal -= 5;
+                        if (keysCurrentlyDown.contains(KeyCode.S)) draggedTotal += 5;
                         if (draggedTotal < 0) draggedTotal = 0;
                         if (draggedTotal > MAX_DISTANCE) draggedTotal = MAX_DISTANCE;
                         setPower(draggedTotal);
@@ -113,8 +108,8 @@ public class PoolCueController {
                 if (enablePoolCueControl) {
                     if (gameController.gameLoopTimer.isActive) {
                         double deltaY = event.getDeltaY();
-                        if(deltaY<0) draggedTotal+=3;
-                        if(deltaY>0) draggedTotal-=3;
+                        if(deltaY<0) draggedTotal+=5;
+                        if(deltaY>0) draggedTotal-=5;
                         if (draggedTotal > MAX_DISTANCE) draggedTotal = MAX_DISTANCE;
                         if (draggedTotal < 0) draggedTotal = 0;
                         setPower(draggedTotal);

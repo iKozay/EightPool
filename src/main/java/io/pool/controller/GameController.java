@@ -287,7 +287,7 @@ public class GameController {
             }
         }
         firstCollidePlay();
-        if(!ballController.gotTypeIn) ballController.setFoul(true);
+        if(!ballController.gotTypeIn&&!bModelInEachTurn.isEmpty()) ballController.setFoul(true);
         checkFoul();
 
         if (gameType == 0) {

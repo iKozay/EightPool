@@ -185,13 +185,13 @@ public class PhysicsModule {
         double distance = Math.sqrt(Math.pow(normalXComponent,2)+Math.pow(normalYComponent,2));
         unitNormalX = normalXComponent / distance;
         unitNormalY = normalYComponent / distance;
-        if (distance < (2 * BallModel.RADIUS*1.05)) {
+        if (distance < (2 * BallModel.RADIUS)) {
 
             /**
              * Find the minimum distance X and Y to prevent overlapping
              */
-            double distanceX = normalXComponent * ((2 * BallModel.RADIUS*1.05 - distance) / (distance));
-            double distanceY = normalYComponent * ((2 * BallModel.RADIUS*1.05 - distance) / (distance));
+            double distanceX = normalXComponent * ((2 * BallModel.RADIUS - distance) / (distance));
+            double distanceY = normalYComponent * ((2 * BallModel.RADIUS - distance) / (distance));
             /**
              * Push-Pull Balls apart
              */
