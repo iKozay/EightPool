@@ -145,6 +145,9 @@ public class GameController {
                 }
             }
         }
+
+        gameView.getTableView().setControlOption(settingsController.getControlOption());
+        gameView.getTableView().setInformativeLabelText();
         gameLoopTimer.start();
         ballController.prepareGame(this.gameView, this.gameView.getTableView());
         gameView.clearBallViewDebug();

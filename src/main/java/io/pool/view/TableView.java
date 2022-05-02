@@ -2,6 +2,8 @@ package io.pool.view;
 
 import io.pool.controller.BallController;
 import io.pool.controller.GameController;
+import io.pool.controller.PoolCueController;
+import io.pool.controller.SettingsController;
 import io.pool.eightpool.ResourcesLoader;
 import io.pool.eightpool.game;
 import io.pool.model.BallModel;
@@ -45,10 +47,14 @@ public class TableView {
     private HBox firstPlayerRemainingBalls;
     private HBox secondPlayerRemainingBalls;
     private GridPane playersIcon;
+    private int controlOption;
+    private Label howToPlayLabel;
 
     //boolean selectionCircleClicked;
 
-    public TableView(Pane root) {
+    public TableView(Pane root, SettingsController settingsController) {
+
+        this.controlOption = settingsController.getControlOption();
 
         BallModel.RADIUS = getTableWidth()/85;
 
@@ -81,6 +87,39 @@ public class TableView {
         whiteLine.setStrokeWidth(1);
 
         table.getChildren().addAll(tableImageView, whiteLine);
+
+
+        VBox informativePane = new VBox();
+        informativePane.setPadding(new Insets(width/55.));
+        informativePane.setSpacing(width/60.);
+        informativePane.setPrefHeight(height/3.9);
+        informativePane.setPrefWidth(width);
+        informativePane.setStyle("-fx-background-color: bisque; -fx-background-radius: 15");
+
+        Label label1 = new Label("How to play!");
+        label1.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/50.));
+        label1.setPadding(new Insets(0));
+        label1.setTextFill(Color.ORANGERED);
+
+        howToPlayLabel = new Label("");
+        howToPlayLabel.setFont(Font.font("Verdana", FontWeight.NORMAL, TableView.width/50.));
+
+        setInformativeLabelText();
+
+        Label label3 = new Label("Keep in mind that you always can change playing method from settings");
+        label3.setFont(Font.font("Verdana", FontWeight.NORMAL, TableView.width/50.));
+
+        informativePane.setOnMouseClicked(event -> {
+            howToPlayLabel.setVisible(!howToPlayLabel.isVisible());
+            label3.setVisible(!label3.isVisible());
+            label1.setStyle("-fx-background-color: bisque; -fx-background-radius: 7");
+            if (label1.getPadding().equals(new Insets(width/70.))) label1.setPadding(new Insets(0));
+            else label1.setPadding(new Insets(width/70.));
+            if (informativePane.getStyle().equals("-fx-background-color: bisque; -fx-background-radius: 15")) informativePane.setStyle("-fx-background-color: transparent; -fx-background-radius: 15");
+            else informativePane.setStyle("-fx-background-color: bisque; -fx-background-radius: 15");
+        });
+
+        informativePane.getChildren().addAll(label1, howToPlayLabel, label3);
 
         playersIcon = new GridPane();
         playersIcon.setHgap(width/28.65);
@@ -163,12 +202,15 @@ public class TableView {
         remainingBallsPane.setSpacing(100);
         remainingBallsPane.setAlignment(Pos.CENTER);
 
-        anchorPane.getChildren().addAll( playersIcon, table);
+        anchorPane.getChildren().addAll( playersIcon, table, informativePane);
 
         AnchorPane.setLeftAnchor(table, width/43.2);
         AnchorPane.setTopAnchor(table, width/8.);//////
         AnchorPane.setTopAnchor(playersIcon, 0.0);
         AnchorPane.setLeftAnchor(playersIcon, width/43.2);
+        AnchorPane.setBottomAnchor(informativePane, width/10.);
+        AnchorPane.setLeftAnchor(informativePane, width/43.2);
+
 
         root.getChildren().add(anchorPane); // adding the table to the main pain of the project.
 
@@ -176,6 +218,17 @@ public class TableView {
         createLines(root);
 
     }
+
+    public void setInformativeLabelText() {
+        if(this.controlOption==0){
+            howToPlayLabel.setText("Scroll to set power, move the mouse to rotate, and click to hit the ball");
+        }else if(this.controlOption==1){
+            howToPlayLabel.setText("use W and S keys to set power, move the mouse to rotate, and click to hit the ball");
+        }else{
+            howToPlayLabel.setText("use W and S keys to set power, A and D to rotate, and shift to hit the ball");
+        }
+    }
+
     public void createHoles(){
         //Hole 1
         Circle upLeftCorner = new Circle();
@@ -440,6 +493,10 @@ public class TableView {
             secondPlayerRemainingBalls.getChildren().add(remainingBall);
         }
 
+    }
+
+    public void setControlOption(int controlOption) {
+        this.controlOption = controlOption;
     }
 }
 

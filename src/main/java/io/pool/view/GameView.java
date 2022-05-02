@@ -84,7 +84,7 @@ public class GameView extends Pane {
         /**
          * Instantiates the Views and GameController
          */
-        tableView = new TableView(this);
+        tableView = new TableView(this, this.settingsController);
         cueView = new PoolCueView();
         displayPoolCue(false);
 
