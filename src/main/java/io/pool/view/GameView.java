@@ -308,6 +308,7 @@ public class GameView extends Pane {
             cueThemePane.setVisible(true);
             if (tableThemesPane.isVisible()) tableThemesPane.setVisible(false);
             if (ballsPrimaryPane.isVisible()) ballsPrimaryPane.setVisible(false);
+            if (ballsDataPane.isVisible()) ballsDataPane.setVisible(false);
         });
 
         backButton = new Button("Main Menu", leaveArrowImageView);
