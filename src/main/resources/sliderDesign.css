@@ -30,3 +30,7 @@
 .jfx-slider > .axis {
     -fx-tick-label-fill: white;
  }
+
+.combo-box > .list-cell {
+-fx-text-fill: white;
+}

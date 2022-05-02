@@ -48,7 +48,11 @@ public class TableView {
     private HBox secondPlayerRemainingBalls;
     private GridPane playersIcon;
     private int controlOption;
+
+    private Label label1;
     private Label howToPlayLabel;
+    private Label label3;
+    private VBox informativePane;
 
     //boolean selectionCircleClicked;
 
@@ -89,14 +93,14 @@ public class TableView {
         table.getChildren().addAll(tableImageView, whiteLine);
 
 
-        VBox informativePane = new VBox();
+        informativePane = new VBox();
         informativePane.setPadding(new Insets(width/55.));
         informativePane.setSpacing(width/60.);
         informativePane.setPrefHeight(height/3.9);
         informativePane.setPrefWidth(width);
         informativePane.setStyle("-fx-background-color: bisque; -fx-background-radius: 15");
 
-        Label label1 = new Label("How to play!");
+        label1 = new Label("How to play!");
         label1.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/50.));
         label1.setPadding(new Insets(0));
         label1.setTextFill(Color.ORANGERED);
@@ -106,17 +110,12 @@ public class TableView {
 
         setInformativeLabelText();
 
-        Label label3 = new Label("Keep in mind that you always can change playing method from settings");
+        label3 = new Label("Keep in mind that you always can change playing method from settings");
         label3.setFont(Font.font("Verdana", FontWeight.NORMAL, TableView.width/50.));
 
+        smallVisualEffect();
         informativePane.setOnMouseClicked(event -> {
-            howToPlayLabel.setVisible(!howToPlayLabel.isVisible());
-            label3.setVisible(!label3.isVisible());
-            label1.setStyle("-fx-background-color: bisque; -fx-background-radius: 7");
-            if (label1.getPadding().equals(new Insets(width/70.))) label1.setPadding(new Insets(0));
-            else label1.setPadding(new Insets(width/70.));
-            if (informativePane.getStyle().equals("-fx-background-color: bisque; -fx-background-radius: 15")) informativePane.setStyle("-fx-background-color: transparent; -fx-background-radius: 15");
-            else informativePane.setStyle("-fx-background-color: bisque; -fx-background-radius: 15");
+            smallVisualEffect();
         });
 
         informativePane.getChildren().addAll(label1, howToPlayLabel, label3);
@@ -217,6 +216,16 @@ public class TableView {
         createHoles();
         createLines(root);
 
+    }
+
+    private void smallVisualEffect() {
+        howToPlayLabel.setVisible(!howToPlayLabel.isVisible());
+        label3.setVisible(!label3.isVisible());
+        label1.setStyle("-fx-background-color: bisque; -fx-background-radius: 7");
+        if (label1.getPadding().equals(new Insets(width/70.))) label1.setPadding(new Insets(0));
+        else label1.setPadding(new Insets(width/70.));
+        if (informativePane.getStyle().equals("-fx-background-color: bisque; -fx-background-radius: 15")) informativePane.setStyle("-fx-background-color: transparent; -fx-background-radius: 15");
+        else informativePane.setStyle("-fx-background-color: bisque; -fx-background-radius: 15");
     }
 
     public void setInformativeLabelText() {

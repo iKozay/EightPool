@@ -18,9 +18,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 
@@ -253,6 +255,7 @@ public class MainMenuView extends GridPane{
         buttonGroup.getChildren().addAll(pve1Btn,pve2Btn,pve3Btn);
 
         PVPstartBtn = new Button("Start");
+        PVPstartBtn.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/70.));
 
         mainMenuController = new MainMenuController(this, stage);
 
@@ -265,9 +268,11 @@ public class MainMenuView extends GridPane{
         topBox.setSpacing(500);
         topBox.setMinHeight(400);
         Label player2Lbl = new Label("Player 2");
-        player2Lbl.setFont(new Font(20));
+        player2Lbl.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/50.));
+        player2Lbl.setTextFill(Color.WHITE);
         Label player1Lbl = new Label("Player 1");
-        player1Lbl.setFont(new Font(20));
+        player1Lbl.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/50.));
+        player1Lbl.setTextFill(Color.WHITE);
 
         // Center Border Pane
         HBox centerBox = new HBox();
@@ -304,6 +309,7 @@ public class MainMenuView extends GridPane{
         comboBoxP1.setEffect(dp1);
         comboBoxP1.setStyle("-fx-background-color: #78282b");
         backBtn = new Button("BACK");
+        backBtn.setFont(Font.font("Verdana", FontWeight.BOLD, TableView.width/70.));
         backBtn.setPrefSize(300,50);
         backBtn.setOnAction(event -> {
             stage.getScene().setRoot(this);
